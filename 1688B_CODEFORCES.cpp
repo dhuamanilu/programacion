@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+typedef long double ld;
+
+
+typedef pair<int, int> pi;
+
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define FOR(i, a, b) for (int i=a; i<(b); i++)
+
+#define mp make_pair
+#define pb push_back
+#define f first
+#define se second
+#define lb lower_bound
+#define ub upper_bound
+#define all(x) x.begin(), x.end()
+#define ins insert
+
+const int MOD = 1000000007;
+const char nl = '\n';
+const int MX = 100001;
+const int N=1000+3;
+
+ll lowbit (ll x){
+    return x & (-x);
+}
+void solve(){
+    ll n;
+    cin>>n;
+    int a[n];
+    ll rpta=LONG_LONG_MAX;
+    ll cont=0;
+    FOR(i,0,n){
+        cin>>a[i];
+        if(a[i]%2==0) cont++;
+        ll auxi=0;
+        while(a[i] % 2 == 0){
+            a[i]/=2;
+            auxi++;
+        }
+        rpta=min(rpta,auxi);
+
+    }
+    if(cont == 0){
+        cout<<"0\n";
+        return;
+    }
+
+    else if(cont == n)
+        cout<<rpta+n-1<<"\n";
+    else{
+        cout<<cont<<"\n";
+    }
+
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    /*if (fopen("abcd.in", "r")) {
+		freopen("billboard.in", "r", stdin);
+		freopen("billboard.out", "w", stdout);
+    }*/
+  	int t=1;
+    cin>>t;
+
+  	while(t--){
+        solve();
+  	}
+	return 0;
+}
+
+
+
+
+
+
+
+
