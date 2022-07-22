@@ -39,61 +39,22 @@ void solve(){
         return;
     }
     else{
-        bool ok=false;
-        FOR(i,0,n-1){
-            if(a[i]<=a[i+1]){
-                ok=true;
+        if (a[n - 1] < 0) {
+            if (is_sorted(a,a+n)) {
+                cout <<"0\n";
+                return;
             }
-            else{
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            cout<<"0\n";
-            return;
-        }
-        /*vector <pair<ll,pair<ll,ll>>> res;
-        ll ope=0;
-        FOR(i,0,n){
-            int auxi=i+1;
-            int guarda=auxi;
-            if(a[i]<= a[auxi]) continue;
-            else{
-                guarda++;
-                while(guarda < n && a[guarda]<0){
-                    guarda++;
-                }
-                if(guarda == n-1 && a[guarda]<0){
-                    cout<<"-1\n";
-                    return;
-                }
-                a[i]=a[auxi]-a[guarda];
-                ope++;
-                pair<ll,ll> auxi2;
-                auxi2.first=auxi;
-                auxi2.second=guarda;
-                pair <ll,pair<ll,ll>> auxi3;
-                auxi3.first=i;
-                auxi3.second=auxi2;
-                res.emplace_back(auxi3);
+            else {
+                cout <<"-1\n";
+                return;
             }
         }
-        if(a[n-2] < a[n-3]){
-            a[n-3]=a[n-2]-a[n-1];
-            ope++;
-            pair<ll,ll> auxi2;
-            auxi2.first=n-2;
-            auxi2.second=n-1;
-            pair <ll,pair<ll,ll>> auxi3;
-            auxi3.first=n-3;
-            auxi3.second=auxi2;
-            res.emplace_back(auxi3);
+        else{
+            cout<<n-2<<"\n";
+            for (ll i = 1; i <= n - 2; ++i) {
+                cout << i << ' ' << n - 1 << ' ' << n << "\n";
+            }
         }
-        cout<<ope<<"\n";
-        FOR(i,0,res.size()){
-            cout<<res[i].first+1<<" "<<res[i].second.first+1<<" "<<res[i].second.second+1<<"\n";
-        }*/
 
     }
 }
