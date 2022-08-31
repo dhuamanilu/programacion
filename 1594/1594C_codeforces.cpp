@@ -39,7 +39,7 @@ void solve(){
         if(s[i-1]==c) continue;
         else{
             ok=false;
-            if(i%2==0){
+            if(i%2==1){
                 imp=true;
             }
             else{
@@ -54,18 +54,17 @@ void solve(){
     if((imp && !par) || (!imp &&par)){
         cout<<"1\n";
         if(imp){
-            cout<<"2\n";
+            cout<<n<<"\n";
             return;
         }
         else if(par){
-
+            cout<<n-1<<"\n";
         }
         return;
     }
     if(par && imp){
         cout<<"2\n";
         cout<<n<<" "<<n-1<<"\n";
-
         return;
     }
 

@@ -10,8 +10,8 @@ typedef pair<int, int> pi;
 
 typedef vector<int> vi;
 
-#define FOR(i, a, b) for (int i=a; i<(b); i++)
-
+#define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define FOR2(i, a, b) for (long long i=a; i<(b); i+=2)
 #define mp make_pair
 #define pb push_back
 #define f first
@@ -27,42 +27,41 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    int n;
+    ll n;
     cin>>n;
-    int a[n];
-
-    FOR(i,0,n){
+    ll a[n+1];
+    FOR(i,1,n+1){
         cin>>a[i];
     }
-    int cont1=0;
-    for(int i=1;i<n;i+=2){
-        if(i!=n-1 && i!=0){
-            if(a[i]>a[i+1] && a[i]>a[i-1]) continue;
-            cont1+=max(a[i+1],a[i-1])+1-a[i];
-        }
+    if(n&1){
+        ll ans = 0;
+        for (int i = 2; i < n; i += 2)
+            ans+=max(0ll, max(a[i - 1], a[i + 1]) - a[i] + 1);
+        cout <<ans<< "\n";
+        return;
     }
-    int cont2=0;
-    for(int i=2;i<n;i+=2){
-        if(i!=n-1 && i!=0){
-            if(a[i]>a[i+1] && a[i]>a[i-1]) continue;
-            cont2+=max(a[i+1],a[i-1])+1-a[i];
+    else{
+        ll tot=0;
+        for (int i=2;i<n;i+=2)
+            tot+=max(0ll,max(a[i-1],a[i+1])-a[i]+1);
+        ll ans=tot;
+        for (int i=n-1;i>1;i-=2) {
+            tot-=max(0ll,max(a[i-2],a[i])-a[i-1]+1);
+            tot+=max(0ll,max(a[i-1],a[i+1])-a[i]+1);
+            ans=min(ans,tot);
         }
+        cout<<ans<<"\n";
     }
-    cout<<"cont (1 y 2) : "<<cont1<<" "<<cont2<<"\n-----------\n";
+
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("abcd.in", "r")) {
-		freopen("billboard.in", "r", stdin);
-		freopen("billboard.out", "w", stdout);
-    }*/
-  	int t=1;
+    int t=1;
     cin>>t;
-
-  	while(t--){
+    while(t--){
         solve();
-  	}
-	return 0;
+    }
+    return 0;
 }

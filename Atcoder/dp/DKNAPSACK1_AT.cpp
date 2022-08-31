@@ -29,12 +29,20 @@ const int INF=100000000;
 void solve(){
     ll n,w;
     cin>>n>>w;
-    ll a[n][2];
+    vector <ll> dp(w+1);
     FOR(i,0,n){
-        cin>>a[i][0];
-        cin>>a[i][1];
+        ll peso,valor;
+        cin>>peso>>valor;
+        for(int j=w-peso;j>=0;j--){
+            dp[j+peso]=max(dp[j+peso],dp[j]+valor);
+        }
     }
-    ll dp[];
+    ll ans=0;
+    for(int i=0;i<=w;i++){
+        ans=max(ans,dp[i]);
+    }
+    cout<<ans<<"\n";
+
 
 }
 int main(){
