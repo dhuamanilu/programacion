@@ -21,7 +21,33 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    return solve();
+    ll n,k,r,c;
+    cin>>n>>k>>r>>c;
+    if(k==1){
+        FOR(i,0,n){
+            FOR(j,0,n){
+                cout<<"X";
+            }
+            cout<<"\n";
+        }
+        return;
+    }
+    else{
+        FOR1(i,1,n){
+            FOR1(j,1,n){
+                if((i+j)%k == (r+c)%k){
+                    cout<<"X";
+                }
+                else{
+                    cout<<".";
+                }
+
+            }
+            cout<<"\n";
+        }
+    }
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

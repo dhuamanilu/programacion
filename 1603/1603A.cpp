@@ -21,7 +21,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    return solve();
+    ll n;
+    cin>>n;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    //cout<<"asdas : "<<1%2<<"\n";
+    ll pos=0;
+    bool ok=true;
+    FOR(i,0,n){
+        bool found=false;
+        for(ll j=i+2;j>=2;j--){
+            if(a[i]%j){
+                found=true;
+                break;
+            }
+        }
+        ok&=found;
+
+    }
+    if(ok)
+        cout<<"YES\n";
+    else
+        cout<<"NO\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -17,17 +17,40 @@ typedef vector<ll> vll;
 #define ins insert
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 100005;
 const int N=1000+3;
+vector<int> G[MX];
+ll cont=0;
+void dfs(ll a,ll b,bool c){
+    if(!c){
+        cont++;
+    }
+    for(auto e : G[a]){
+        if(e!=b){
+            dfs(e,a,c^1);
+        }
 
+    }
+}
 void solve(){
-    return solve();
+    ll n;
+    cin>>n;
+    FOR(i,0,n-1){
+        int u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    dfs(0,0,0);
+    cout<<cont*(n-cont)-(n-1)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

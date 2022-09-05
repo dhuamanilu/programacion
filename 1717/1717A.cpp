@@ -21,7 +21,9 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    return solve();
+    ll n;
+    cin>>n;
+    cout<<n+(2*((n)/2))+(2*(n/3))<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -19,9 +19,35 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll eval(ll a){
+    return a*(a+1)/2;
+}
 void solve(){
-    return solve();
+    ll k,x;
+    cin>>k>>x;
+    ll s=0,e=2*k,m=s+(e-s)/2;
+    if(k*k<=x){
+        cout<<2*k-1<<"\n";
+        return;
+    }
+    while(s<=e){
+        ll aux=0;
+        m=s+(e-s)/2;
+        if(m<k){
+            aux=eval(m);
+        }
+        else{
+            aux=eval(k-1)+eval(k)-eval(2*k-1-m);
+        }
+        if(aux<x){
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
+    }
+    cout<<s<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

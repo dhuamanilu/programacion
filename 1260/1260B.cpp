@@ -21,7 +21,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    return solve();
+    ll a,b;
+    cin>>a>>b;
+    if(a>b) swap(a,b);
+    if((a+b)%3==0 && 2*a>=b){
+        cout<<"YES\n";
+    }
+    else cout<<"NO\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

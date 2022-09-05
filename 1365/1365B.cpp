@@ -21,27 +21,57 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll a[n][m];
+    ll n;
+    cin>>n;
+    vector <ll> a(n,0);
     FOR(i,0,n){
-        FOR(j,0,m){
-            char aux;
-            cin>>aux;
-            if(aux=='.'){
-                a[i][j]=0;
-            }
-            else{
-                a[i][j]=1;
-            }
+        cin>>a[i];
+
+    }
+
+    vector <bool> b(n);
+    set <ll> set1;
+    ll auxi;
+    FOR(i,0,n){
+        cin>>auxi;
+        if(auxi==1){
+            b[i]=true;
+            set1.insert(1);
         }
+        else{
+            b[i]=false;
+            set1.insert(0);
+        }
+    }
+
+    if((int)set1.size()==1 && is_sorted(a.begin(),a.end())){
+        cout<<"YES\n";
+        return;
+    }
+    bool cont=false,cont2=false;
+    FOR(i,0,n){
+        if(b[i]==false){
+            cont=true;
+        }
+        if(b[i]==true){
+            cont2=true;
+        }
+
+    }
+    if(cont && cont2){
+        cout<<"YES\n";
+        return;
+    }
+    else{
+        cout<<"NO\n";
+        return;
     }
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
+    int t;
     cin>>t;
     while(t--){
         solve();

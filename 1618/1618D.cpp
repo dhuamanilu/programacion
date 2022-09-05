@@ -21,7 +21,21 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    return solve();
+    ll n,k;
+    cin>>n>>k;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    sort(a,a+n);
+    ll res=0;
+    FOR(i,0,n-2*k){
+        res+=a[i];
+    }
+    FOR(i,0,k){
+        res+=a[n-2*k+i]/a[n-k+i];
+    }
+    cout<<res<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
