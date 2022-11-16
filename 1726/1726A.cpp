@@ -24,37 +24,29 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    ll maxi=LONG_LONG_MIN,mini=LONG_LONG_MAX,indmax=0,indmin=0;
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+        if(a[i]>=maxi){
+            maxi=a[i];
+            indmax=i;
+        }
+        if(a[i]<=mini){
+            mini=a[i];
+            indmin=i;
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
+    //cout<<indmin<<" "<<indmax<<"\n";
+    if(a[0]==mini || a[n-1]==maxi || (indmin+n-1-indmax)%n==0){
+        cout<<maxi-mini<<"\n";
         return;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    ll res=0-LONG_LONG_MIN;
+    FOR(i,0,n-1){
+        res=max(res,a[i]-a[i+1]);
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    ll r1=maxi-a[0],r2=a[n-1]-mini;
+    cout<<max(r1,max(res,r2))<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

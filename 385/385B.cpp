@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -21,46 +23,21 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    string s;
+    cin>>s;
+    ll n=s.size();
+    ll cont=0,maxi=-1;
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+        if(i>=3 && s.substr(i-3,4)=="bear") maxi=i-3;
+        cont+=maxi+1;
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<cont<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

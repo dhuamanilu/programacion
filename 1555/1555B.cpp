@@ -21,40 +21,32 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
+    ll W,H,x1,y1,x2,y2,w,h;
+    cin>>W>>H>>x1>>y1>>x2>>y2>>w>>h;
+    ll ans=LONG_LONG_MAX;
+    if(h<y1 || h<H-y2 || w<x1 || w<W-x2){
+        cout<<"0\n";
         return;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    if(y2+(h-y1)<=H){
+        ans=min(ans,h-y1);
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+    if(y1-(h-(H-y2))>=0){
+        ans=min(ans,h-(H-y2));
     }
+    if(x2+(w-x1)<=W){
+        ans=min(ans,w-x1);
+    }
+    if(x1-(w-(W-x2))>=0){
+        ans=min(ans,w-(W-x2));
+    }
+    if(ans==LONG_LONG_MAX){
+        cout<<"-1\n";
+        return;
+    }
+    double res=ans*1.0;
+    cout<<fixed<<std::setprecision(6)<<res<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

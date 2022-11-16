@@ -21,40 +21,45 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
+    ll n,guarda=0;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
+    if(n==2){
+        cout<<"1\n2\n";
         return;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    if(n==3){
+        cout<<"1\n3\n";
+        return;
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+    ll n2=n;
+    ll ans=LONG_LONG_MIN;
+    for (ll i=2;i*i<=n;i++){
+        bool div=false;
+        ll cont=0;
+        while(n%i==0 && n>1){
+            div=true;
+            cont++;
+            n/=i;
+        }
+        if(div){
+            if(cont>ans){
+                ans=cont;
+                guarda=i;
+            }
+            ans=max(ans,cont);
+        }
+        if(n==1) break;
     }
+    //cout<<"este es el nas: "<<ans-1<<"\n";
+    if(ans==LONG_LONG_MIN){
+        cout<<"1\n"<<n2<<"\n";
+        return;
+    }
+    cout<<ans<<"\n";
+    FOR(i,0,ans-1){
+        cout<<guarda<<" ";
+    }
+    cout<<n2/(ll)pow(guarda,ans-1)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

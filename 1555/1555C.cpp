@@ -21,40 +21,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    ll m;
+    cin>>m;
+    ll a[m][2];
+    FOR(j,0,2){
+        FOR(i,0,m){
+            cin>>a[i][j];
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
+    ll sum1=0;
+    FOR(i,0,m){
+        sum1+=a[i][0];
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    ll ans=LONG_LONG_MAX,sum2=0;
+    FOR(i,0,m){
+        sum1-=a[i][0];
+        ans=min(ans,max(sum1,sum2));
+        sum2+=a[i][1];
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -24,37 +24,28 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    ll maxi=LONG_LONG_MIN;
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
+    }
+    if(n==3){
+        if(a[1]%2==1){
+            cout<<"-1\n";
+            return;
+        }
     }
     bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
+    FOR(i,1,n-1){
+        ok&=(a[i]==1);
     }
     if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
+        cout<<"-1\n";
         return;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    ll ans=0;
+    FOR(i,1,n-1){
+        ans+=(a[i]+1)/2;
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

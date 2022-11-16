@@ -18,49 +18,47 @@ typedef vector<ll> vll;
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=105;
+int dx[]={1,-1,0,0};
+int dy[]={0,0,1,-1};
+bool vis[N][N];
+vector <pair < ll , ll > > ans;
+ll n,m;
+bool isValid(ll nx, ll ny){
+    return nx>=1 && nx<=n && ny>=1 && ny<=m;
+}
+void dfs(ll a ,ll b){
+    ans.push_back(mp(a,b));
+    vis[a][b]=true;
+    FOR(i,0,4){
+        FOR(k,1,201){
+            ll nx=a+k*dx[i],ny=b+k*dy[i];
+            if(isValid(nx,ny)){
+                if(vis[nx][ny]) continue;
+                dfs(nx,ny);
+            }
+        }
 
+    }
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    ll sx,sy;
+    cin>>n>>m>>sx>>sy;
+    for(ll i=1;i<=n;i++){
+        for(ll j=1;j<=m;j++){
+            vis[i][j]=false;
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+    dfs(sx,sy);
+    for(auto e : ans){
+        cout<<e.f<<" "<<e.se<<"\n";
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -23,38 +23,33 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+    map<ll,ll> a;
+    ll mini=LONG_LONG_MAX,maxi=LONG_LONG_MIN;
+    FOR(i,0,4*n){
+        ll auxi;
+        cin>>auxi;
+        a[auxi]++;
+        mini=min(mini,auxi);
+        maxi=max(maxi,auxi);
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    ll ar=mini*maxi;
+    for(auto &e : a){
+        //cout<<e.first<<" "<<e.second<<"\n";
+        if(e.second==0) continue;
+        while(ar%e.first==0 && a.count(ar/e.first) && a[ar/e.first] >=2 && e.second>=2){
+            e.second-=2;
+            a[ar/e.first]-=2;
+        }
+
+    }
+    for(auto e : a){
+        if(e.second>0){
+            cout<<"NO\n";
+            return;
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<"YES\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

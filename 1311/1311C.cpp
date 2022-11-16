@@ -21,40 +21,35 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
+    ll n,m;
+    cin>>n>>m;
+    string s;
+    cin>>s;
+    vector <ll> cont(26,0);
+    ll a[m];
+    FOR(i,0,m){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
+    vector < vector <ll > > aux(n,vector <ll>(26,0) );
+    aux[0][s[0]-'a']++;
     FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+        vector <ll> get;
+        get=aux[i-1];
+        get[s[i]-'a']++;
+        aux[i]=get;
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+    FOR(i,0,m){
+        FOR(j,0,26){
+            cont[j]+=aux[a[i]-1][j];
+        }
     }
+    for(auto e : s){
+        cont[e-'a']++;
+    }
+    for(auto e : cont){
+        cout<<e<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

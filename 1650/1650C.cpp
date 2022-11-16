@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<long long,long long> pll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define mp make_pair
+#define pb push_back
+#define f first
+#define se second
+#define lb lower_bound
+#define ub upper_bound
+#define all(x) x.begin(), x.end()
+#define ins insert
+const int MOD = 1000000007;
+const char nl = '\n';
+const int MX = 100001;
+const int N=1000+3;
+
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+    vector < pair < pair<ll,ll>,ll > > c;
+    FOR(i,0,m){
+        ll x,w;
+        cin>>x>>w;
+        c.emplace_back(mp(mp(w,x) ,i+1 ));
+    }
+    sort(all(c));
+    ll sum=0;
+    vector <pll> res;
+    FOR(i,0,2*n){
+        sum+=c[i].first.first;
+        res.push_back(mp(c[i].first.second,c[i].second));
+    }
+    sort(all(res));
+    cout<<sum<<"\n";
+    ll i=0,j=res.size()-1;
+    while(i<j){
+        cout<<res[i].second<<" "<<res[j].second<<"\n";
+        i++;
+        j--;
+    }
+    cout<<"\n";
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int t=1;
+    cin>>t;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+

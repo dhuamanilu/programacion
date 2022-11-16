@@ -1,0 +1,159 @@
+GNU Octave, version 7.2.0
+Copyright (C) 1993-2022 The Octave Project Developers.
+This is free software; see the source code for copying conditions.
+There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  For details, type 'warranty'.
+
+Octave was configured for "x86_64-w64-mingw32".
+
+Additional information about Octave is available at https://www.octave.org.
+
+Please contribute if you find this software useful.
+For more information, visit https://www.octave.org/get-involved.html
+
+Read https://www.octave.org/bugs.html to learn how to submit bug reports.
+For information about changes from previous versions, type 'news'.
+
+>> intervalos=[0:4:20]
+intervalos =
+
+    0    4    8   12   16   20
+
+>> for var = 10
+a=a+1
+endfor
+error: 'a' undefined near line 2, column 3
+>> a=[0,0,0,0,0]
+a =
+
+   0   0   0   0   0
+
+>> for var=5
+print(var)
+endfor
+error: print: input arguments must be a graphics handle or strings.
+error: called from
+    __print_parse_opts__ at line 93 column 7
+    print at line 420 column 8
+>> for var = 5
+a(var) = (intervalos(var)+intervalos(var+1))/2
+endfor
+a =
+
+    0    0    0    0   18
+
+>> var=0
+var = 0
+>> for var = 5
+a(var) = (intervalos(var)+intervalos(var+1))/2
+endfor
+a =
+
+    0    0    0    0   18
+
+>> for var = 1:5
+a(var) = (intervalos(var)+intervalos(var+1))/2
+endfor
+a =
+
+    2    0    0    0   18
+
+a =
+
+    2    6    0    0   18
+
+a =
+
+    2    6   10    0   18
+
+a =
+
+    2    6   10   14   18
+
+a =
+
+    2    6   10   14   18
+
+>> marcas=[0,0,0,0,0]
+marcas =
+
+   0   0   0   0   0
+
+>> for var = 1:5
+marcas(var) = (intervalos(var)+intervalos(var+1))/2
+endfor
+marcas =
+
+   2   0   0   0   0
+
+marcas =
+
+   2   6   0   0   0
+
+marcas =
+
+    2    6   10    0    0
+
+marcas =
+
+    2    6   10   14    0
+
+marcas =
+
+    2    6   10   14   18
+
+>> D=[14 16 14 15 15 9 2 10 13 14 10 11 15 13 0 18 10 19 6 20 14 11 11 17 16 12 14 2 9 1 13 13 18 12 1 13 13 10]
+D =
+
+   14   16   14   15   15    9    2   10   13   14   10   11   15   13    0   18   10   19    6   20   14   11   11   17   16   12   14    2    9    1   13   13   18   12    1   13   13   10
+
+>> f=hist(D,marcas)
+f =
+
+    5    1   11   16    5
+
+>> statistics (D)
+error: cat: dimension mismatch
+error: called from
+    statistics at line 68 column 9
+>> statistics (D,1)
+error: statistics: dimension of X is too small (<2)
+error: called from
+    statistics at line 63 column 5
+>> statistics (D,2)
+error: cat: dimension mismatch
+error: called from
+    statistics at line 68 column 9
+>> statistics (D,3)
+error: statistics: DIM must be an integer and a valid dimension
+error: called from
+    statistics at line 58 column 7
+>> statistics (D,4)
+error: statistics: DIM must be an integer and a valid dimension
+error: called from
+    statistics at line 58 column 7
+>> statistics (D,2)
+error: cat: dimension mismatch
+error: called from
+    statistics at line 68 column 9
+>> max(D)
+ans = 20
+>> maxi=max(D)
+maxi = 20
+>> mini=min(D)
+mini = 0
+>> rango=maxi-mini
+rango = 20
+>> quantile (D,[0,25 0,75])
+ans =
+
+     0   Inf     0   Inf
+
+>> z=iqr(D)
+z = 5
+>> z=iqr(D,"ALL")
+z = 5
+>> z=iqr(D)
+z = 5
+>>
+ﭖ

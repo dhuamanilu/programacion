@@ -21,40 +21,35 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    string s;
+    cin>>s;
+    ll n=s.size();
+    ll cost=abs(s[n-1]-s[0]);
+    cout<<cost<<" ";
+    char st=s[0],e=s[n-1];
+    map <char ,vector <ll > > m;
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+        m[s[i]].push_back(i);
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    vector <ll> ans;
+
+    while(true){
+        for(auto e : m[st]){
+            ans.push_back(e);
         }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
+        if(st<e)st++;
+        else if(st>e){
+            st--;
         }
-        cout<<"\n";
-        return;
+        else break;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    cout<<ans.size()<<"\n";
+    for(auto e : ans){
+        cout<<e+1<<" ";
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -23,38 +23,34 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    string s;
+    cin>>s;
+    ll cont0=0,cont1=0;
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+        if(s[i]=='0') cont0++;
+        else cont1++;
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
+    ll ans=0;
+    if(cont1==0){
+        ans=cont0*cont0;
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
+    else if(cont0==0){
+        ans=cont1*cont1;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    else{
+        ans=cont0*cont1;
     }
+
     FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+        ll j=i,cont=0;
+        while(s[j]==s[i]){
+            j++;
+            cont++;
+        }
+        ans=max(ans,cont*cont);
+        i=j-1;
     }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

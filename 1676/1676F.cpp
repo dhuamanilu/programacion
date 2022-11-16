@@ -21,40 +21,42 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    ll n,k;
+    cin>>n>>k;
+    map <ll,ll> m;
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+        ll aux;
+        cin>>aux;
+        m[aux]++;
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    vector <ll> good;
+    for(auto e : m){
+        if(e.se>=k){
+            good.push_back(e.f);
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
+    if(!good.size()){
+        cout<<"-1\n";
         return;
+
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+    sort(all(good));
+    ll lans=good[0],rans=good[0],mx=0,l=good[0];
+    FOR(i,1,good.size()){
+        if(good[i]-1==good[i-1]){
+            if(good[i]-l>mx){
+                lans=l;
+                rans=good[i];
+                mx=good[i]-l;
+            }
+        }
+        else{
+            l=good[i];
+        }
     }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<lans<<" "<<rans<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

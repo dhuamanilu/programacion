@@ -23,38 +23,38 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    vector <string> vec,vec2;
+    vector <ll> cont1(11,0),cont2(11,0);
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
+        string s;
+        cin>>s;
+        cont1[s[0]-'a']++;
+        vec.push_back(s);
+        reverse(s.begin(),s.end());
+        string s2=s;
+        cont2[s2[0]-'a']++;
+        vec2.push_back(s2);
     }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
+    sort(all(vec));
+    sort(all(vec2));
+    ll ans=0;
+    cout<<"CONTADORES DE CONT1\n";
+    for(auto e : cont1){
+        cout<<e<<" ";
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
+    cout<<"\n";
     FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+        ll contado=cont1[vec[i][0]-'a'];
+        ll j=i+1;
+        while(j<n && vec[i]==vec[j]){
+            j++;
+            contado--;
+        }
+        cout<<"aumentare ans en : "<<contado<<" "<<contado*(contado-1)/2<<"\n";
+        ans+=contado*(contado-1)/2;
     }
+    cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -23,37 +23,25 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    vector< vector < ll > > a;
+    FOR1(i,1,n){
+        vector<ll> auxi;
+        FOR1(j,1,i){
+                if(j==1 || j==i){
+                    auxi.emplace_back(1);
+                }
+                else{
+                    auxi.emplace_back(0);
+                }
         }
+        a.push_back(auxi);
+        auxi.clear();
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
+    FOR(i,0,n){
+        for(auto e : a[i]){
+            cout<<e<<" ";
         }
         cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
     }
 }
 int main(){
@@ -61,6 +49,10 @@ int main(){
     cin.tie(0);
     int t=1;
     cin>>t;
+    if (fopen("a.in", "r")){
+    freopen("a.in", "r", stdin);
+    freopen("a.out", "w", stdout);
+    }
     while(t--){
         solve();
     }

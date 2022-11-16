@@ -24,37 +24,35 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    ll maxi=LONG_LONG_MIN;
+    set <ll> s;
+    vll falta;
+    FOR1(i,1,n){
+        s.insert(i);
+    }
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
+        if(s.find(a[i])!=s.end()){
+            s.erase(a[i]);
+        }
         else{
-            ok=false;
-            break;
+            falta.push_back(a[i]);
         }
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
+    sort(all(falta));
+    reverse(all(falta));
+    for(auto &e :falta){
+        auto it=s.end();
+        it--;
+        ll aux=*it;
+        if(2*aux> (e-1)){
+            cout<<"-1\n";
+            return;
         }
-        cout<<"\n";
-        return;
+        s.erase(it);
+
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
-    FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
-    }
+    cout<<falta.size()<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

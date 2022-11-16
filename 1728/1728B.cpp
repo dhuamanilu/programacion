@@ -23,38 +23,33 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
+    vector <ll> a(n);
+    if(n%2==0){
+        ll aux=n-2;
+        FOR(i,0,n-3){
+            a[i]=aux;
+            aux--;
         }
+        a[n-3]=1;
+        a[n-2]=n-1;
+        a[n-1]=n;
     }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
+    else{
+        a[0]=1;
+        ll aux=n-2;
+        FOR(i,1,n-2){
+            a[i]=aux;
+            aux--;
         }
-        cout<<"\n";
-        return;
+        a[n-2]=n-1;
+        a[n-1]=n;
     }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
-    FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
-    }
+
     FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+        cout<<a[i]<<" ";
     }
+    cout<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -66,7 +61,6 @@ int main(){
     }
     return 0;
 }
-
 
 
 

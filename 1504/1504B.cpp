@@ -15,46 +15,27 @@ typedef vector<ll> vll;
 #define ub upper_bound
 #define all(x) x.begin(), x.end()
 #define ins insert
-const int MOD = 1000000007;
-const char nl = '\n';
-const int MX = 100001;
-const int N=1000+3;
 
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-    }
-    bool ok=true;
-    FOR(i,0,n-1){
-        if((a[i]&a[i+1])==a[i]) continue;
-        else{
-            ok=false;
-            break;
-        }
-    }
-    if(ok){
-        FOR(i,0,n){
-            cout<<"0 ";
-        }
-        cout<<"\n";
-        return;
-    }
-    vector <ll> b(n,0);
-    vector <ll> gro(n,0);
-    b[0]=0;
-    gro[0]=a[0];
+    string a,b;
+    cin>>a>>b;
+    vector <ll> pre1(n,0),pre2(n,0);
+    pre1[0]=(a[0]=='1');
+    pre2[0]=(a[0]=='0');
     FOR(i,1,n){
-        b[i]=(gro[i-1]|a[i])^a[i];
-        gro[i]=a[i]^b[i];
+       pre1[i]=pre1[i-1]+(a[i]=='1');
+       pre2[i]=pre2[i-1]+(a[i]=='0');
     }
     FOR(i,0,n){
-        cout<<b[i]<<" \n"[i==n-1];
+        if(pre1[i]!=pre2[i] && ( (a[i]==b[i])!=(a[i+1]==b[i+1]) ) ){
+            //cout<<i<<" "<<pre1[i]<<" "<<pre2[i]<<"\n";
+            cout<<"NO\n";
+            return;
+        }
     }
+    cout<<"YES\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
