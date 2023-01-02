@@ -21,25 +21,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
+    ll n;
+    cin>>n;
+    ll a[n][2];
+    vector < pair < ll,ll > > pos;
+    FOR(j,0,2){
+        string s;
+        cin>>s;
+        FOR(i,0,n){
+            if(s[i]=='*'){
+                a[i][j]=1;
+                pos.push_back(mp(i,j));
+            }
+            else a[i][j]=0;
+        }
     }
-    ll ans=LONG_LONG_MAX;
-    FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+    sort(all(pos));
+    ll mid=pos[pos.size()/2].f,sum=0;
+    cout<<"es f se:"<<pos[pos.size()/2].f<<" "<<pos[pos.size()/2].se <<"\n";
+    for(auto e : pos){
+        sum+=abs(e.f-mid);
+        if(e.se !=pos[pos.size()/2].se) sum++;
     }
-    cout<<ans<<"\n";
+    cout<<sum<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

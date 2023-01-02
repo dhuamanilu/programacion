@@ -19,36 +19,31 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll maxi=LONG_LONG_MIN;
+vector <ll> ans;
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
+    string str;
+    ll sum=0;
+    while(getline(cin, str)){
+        if(str.length()==0 ) break;
+        sum+=stol(str);
     }
-    ll ans=LONG_LONG_MAX;
-    FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
-    }
-    cout<<ans<<"\n";
+    //cout<<"este es mi sum:"<<sum<<"\n";
+    ans.push_back(sum);
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int t=1;
-    cin>>t;
+    //cin.tie(0);
+    int t=2000;
+    //cin>>t;
     while(t--){
         solve();
     }
+    sort(all(ans));
+    reverse(all(ans));
+    cout<<ans[0]+ans[1]+ans[2]<<"\n";
     return 0;
 }
 

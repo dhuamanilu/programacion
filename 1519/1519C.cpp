@@ -5,7 +5,6 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map<ll,ll> mll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -18,37 +17,58 @@ typedef map<ll,ll> mll;
 #define ins insert
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
 
 void solve(){
     ll n;
     cin>>n;
-    ll pos[n+1],a[n],b[n];
+    ll a[n];
     FOR(i,0,n){
         cin>>a[i];
-        pos[a[i]]=i;
+        a[i]--;
+    }
+    vector <vector <ll> > G(n);
+    FOR(i,0,n){
+        ll skill;
+        cin>>skill;
+        G[a[i]].push_back(skill);
     }
     FOR(i,0,n){
-        cin>>b[i];
+        sort(all(G[i]),greater<ll>());
     }
-    mll m;
+    vector <vector <ll>> sumas(n,vector<long long>(1, 0));
     FOR(i,0,n){
-        ll shift=pos[b[i]]-i;
-        if(shift<0) shift+=n;
-        m[shift]++;
+        for(auto e : G[i]){
+            sumas[i].push_back(sumas[i].back()+e);
+        }
     }
-    ll ans=LONG_LONG_MIN;
-    for(auto e : m){
-        ans=max(ans,e.se);
+    /*cout<<"Sumas : "<<sumas.size()<<"\n";
+    for(vector<ll> e : sumas){
+        for(ll el: e){
+            cout<<el<<" ";
+        }
+        cout<<"\n";
+    }*/
+    vector <ll> ans(n,0);
+    FOR(i,0,n){
+        ll sz=G[i].size();
+        FOR1(k,1,sz){
+            ans[k-1]+=sumas[i][((sz/k)*k)];
+        }
     }
-    cout<<ans<<"\n";
+    for(auto e : ans){
+        cout<<e<<" ";
+    }
+    cout<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

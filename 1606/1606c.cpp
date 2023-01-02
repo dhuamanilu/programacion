@@ -19,27 +19,33 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll pot(ll a, ll n) {
+    if (n == 0) return 1;
+    ll x = pot(a, n/2);
+    if (n % 2 == 0) return x*x;
+    return x*x*a;
+}
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll n,k;
+    cin>>n>>k;
+    ll a[n];
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        cin>>a[i];
+        a[i]=pot(10,a[i]);
+    }
+    sort(a,a+n);
+    ll ans=0;
+    k++;
+    FOR(i,0,n){
+        ll left=k;
+        if(i+1<n){
+            left=min(left,a[i+1]/a[i]-1);
+        }
+        ans+=a[i]*left;
+        k-=left;
     }
     cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

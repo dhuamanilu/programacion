@@ -19,27 +19,40 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll n,k;
+    cin>>n>>k;
+    map <ll,vll> ma;
+    ll x;
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        cin>>x;
+        if(ma[x].size()<k){
+            ma[x].push_back(i);
+        }
     }
-    cout<<ans<<"\n";
+    ll sum=0;
+    for(auto e: ma){
+        sum+=e.se.size();
+    }
+    sum-=sum%k;
+    vll a(n,0);
+    ll color=0;
+    bool ok=true;
+    for(auto e : ma){
+        if(!ok) break;
+        for(auto i : e.se){
+            a[i]=++color;
+            color%=k;
+            if(--sum==0){
+                ok=false;
+                break;
+            }
+        }
+    }
+    FOR(i,0,n){
+        cout<<a[i]<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

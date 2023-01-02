@@ -5,6 +5,8 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -21,25 +23,34 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll n;
+    cin>>n;
+    mll m;
+    vpll v;
+    ll a[n],b[n];
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        cin>>a[i];
+        m[a[i]]=i;
+    }
+    FOR(i,0,n){
+        cin>>b[i];
+        v.pb({b[i],i});
+    }
+    sort(all(v));
+    ll mini=LONG_LONG_MAX;
+    for(ll i=n-1;i>=0;i--){
+        mini=min(mini,v[i].se);
+        v[i].se=mini;
+    }
+    ll ans=LONG_LONG_MAX,j=0;
+    for(ll i=1;i<=2*n;i+=2){
+        ll x=m[i];
+        x+=v[j].se;
+        ans=min(ans,x);
+        j++;
     }
     cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

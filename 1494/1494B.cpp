@@ -23,27 +23,31 @@ const int N=1000+3;
 void solve(){
     ll n,U,R,D,L;
     cin>>n>>U>>R>>D>>L;
-
-    FOR(i,0,16){
-        ll u=U,r=R,d=D,l=L;
+    FOR(i,0,1<<4){
+        ll nU=U,nR=R,nD=D,nL=L;
         if(i&1){
-            u--; r--;
+            nU--;
+            nL--;
         }
         if(i&2){
-            u--; l--;
+            nU--;
+            nR--;
         }
         if(i&4){
-            d--; r--;
+            nD--;
+            nL--;
         }
         if(i&8){
-            l--; d--;
+            nD--;
+            nR--;
         }
-        if(min(min(u,r),min(d,l))>=0 && max(max(u,r),max(d,l))<=n-2){
+        if(min(min(nU,nR),min(nD,nL))>=0 && max(max(nU,nR),max(nD,nL))<=n-2){
             cout<<"YES\n";
             return;
         }
     }
     cout<<"NO\n";
+
 
 }
 int main(){

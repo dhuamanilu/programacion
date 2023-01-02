@@ -21,25 +21,36 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll n,m;
+    cin>>n>>m;
+    ll a[n][m];
+    ll px=LONG_LONG_MAX,py=LONG_LONG_MAX;
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        string s;
+        cin>>s;
+        FOR(j,0,m){
+            a[i][j]=(s[j]=='R');
+            if(a[i][j] && i<=px && j<=py){
+                px=i;
+                py=j;
+            }
+        }
     }
-    cout<<ans<<"\n";
+    FOR(i,0,n){
+        FOR(j,0,m){
+            if(a[i][j]){
+                if(i-px >= 0 && j-py>=0){
+                    continue;
+                }
+                else{
+                    cout<<"NO\n";
+                    return;
+                }
+            }
+        }
+    }
+    cout<<"YES\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -17,39 +17,47 @@ typedef vector<ll> vll;
 #define ins insert
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 100005;
 const int N=1000+3;
 
-void solve(){
-    ll n,k;
-    cin>>n>>k;
-    set <ll> s;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-        s.insert(a[i]);
+vector <ll> values={2,11};
+vector <ll> marcas;
+void dfs(vector<vector<array<ll, 2>>> &G,ll v,ll p,ll c){
+    for(auto e : G[v]){
+        if(e[0]!=p){
+            marcas[e[1]]=c;
+            c^=1;
+            dfs(G,e[0],v,c);
+        }
     }
-    if(s.size()>k){
+}
+void solve(){
+    ll n;
+    cin>>n;
+    vector<vector<array<ll, 2>>> G(n);
+    vector <ll> deg(n,0);
+    FOR(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        G[u].push_back({v,i});
+        G[v].push_back({u,i});
+        deg[u]++,deg[v]++;
+    }
+
+    if(*max_element(all(deg))>2){
         cout<<"-1\n";
     }
     else{
-        cout<<n*k<<"\n";
-        FOR(i,0,n){
-            for(auto e : s){
-                cout<<e<<" ";
-            }
-
-            FOR(l,0,k-s.size()){
-                cout<<"1 ";
-            }
-
+        marcas.resize(n-1);
+        dfs(G,0,-1,0);
+        for(auto e : marcas){
+            cout<<values[e]<<" ";
         }
         cout<<"\n";
+
     }
-
-
-
-
 }
 int main(){
     ios_base::sync_with_stdio(0);

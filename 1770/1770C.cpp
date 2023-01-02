@@ -1,3 +1,6 @@
+#pragma GCC target ("avx2")
+#pragma GCC optimization ("O3")
+#pragma GCC optimization ("unroll-loops")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -5,7 +8,8 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map<ll,ll> mll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -24,31 +28,47 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll pos[n+1],a[n],b[n];
-    FOR(i,0,n){
-        cin>>a[i];
-        pos[a[i]]=i;
-    }
-    FOR(i,0,n){
-        cin>>b[i];
-    }
+    ll a[n];
     mll m;
     FOR(i,0,n){
-        ll shift=pos[b[i]]-i;
-        if(shift<0) shift+=n;
-        m[shift]++;
+        cin>>a[i];
+        m[a[i]]++;
     }
-    ll ans=LONG_LONG_MIN;
     for(auto e : m){
-        ans=max(ans,e.se);
+        if(e.se>1){
+            cout<<"NO\n";
+            return;
+        }
     }
-    cout<<ans<<"\n";
+    ll lu=2600;
+    FOR(x,0,lu){
+        bool ok=true;
+        FOR(i,0,n){
+            FOR(j,i+1,n){
+                if(__gcd(a[i]+x,a[j]+x)!=1){
+                    ok=false;
+                    break;
+                }
+            }
+            if(!ok){
+                break;
+            }
+        }
+        if(!ok){
+            continue;
+        }
+        else{
+            cout<<"YES\n";
+            return;
+        }
+    }
+    cout<<"NO\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

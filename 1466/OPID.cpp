@@ -5,7 +5,6 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map<ll,ll> mll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -20,29 +19,50 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll powb(ll a, ll b) {
+    if (b==0) return 1;
+    ll res = powb(a, b/2);
+    if (b%2)
+        return res*res*a;
+    else
+        return res*res;
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll pos[n+1],a[n],b[n];
+    ll n,k;
+    cin>>n>>k;
+    ll a[n];
     FOR(i,0,n){
         cin>>a[i];
-        pos[a[i]]=i;
-    }
-    FOR(i,0,n){
-        cin>>b[i];
-    }
-    mll m;
-    FOR(i,0,n){
-        ll shift=pos[b[i]]-i;
-        if(shift<0) shift+=n;
-        m[shift]++;
     }
     ll ans=LONG_LONG_MIN;
-    for(auto e : m){
-        ans=max(ans,e.se);
+    FOR(i,0,(1<<n)){
+        if(__builtin_popcount(i)!=n-k) continue;
+        vll v;
+        FOR(j,0,n){
+            if(i&(1<<j)){
+                v.pb(a[j]);
+            }
+        }
+        /*for(auto e : v){
+            cout<<e<<" ";
+        }
+        cout<<"\n";*/
+        ll sum=0,cont=0;
+        while(!v.empty()){
+            ll d=v.back();
+            //cout<<"pow 10 0 : "<<pow(10,0)<<"\n";
+            sum+=(ll) powb(10,cont)*d;
+            cont++;
+            v.pop_back();
+        }
+        if(sum>ans){
+            ans=sum;
+            //cout<<"este es el num" <<sum<<"\n";
+        }
+
     }
     cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -28,20 +28,33 @@ void solve(){
         cin>>a[i];
     }
     ll b[n];
-    vector <ll> c(n);
     FOR(i,0,n){
         cin>>b[i];
-        c[i]=a[i]-b[i];
     }
-    sort(all(c));
+    vector <ll> diff(n,0);
+    FOR(i,0,n){
+        diff[i]=a[i]-b[i];
+    }
+    sort(all(diff));
     ll ans=0;
     FOR(i,0,n){
-        ll pos=lower_bound(c.begin()+i+1,c.end(), (-1ll*c[i])+1ll)-c.begin();
-        //cout<<"este es el pos n - pos "<<pos<<" "<<n-pos<<"\n";
-        ans+=n-pos;
+        ll difer=diff[i];
+        if(difer<=0) continue;
+        //auto x=lower_bound(all(diff),-1ll*difer+1)-diff.begin();
+        ll s=0,e=n-1,m=s+(e-s)/2,mejor=0;
+        while(s<=e){
+            m=s+(e-s)/2;
+            if(difer+diff[m]>0){
+                mejor=m;
+                e=m-1;
+            }
+            else{
+                s=m+1;
+            }
+        }
+        ans+=i-mejor;
     }
     cout<<ans<<"\n";
-
 }
 int main(){
     ios_base::sync_with_stdio(0);

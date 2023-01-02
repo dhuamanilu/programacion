@@ -24,20 +24,21 @@ void solve(){
     string s;
     cin>>s;
     ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    bool used[n];
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        used[i]=false;
+    }
+    ll ans=0;
+    FOR(i,1,n){
+        bool ok=false;
+        if(s[i]==s[i-1] && !used[i-1]){
+            ok=true;
+        }
+        if(i>1 && s[i]==s[i-2] && !used[i-2]){
+            ok=true;
+        }
+        used[i] =ok;
+        ans += used[i];
     }
     cout<<ans<<"\n";
 }

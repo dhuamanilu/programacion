@@ -24,20 +24,27 @@ void solve(){
     string s;
     cin>>s;
     ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll dp[n+1][2];
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        FOR(j,0,2){
+            dp[i][j]=0;
+        }
+    }
+    ll ans=0;
+    FOR1(i,1,n){
+        if(s[i-1]=='?'){
+            dp[i][1]=dp[i-1][0]+1;
+            dp[i][0]=dp[i-1][1]+1;
+        }
+        else if(s[i-1]=='0'){
+            dp[i][1]=0;
+            dp[i][0]=dp[i-1][1]+1;
+        }
+        else{
+            dp[i][1]=dp[i-1][0]+1;
+            dp[i][0]=0;
+        }
+        ans+=max(dp[i][0],dp[i][1]);
     }
     cout<<ans<<"\n";
 }

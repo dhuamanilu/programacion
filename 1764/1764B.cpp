@@ -21,25 +21,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
-    }
-    ll ans=LONG_LONG_MAX;
+    ll n;
+    cin>>n;
+    set <ll> s;
+    ll maxi=LONG_LONG_MIN,mini=LONG_LONG_MAX,gc=0;
     FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+        ll aux;
+        cin>>aux;
+        maxi=max(maxi,aux);
+        mini=min(mini,aux);
+        gc=__gcd(gc,aux);
+        s.insert(aux);
     }
-    cout<<ans<<"\n";
+    if(gc==1){
+        cout<<maxi<<"\n";
+    }
+    else{
+        cout<<((maxi-gc)/gc) + 1<<"\n";
+    }
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

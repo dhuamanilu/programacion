@@ -21,25 +21,28 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
+    ll l,r,x;
+    cin>>l>>r>>x;
+    ll a,b;
+    cin>>a>>b;
+    if(a==b){
+        cout<<"0\n";
+        return;
     }
-    ll ans=LONG_LONG_MAX;
-    FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+    if(a+x > r && a-x < l || ( b-x<l && b + x > r)){
+        cout<<"-1\n";
+        return;
     }
-    cout<<ans<<"\n";
+
+    if(abs(a-b)>=x && (a+x<=r || a-x>=l)) {
+        cout<<"1\n";
+    }
+    else if( (a-l>=x && r-a>=x) || (a-x<l && r>=b+x) || (r<a+x && b-x>=l) ){
+        cout<<"2\n";
+    }
+    else{
+        cout<<"3\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
