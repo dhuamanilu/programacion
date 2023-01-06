@@ -26,17 +26,26 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    ll maxi=LONG_LONG_MIN,sum=0;
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
-        sum+=a[i];
     }
-
-    ll ans=max(maxi,(sum+n-2)/(n-1));
-    cout<<(n-1)*ans-sum<<"\n";
-
-
+    if(n==1){
+        cout<<"0\n";
+        return;
+    }
+    sort(a,a+n);
+    vll diff;
+    FOR(i,0,n-1){
+        diff.pb(a[i+1]-a[i]);
+    }
+    ll ans=0;
+    FOR(i,0,n-1){
+        ans-=diff[i]*(i+1)*(n-i-1);
+    }
+    FOR(i,0,n-1){
+        ans+=diff[i];
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

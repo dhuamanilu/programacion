@@ -23,26 +23,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,t;
+    cin>>n>>t;
     ll a[n];
-    ll maxi=LONG_LONG_MIN,sum=0;
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
-        sum+=a[i];
     }
-
-    ll ans=max(maxi,(sum+n-2)/(n-1));
-    cout<<(n-1)*ans-sum<<"\n";
-
-
+    vll pref;
+    pref.pb(0);
+    pref[0]=a[0];
+    FOR(i,0,n){
+        pref.pb(pref.back()+a[i]);
+    }
+    ll ans=0;
+    for (auto it = pref.begin(); it != pref.end(); it++) {
+        ll x = upper_bound(it, pref.end(), t + *it) - it - 1;
+        ans = max(ans, x);
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -21,22 +21,15 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll calc(ll a){
+    if(a<=1) return 1;
+    return calc(a/2)+a;
+}
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN,sum=0;
-    FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-        sum+=a[i];
-    }
 
-    ll ans=max(maxi,(sum+n-2)/(n-1));
-    cout<<(n-1)*ans-sum<<"\n";
-
-
+    cout<<calc(n)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

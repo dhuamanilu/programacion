@@ -3,10 +3,10 @@ using namespace std;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int, int> pi;
+typedef pair<ll, ll> pll;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map <ll,ll> mll;
-typedef vector <pair<ll,ll>> vpll;
+typedef vector<pll> vpll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -23,20 +23,24 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
+    ll n,sum=0,ans=LONG_LONG_MAX;
     cin>>n;
-    ll a[n];
-    ll maxi=LONG_LONG_MIN,sum=0;
+    vpll a(n);
+
     FOR(i,0,n){
-        cin>>a[i];
-        maxi=max(maxi,a[i]);
-        sum+=a[i];
+        cin>>a[i].f;
     }
-
-    ll ans=max(maxi,(sum+n-2)/(n-1));
-    cout<<(n-1)*ans-sum<<"\n";
-
-
+    FOR(i,0,n){
+        cin>>a[i].se;
+        sum+=a[i].se;
+    }
+    sort(all(a));
+    ans=min(sum,ans);
+    FOR(i,0,n){
+        sum-=a[i].se;
+        ans=min(ans,max(a[i].f,sum));
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

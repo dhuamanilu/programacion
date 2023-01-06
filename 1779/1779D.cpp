@@ -26,15 +26,20 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    ll maxi=LONG_LONG_MIN,sum=0;
     FOR(i,0,n){
         cin>>a[i];
-        maxi=max(maxi,a[i]);
-        sum+=a[i];
     }
-
-    ll ans=max(maxi,(sum+n-2)/(n-1));
-    cout<<(n-1)*ans-sum<<"\n";
+    ll b[n];
+    FOR(i,0,n){
+        cin>>b[i];
+    }
+    ll m;
+    cin>>m;
+    ll x[m];
+    FOR(i,0,m){
+        cin>>x[i];
+    }
+    sort(x,x+m,greater<ll>());
 
 
 }

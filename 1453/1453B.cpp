@@ -27,6 +27,17 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    ll maxi=max(abs(a[0]-a[1]),abs(a[n-1]-a[n-2])),ans=0;
+    FOR(i,1,n-1){
+        maxi=max(maxi,abs(a[i+1]-a[i])+abs(a[i-1]-a[i])-abs(a[i+1]-a[i-1]));
+    }
+    FOR(i,0,n-1){
+        ans+=abs(a[i+1]-a[i]);
+    }
+    cout<<ans-maxi<<"\n";
+
+
+
 
 }
 int main(){
