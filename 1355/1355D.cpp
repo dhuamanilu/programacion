@@ -23,18 +23,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll n,s;
+    cin>>n>>s;
+
+    if(s<2*n){
+        cout<<"NO\n";
+    }
+    else{
+        cout<<"YES\n";
+        FOR(i,0,n-1){
+            cout<<"2 ";
+        }
+        cout<<s-2*(n-1)<<"\n"<<1<<"\n";
+
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

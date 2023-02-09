@@ -24,12 +24,23 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll n,m;
+    cin>>n>>m;
+    ll maxi=LONG_LONG_MIN,or1=0;
+    FOR(i,0,m){
+        ll l,r,x;
+        cin>>l>>r>>x;
+        maxi=max(maxi,x);
+        or1|=x;
     }
+    ll mult=1;
+    while(n>1){
+        mult*=2;
+        mult%=MOD;
+        n--;
+    }
+    //cout<<"ESTE ES MUKLT:"<<mult<<"\n";
+    cout<< ((maxi|or1)*mult)%MOD<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
