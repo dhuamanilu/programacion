@@ -26,88 +26,20 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool cicle(ll v,vector<bool> &vis,ll par,vector<vll> &G){
-    vis[v]=true;
-    for(auto e : G[v]){
-        if(!vis[e]){
-            if(cicle(e,vis,v,G)) return true;
-        }
-        else if(e!=par) return true;
-    }
-    return false;
-}*/
+
 void solve(){
     ll n;
     cin>>n;
-    ll ans=1;
-    FOR1(i,1,n){
-        ans*=i;
-        ans%=MOD;
-    }
-    ll pow=1;
-    FOR(i,0,n-1){
-        pow*=2;
-        pow%=MOD;
-    }
-    ans-=pow;
-    ans+=MOD;
-    ans%=MOD;
-    cout<<ans<<"\n";
-    /*vll a(n);
+    ll a[n];
     FOR(i,0,n){
-        a[i]=i+1;
+        cin>>a[i];
     }
-    ll ans=0;
-    do{
-        vector<vll> G(n+5);
-        FOR(i,0,n){
-            ll ind=i-1;
-            while(ind>=0){
-                if(a[ind]>a[i]){
-                    break;
-                }
-                ind--;
-            }
-            if(ind>=0){
-                G[i].pb(ind);
-                G[ind].pb(i);
-            }
-
-        }
-        FOR(i,0,n){
-            ll ind=i+1;
-            while(ind<n){
-                if(a[ind]>a[i]){
-                    break;
-                }
-                ind++;
-            }
-            if(ind<n){
-                G[i].pb(ind);
-                G[ind].pb(i);
-            }
-
-        }
-
-        vector<bool> vis(n+5,false);
-        FOR1(i,1,n){
-            if(!vis[i]){
-                if(cicle(i,vis,-1,G)){
-                    ans++;
-                    ans%=MOD;
-                    break;
-                }
-            }
-        }
-
-    }while(next_permutation(all(a)));
-    cout<<ans<<"\n";*/
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }
