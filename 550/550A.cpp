@@ -28,35 +28,27 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    set<ll> a,b;
-    FOR(i,0,n){
-        ll aux;
-        cin>>aux;
-        a.insert(aux);
-    }
-    FOR(i,0,m){
-        ll aux;
-        cin>>aux;
-        b.insert(aux);
-    }
-    ll ans=0;
-    for(auto e : a){
-        set<long long int>::iterator x=b.lower_bound(e);
-        ll dist=LONG_LONG_MAX;
-        if(x!=b.end()){
-            dist=min(dist,abs(*x-e));
-
+    string s;
+    cin>>s;
+    ll n=s.size();
+    map<ll,string> m1,m2;
+    FOR(i,0,n-1){
+        if(s[i]=='A' && s[i+1]=='B'){
+            m1[i]="AB";
         }
-        if(x!=b.begin()){
-            x--;
-            dist=min(dist,abs(*x-e));
+        else if(s[i]=='B' && s[i+1]=='A'){
+            m2[i]="BA";
         }
-        ans=max(ans,dist);
     }
-    cout<<ans<<"\n";
-
+    for(auto e : m1){
+        for(auto v : m2){
+            if(e.f+1!=v.f && v.f+1!=e.f){
+                cout<<"YES\n";
+                return;
+            }
+        }
+    }
+    cout<<"NO\n";
 
 }
 int main(){

@@ -30,40 +30,15 @@ const int N=1000+3;
 void solve(){
     ll n,m;
     cin>>n>>m;
-    set<ll> a,b;
-    FOR(i,0,n){
-        ll aux;
-        cin>>aux;
-        a.insert(aux);
-    }
-    FOR(i,0,m){
-        ll aux;
-        cin>>aux;
-        b.insert(aux);
-    }
-    ll ans=0;
-    for(auto e : a){
-        set<long long int>::iterator x=b.lower_bound(e);
-        ll dist=LONG_LONG_MAX;
-        if(x!=b.end()){
-            dist=min(dist,abs(*x-e));
-
-        }
-        if(x!=b.begin()){
-            x--;
-            dist=min(dist,abs(*x-e));
-        }
-        ans=max(ans,dist);
-    }
-    cout<<ans<<"\n";
-
+    string s,t;
+    cin>>s>>t;
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

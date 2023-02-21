@@ -14,6 +14,8 @@ typedef priority_queue<ll> pq;
 #define pb push_back
 #define f first
 #define se second
+#include <cstdint>
+
 #define lb lower_bound
 #define ub upper_bound
 #define all(x) x.begin(), x.end()
@@ -26,38 +28,44 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+__int128 abs1(__int128 a){
+    if(a>0) return a;
+    return -a;
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    set<ll> a,b;
+    ll n;
+    cin>>n;
+    ll a[n];
     FOR(i,0,n){
-        ll aux;
-        cin>>aux;
-        a.insert(aux);
+        cin>>a[i];
     }
-    FOR(i,0,m){
-        ll aux;
-        cin>>aux;
-        b.insert(aux);
-    }
-    ll ans=0;
-    for(auto e : a){
-        set<long long int>::iterator x=b.lower_bound(e);
-        ll dist=LONG_LONG_MAX;
-        if(x!=b.end()){
-            dist=min(dist,abs(*x-e));
-
+    sort(a,a+n);
+    ll ind=0;
+    FOR1(j,1,31625){
+        ll pot=1;
+        FOR(i,0,n-1){
+            pot*=j;
+            if(pot>a[n-1]) break;
         }
-        if(x!=b.begin()){
-            x--;
-            dist=min(dist,abs(*x-e));
+        if(pot<=a[n-1]){
+            ind=j;
         }
-        ans=max(ans,dist);
+        else break;
     }
-    cout<<ans<<"\n";
-
-
+    //cout<<ind<<"\n";
+    __int128 ans=LONG_LONG_MAX;
+    FOR1(j,ind,ind+4){
+        __int128 aux=0,po=1;
+        FOR(i,0,n){
+            aux+=abs1(a[i]-po);
+            if(po>LONG_LONG_MAX/j){
+                break;
+            }
+            po*=j;
+        }
+        ans=min(ans,aux);
+    }
+    cout<<(ll)ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

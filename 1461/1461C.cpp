@@ -19,38 +19,41 @@ typedef vector <pair<ll,ll>> vpll;
 #define ins insert
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 100005;
 const int N=1000+3;
-
+ll r[MX];
+double p[MX];
+ll a[MX];
 void solve(){
-    ll n;
-    cin>>n;
-    cout<<7+(n-1)*3<<"\n";
-    ll x=0,y=1;
-    FOR(i,0,n+1){
-        cout<<x<<" "<<y<<"\n";
-        x++;
-        y++;
+    ll n,m;
+    cin>>n>>m;
+    FOR(i,0,n){
+        cin>>a[i];
     }
-    x=0;
-    y=0;
-    FOR(i,0,n+2){
-        cout<<x<<" "<<y<<"\n";
-        x++;
-        y++;
+    FOR(i,0,m){
+        cin>>r[i]>>p[i];
     }
-    x=1;
-    y=0;
-    FOR(i,0,n+1){
-        cout<<x<<" "<<y<<"\n";
-        x++;
-        y++;
+    ll last=n-1;
+    while(last>=0 && a[last]==last+1){
+        last--;
     }
+    if(last==-1){
+        cout<<"1.000\n";
+        return;
+    }
+    double ans=1.000;
+    FOR(i,0,m){
+        if(r[i]-1>=last){
+            ans*=(1.0000-p[i]);
+        }
+    }
+    cout<<fixed<<setprecision(7)<<1-ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
+    cin>>t;
     while(t--){
         solve();
     }
