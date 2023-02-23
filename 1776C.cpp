@@ -28,34 +28,19 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll a[n][m];
+    ll n,r;
+    cin>>n>>r;
+    ll a[n];
     FOR(i,0,n){
-        FOR(j,0,m){
-            cin>>a[i][j];
-        }
+        cin>>a[i];
     }
-
-    vector<vll> cont(n+m-1,vector<ll> (2,0));
-    FOR(i,0,n){
-        FOR(j,0,m){
-            cont[i+j][a[i][j]]++;
-        }
-    }
-    ll ans=0;
-    FOR(i,0,n+m-1){
-        ll j=n+m-2-i;
-        if(i<=j) continue;
-        ans+=min(cont[i][0]+cont[j][0],cont[i][1]+cont[j][1]);
-    }
-    cout<<ans<<"\n";
+    cout<<"-\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
