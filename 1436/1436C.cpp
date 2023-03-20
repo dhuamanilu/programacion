@@ -28,47 +28,47 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
-    }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    ll n,x,pos;
+    cin>>n>>x>>pos;
+    ll ans=1,s=0,e=n,m=s+(e-s)/2,cont2=0,cont=1;
+
+
+    while(s<e){
+        m=(s+e)/2;
+        if(pos==m){
+            break;
         }
-        i++;
+        else if(pos<m){
+            //dbg(n-x-cont2);
+            ans*=(n-x-cont2);
+            ans%=MOD;
+            cont2++;
+            e=m;
+        }
+        else{
+            //dbg(x-cont);
+            ans*=(x-cont);
+            ans%=MOD;
+            cont++;
+            s=m+1;
+        }
     }
-    cout<<"YES\n";
+    ll queda=n-cont-cont2;
+    //dbg(queda);
+    FOR1(i,1,queda){
+        ans*=i;
+        ans%=MOD;
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
 

@@ -26,33 +26,65 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+const string T = "abacaba";
+ll contar(string &s){
+    ll cont=0;
+    FOR(i,0,(ll)s.size()-(ll)T.size()+1){
 
+        bool ok=true;
+        FOR(j,0,(ll)T.size()){
+            if(s[i+j]!=T[j]){
+                ok=false;
+                break;
+            }
+        }
+        if(ok) cont++;
+    }
+    return cont;
+}
 void solve(){
     ll n;
     cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
-    }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    string s;
+    cin>>s;
+    ll cont=contar(s);
+    //dbg(cont);
+    if(cont==1){
+        cout<<"YES\n";
+        FOR(i,0,n){
+            if(s[i]=='?') s[i]='z';
         }
-        i++;
+        cout<<s<<"\n";
     }
-    cout<<"YES\n";
+    else if(cont>1){
+        cout<<"NO\n";
+    }
+    else{
+
+        FOR(i,0,n-(ll)T.size()+1){
+            string ss=s;
+            bool ok=true;
+            FOR(j,0,(ll)T.size()){
+                if(ss[i+j]!='?' && ss[i+j]!=T[j]){
+                    ok=false;
+                    break;
+                }
+                ss[i+j]=T[j];
+            }
+            //if(i==12) cout<<"ESTE ES MI STRINS 12 : "<<ss<<"\n";
+            if(ok && contar(ss)==1){
+                FOR(i,0,n){
+                    if(ss[i]=='?') ss[i]='z';
+                }
+                cout<<"YES\n";
+                cout<<ss<<"\n";
+                return;
+            }
+        }
+        cout<<"NO\n";
+
+
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

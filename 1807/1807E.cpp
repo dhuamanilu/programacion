@@ -30,33 +30,44 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
+    ll a[n];
+    FOR(i,0,n){
         cin>>a[i];
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
+    vll pre(n,0);
+    pre[0]=a[0];
+    FOR(i,1,n){
+        pre[i]=pre[i-1]+a[i];
+    }
+    ll s=0,e=n-1,m=s+(e-s)/2;
+    while(true){
+        m=s+(e-s)/2;
+        cout<<"? "<<(m-s+1)<<" ";
+        FOR1(i,s,m){
+            cout<<i+1<<" ";
+        }
+        cout<<endl;
+        cout.flush();
+        ll x;
+        cin>>x;
+        ll resta=pre[s-1];
+        if(s==0){
+            resta=0;
+        }
+        if(m==s && a[m]+1==x){
+            cout<<"! "<<m+1<<endl;
             return;
         }
-        i++;
+        else if(x>pre[m]-resta){
+            e=m;
+        }
+        else{
+            s=m+1;
+        }
     }
-    cout<<"YES\n";
+
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
     int t=1;
     cin>>t;
     while(t--){

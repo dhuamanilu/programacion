@@ -30,29 +30,41 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
+    ll a[n];
+    FOR(i,0,n){
         cin>>a[i];
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    ll con=0,maxi=LONG_LONG_MIN;
+    bool ok=false;
+    FOR(i,0,n){
+        if(a[i]==1){
+            con++;
         }
-        i++;
+        else{
+            ok=true;
+            con=0;
+        }
+        maxi=max(maxi,con);
     }
-    cout<<"YES\n";
+    //dbg(maxi);
+    ll ans=maxi,ocu=0,cont=0;
+    FOR(i,0,n){
+        if(a[i]==1){
+            cont++;
+            if(ocu<ans){
+                ocu++;
+            }
+            else{
+                ans++;
+            }
+        }
+        else{
+            ocu=(cont/2)+1;
+            if(ocu>ans) ans=ocu;
+            cont=0;
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

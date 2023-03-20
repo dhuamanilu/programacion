@@ -28,47 +28,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
-    }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    cout<<100<<endl;
+    FOR1(i,1,100){
+        cout<<2000<<endl;
+        FOR(j,0,2000){
+            if(j%2){
+                cout<<"a";
+            }
+            else cout<<"b";
         }
-        i++;
+        cout<<endl;
     }
-    cout<<"YES\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
-

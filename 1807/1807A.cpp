@@ -28,31 +28,14 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
+    ll a,b,c;
+    cin>>a>>b>>c;
+    if(a+b==c){
+        cout<<"+\n";
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
-        }
-        i++;
+    else{
+        cout<<"-\n";
     }
-    cout<<"YES\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

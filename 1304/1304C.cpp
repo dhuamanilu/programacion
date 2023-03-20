@@ -28,29 +28,23 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
+    ll n,m;
+    cin>>n>>m;
+    ll t[n],l[n],h[n];
+    FOR(i,0,n){
+        cin>>t[i]>>l[i]>>h[i];
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
+    ll mn=m,mx=m,pre=0;
+    FOR(i,0,n){
+        mn-=(t[i]-pre);
+        mx+=t[i]-pre;
+        if(mn>h[i] || mx<l[i]){
             cout<<"NO\n";
             return;
         }
-        i++;
+        mn=max(mn,l[i]);
+        mx=min(mx,h[i]);
+        pre=t[i];
     }
     cout<<"YES\n";
 }

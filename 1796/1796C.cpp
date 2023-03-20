@@ -30,6 +30,16 @@ const int N=1000+3;
 void solve(){
     ll l,r;
     cin>>l>>r;
+    ll ans1=1;
+    while((l<<ans1)<=r){
+        ans1++;
+    }
+    ll ans2=r/(1<<(ans1-1))-l+1;
+    if(ans1>1){
+        ll maxi=max(0ll,(r/(1<<(ans1-2))/3-l+1));
+        ans2+=(ans1-1)*maxi;
+    }
+    cout<<ans1<<" "<<ans2<<"\n";
 
 }
 int main(){

@@ -28,31 +28,71 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
-        cin>>a[i];
-    }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    ll n,m,i1,j1,i2,j2;
+    cin>>n>>m>>i1>>j1>>i2>>j2;
+    string d;
+    cin>>d;
+    vector<vector<bool>> mar(n,vector<bool>(m,false));
+    vector<vll> num(n,vll (m,0));
+    ll ans=0;
+    while(true){
+        if(mar[i1][j1]) break;
+        mar[i1][j1]=true;
+        if(d=="DL"){
+            if(i1+1<n && j1-1>=0){
+                i1++;
+                j1--;
+                num[i1][j1]=ans;
+                mar[i1][j1]=true;
+            }
+            else{
+                ans++;
+
+            }
+
         }
-        i++;
+        else if(d=="DR"){
+            if(i1+1<n && j1+1<m){
+                i1++;
+                j1++;
+                num[i1][j1]=ans;
+                mar[i1][j1]=true;
+            }
+            else{
+
+            }
+
+        }
+        else if(d=="UR"){
+            if(i1-1>=0 && j1+1<m){
+                i1--;
+                j1++;
+                num[i1][j1]=ans;
+                mar[i1][j1]=true;
+            }
+            else{
+
+            }
+
+        }
+        else{
+            if(i1-1>=0 && j1-1>=0){
+                i1--;
+                j1--;
+                num[i1][j1]=ans;
+                mar[i1][j1]=true;
+            }
+
+        }
+
     }
-    cout<<"YES\n";
+    if(mar[i2][j2]){
+        cout<<num[i2][j2]<<"\n";
+    }
+    else{
+        cout<<"-1\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

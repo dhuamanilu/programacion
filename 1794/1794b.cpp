@@ -31,8 +31,20 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
+    ll op=0;
     FOR(i,0,n){
         cin>>a[i];
+        if(a[i]==1) {a[i]++; op++;}
+    }
+    FOR(i,0,n-1){
+        while(a[i+1]%a[i]==0){
+            a[i+1]++;
+            op++;
+        }
+    }
+    assert(op<=2*n);
+    FOR(i,0,n){
+        cout<<a[i]<<" \n"[i==n-1];
     }
 }
 int main(){

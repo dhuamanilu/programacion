@@ -30,29 +30,32 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
+    ll a[n];
+    FOR(i,0,n){
         cin>>a[i];
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
+    ll mini=LONG_LONG_MAX,maxi=LONG_LONG_MIN;
+    FOR(i,0,n){
+        if(i+1<n && a[i+1]!=-1 && a[i]==-1){
+            mini=min(mini,a[i+1]);
+            maxi=max(maxi,a[i+1]);
         }
-        i++;
+        if(i>0 && a[i-1]!=-1 && a[i]==-1){
+            mini=min(mini,a[i-1]);
+            maxi=max(maxi,a[i-1]);
+        }
     }
-    cout<<"YES\n";
+    ll ans=(mini+maxi)/2,maxin=LONG_LONG_MIN;
+
+    FOR(i,0,n-1){
+        ll ele1=a[i],ele2=a[i+1];
+        if(ele1==-1) ele1=ans;
+        if(ele2==-1) ele2=ans;
+        ll diff=abs(ele1-ele2);
+        maxin=max(maxin,diff);
+    }
+    cout<<maxin<<" "<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

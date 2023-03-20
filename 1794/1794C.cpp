@@ -34,6 +34,15 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    ll j=0;
+    FOR(i,0,n){
+        while(j<n && a[j]< (i-j+1)){
+            j++;
+        }
+        cout<<max(i-j+1,1ll)<<" ";
+    }
+    cout<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

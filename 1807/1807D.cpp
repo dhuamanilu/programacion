@@ -28,31 +28,37 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> a(2*n-2);
-    FOR(i,0,2*n-2){
+    ll n,q;
+    cin>>n>>q;
+    ll a[n];
+    FOR(i,0,n){
         cin>>a[i];
     }
-    sort(all(a),[]
-    (const std::string& first, const std::string& second){
-        return first.size() < second.size();
-    });
-    FOR(i,0,2*n-3){
-        string a1=a[i],a2=a[i+1];
-        reverse(all(a1));
-        reverse(all(a2));
-        /*dbg(a[i]);
-        dbg(a[i+1]);
-        dbg(a1);
-        dbg(a2);*/
-        if(a1!=a[i+1] && a2!=a[i]){
-            cout<<"NO\n";
-            return;
-        }
-        i++;
+    vll pre(n,0);
+    pre[0]=a[0];
+    FOR(i,1,n){
+        pre[i]=pre[i-1]+a[i];
     }
-    cout<<"YES\n";
+    FOR(i,0,q){
+        ll l,r,k;
+        cin>>l>>r>>k;
+        ll restar=pre[l-2];
+        if(l==1){
+            restar=0;
+        }
+        //dbg(pre[r-1]-restar);
+        //dbg((r-l+1)*k);
+        ll newSum=pre[n-1]-(pre[r-1]-restar)+(r-l+1)*k;
+        //dbg(newSum);
+        if(newSum%2==1){
+            cout<<"YES\n";
+        }
+        else{
+            cout<<"NO\n";
+        }
+    }
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
