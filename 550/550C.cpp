@@ -24,39 +24,33 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 105;
+const int MO = 8;
 const int N=1000+3;
-
+bool dp[MX][MO];
+ll aux[MX][MO];
 void solve(){
-    ll n,x,pos;
-    cin>>n>>x>>pos;
-    ll ans=1,s=0,e=n,m=s+(e-s)/2,cont2=0,cont=1;
+    string s;
+    cin>>s;
+    ll n=s.size();
+    vll a;
+    FOR(i,0,n){
+        a.pb(s[i]-'0');
+    }
+    FOR(i,1,n){
+        dp[i][a[i]%MO]=true;
+        FOR(j,0,8){
+            if(dp[i-1][j]){
+                dp[i][(j*10+a[i])%MO]=true;
 
-
-    while(s<e){
-        m=(s+e)/2;
-        if(pos>=m){
-            if(pos!=m){
-                ans*=(x-cont);
-                ans%=MOD;
-                cont++;
             }
-            s=m+1;
-        }
-        else {
-            ans*=(n-x-cont2);
-            ans%=MOD;
-            cont2++;
-            e=m;
         }
 
     }
-    ll queda=n-cont-cont2;
-    FOR1(i,1,queda){
-        ans*=i;
-        ans%=MOD;
-    }
-    cout<<ans<<"\n";
+
+
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -68,4 +62,11 @@ int main(){
     }
     return 0;
 }
+
+
+
+
+
+
+
 
