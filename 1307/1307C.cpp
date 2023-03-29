@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -30,31 +32,30 @@ const int N=1000+3;
 void solve(){
     string s;
     cin>>s;
-    ll n=s.size();
-    mll m;
-    FOR(i,0,n){
-        m[s[i]-'0']++;
-    }
-    if(m.size()==1){
-        cout<<"-1\n";
-    }
-    else{
-        ll ans=4;
-        for(auto e : m){
-            if(e.se==3){
-                cout<<"6\n";
-                return;
-            }
-        }
-        cout<<ans<<"\n";
-    }
+    ll n=(ll)s.size();
+    map<string,ll> m;
 
+    FOR(i,0,n){
+        //dbg(s[i]);
+        FOR(j,0,26){
+            // dbg(to_string(char('a'+j))+s[i]);
+            string aux=to_string(char('a'+j))+s[i];
+            string aux2=to_string(char('a'+j));
+            m[aux]+=m[aux2];
+        }
+        m[to_string(char(s[i]))]++;
+    }
+    ll maxi=LONG_LONG_MIN;
+    for(auto &e : m){
+        maxi=max(maxi,e.se);
+    }
+    cout<<maxi<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -28,25 +28,29 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    mll m;
+    ll n;
+    cin>>n;
+    ll a[n];
     FOR(i,0,n){
-        m[s[i]-'0']++;
+        cin>>a[i];
     }
-    if(m.size()==1){
-        cout<<"-1\n";
+    ll b[n];
+    FOR(i,0,n){
+        cin>>b[i];
+    }
+    bool ok=true;
+    ll last1=a[n-1],last2=b[n-1];
+    FOR(i,0,n-1){
+        if((a[i]>last1 || b[i]> last2) && (a[i] > last2 || b[i] > last1)){
+            ok=false;
+            break;
+        }
+    }
+    if(ok){
+        cout<<"YES\n";
     }
     else{
-        ll ans=4;
-        for(auto e : m){
-            if(e.se==3){
-                cout<<"6\n";
-                return;
-            }
-        }
-        cout<<ans<<"\n";
+        cout<<"NO\n";
     }
 
 }

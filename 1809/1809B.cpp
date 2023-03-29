@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <boost/multiprecision/mpfr.hpp>
 typedef long long ll;
 typedef long double ld;
 typedef pair<int, int> pi;
@@ -15,6 +16,7 @@ typedef priority_queue<ll> pq;
 #define f first
 #define se second
 #define lb lower_bound
+
 #define ub upper_bound
 #define all(x) x.begin(), x.end()
 #define ins insert
@@ -26,15 +28,17 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
+    n--;
+    string s=to_string(n);
+
+    boost::multiprecision::mpfr_float_100 f(std::move(s));
+    boost::multiprecision::mpfr_float_100 sqrt = boost::multiprecision::sqrt(f);
+    std::cout << sqrt.str() << std::endl;
 }
+
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);

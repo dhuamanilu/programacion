@@ -24,29 +24,42 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-
+vll G[MX];
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    mll m;
-    FOR(i,0,n){
-        m[s[i]-'0']++;
+    ll n;
+    cin>>n;
+    for(auto &e  : G){
+        e.clear();
     }
-    if(m.size()==1){
-        cout<<"-1\n";
+    FOR(i,1,n){
+        ll u,v;
+        cin>>u>>v;
+        G[u].pb(i);
+        G[v].pb(i);
     }
-    else{
-        ll ans=4;
-        for(auto e : m){
-            if(e.se==3){
-                cout<<"6\n";
-                return;
-            }
+    ll maxi=LONG_LONG_MIN,guarda=0;
+    FOR1(i,1,n){
+        if((ll)G[i].size()>maxi){
+            maxi=G[i].size();
+            guarda=i;
         }
-        cout<<ans<<"\n";
+    }
+    ll cur=0;
+    vll ans(n+1,-1);
+    //dbg(guarda);
+    for(auto &e : G[guarda]){
+        ans[e]=cur;
+        cur++;
+    }
+
+    FOR(i,1,n){
+        if(ans[i]==-1){
+            ans[i]=cur;
+            cur++;
+        }
+        cout<<ans[i]<<"\n";
     }
 
 }
@@ -54,7 +67,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

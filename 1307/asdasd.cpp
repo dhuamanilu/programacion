@@ -28,33 +28,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    mll m;
-    FOR(i,0,n){
-        m[s[i]-'0']++;
-    }
-    if(m.size()==1){
-        cout<<"-1\n";
-    }
-    else{
-        ll ans=4;
-        for(auto e : m){
-            if(e.se==3){
-                cout<<"6\n";
-                return;
-            }
+    ll a,b;
+    cin>>a>>b;
+    ll cont=0;
+    FOR1(i,4,(ll)1e10){
+        if(i>=2147483648) break;
+        cont++;
+        if(a==(i-1)*b || b==(i-1)*a){
+            cout<<cont+1<<"\n";
+            return;
         }
-        cout<<ans<<"\n";
+        i*=2;
     }
+    cout<<"-1\n";
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -9,6 +9,7 @@ typedef map <ll,ll> mll;
 typedef vector <pair<ll,ll>> vpll;
 typedef priority_queue<ll> pq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define FORR(i, a, b) for (long long i=a-1; i>=b; i--)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
 #define pb push_back
@@ -28,27 +29,41 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    mll m;
-    FOR(i,0,n){
-        m[s[i]-'0']++;
-    }
-    if(m.size()==1){
-        cout<<"-1\n";
-    }
-    else{
-        ll ans=4;
-        for(auto e : m){
-            if(e.se==3){
-                cout<<"6\n";
-                return;
-            }
+    ll m;
+    cin>>m;
+    vector<vll> guarda;
+    FOR(i,0,m){
+        ll num;
+        cin>>num;
+        vll auxi;
+        FOR(j,0,num){
+            ll nu;
+            cin>>nu;
+            auxi.pb(nu);
         }
-        cout<<ans<<"\n";
+        guarda.pb(auxi);
     }
-
+    vector<bool> vis(50009,false);
+    vll res;
+    FORR(i,m,0){
+        bool found=false;
+        FOR(j,0,guarda[i].size()){
+            if(!found && !vis[guarda[i][j]]){
+                res.pb(guarda[i][j]);
+                found=true;
+            }
+            vis[guarda[i][j]]=true;
+        }
+        if(!found){
+            cout<<"-1\n";
+            return;
+        }
+    }
+    reverse(all(res));
+    FOR(i,0,(ll)res.size()){
+        cout<<res[i]<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
