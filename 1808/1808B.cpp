@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -28,12 +30,25 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
+    ll n,m;
+    cin>>n>>m;
+    ll a[n][m];
     FOR(i,0,n){
-        cin>>a[i];
+        FOR(j,0,m){
+            cin>>a[i][j];
+        }
     }
+    ll ans=0;
+    FOR(i,0,m){
+        vll auxi;
+        FOR(j,0,n){
+            auxi.pb(a[j][i]);
+        }
+        sort(all(auxi));
+        //falta mejorar esta parte
+        ans+=2*(auxi[n-1]-auxi[0]);
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -26,14 +26,28 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+ll dif(ll a){
+    ll maxi=LONG_LONG_MIN,mini=LONG_LONG_MAX;
+    while(a>0){
+        ll d=a%10;
+        maxi=max(maxi,d);
+        mini=min(mini,d);
+        a/=10;
     }
+    return maxi-mini;
+}
+void solve(){
+    ll l,r;
+    cin>>l>>r;
+    ll maxi=LONG_LONG_MIN,ans=l;
+    FOR1(i,max(l,r-100),r){
+        ll dif1=dif(i);
+        if(dif1>maxi){
+            maxi=dif1;
+            ans=i;
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -45,8 +59,6 @@ int main(){
     }
     return 0;
 }
-
-
 
 
 
