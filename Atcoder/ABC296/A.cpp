@@ -21,15 +21,12 @@ const int INF=100000000;
 void solve(){
     ll n;
     cin>>n;
-    string s;
-    cin>>s;
-    FOR(i,0,n-1){
-        if(s[i]==s[i+1]){
-            cout<<"NO\n";
-            return;
-        }
+    if(n<=2){
+        cout<<"YES\n";
     }
-    cout<<"YES\n";
+    else{
+        cout<<"NO\n";
+    }
 
 }
 int main(){

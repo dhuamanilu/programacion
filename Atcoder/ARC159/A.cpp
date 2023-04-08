@@ -18,20 +18,24 @@ const char nl = '\n';
 const int MX = 200005;
 const int N=105;
 const int INF=100000000;
-ll a[N][N];
-ll n;
-ll dfs(ll ele,ll ele2,ll dist){
-    if(a[ele%n][ele2%n]){
-        return dist;
-    }
-}
-void solve(){
-    ll k;
-    cin>>n>>k;
 
+void solve(){
+    ll n,k;
+    cin>>n>>k;
+    vector<vector<ll>> a(n,vector<ll>(n,(ll)1e15));
     FOR(i,0,n){
         FOR(j,0,n){
             cin>>a[i][j];
+            if(!a[i][j]){
+                a[i][j]=1e15;
+            }
+        }
+    }
+    FOR(k,0,n){
+        FOR(i,0,n){
+            FOR(j,0,n){
+                a[i][j]=min(a[i][j],a[i][k]+a[k][j]);
+            }
         }
     }
     ll q;
@@ -41,7 +45,11 @@ void solve(){
         cin>>s>>t;
         s--;
         t--;
-        ll dist=dfs(s,t,0);
+        if(a[s%n][t%n]<=n)
+            cout<<a[s%n][t%n]<<"\n";
+        else{
+            cout<<"-1\n";
+        }
     }
 
 }
