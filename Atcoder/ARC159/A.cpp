@@ -16,20 +16,30 @@ typedef vector<int> vi;
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 200005;
-const int N=1000+3;
+const int N=105;
 const int INF=100000000;
+ll a[N][N];
+ll dfs(ll ele,ll ele2){
+
+}
 void solve(){
-    ll n;
-    cin>>n;
-    string s;
-    cin>>s;
-    FOR(i,0,n-1){
-        if(s[i]==s[i+1]){
-            cout<<"NO\n";
-            return;
+    ll n,k;
+    cin>>n>>k;
+
+    FOR(i,0,n){
+        FOR(j,0,n){
+            cin>>a[i][j];
         }
     }
-    cout<<"YES\n";
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+        ll s,t;
+        cin>>s>>t;
+        s--;
+        t--;
+        ll dist=dfs(s,t);
+    }
 
 }
 int main(){
