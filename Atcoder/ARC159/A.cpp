@@ -19,11 +19,14 @@ const int MX = 200005;
 const int N=105;
 const int INF=100000000;
 ll a[N][N];
-ll dfs(ll ele,ll ele2){
-
+ll n;
+ll dfs(ll ele,ll ele2,ll dist){
+    if(a[ele%n][ele2%n]){
+        return dist;
+    }
 }
 void solve(){
-    ll n,k;
+    ll k;
     cin>>n>>k;
 
     FOR(i,0,n){
@@ -38,7 +41,7 @@ void solve(){
         cin>>s>>t;
         s--;
         t--;
-        ll dist=dfs(s,t);
+        ll dist=dfs(s,t,0);
     }
 
 }
