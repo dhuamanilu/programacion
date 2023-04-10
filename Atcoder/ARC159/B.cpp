@@ -20,20 +20,17 @@ const int MX = 200005;
 const int N=1000+3;
 const int INF=100000000;
 void solve(){
-
-    char ans,ans2;
-    FOR(i,0,8){
-        string s;
-        cin>>s;
-        FOR(j,0,8){
-            if(s[j]=='*'){
-                ans='a'+j;
-                ans2='1'+7-i;
-            }
-        }
+    ll a,b;
+    cin>>a>>b;
+    ll ans=0;
+    while(a>=1 && b>=1){
+        ll gc=__gcd(a,b);
+        cout<<"ESSTE ES MI a b GCD :"<<a<<" "<<b<<" "<<gc<<"\n";
+        a-=gc;
+        b-=gc;
+        ans++;
     }
-
-    cout<<ans<<ans2<<"\n";
+    cout<<ans<<"\n";
 
 
 }
