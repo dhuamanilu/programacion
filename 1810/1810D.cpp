@@ -1,12 +1,15 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
-#define FOR(i, a, b) for (int i=a; i<(b); i++)
-#define FOR1(i, a, b) for (int i=a; i<=(b); i++)
+typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
+#define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
 #define pb push_back
 #define f first
@@ -21,28 +24,44 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-const int INF=100000000;
+
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    if(n*n<m){
-        cout<<"-1\n";
+    ll q,l=-1,r=(ll)1e10;
+    cin>>q;
+
+    FOR(i,0,q){
+        ll ty;
+        cin>>ty;
+        if(ty==1){
+            ll a,b,n;
+            cin>>a>>b>>n;
+            ll L=(n-1)*(a-b)+1,R=(n-1)*(a-b)+a;
+        }
+        else{
+            ll a,b;
+            cin>>a>>b;
+
+
+        }
     }
-    else{
-
-
-    }
-
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-  	int t=1;
-  	while(t--){
+    int t=1;
+    cin>>t;
+    while(t--){
         solve();
-  	}
-	return 0;
+    }
+    return 0;
 }
+
+
+
+
+
+
+
+

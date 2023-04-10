@@ -1,12 +1,15 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
-#define FOR(i, a, b) for (int i=a; i<(b); i++)
-#define FOR1(i, a, b) for (int i=a; i<=(b); i++)
+typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
+#define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
 #define pb push_back
 #define f first
@@ -21,28 +24,79 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-const int INF=100000000;
-void solve(){
-    ll n,m;
-    cin>>n>>m;
-    if(n*n<m){
-        cout<<"-1\n";
+ll go(ll a,ll b,vll &ans){
+    for(ll i=29;i>=0;i--){
+        //cout<<i<<" ";
+        if((a&(1ll<<i) ) != (b & (1ll<<i))){
+            if(a&(1ll<<i)){
+                if(ans[i]==-1){
+                    ans[i]=1;
+                    //cout<<"MODIFICARE ANS";
+                }
+                else if(ans[i]==0){
+                    return 0;
+                }
+            }
+            else{
+                if(ans[i]==-1){
+                    ans[i]=0;
+                    //cout<<"MODIFICARE ANS";
+                }
+                else if(ans[i]==1){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
     }
-    else{
-
-
-    }
-
-
+    return 1;
 }
+void solve(){
+    ll a,b,c;
+    cin>>a>>b>>c;
+    vll ans(30,-1);
+    if(!go(a,b,ans)){
+        cout<<"-1\n";
+        return;
+    }
+    if(!go(b,c,ans)){
+        cout<<"-1\n";
+        return;
+    }
+    if(!go(a,c,ans)){
+        cout<<"-1\n";
+        return;
+    }
+    for(auto & e: ans){
+        if(e==-1) e=0;
+    }
+    string res="";
+    for(long long i=(ll)ans.size()-1;i>=0;i--){
+        res+=to_string(ans[i]);
+    }
+    unsigned long long value = std::stoull(res, 0, 2);
+    cout<<value<<"\n";
+}
+
+
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-  	int t=1;
-  	while(t--){
+    int t=1;
+    cin>>t;
+    while(t--){
         solve();
-  	}
-	return 0;
+    }
+    return 0;
 }
+
+
+
+
+
+
+
+
