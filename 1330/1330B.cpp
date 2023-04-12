@@ -22,24 +22,23 @@ const char nl = '\n';
 const int MX = 200005;
 const int N=1000+3;
 ll a[MX];
-bool judge(int n){
-    static int used[MX];
-    for(int i = 1; i <= n; i++) used[i] = 0;
-    for(int i = 0; i < n; i++) used[a[i]] = 1;
-    for(int i = 1; i <= n; i++) {
-        if(!used[i]) return 0;
+bool judge(int ini,int n,int veri){
+    bool used[MX];
+    FOR1(i,1,n) used[i]=false;
+    FOR(i,ini,n) used[a[i]]=true;
+    FOR1(i,1,veri) {
+        if(!used[i]) return false;
     }
-    return 1;
+    return true;
 }
 void check(ll len,ll n,vpll &a){
-    if(judge(len) &&judge(n-len)){
+    if(judge(0,len,len) && judge(len,n,n-len)){
         a.pb({len,n-len});
     }
 }
 void solve(){
     ll n;
     cin>>n;
-
     ll maxi=LONG_LONG_MIN;
     FOR(i,0,n){
         cin>>a[i];
@@ -47,7 +46,9 @@ void solve(){
     }
     vpll ans;
     check(n-maxi,n,ans);
-    check(maxi,n,ans);
+    if(maxi*2!=n)
+        check(maxi,n,ans);
+    assert(ans.size()<=2);
     cout<<ans.size()<<"\n";
     for(auto e : ans){
         cout<<e.f<<" "<<e.se<<"\n";

@@ -28,25 +28,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    string s;
-    cin>>s;
-    ll ans=0;
-    FOR(i,0,n){
-        ll j=i+1;
-        while(j<n && s[j]=='0'){
-            j++;
-        }
-        ll cer=j-i;
-        if(s[i]=='1') cer-=(k+1);
-        if(j<n && s[j]=='1') cer-=k;
-        if(cer>0)
-            ans+=max(0ll,(cer+k)/(k+1));
-        i=j-1;
-    }
+    ll a,b;
+    cin>>a>>b;
+    ll gc=__gcd(a,b);
 
-    cout<<ans<<"\n";
+    if(gc!=1){
+        cout<<"2\n";
+        ll guarda1=a,guarda2=b;
+        a--;
+        while(true){
+            gc=__gcd(a,b);
+            if(gc==1) break;
+            b--;
+        }
+        cout<<a<<" "<<b<<"\n";
+        cout<<guarda1<<" "<<guarda2<<"\n";
+    }
+    else{
+        cout<<"1\n";
+        cout<<a<<" "<<b<<"\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
