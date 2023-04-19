@@ -22,48 +22,50 @@ const int MOD2=998244353;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool isPalindrome(string &S){
-    string P = S;
-    reverse(P.begin(), P.end());
-    if (S == P) return true;
-    else    return false;
+string prefix_function(const string& s) {
+    string aux=s;
+    reverse(all(aux));
+    aux=s+"#"+aux;
+    ll n=(ll)aux.size();
+    vector<ll> pi(n);
+    pi[0]=0;
+    ll j;
+    FOR(i,1,n){
+        j=pi[i-1];
+        while(j>0 && aux[i]!=aux[j]){
+            j=pi[j-1];
+        }
+        if(aux[i]==aux[j]){
+            j++;
+        }
+        pi[i]=j;
+    }
+    return s.substr(0,j);
 }
 void solve(){
     string s;
     cin>>s;
-    ll n=s.size();
-    map<string,ll> pref,suff;
-    string aux="";
-    FOR(i,0,n){
-        aux+=s[i];
-        pref[aux]++;
+    ll n=(ll)s.size();
+    ll k=0;
+    while(2*k+1<n && s[k]==s[n-1-k]){
+        k++;
     }
-    pref[""]++;
-    suff[""]++;
-    aux="";
-    string copia=s;
-    FOR(i,0,n){
-        suff[copia]++;
-        copia=copia.substr(1);
+    if(k>0){
+        cout<<s.substr(0,k);
     }
-    ll maxi=LONG_LONG_MIN;
-
-    string ans;
-    for(auto &e : pref){
-        for(auto & e2 : suff){
-            //cout<<"mi pref y suff: "<<e.f<<" "<<e2.f<<"\n";
-            string aux=e.f+e2.f;
-            if(aux.size()>s.size()) continue;
-            if(isPalindrome(aux) ){
-                if(aux.size()>maxi){
-                    maxi=aux.size();
-                    ans=aux;
-                }
-            }
-        }
+    if(n>2*k){
+        string med=s.substr(k,n-2*k);
+        string pre1=prefix_function(med);
+        reverse(all(med));
+        string pre2=prefix_function(med);
+        if ((int)pre1.size()<(int)pre2.size())
+            swap(pre1, pre2);
+        cout<<pre1;
     }
-    cout<<ans<<"\n";
-
+    if(k>0){
+        cout<<s.substr(n-k,k);
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
