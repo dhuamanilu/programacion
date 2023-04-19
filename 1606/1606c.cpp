@@ -34,17 +34,7 @@ void solve(){
         a[i]=pot(10,a[i]);
     }
     sort(a,a+n);
-    ll ans=0;
-    k++;
-    FOR(i,0,n){
-        ll left=k;
-        if(i+1<n){
-            left=min(left,a[i+1]/a[i]-1);
-        }
-        ans+=a[i]*left;
-        k-=left;
-    }
-    cout<<ans<<"\n";
+
 
 }
 int main(){
