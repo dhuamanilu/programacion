@@ -32,7 +32,21 @@ void solve(){
     cin>>n>>k;
     string s;
     cin>>s;
+    ll ans=0;
+    FOR(i,0,n){
+        ll j=i+1;
+        while(j<n && s[j]=='0'){
+            j++;
+        }
+        ll cer=j-i;
+        if(s[i]=='1') cer-=(k+1);
+        if(j<n && s[j]=='1') cer-=k;
+        if(cer>0)
+            ans+=max(0ll,(cer+k)/(k+1));
+        i=j-1;
+    }
 
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
