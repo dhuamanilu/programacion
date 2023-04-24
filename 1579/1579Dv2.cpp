@@ -19,47 +19,34 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-void ctmr(){
-    vll primos;
-    FOR1(j,1,1e5){
-        bool ok=true;
-        for(ll i=2;i*i<=j;i++){
-            if(j%i==0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok) primos.pb(j);
-    }
-    cout<<"aasdd "<<primos.back()<<"\n";
 
-
-}
 void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    priority_queue<pair<ll,ll>> pq;
+
     FOR(i,0,n){
         cin>>a[i];
-        pq.push(mp(a[i],i+1));
+
     }
-    vector <pll> v;
-    while(pq.size()>=2){
-        auto x=pq.top();
-        pq.pop();
-        auto y=pq.top();
-        pq.pop();
-        if(x.f>0 && y.f>0){
-            x.f--;
-            y.f--;
-            v.push_back(mp(x.se,y.se));
+    vector<pair<ll,ll>> ans;
+    sort(a,a+n);
+    ll i=n-2,j=n-1;
+    while(i>=0 && j>=0){
+        if(a[j]>0 && a[i]>0){
+            a[j]--;
+            a[i]--;
+            ans.pb({i+1,j+1});
         }
-        if(x.f>0) pq.push(mp(x.f,x.se));
-        if(y.f>0) pq.push(mp(y.f,y.se));
+        else if(a[i]==0){
+            i--;
+        }
+        else if(a[j]==0){
+            j--;
+        }
     }
-    cout<<v.size()<<"\n";
-    for(auto e : v){
+    cout<<ans.size()<<"\n";
+    for(auto & e : ans){
         cout<<e.f<<" "<<e.se<<"\n";
     }
 
@@ -68,12 +55,11 @@ void solve(){
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*int t=1;
+    int t=1;
     cin>>t;
     while(t--){
         solve();
-    }*/
-    ctmr();
+    }
     return 0;
 }
 
