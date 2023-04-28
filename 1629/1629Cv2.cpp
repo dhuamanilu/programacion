@@ -23,13 +23,37 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vector <ll> a(n);
+    vector <ll> a(n),mex(n);
     FOR(i,0,n){
         cin>>a[i];
     }
 
+    ll act=0;
+    vll cont(n+1,0);
+    for(ll i=n-1;i>=0;i--){
+        cont[a[i]]++;
+        while(cont[act]) act++;
+        mex[i]=act;
+    }
     vll ans;
+    vll found(n+1,0);
 
+    FOR(i,0,n){
+        ans.pb(mex[i]);
+        ll j=i,mex2=0;
+        while(j<n){
+            found[a[j++]]++;
+            while(found[mex2]) mex2++;
+            if(mex2==mex[i]){
+                break;
+            }
+
+        }
+        FOR(k,i,j){
+            found[a[k]]--;
+        }
+        i=j-1;
+    }
     cout<<ans.size()<<"\n";
     for(auto e : ans){
         cout<<e<<" ";
@@ -46,11 +70,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-

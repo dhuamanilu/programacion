@@ -34,7 +34,18 @@ void solve(){
         a[i]=pot(10,a[i]);
     }
     sort(a,a+n);
-
+    ll ans=0;
+    k++;
+    FOR(i,0,n){
+        if(k<=0) break;
+        ll tomar;
+        if(i+1<n)
+            tomar=min((a[i+1]/a[i])-1,k);
+        else  tomar=k;
+        ans+=tomar*a[i];
+        k-=tomar;
+    }
+    cout<<ans<<"\n";
 
 }
 int main(){
