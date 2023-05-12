@@ -26,11 +26,31 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+bool posible(ll n,ll m){
+    if(n==m) return true;
+    if(n%3==0){
+        return posible(n/3,m)  || posible(2*n/3,m);
+    }
+    return false;
+}
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n,m;
+    cin>>n>>m;
+    if(n==m){
+        cout<<"YES\n";
+    }
+    else if(n%3!=0 || n<m){
+        cout<<"NO\n";
+    }
+    else{
+        if(posible(n,m)){
+            cout<<"YES\n";
+        }
+        else{
+            cout<<"NO\n";
+        }
+
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -5,6 +5,7 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef map<ll,ll> mll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -19,43 +20,28 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
 void solve(){
-    string s;
-    cin>>s;
-    ll n=s.size();
-    vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=(s[0]=='0');
-    cont1[0]=(s[0]=='1');
-    FOR(i,1,n){
-        cont0[i]=cont0[i-1]+(s[i]=='0');
-        cont1[i]=cont1[i-1]+(s[i]=='1');
+    ll n,a,b,c;
+    cin>>n>>a>>b>>c;
+    vll dp(n+1,LONG_LONG_MIN);
+    dp[0]=0;
+    FOR1(i,a,n){
+        dp[i]=max(dp[i],dp[i-a]+1);
     }
-    ll ans=LONG_LONG_MAX;
-    FOR(i,0,n){
-        ll aux=i+1-(cont1[i])+n-i-1-(cont0[n-1]-cont0[i]);
-        ll aux2=i+1-(cont0[i])+n-i-1-(cont1[n-1]-cont1[i]);
-        //cout<<"este es aux2: "<<i+1-cont0[i]<<" "<<n-i-1-(cont1[n-1]-cont1[i])<<"\n";
-        ll res=min(aux,aux2);
-        ans=min(ans,res);
+    FOR1(i,b,n){
+        dp[i]=max(dp[i],dp[i-b]+1);
     }
-    cout<<ans<<"\n";
+    FOR1(i,c,n){
+        dp[i]=max(dp[i],dp[i-c]+1);
+    }
+    cout<<dp[n]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
-

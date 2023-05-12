@@ -28,9 +28,44 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    vector<ll> tip1,tip2,tip3;
+    FOR(i,0,n){
+        ll m;
+        cin>>m;
+        string s;
+        cin>>s;
+        if(s[0]=='1' && s[1]=='1'){
+            tip3.pb(m);
+        }
+        else if(s[1]=='1' && s[0]=='0'){
+            tip2.pb(m);
+        }
+        else if(s[0]=='1' && s[1]=='0'){
+            tip1.pb(m);
+        }
+    }
+    sort(all(tip1));
+    sort(all(tip2));
+    sort(all(tip3));
+    ll ans=LONG_LONG_MAX;
+    bool ok=false;
+    if(tip3.size()){
+        ans=min(ans,tip3[0]);
+        ok=true;
+    }
+    if(tip2.size() && tip1.size()){
+        ans=min(ans,tip2[0]+tip1[0]);
+        ok=true;
+    }
+    if(!ok){
+        cout<<"-1\n";
+    }
+    else{
+        cout<<ans<<"\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
+typedef int ll;
 typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
@@ -25,12 +25,45 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=1000+5;
+ll n,m;
+ll a[N][N];
+bool isValid(ll a, ll b){
+    return a>=0 && a<n && b>=0 && b<m;
+}
+long long dfs(ll i,ll j,vector<vector<bool>> &vis){
+    long long ans=0;
+    vis[i][j]=true;
+    ans+=a[i][j];
+    vll dx={1,-1,0,0};
+    vll dy={0,0,1,-1};
+    FOR(k,0,4){
+        ll nx=i+dx[k],ny=j+dy[k];
+        if(isValid(nx,ny)){
+            if(vis[nx][ny]) continue;
+            if(a[nx][ny]>0){
+                ans+=dfs(nx,ny,vis);
+            }
+        }
+    }
+    return ans;
+}
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    cin>>n>>m;
+    vector<vector<bool>> vis(n,vector<bool>(m,false));
+    FOR(i,0,n){
+        FOR(j,0,m){
+            cin>>a[i][j];
+        }
+    }
+    long long ans=0;
+    FOR(i,0,n){
+        FOR(j,0,m){
+            if(a[i][j]==0 || vis[i][j]) continue;
+            ans=max(ans,dfs(i,j,vis));
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

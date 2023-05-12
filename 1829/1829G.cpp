@@ -24,13 +24,14 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 2000005;
 const int N=1000+3;
-
+ll ans[MX];
+ll pre[1500][1500];
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

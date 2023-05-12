@@ -25,18 +25,69 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=210;
 void solve(){
     string s;
     cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n=s.size();
+    string izq="qwertasdfgzxcvb",der="yuiophjklnm";
+    map<char,ll> mizq,mder;
+    for(auto & e : izq){
+        mizq[e]++;
+    }
+    for(auto & e : der){
+        mder[e]++;
+    }
+    bool ok=true;
+    FOR(i,0,n){
+        if(i%2==0){
+            if(!mizq.count(s[i])){
+                ok=false;
+                break;
+            }
+        }
+        else{
+            if(!mder.count(s[i])){
+                ok=false;
+                break;
+            }
+        }
+    }
+    if(ok){
+        cout<<"yes\n";
+    }
+    else{
+        ok=true;
+        FOR(i,0,n){
+            if(i%2==1){
+                if(!mizq.count(s[i])){
+                    ok=false;
+                    break;
+                }
+            }
+            else{
+                if(!mder.count(s[i])){
+                    ok=false;
+                    break;
+                }
+            }
+        }
+        if(ok){
+            cout<<"yes\n";
+        }
+        else{
+            cout<<"no\n";
+        }
+    }
+
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

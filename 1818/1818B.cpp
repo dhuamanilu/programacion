@@ -28,9 +28,51 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    /*FOR(i,0,100){
+        cout<<i+1<<" ";
+    }
+    cout<<"\n";*/
+    if(n==1){
+        cout<<"1\n";
+    }
+    else if(n%2==1){
+        cout<<"-1\n";
+    }
+    else{
+        ll par=2,impar=1;
+        vll a;
+        FOR(i,0,n){
+            if(i%2==0){
+                cout<<par<<" ";
+                a.pb(par);
+                par+=2;
+            }
+            else{
+                cout<<impar<<" ";
+                a.pb(impar);
+                impar+=2;
+            }
+        }
+        cout<<"\n";
+        /*vll pref(n,0);
+        pref[0]=a[0];
+        FOR(i,1,n){
+            pref[i]=pref[i-1]+a[i];
+        }
+        FOR1(tama,2,n){
+            FOR(i,tama-1,n){
+                ll resta=i-tama<0 ? 0 : pref[i-tama];
+                assert((pref[i]-resta)%tama!=0);
+                if((pref[i]-resta)%tama==0 ){
+                    cout<<"esta mal tu huevada:";
+                    dbgm(pref[i]-resta,tama);
+                }
+            }
+        }*/
+
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

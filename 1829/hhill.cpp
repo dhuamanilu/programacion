@@ -25,18 +25,38 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=210;
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    vll left(n,0),ri(n,0);
+    FOR(i,1,n){
+        if(a[i]>=a[i-1]){
+            left[i]=left[i-1]+1;
+        }
+    }
+    for(ll i=n-2;i>=0;i--){
+        if(a[i]>=a[i+1]){
+            ri[i]=ri[i+1]+1;
+        }
+    }
+    ll ans=LONG_LONG_MIN;
+    FOR(i,0,n){
+        ans=max(ans,min(a[i]-a[i-left[i]],a[i]-a[i+ri[i]]));
+    }
+    cout<<ans<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

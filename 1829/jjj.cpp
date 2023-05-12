@@ -25,18 +25,36 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=210;
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    ll a[n];
+    ll suma=0;
+    FOR(i,0,n){
+        cin>>a[i];
+        suma+=a[i];
+    }
+    vll ans;
+    FOR(i,0,n){
+        if((suma-a[i])%2==0){
+            ans.pb(i+1);
+        }
+    }
+    cout<<ans.size()<<"\n";
+    FOR(i,0,ans.size()){
+        if(i!=ans.size()-1){
+            cout<<ans[i]<<" ";
+        }
+        else cout<<ans[i];
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

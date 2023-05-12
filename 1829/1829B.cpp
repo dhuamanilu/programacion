@@ -28,9 +28,25 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    ll ans=0;
+    FOR(i,0,n){
+        if(a[i]==0){
+            ll j=i;
+            while(j<n && a[j]==0){
+                j++;
+            }
+            j--;
+            ans=max(ans,j-i+1);
+            i=j;
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

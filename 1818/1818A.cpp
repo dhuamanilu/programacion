@@ -28,9 +28,49 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n,k;
+    cin>>n>>k;
+    string s[n];
+    FOR(i,0,n){
+        cin>>s[i];
+    }
+    vector<bool> used(n,true);
+    bool borra=true;
+    while(borra){
+        borra=false;
+        FOR(j,0,k){
+            ll cont=0;
+            FOR(i,0,n){
+                if(!used[i]) continue;
+                if(s[i][j]=='+') cont++;
+                else cont--;
+            }
+            if(s[0][j]=='+'){
+                FOR(it,0,n){
+                    if(s[it][j]=='-'){
+                        if(!used[it]) continue;
+                        used[it]=false;
+                        borra=true;
+                    }
+                }
+            }
+            else{
+                FOR(it,0,n){
+                    if(s[it][j]=='+') {
+                        if(!used[it]) continue;
+                        used[it]=false;
+                        borra=true;
+                    }
+                }
+
+            }
+        }
+    }
+    ll answer=0;
+    FOR(i,0,n){
+        if(used[i]) answer++;
+    }
+    cout<<answer<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

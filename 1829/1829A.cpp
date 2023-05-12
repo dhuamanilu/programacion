@@ -30,7 +30,12 @@ const int N=1000+3;
 void solve(){
     string s;
     cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    string co="codeforces";
+    ll ans=0;
+    FOR(i,0,10){
+        if(s[i]!=co[i]) ans++;
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

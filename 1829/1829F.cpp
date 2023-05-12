@@ -25,12 +25,30 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=210;
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n,m;
+    cin>>n>>m;
+    vll grado(n+1,0);
+    mll ma;
+    FOR(i,0,m){
+        ll u,v;
+        cin>>u>>v;
+        grado[u]++;
+        grado[v]++;
+    }
+    FOR1(i,1,n){
+        ma[grado[i]]++;
+    }
+    vector<pair<ll,ll>> res;
+    ll total=0;
+    for(auto & e : ma){
+        if(e.f==1){
+            total++;
+        }
+    }
+    total-=;
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

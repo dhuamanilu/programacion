@@ -25,18 +25,56 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=210;
 void solve(){
-    string s;
-    cin>>s;
-    cout<<s[0]-'0'+s[2]-'0'<<"\n";
+    ll n;
+    cin>>n;
+    ll a[n][2];
+    FOR(i,0,n){
+        string s;
+        cin>>s;
+        string n1="",n2="";
+        bool ok=false;
+        FOR(j,0,s.size()){
+            if(ok){
+                n2+=s[j];
+                continue;
+            }
+            if(s[j]!='-')
+                n1+=s[j];
+            else{
+                ok=true;
+            }
+        }
+        a[i][0]=stoll(n1,nullptr,10);
+        a[i][1]=stoll(n2,nullptr,10);
+    }
+    ll bob=0,alice=0;
+    FOR(i,0,n){
+        if(((a[i][0]+a[i][1]+1)/2)&1){
+            swap(a[i][0],a[i][1]);
+        }
+        if(max(a[i][0],a[i][1])==11 && (a[i][0]!=bob || a[i][1]!=alice)){
+            cout<<"error "<<i+1<<"\n";
+            return;
+        }
+        if(a[i][0]<bob || a[i][1]<alice || a[i][1]>11 || a[i][0]>11
+           || (a[i][0]==a[i][1] && a[i][0]==11)){
+            cout<<"error "<<i+1<<"\n";
+            return;
+        }
+        bob=a[i][1];
+        alice=a[i][0];
+    }
+    cout<<"ok\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
