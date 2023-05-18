@@ -24,53 +24,25 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 100005;
 const int N=1000+3;
-
+ll a[MX];
+ll n;
+ll lis(){
+    return 1ll;
+}
 void solve(){
-    string s,t;
-    cin>>s>>t;
-    ll n=s.size();
-    map<char,ll> m;
+    cin>>n;
     FOR(i,0,n){
-        m[s[i]]++;
+        cin>>a[i];
     }
-    FOR(i,0,n){
-        if(t[i]!='@')
-            m[t[i]]--;
-        else m[t[i]]++;
-    }
-    map<char,ll> map2;
-    string aux="atcoder";
-    for(auto & e : aux){
-        map2[e]++;
-    }
-    ll quedan=0,arro=0;
-    for(auto & e :  m){
-        if(e.f=='@'){
-            arro=e.se;
-            continue;
-        }
-        if(!map2.count(e.f) && e.se!=0){
-            cout<<"No\n";
-            return;
-        }
-        quedan+=abs(e.se);
-
-    }
-    //dbgm(quedan,arro);
-    if(quedan<=arro){
-        cout<<"Yes\n";
-    }
-    else{
-        cout<<"No\n";
-    }
+    cout<<lis()<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

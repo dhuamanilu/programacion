@@ -34,12 +34,36 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    vll ans;
+    FOR(i,0,n-1){
+        if(abs(a[i]-a[i+1])==1){
+            ans.pb(a[i]);
+            ans.pb(a[i+1]);
+        }
+        else if(a[i]<a[i+1]){
+            FOR1(j,a[i],a[i+1]){
+                ans.pb(j);
+            }
+        }
+        else if(a[i]>a[i+1]){
+            for(ll j=a[i];j>=a[i+1];j--){
+                ans.pb(j);
+            }
+        }
+    }
+    FOR(i,0,ans.size()){
+        if(i+1<ans.size() && ans[i]==ans[i+1]){
+            continue;
+        }
+        cout<<ans[i]<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

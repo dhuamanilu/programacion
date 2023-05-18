@@ -28,49 +28,27 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s,t;
-    cin>>s>>t;
+    string s;
+    cin>>s;
     ll n=s.size();
-    map<char,ll> m;
+    map <char,ll> m;
     FOR(i,0,n){
         m[s[i]]++;
     }
-    FOR(i,0,n){
-        if(t[i]!='@')
-            m[t[i]]--;
-        else m[t[i]]++;
-    }
-    map<char,ll> map2;
-    string aux="atcoder";
-    for(auto & e : aux){
-        map2[e]++;
-    }
-    ll quedan=0,arro=0;
-    for(auto & e :  m){
-        if(e.f=='@'){
-            arro=e.se;
-            continue;
-        }
-        if(!map2.count(e.f) && e.se!=0){
-            cout<<"No\n";
+    for(auto & e : m){
+
+        if(e.se==n || (e.se==n-1)){
+            cout<<"NO\n";
             return;
         }
-        quedan+=abs(e.se);
-
     }
-    //dbgm(quedan,arro);
-    if(quedan<=arro){
-        cout<<"Yes\n";
-    }
-    else{
-        cout<<"No\n";
-    }
+    cout<<"YES\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

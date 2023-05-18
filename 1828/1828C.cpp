@@ -28,49 +28,32 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    string s,t;
-    cin>>s>>t;
-    ll n=s.size();
-    map<char,ll> m;
+    ll n;
+    cin>>n;
+    ll a[n];
     FOR(i,0,n){
-        m[s[i]]++;
+        cin>>a[i];
     }
+    ll b[n];
     FOR(i,0,n){
-        if(t[i]!='@')
-            m[t[i]]--;
-        else m[t[i]]++;
+        cin>>b[i];
     }
-    map<char,ll> map2;
-    string aux="atcoder";
-    for(auto & e : aux){
-        map2[e]++;
+    sort(a,a+n);
+    sort(b,b+n,greater<ll>());
+    ll ans=1;
+    FOR(i,0,n){
+        auto x=n-(upper_bound(a,a+n,b[i])-a);
+        //cout<<"este es mi x : "<<x<<"\n";
+        ans*=(x-i);
+        ans%=MOD;
     }
-    ll quedan=0,arro=0;
-    for(auto & e :  m){
-        if(e.f=='@'){
-            arro=e.se;
-            continue;
-        }
-        if(!map2.count(e.f) && e.se!=0){
-            cout<<"No\n";
-            return;
-        }
-        quedan+=abs(e.se);
-
-    }
-    //dbgm(quedan,arro);
-    if(quedan<=arro){
-        cout<<"Yes\n";
-    }
-    else{
-        cout<<"No\n";
-    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

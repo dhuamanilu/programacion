@@ -24,47 +24,46 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = (1<<18)+5;
 const int N=1000+3;
-
+vector<pair<ll,ll>> subset;
+vpll ele;
+vector<vpll> respu;
+void solve2(int n, int index) {
+    if(index == n){
+        vpll auxi;
+        for(int i=0; i<subset.size(); i++){
+            auxi.pb(subset[i]);
+        }
+        respu.pb(auxi);
+    }else{
+        subset.push_back(ele[index]);
+        solve2(n, index+1);
+        subset.pop_back();
+        solve2(n, index+1);
+    }
+}
 void solve(){
-    string s,t;
-    cin>>s>>t;
-    ll n=s.size();
-    map<char,ll> m;
-    FOR(i,0,n){
-        m[s[i]]++;
-    }
-    FOR(i,0,n){
-        if(t[i]!='@')
-            m[t[i]]--;
-        else m[t[i]]++;
-    }
-    map<char,ll> map2;
-    string aux="atcoder";
-    for(auto & e : aux){
-        map2[e]++;
-    }
-    ll quedan=0,arro=0;
-    for(auto & e :  m){
-        if(e.f=='@'){
-            arro=e.se;
-            continue;
-        }
-        if(!map2.count(e.f) && e.se!=0){
-            cout<<"No\n";
-            return;
-        }
-        quedan+=abs(e.se);
+    ll h,w,t;
+    cin>>h>>w>>t;
+    vector<vector<char>> a(h,vector<char>(w));
 
+    FOR(i,0,h){
+        FOR(j,0,w){
+            cin>>a[i][j];
+            if(a[i][j]=='o'){
+                ele.pb({i,j});
+            }
+        }
     }
-    //dbgm(quedan,arro);
-    if(quedan<=arro){
-        cout<<"Yes\n";
+    solve2(ele.size(),0);
+    for(auto & e : respu ){
+        for(auto & e2 : e){
+            cout<<e2.f<<" "<<e2.se<<",";
+        }
+        cout<<"\n";
     }
-    else{
-        cout<<"No\n";
-    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

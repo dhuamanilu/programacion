@@ -26,20 +26,35 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+long long gcd(long long int a, long long int b)
+{
+  if (b == 0)
+    return a;
+  return gcd(b, a % b);
+}
 
+// Function to return LCM of two numbers
+long long lcm(int a, int b)
+{
+    return (a / gcd(a, b)) * b;
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll x;
+    cin>>x;
+    ll ans=1;
+    for(ll i=1;i*i<=x;i++){
+        if(x%i==0 && lcm(i,x/i)==x){
+            ans=i;
+        }
     }
+    cout<<ans<<" "<<x/ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

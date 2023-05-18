@@ -30,16 +30,31 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
+    string s;
+    cin>>s;
+    ll cont1=0,cont2=0,win=0;
     FOR(i,0,n){
-        cin>>a[i];
+        if(s[i]=='T'){
+            cont1++;
+        }
+        else cont2++;
+        if(cont1>cont2){
+            win=1;
+        }
+        else if(cont2>cont1) win=2;
+    }
+    if(win==1){
+        cout<<"T\n";
+    }
+    else{
+        cout<<"A\n";
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
