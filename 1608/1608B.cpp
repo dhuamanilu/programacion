@@ -28,28 +28,24 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    sort(a,a+n);
-    reverse(a,a+n);
-    ll men=0,least=0;
-    FOR(i,0,n){
-        ll men2=0;
-        if(a[i]==n) men++,continue;
-        FOR(j,0,n){
-            if(i==j) continue;
-
-        }
-    }
-    if(men<least){
+    ll n,a,b;
+    cin>>n>>a>>b;
+    if(a+b+2 > n || abs(a-b) > 1){
         cout<<"-1\n";
     }
     else{
-        cout<<men<<"\n";
+        ll mini=1,maxi=n;
+        if(a > b){
+            FOR(i,0,b){
+                cout<<maxi<<" ";
+                maxi--;
+                cout<<mini<<" ";
+                mini++;
+            }
+            cout<<maxi<<" ";
+            maxi--;
+
+        }
     }
 }
 int main(){

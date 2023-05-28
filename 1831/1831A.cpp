@@ -34,23 +34,10 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    sort(a,a+n);
-    reverse(a,a+n);
-    ll men=0,least=0;
     FOR(i,0,n){
-        ll men2=0;
-        if(a[i]==n) men++,continue;
-        FOR(j,0,n){
-            if(i==j) continue;
-
-        }
+        cout<<n+1-a[i]<<" ";
     }
-    if(men<least){
-        cout<<"-1\n";
-    }
-    else{
-        cout<<men<<"\n";
-    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

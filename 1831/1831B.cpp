@@ -31,26 +31,49 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
+    ll b[n];
     FOR(i,0,n){
         cin>>a[i];
     }
-    sort(a,a+n);
-    reverse(a,a+n);
-    ll men=0,least=0;
     FOR(i,0,n){
-        ll men2=0;
-        if(a[i]==n) men++,continue;
-        FOR(j,0,n){
-            if(i==j) continue;
-
+        cin>>b[i];
+    }
+    mll m1,m2;
+    FOR(i,0,n){
+        ll j=i;
+        while(a[i]==a[j] && j<n){
+            j++;
         }
+        ll maxi=0;
+        if(m1.count(a[i])){
+            maxi=m1[a[i]];
+        }
+        m1[a[i]]=max(maxi,j-i);
+        i=j-1;
     }
-    if(men<least){
-        cout<<"-1\n";
+    FOR(i,0,n){
+        ll j=i;
+        while(b[i]==b[j] && j<n){
+            j++;
+        }
+        ll maxi=0;
+        if(m2.count(b[i])){
+            maxi=m2[b[i]];
+        }
+        m2[b[i]]=max(maxi,j-i);
+        i=j-1;
     }
-    else{
-        cout<<men<<"\n";
+    ll ans=LONG_LONG_MIN;
+    for(auto & e : m1){
+        ll tosum=m2.count(e.f) ? m2[e.f] : 0ll;
+        ans=max(ans,e.se+tosum);
     }
+    for(auto & e : m2){
+        ll tosum=m1.count(e.f) ? m1[e.f] : 0ll;
+        ans=max(ans,e.se+tosum);
+    }
+    cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

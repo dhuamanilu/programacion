@@ -34,6 +34,19 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+
+    ll ans=LONG_LONG_MAX,i=0,j=n-1;
+    while(i<j){
+        if(a[j]%ans!=a[i]%ans){
+            ans=min(ans,abs(a[j]-a[i]));
+        }
+        i++;
+        j--;
+    }
+    if(ans==LONG_LONG_MAX){
+        ans=0;
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
