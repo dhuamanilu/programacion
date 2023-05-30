@@ -24,52 +24,74 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
-const int N=200000+5;
-const int MAXN=200000+5;
-vpll a[MAXN];
-ll dp[MAXN],id[MAXN];
-ll ans=0;
-void dfs(ll ele){
-    for(auto & e : a[ele]){
-        if(dp[e.f]==0){
-            dp[e.f]=dp[ele]+(e.se<=id[ele]);
-            id[e.f]=e.se;
-            dfs(e.f);
-        }
-    }
+const int MAXN = 200005;
+
+const int N = 2e5+5;  // limit for array size
+int n;  // array size
+int t[2 * N];
+
+void build() {  // build the tree
+  for (int i = n - 1; i > 0; --i) t[i] = t[i<<1] + t[i<<1|1];
 }
+
+void modify(int p, int value) {  // set value at position p
+  for (t[p += n] = value; p > 1; p >>= 1) t[p>>1] = t[p] + t[p^1];
+}
+
+int query(int l, int r) {  // sum on interval [l, r)
+  int res = 0;
+  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+    if (l&1) res += t[l++];
+    if (r&1) res += t[--r];
+  }
+  return res;
+}
+
 void solve(){
-    ll n;
-    cin>>n;
-    ans=0;
-    FOR(i,0,n){
-        a[i].clear();
-        dp[i]=0;
-        id[i]=0;
+    ll q;
+    cin>>n>>q;
+    n*=2;
+    build();
+
+    while(q--){
+        char aux;
+        cin>>aux;
+        if(aux=='-'){
+            ll num;
+            cin>>num;
+            num--;
+            modify(num,1);
+            modify(num+n/2,1);
+        }
+        else if(aux=='+'){
+            ll num;
+            cin>>num;
+            num--;
+            modify(num,0);
+            modify(num+n/2,0);
+        }
+        else{
+            ll from,to;
+            cin>>from>>to;
+            from--;
+            to--;
+            if(from>to) swap(from,to);
+            //dbgm(query(from,to+1));
+            if(query(from,to+1) && query(to,from+n/2+1)){
+                cout<<"impossible\n";
+            }
+            else{
+                cout<<"possible\n";
+            }
+        }
+
     }
-    FOR(i,1,n){
-        ll u,v;
-        cin>>u>>v;
-        u--;
-        v--;
-        a[u].pb({v,i});
-        a[v].pb({u,i});
-    }
-    dp[0]=1;
-    dfs(0);
-    FOR(i,0,n){
-        //dbg(dp[i]);
-        ans=max(ans,dp[i]);
-    }
-    cout<<ans<<"\n";
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }

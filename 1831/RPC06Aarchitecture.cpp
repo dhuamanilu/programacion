@@ -25,51 +25,35 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=200000+5;
-const int MAXN=200000+5;
-vpll a[MAXN];
-ll dp[MAXN],id[MAXN];
-ll ans=0;
-void dfs(ll ele){
-    for(auto & e : a[ele]){
-        if(dp[e.f]==0){
-            dp[e.f]=dp[ele]+(e.se<=id[ele]);
-            id[e.f]=e.se;
-            dfs(e.f);
+const int N=1000+3;
+
+void solve(){
+    ll a,b;
+    cin>>a>>b;
+    ll mini=min(a,b),maxi=max(a,b);
+    a=mini;
+    b=maxi;
+    ll cont=0;
+    FOR(x,0,a-1){
+        ll calc=(a-1)*(a-1)-(x*x);
+        ll y=sqrtl(calc);
+        if(y*y==calc){
+            if((y*(b-1))%(a-1)==0 && (x*(b-1))%(a-1)==0) cont++;
         }
     }
-}
-void solve(){
-    ll n;
-    cin>>n;
-    ans=0;
-    FOR(i,0,n){
-        a[i].clear();
-        dp[i]=0;
-        id[i]=0;
+    if(a==b){
+        cout<<cont<<"\n";
     }
-    FOR(i,1,n){
-        ll u,v;
-        cin>>u>>v;
-        u--;
-        v--;
-        a[u].pb({v,i});
-        a[v].pb({u,i});
+    else{
+        cout<<2*cont<<"\n";
     }
-    dp[0]=1;
-    dfs(0);
-    FOR(i,0,n){
-        //dbg(dp[i]);
-        ans=max(ans,dp[i]);
-    }
-    cout<<ans<<"\n";
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
