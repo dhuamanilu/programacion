@@ -26,34 +26,35 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
-void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
-        }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
-    }
 
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+    ll a[n];
+    ll b[m];
+    ll sum1=0,sum2=0;
+    FOR(i,0,n){
+        cin>>a[i];
+        sum1+=a[i];
+    }
+    FOR(i,0,m){
+        cin>>b[i];
+        sum2+=b[i];
+    }
+    if(sum1==sum2){
+        cout<<"Draw\n";
+    }
+    else if(sum1>sum2){
+        cout<<"Tsondu\n";
+    }
+    else{
+        cout<<"Tenzing\n";
+    }
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +62,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

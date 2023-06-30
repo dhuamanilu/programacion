@@ -24,20 +24,12 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    mll m;
-    FOR(i,0,n){
-        cin>>a[i];
-        m[a[i]]++;
+    if(n%2==1){
+        cout<<"Alice\n";
     }
-    ll ans=0;
-    vll dp(100001,0);
-    dp[1]=m.count(1) ? m[1] : 0;
-    dp[2]=max(dp[1],m[2]*2);
-    FOR1(i,3,1e5){
-        dp[i]=max(dp[i-1],dp[i-2]+i*m[i]);
+    else{
+        cout<<"Bob\n";
     }
-    cout<<dp[(ll)1e5]<<"\n";
 }
 
 int main(){

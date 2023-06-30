@@ -31,25 +31,27 @@ void solve(){
     string s;
     cin>>s;
     ll n=s.size();
-    map<ll,string> m1,m2;
+    mll ab,ba;
     FOR(i,0,n-1){
-        if(s[i]=='A' && s[i+1]=='B'){
-            m1[i]="AB";
-        }
-        else if(s[i]=='B' && s[i+1]=='A'){
-            m2[i]="BA";
+        if(s[i]=='A' && s[i+1]=='B') ab[i]++;
+        else if(s[i]=='B' && s[i+1]=='A') ba[i]++;
+    }
+    for(auto & e : ab){
+        if(!ba.count(e.f+1) && !ba.count(e.f-1)){
+            //cout<<e.f<<" "<<e.se<<"\n";
+            //cout<<"HOLA1\n";
+            cout<<"YES\n";
+            return;
         }
     }
-    for(auto e : m1){
-        for(auto v : m2){
-            if(e.f+1!=v.f && v.f+1!=e.f){
-                cout<<"YES\n";
-                return;
-            }
+    for(auto & e : ba){
+        if(!ab.count(e.f+1) && !ab.count(e.f-1)){
+            //cout<<"HOLA2\n";
+            cout<<"YES\n";
+            return;
         }
     }
     cout<<"NO\n";
-
 }
 int main(){
     ios_base::sync_with_stdio(0);

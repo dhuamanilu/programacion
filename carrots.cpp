@@ -22,22 +22,14 @@ const char nl = '\n';
 const int MX = 100005;
 const int N=1000+3;
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    mll m;
+    ll n,p;
+    cin>>n>>p;
     FOR(i,0,n){
-        cin>>a[i];
-        m[a[i]]++;
+        string s;
+        cin>>s;
     }
-    ll ans=0;
-    vll dp(100001,0);
-    dp[1]=m.count(1) ? m[1] : 0;
-    dp[2]=max(dp[1],m[2]*2);
-    FOR1(i,3,1e5){
-        dp[i]=max(dp[i-1],dp[i-2]+i*m[i]);
-    }
-    cout<<dp[(ll)1e5]<<"\n";
+    cout<<p<<"\n";
+
 }
 
 int main(){

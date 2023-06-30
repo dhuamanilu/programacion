@@ -28,36 +28,44 @@ const int MX = 100005;
 const int N=1000+3;
 vector<ll> G[MX];
 ll a[MX];
-vector <bool> vis(MX,false);
-ll ans=0,m;
-void dfs(ll u,ll k){
-    if(k>m) return;
-    ll ok=1;
-    assert(!vis[u]);
-    vis[u]=true;
-    for(auto e : G[u]){
-        if(!vis[e]){
-            ok=0;
-            dfs(e,k*a[e-1]+a[e-1]);
-        }
-    }
-    ans+=ok;
-}
 void solve(){
-    ll n;
+    ll n,m;
     cin>>n>>m;
-    FOR(i,0,n){
+    FOR1(i,1,n){
+        G[i].clear();
+    }
+    FOR1(i,1,n){
         cin>>a[i];
     }
     FOR(i,0,n-1){
-        ll x,y;
-        cin>>x>>y;
-        G[x].pb(y);
-        G[y].pb(x);
+        ll u,v;
+        cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
     }
-    dfs(1,a[0]);
+    ll ans=0;
+    function<void(ll,ll,ll)> dfs = [&](ll cont,ll u, ll parent) {
+        if (G[u].size()==1 && u!=1) {
+            if (cont<=m) {
+                //cout<<"aumentar ans\n";
+                ans++;
+            }
+            return;
+        }
+        for(auto & v : G[u]){
+            if(v != parent){
+                ll newCont=a[v] ? cont+1 : 0ll;
+                if(newCont > m) continue;
+                dfs(newCont,v, u);
+            }
+        }
+    };
+    ll inicial=a[1];
+    //dbg(inicial);
+    dfs(inicial,1, -1);
     cout<<ans<<"\n";
 }
+
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);

@@ -26,45 +26,63 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
+
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
+    string s;
+    cin>>s;
+    ll n=s.size();
+    mll m1,m2;
+    FOR(i,0,26){
+        m1['a'+i]++;
+        m2['A'+i]++;
+    }
+    bool ok=true;
+    FOR(i,0,n){
+        if(!m2.count(s[i])){
+            ok=false;
             break;
         }
-        k-=ri-left+1;
     }
-    if(!ok){
-        cout<<"-1\n";
+    if(ok){
+        transform(s.begin(), s.end(), s.begin(), ::tolower);
+        cout<<s<<"\n";
     }
+    else{
 
+        if(m1.count(s[0])){
+            ok=true;
+            FOR(i,1,n){
+                if(!m2.count(s[i])){
+                    ok=false;
+                    break;
+                }
+            }
+        }
+        if(ok){
+            string ans="";
+            ans+=toupper(s[0]);
 
+            FOR(i,1,n){
+                ans+=tolower(s[i]);
+
+            }
+            cout<<ans<<"\n";
+        }
+        else{
+            cout<<s<<"\n";
+        }
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
 
 
 

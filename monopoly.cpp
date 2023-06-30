@@ -25,19 +25,20 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-    mll m;
     FOR(i,0,n){
         cin>>a[i];
-        m[a[i]]++;
     }
-    ll ans=0;
-    vll dp(100001,0);
-    dp[1]=m.count(1) ? m[1] : 0;
-    dp[2]=max(dp[1],m[2]*2);
-    FOR1(i,3,1e5){
-        dp[i]=max(dp[i-1],dp[i-2]+i*m[i]);
+    ll cont=0;
+    FOR1(i,1,6){
+        FOR1(j,1,6){
+            FOR(k,0,n){
+                if(i+j==a[k]) cont++;
+            }
+        }
     }
-    cout<<dp[(ll)1e5]<<"\n";
+    cout<<cont*1.0/36*1.0<<"\n";
+
+
 }
 
 int main(){

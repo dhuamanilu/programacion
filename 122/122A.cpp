@@ -26,45 +26,52 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
-void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+void solve2(){
+    ll n;
+    cin>>n;
+    ll a[]={4,7};
+    vector<ll> b={4,7};
+    ll cont=0;
+    bool ok=true;
+    for(int i=0; i<n; i++){
+        ll aux=cont;
+
+        for(int j=aux; j<b.size(); j++){
+            cont++;
+            if(b[j]*10 + 4 > 1000){
+                ok=false;
+                break;
+            }
+            dbgm(b[j]*10 + 4,b[j]*10 + 7);
+            b.push_back(b[j]*10 + 4);
+            b.push_back(b[j]*10 + 7);
         }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
+        if(!ok) break;
     }
 
-
+    // Imprimir el vector b
+    for(int i=0; i<b.size(); i++){
+        cout << b[i] << " ";
+    }
+    cout << endl;
 }
+
+/*void solve(){
+    ll n;
+    cin>>n;
+    ll a[]={4,7};
+    ll b[]={4,7,44,47,74,77,444,447,474,477,744,747,774,777};
+}*/
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
-        solve();
+        solve2();
     }
     return 0;
 }
-
-
-
-
 
 
 

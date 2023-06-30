@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,45 +28,83 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
+
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+    ll n,m,d;
+    cin>>n>>m>>d;
+    vector<vll> a(n,vll(m,0));
+    vll b;
+    FOR(i,0,n){
+        FOR(j,0,m){
+            cin>>a[i][j];
+            b.pb(a[i][j]);
         }
-        k-=ri-left+1;
     }
-    if(!ok){
-        cout<<"-1\n";
+    vll explorar;
+    sort(all(b));
+    if(b.size()%2==1){
+        explorar.pb(b[b.size()/2]);
     }
+    else{
+        explorar.pb(b[b.size()/2]);
+        explorar.pb(b[(b.size()/2) - 1]);
+    }
+    ll ans=LONG_LONG_MAX;
+    for(auto & e : explorar){
+        ll to=e;
+            ll cont=0;
+            bool ok=true;
+            FOR(it1,0,n){
+                FOR(it2,0,m){
+                    if((to-a[it1][it2])%d==0){
+                        cont+=abs((to-a[it1][it2])/d);
+                    }
+                    else{
+                        ok=false;
+                        break;
 
+                    }
+                }
+                if(!ok) break;
+            }
+            if(ok)
+                ans=min(ans,cont);
+    }
+    /*FOR(i,0,n){
+        FOR(j,0,m){
+            ll to=a[i][j];
+            ll cont=0;
+            bool ok=true;
+            FOR(it1,0,n){
+                FOR(it2,0,m){
+                    if((to-a[it1][it2])%d==0){
+                        cont+=abs((to-a[it1][it2])/d);
+                    }
+                    else{
+                        ok=false;
+                        break;
 
+                    }
+                }
+                if(!ok) break;
+            }
+            if(ok)
+                ans=min(ans,cont);
+        }
+    }*/
+    if(ans==LONG_LONG_MAX) ans=-1;
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
 
 
 

@@ -24,36 +24,58 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-ll P10[14];
+vll G[MX];
+ll ans=0;
+bool vecino(ll x,ll y){
+    for(auto & e : G[x]){
+        if(e==y) return true;
+    }
+    return false;
+}
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+    ll n;
+    cin>>n;
+    FOR1(i,1,n){
+        G[i].clear();
+    }
+    ans=0;
+    vll res(n+1,0);
+    vll degree(n+1,0);
+    FOR(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
+        degree[u]++;
+        degree[v]++;
+    }
+    FOR1(i,1,n){
+        if(degree[i]==1 && i!=1){
+            res[i]=1;
         }
-        k-=ri-left+1;
     }
-    if(!ok){
-        cout<<"-1\n";
+    function<void(ll,ll)> dfs = [&](ll u, ll parent) {
+        for(auto & v : G[u]){
+            if(v != parent){
+                dfs(v, u);
+                res[u] += res[v];
+            }
+        }
+    };
+    dfs(1, -1);
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+        ll x,y;
+        cin>>x>>y;
+        cout<<res[x]*res[y]<<"\n";
     }
-
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +83,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

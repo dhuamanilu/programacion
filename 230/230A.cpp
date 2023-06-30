@@ -5,8 +5,6 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map <ll,ll> mll;
-typedef vector <pair<ll,ll>> vpll;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -19,34 +17,42 @@ typedef vector <pair<ll,ll>> vpll;
 #define ins insert
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100005;
+const int MX = 1000005;
 const int N=1000+3;
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    mll m;
-    FOR(i,0,n){
-        cin>>a[i];
-        m[a[i]]++;
+bool customCompare(const pair<ll,ll>& a, const pair<ll,ll>& b) {
+    // Ordenar por el menor del primer elemento
+    if (a.first != b.first) {
+        return a.first < b.first;
     }
-    ll ans=0;
-    vll dp(100001,0);
-    dp[1]=m.count(1) ? m[1] : 0;
-    dp[2]=max(dp[1],m[2]*2);
-    FOR1(i,3,1e5){
-        dp[i]=max(dp[i-1],dp[i-2]+i*m[i]);
-    }
-    cout<<dp[(ll)1e5]<<"\n";
+
+    // Ordenar por el mayor del segundo elemento
+    return a.second > b.second;
 }
 
+void solve(){
+    ll s,n;
+    cin>>s>>n;
+    vector<pair<ll,ll>> x(n);
+    FOR(i,0,n){
+        cin>>x[i].first>>x[i].second;
+    }
+    sort(all(x),customCompare);
+    FOR(i,0,n){
+        if(s > x[i].f){
+            s+=x[i].se;
+        }
+        else{
+            cout<<"NO\n";
+            return;
+        }
+    }
+    cout<<"YES\n";
+}
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
-    while(t--){
-        solve();
-    }
+    cout.tie(0);
+    solve();
     return 0;
 }
 

@@ -26,34 +26,51 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
+struct info{
+    ll ansmini=0,ansmaxi=0,suffmini=0,suffmaxi=0;
+};
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+    ll n;
+    cin>>n;
+    vector<info> a;
+    info ab;
+    ab.suffmaxi=1;
+    ab.suffmini=0;
+    ab.ansmaxi=1;
+    ab.ansmini=0;
+    a.pb(ab);
+    FOR(i,0,n){
+        char aux;
+        cin>>aux;
+        if(aux=='+'){
+            ll v,x;
+            cin>>v>>x;
+            v--;
+            info in;
+            in.suffmini=min(0ll,x+a[v].suffmini);
+            in.suffmaxi=max(0ll,a[v].suffmaxi+x);
+            in.ansmaxi=max(a[v].ansmaxi,in.suffmaxi);
+            in.ansmini=min(a[v].ansmini,in.suffmini);
+            a.pb(in);
         }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
-    }
+        else{
+            ll u,v,k;
+            cin>>u>>v>>k;
+            u--;
+            v--;
+            if(a[v].ansmini<= k && k <= a[v].ansmaxi){
+                cout<<"YES\n";
+            }
+            else{
+                cout<<"NO\n";
+            }
+        }
 
-
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +78,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

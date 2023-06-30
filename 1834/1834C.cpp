@@ -32,47 +32,27 @@ void solve(){
     cin>>n;
     string s,t;
     cin>>s>>t;
-    ll diff=0;
+    ll ans=LONG_LONG_MAX;
+    FOR(k,0,2){
+        ll diff=0;
+        FOR(i,0,n){
+            diff+=(s[i]!=t[i]);
+        }
+        if(diff%2==k){
+            ans=min(ans,2*diff);
+        }
+        else if(diff>0){
+            ans=min(ans,2*diff-1);
+        }
+        else{
+            ans=min(ans,2ll);
+        }
+        reverse(all(s));
+    }
+    cout<<ans<<"\n";
 
-    FOR(i,0,n){
-        diff+=(s[i]!=t[i]);
-    }
-    if(diff==0){
-        cout<<"0\n";
-    }
-    else if(diff==1){
-        cout<<"1\n";
-    }
-    else{
-        ll ans=0,i=0,j=n-1;
-        ll paridad1=0,paridad2=0;
-        while(i<n){
-            ans+=(s[i]!=t[j]);
-            if(i<j){
-                paridad1=ans;
-            }
-            else{
-                paridad2=ans-paridad1;
-            }
-            s[i]='a';
-            t[j]='a';
-            i++;
-            j--;
-        }
-        if(ans<=1){
-            cout<<"2\n";
-        }
-        else {
-            ans*=2;
-            if(paridad1%2==paridad2%2 || n%2==1) ans--;
-            cout<<ans<<"\n";
-        }
-        /*else{
-            ans*=2;
-            if(n%2==1) ans--;
-            cout<<ans<<"\n";
-        }*/
-    }
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

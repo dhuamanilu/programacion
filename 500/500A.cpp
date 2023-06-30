@@ -24,47 +24,53 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 30005;
 const int N=1000+3;
-ll P10[14];
+vll G[MX];
+vector<bool> vis(MX,false);
+bool dfs(ll ele,ll des){
+    if(ele==des){
+        return true;
+    }
+    vis[ele]=true;
+
+    for(auto & e : G[ele]){
+        if(!vis[e] && dfs(e,des)) return true;
+    }
+    return false;
+}
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
-        }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
-    }
 
-
+    ll n,t;
+    cin>>n>>t;
+    FOR(i,0,MX){
+        G[i].clear();
+        vis[i]=false;
+    }
+    ll a[n-1];
+    FOR(i,0,n-1){
+        cin>>a[i];
+        ll neighbor=a[i]+i+1;
+        G[a[i]].pb(neighbor);
+        //G[neighbor].pb(a[i]);
+    }
+    if(dfs(1,t)){
+        cout<<"YES\n";
+    }
+    else{
+        cout<<"NO\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
 
 
 

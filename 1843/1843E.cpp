@@ -26,34 +26,107 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
-void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+//https://leetcode.com/problems/range-sum-query-mutable/solutions/1218358/c-segment-tree-explained/
+class NumArray {
+public:
+    vector<int> seg;
+    int n;
+    void buildTree(vector<int>& nums, int pos, int left, int right){
+        if (left == right){
+            seg[pos] = nums[left];
+            return;
         }
-        k-=ri-left+1;
+        int mid = (left+right)/2;
+        buildTree(nums, 2*pos+1, left, mid);
+        buildTree(nums, 2*pos+2, mid+1, right);
+        seg[pos]=seg[2*pos+1]+ seg[2*pos+2];
     }
-    if(!ok){
-        cout<<"-1\n";
+    void updateUtil(int pos, int left, int right, int index, int val) {
+        if(index <left || index >right) return;
+        if(left==right){
+            if(left==index)
+                seg[pos]=val;
+            return;
+        }
+        int mid=(left+right)/2;
+        updateUtil(2*pos+1,left,mid,index,val);
+        updateUtil(2*pos+2,mid+1,right,index,val);
+        seg[pos]=seg[2*pos+1]+seg[2*pos+2];
     }
+    int rangeUtil(int qlow, int qhigh, int low, int high, int pos){
+        if (qlow <= low && qhigh>= high){
+            return seg[pos];
+        }
+        if (qlow > high || qhigh < low) {
+            return 0;
+        }
+        int mid = low+(high-low)/2;
+        return (rangeUtil(qlow, qhigh, low, mid, 2*pos+1) + rangeUtil(qlow, qhigh, mid+1, high, 2*pos+2));
+    }
+    NumArray(vector<int>& nums) {
+        if(nums.size() > 0){
+            n = nums.size();
+            seg.resize(4*n,0);
+            buildTree(nums, 0, 0, n-1);
+        }
+    }
+    void update(int index, int val) {
+        if(n==0)return;
+        updateUtil(0,0,n-1, index, val);
+    }
+    int sumRange(int left, int right) {
+        if(n==0)return 0;
+        return rangeUtil(left, right, 0, n-1, 0);
+    }
+};
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+    vector<pair<ll,ll>> a(m,{0,0});
+    FOR(i,0,m){
+        cin>>a[i].f>>a[i].se;
+        a[i].f--;
+        a[i].se--;
+    }
+    //obj->update(index,val);
+    //int param_2 = obj->sumRange(left,right);
+    ll q;
+    cin>>q;
+    vll cambios(q);
+    FOR(i,0,q){
+        cin>>cambios[i];
+        cambios[i]--;
+    }
+    ll ans=-1,s=0,e=q,mid=s+(e-s)/2;
 
+    while(s<=e){
+        vector<int> nums(n,0);
+        NumArray* obj = new NumArray(nums);
+        mid=s+(e-s)/2;
+        bool ok=false;
+        FOR(j,0,mid){
+            obj->update(cambios[j],1);
+        }
+        for(auto & e : a){
+            if(2*obj->sumRange(e.f,e.se) > e.se-e.f+1){
+                ok=true;
+                break;
+            }
+        }
+        if(ok){
+            ans=mid;
+            e=mid-1;
+        }
+        else{
+            s=mid+1;
+        }
+    }
+    cout<<ans<<"\n";
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +134,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

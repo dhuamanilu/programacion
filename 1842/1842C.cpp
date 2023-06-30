@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,34 +28,74 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
-void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+
+struct Interval {
+    int start;
+    int stop;
+    int score;
+};
+
+bool compareIntervals(const Interval& a, const Interval& b) {
+    return a.stop < b.stop;
+}
+
+ll findMaxScore(std::vector<Interval>& intervals) {
+    ll n = intervals.size();
+    std::vector<ll> best(n + 1, 0);
+
+    std::sort(intervals.begin(), intervals.end(), compareIntervals);
+
+    for (ll i = 1; i <= n; i++) {
+        ll j = i - 1;
+        while (j > 0 && intervals[j - 1].stop >= intervals[i - 1].start) {
+            j--;
         }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
+        best[i] = std::max(best[i - 1], best[j] + intervals[i - 1].score);
     }
 
+    return best[n];
+}
+
+void solve(){
+    ll n;
+    cin>>n;
+    vll a(n);
+
+    map<ll,vll> pos;
+    FOR(i,0,n){
+        cin>>a[i];
+        pos[a[i]].pb(i);
+    }
+    vector<Interval> rangos;
+    for (auto& p : pos) {
+        if (p.second.size() < 2) {
+            continue;
+        }
+        ll num = p.first;
+        vll& positions = p.second;
+
+        for (ll i = 0; i < positions.size(); i++) {
+            for (ll j = i + 1; j < positions.size(); j++) {
+                if(positions[j] - positions[i] + 1 < 2){
+                    continue;
+                }
+                Interval aux;
+                aux.start = positions[i];
+                aux.stop = positions[j];
+                aux.score = positions[j] - positions[i] + 1;
+
+                rangos.pb(aux);
+            }
+        }
+    }
+
+
+    cout<<findMaxScore(rangos)<<"\n";
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +103,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

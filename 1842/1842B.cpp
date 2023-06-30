@@ -26,34 +26,39 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
-void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
-        }
-        k-=ri-left+1;
-    }
-    if(!ok){
-        cout<<"-1\n";
-    }
 
+
+void solve(){
+    ll n,x;
+    cin>>n>>x;
+    vector<vll> a(n,vll(3,0));
+    FOR(j,0,3){
+        FOR(i,0,n){
+            cin>>a[i][j];
+        }
+    }
+    vector<ll> or1(3,0);
+    FOR(j,0,3){
+        FOR(i,0,n){
+            ll aux=(or1[j]|a[i][j]);
+            if((x&aux)==aux){
+                or1[j]|=a[i][j];
+            }
+            else break;
+        }
+    }
+    ll auxor=(or1[0]|or1[1]);
+    if((auxor|or1[2])==x){
+        cout<<"YES\n";
+    }
+    else{
+        cout<<"NO\n";
+    }
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
     cin>>t;
     while(t--){
@@ -61,10 +66,6 @@ int main(){
     }
     return 0;
 }
-
-
-
-
 
 
 

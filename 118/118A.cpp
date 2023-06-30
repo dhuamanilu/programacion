@@ -26,45 +26,36 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll P10[14];
+
 void solve(){
-    ll a,b,c,k;
-    cin>>a>>b>>c>>k;
-    bool ok=false;
-    FOR(i,P10[a-1],P10[a]){
-        ll left=max(P10[c-1]-i,P10[b-1]),ri=min(P10[c]-i-1,P10[b]-1);
-        if(left>ri) continue;
-        if(k<=ri-left+1){
-            ok=true;
-            cout<<i<<" + "<<left+k-1<<" = "<<i+left+k-1<<"\n";
-            break;
+    string s;
+    cin>>s;
+    transform(s.begin(), s.end(), s.begin(), ::toupper);
+    ll n=s.size();
+    string ans="";
+    map<char,ll> m;
+    string aux="AEIOUY";
+    for(auto & e : aux){
+        m[e]++;
+    }
+    FOR(i,0,n){
+        if(!m.count(s[i])){
+            ans+=".";
+            ans+=char(tolower(s[i]));
         }
-        k-=ri-left+1;
     }
-    if(!ok){
-        cout<<"-1\n";
-    }
-
-
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    P10[0]=1;
-    FOR(i,1,14){
-        P10[i]=P10[i-1]*10;
-    }
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
 
 
 
