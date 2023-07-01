@@ -26,15 +26,54 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll sumD(ll n){
+    ll ans=0;
+    while(n>0){
+        ll d=n%10;
+        ans+=d;
+        n/=10;
+    }
+    return ans;
+}
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    if(n%2==0){
+        cout<<n/2<<" "<<n/2<<"\n";
+    }
+    else{
+        vll dg;
+        while(n){
+            dg.pb(n%10);
+            n/=10;
+        }
+        vll ans1,ans2;
+        ll ctm=0;
+        FOR(i,0,dg.size()){
+            if(dg[i]%2==1){
+                ans1.pb(dg[i]/2 + ctm);
+                ans2.pb((dg[i]/2)+1-ctm);
+                ctm^=1;
+            }
+            else{
+                ans1.pb(dg[i]/2);
+                ans2.pb(dg[i]/2);
+            }
+        }
+        ll res1=0,res2=0,pot=1;
+        FOR(i,0,ans1.size()){
+            res1+=ans1[i]*pot;
+            pot*=10;
+        }
+        pot=1;
+        FOR(i,0,ans2.size()){
+            res2+=ans2[i]*pot;
+            pot*=10;
+        }
+        cout<<res1<<" "<<res2<<"\n";
     }
 }
+
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);

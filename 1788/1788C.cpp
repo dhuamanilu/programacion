@@ -34,6 +34,12 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    FOR1(i,1,1000){
+        cout<<i<<" ";
+    i++;
+
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

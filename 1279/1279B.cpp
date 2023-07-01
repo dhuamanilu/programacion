@@ -28,17 +28,7 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,s;
-    cin>>n>>s;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    ll ans;
-    FOR(i,0,n){
-        auto x=lower_bound(a,a+n,s+a[i])-a;
 
-    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

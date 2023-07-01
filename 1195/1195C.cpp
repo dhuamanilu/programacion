@@ -23,20 +23,19 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n],b[n];
-    FOR(i,0,n){
+    ll a[n+1],b[n+1];
+    FOR1(i,1,n){
         cin>>a[i];
     }
-    FOR(i,0,n){
+    FOR1(i,1,n){
         cin>>b[i];
     }
-    ll dp[n][2];
-    FOR(i,0,n){
-        FOR(j,0,2){
-            dp[i][j]=max(dp[i-1][j]);
-        }
+    vector<vll> dp(n+1,vll(2,0));
+    FOR1(i,1,n){
+        dp[i][0]=max(dp[i-1][0],dp[i-1][1]+a[i]);
+        dp[i][1]=max(dp[i-1][1],dp[i-1][0]+b[i]);
     }
-    cout<<max(dp[n-1][0],dp[n-1][1])<<"\n";
+    cout<<max(dp[n][0],dp[n][1])<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

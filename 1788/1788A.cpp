@@ -31,8 +31,32 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
+    ll cont=0;
     FOR(i,0,n){
         cin>>a[i];
+        if(a[i]==2) cont++;
+    }
+    if(cont&1){
+        cout<<"-1\n";
+        return;
+    }
+    ll cont2=0;
+    FOR(i,0,n){
+        if(a[i]==2){
+            cont2++;
+        }
+        if(cont2==cont/2){
+            cout<<i+1<<"\n";
+            return;
+        }
+    }
+    if(cont==0){
+        cout<<"1\n";
+        return;
+    }
+    else{
+        cout<<"-1\n";
+        return;
     }
 }
 int main(){

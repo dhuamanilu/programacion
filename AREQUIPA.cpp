@@ -1,0 +1,92 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<int, int> pi;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
+#define FOR(i, a, b) for (long long i=a; i<(b); i++)
+#define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
+#define mp make_pair
+#define pb push_back
+#define f first
+#define se second
+#define lb lower_bound
+#define ub upper_bound
+#define all(x) x.begin(), x.end()
+#define ins insert
+#define n_l '\n'
+#define dbg(...) cout << "[" << #__VA_ARGS__ << "]: "; cout << to_string(__VA_ARGS__) << endl
+template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<typename T> int SIZE(const T &t){ return t.size(); } string to_string(const string s, int x1=0, int x2=1e9){ return '"' + ((x1 < s.size()) ? s.substr(x1, x2-x1+1) : "") + '"'; } string to_string(const char* s) { return to_string((string) s); } string to_string(const bool b) { return (b ? "true" : "false"); } string to_string(const char c){ return string({c}); } template<size_t N> string to_string(const bitset<N> &b, int x1=0, int x2=1e9){ string t = ""; for(int __iii__ = min(x1,SIZE(b)),  __jjj__ = min(x2, SIZE(b)-1); __iii__ <= __jjj__; ++__iii__){ t += b[__iii__] + '0'; } return '"' + t + '"'; } template <typename A, typename... C> string to_string(const A (&v), int x1=0, int x2=1e9, C... coords); int l_v_l_v_l = 0, t_a_b_s = 0; template <typename A, typename B> string to_string(const pair<A, B> &p) { l_v_l_v_l++; string res = "(" + to_string(p.first) + ", " + to_string(p.second) + ")"; l_v_l_v_l--; return res; } template <typename A, typename... C> string to_string(const A (&v), int x1, int x2, C... coords) { int rnk = rank<A>::value; string tab(t_a_b_s, ' '); string res = ""; bool first = true; if(l_v_l_v_l == 0) res += n_l; res += tab + "["; x1 = min(x1, SIZE(v)), x2 = min(x2, SIZE(v)); auto l = begin(v); advance(l, x1); auto r = l; advance(r, (x2-x1) + (x2 < SIZE(v))); for (auto e = l; e != r; e = next(e)) { if (!first) { res += ", "; } first = false; l_v_l_v_l++; if(e != l){ if(rnk > 1) { res += n_l; t_a_b_s = l_v_l_v_l; }; } else{ t_a_b_s = 0; } res += to_string(*e, coords...); l_v_l_v_l--; } res += "]"; if(l_v_l_v_l == 0) res += n_l; return res; } void dbgm(){;} template<typename Heads, typename... Tails> void dbgm(Heads H, Tails... T){ cout << to_string(H) << " | "; dbgm(T...); }
+#define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
+const int MOD = 1000000007;
+const char nl = '\n';
+const int MX = 30005;
+const int N=1000+3;
+int minDistance(string word1, string word2) {
+        int m=word1.size();
+        int n=word2.size();
+        int dp[m+1][n+1];
+        for(int i=0;i<=m;i++)
+        {
+            dp[i][0]=i;
+        }
+        for(int j=0;j<=n;j++)
+        {
+            dp[0][j]=j;
+
+        }
+
+        for(int i=1;i<=m;i++)
+        {
+            for(int j=1;j<=n;j++)
+            {
+                if(word1[i-1]==word2[j-1])
+                {
+                    dp[i][j]=dp[i-1][j-1];
+
+                }
+                else
+                {   int mini=min(dp[i-1][j],dp[i][j-1]);
+                    dp[i][j]=1+ min(dp[i-1][j-1],mini);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+void solve() {
+    int n;
+    cin >>n;
+    FOR(i,0,n){
+        string escaneo;
+        cin>>escaneo;
+        ll ans=LONG_LONG_MAX;
+        FOR(j,0,escaneo.size()){
+            string s1=escaneo.substr(0,max(0ll,j-1));
+            string s2=escaneo.substr(j+1);
+            reverse(all(s2));
+            ll dist=minDistance(s1,s2);
+            ans=min(ans,dist);
+        }
+        FOR(j,0,escaneo.size()-1){
+            string s1=escaneo.substr(0,max(0ll,j+1));
+            string s2=escaneo.substr(j+1);
+            reverse(all(s2));
+            ll dist=minDistance(s1,s2);
+            ans=min(ans,dist);
+        }
+        cout<<"Prueba "<<i+1<<": "<<ans<<"\n";
+    }
+}
+
+int main() {
+    int t = 1;
+    while(t--)
+        solve();
+    return 0;
+}

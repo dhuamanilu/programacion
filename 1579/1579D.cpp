@@ -19,7 +19,22 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+void ctmr(){
+    vll primos;
+    FOR1(j,1,1e5){
+        bool ok=true;
+        for(ll i=2;i*i<=j;i++){
+            if(j%i==0){
+                ok=false;
+                break;
+            }
+        }
+        if(ok) primos.pb(j);
+    }
+    cout<<"aasdd "<<primos.back()<<"\n";
 
+
+}
 void solve(){
     ll n;
     cin>>n;
@@ -53,11 +68,12 @@ void solve(){
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
+    /*int t=1;
     cin>>t;
     while(t--){
         solve();
-    }
+    }*/
+    ctmr();
     return 0;
 }
 

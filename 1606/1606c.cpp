@@ -37,12 +37,13 @@ void solve(){
     ll ans=0;
     k++;
     FOR(i,0,n){
-        ll left=k;
-        if(i+1<n){
-            left=min(left,a[i+1]/a[i]-1);
-        }
-        ans+=a[i]*left;
-        k-=left;
+        if(k<=0) break;
+        ll tomar;
+        if(i+1<n)
+            tomar=min((a[i+1]/a[i])-1,k);
+        else  tomar=k;
+        ans+=tomar*a[i];
+        k-=tomar;
     }
     cout<<ans<<"\n";
 

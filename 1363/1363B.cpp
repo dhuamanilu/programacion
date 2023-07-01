@@ -25,8 +25,8 @@ void solve(){
     cin>>s;
     ll n=s.size();
     vector <ll> cont0(n,0),cont1(n,0);
-    cont0[0]=s[0]=='0';
-    cont1[0]=s[0]=='1';
+    cont0[0]=(s[0]=='0');
+    cont1[0]=(s[0]=='1');
     FOR(i,1,n){
         cont0[i]=cont0[i-1]+(s[i]=='0');
         cont1[i]=cont1[i-1]+(s[i]=='1');
