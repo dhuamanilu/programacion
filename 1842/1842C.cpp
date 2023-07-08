@@ -28,69 +28,22 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-struct Interval {
-    int start;
-    int stop;
-    int score;
-};
-
-bool compareIntervals(const Interval& a, const Interval& b) {
-    return a.stop < b.stop;
-}
-
-ll findMaxScore(std::vector<Interval>& intervals) {
-    ll n = intervals.size();
-    std::vector<ll> best(n + 1, 0);
-
-    std::sort(intervals.begin(), intervals.end(), compareIntervals);
-
-    for (ll i = 1; i <= n; i++) {
-        ll j = i - 1;
-        while (j > 0 && intervals[j - 1].stop >= intervals[i - 1].start) {
-            j--;
-        }
-        best[i] = std::max(best[i - 1], best[j] + intervals[i - 1].score);
-    }
-
-    return best[n];
-}
-
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-
-    map<ll,vll> pos;
-    FOR(i,0,n){
+    ll a[n+1];
+    FOR1(i,1,n){
         cin>>a[i];
-        pos[a[i]].pb(i);
     }
-    vector<Interval> rangos;
-    for (auto& p : pos) {
-        if (p.second.size() < 2) {
-            continue;
-        }
-        ll num = p.first;
-        vll& positions = p.second;
-
-        for (ll i = 0; i < positions.size(); i++) {
-            for (ll j = i + 1; j < positions.size(); j++) {
-                if(positions[j] - positions[i] + 1 < 2){
-                    continue;
-                }
-                Interval aux;
-                aux.start = positions[i];
-                aux.stop = positions[j];
-                aux.score = positions[j] - positions[i] + 1;
-
-                rangos.pb(aux);
-            }
-        }
+    vll dp(n+1,(ll)1e18);
+    vll mindp(n+1,(ll)1e18);
+    dp[0]=0;
+    FOR1(i,1,n){
+        dp[i]=min(dp[i-1]+1,mindp[a[i]]);
+        mindp[a[i]]=min(mindp[a[i]],dp[i-1]);
+        dbgm(dp[i],mindp[a[i]]);
     }
-
-
-    cout<<findMaxScore(rangos)<<"\n";
+    cout<<n-dp[n]<<"\n";
 
 }
 int main(){

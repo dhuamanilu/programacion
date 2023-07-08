@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,67 +24,67 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 30005;
+const int MX = 100001;
 const int N=1000+3;
-int minDistance(string word1, string word2) {
-        int m=word1.size();
-        int n=word2.size();
-        int dp[m+1][n+1];
-        for(int i=0;i<=m;i++)
-        {
-            dp[i][0]=i;
+
+void solve(){
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    reverse(all(a));
+    vll aux(8,0);
+    FOR(j,0,8){
+        if(a[0]&(1<<j)){
+            aux[j]++;
         }
-        for(int j=0;j<=n;j++)
-        {
-            dp[0][j]=j;
-
+    }
+    ll ans=LONG_LONG_MIN;
+    ll suma=0;
+    FOR(j,0,8){
+        if(aux[j]%2==1){
+            suma+=1<<j;
         }
-
-        for(int i=1;i<=m;i++)
-        {
-            for(int j=1;j<=n;j++)
-            {
-                if(word1[i-1]==word2[j-1])
-                {
-                    dp[i][j]=dp[i-1][j-1];
-
-                }
-                else
-                {   int mini=min(dp[i-1][j],dp[i][j-1]);
-                    dp[i][j]=1+ min(dp[i-1][j-1],mini);
-                }
+    }
+    ll xo=a[0];
+    ans=max(ans,suma);
+    FOR(i,1,n){
+        xo^=a[i];
+        //dbg(xo);
+        vll auxiliar(8,0);
+        FOR(j,0,8){
+            if(xo&(1<<j)){
+                auxiliar[j]++;
             }
         }
-        return dp[m][n];
-    }
-void solve() {
-    int n;
-    cin >>n;
-    FOR(i,0,n){
-        string escaneo;
-        cin>>escaneo;
-        ll ans=LONG_LONG_MAX;
-        FOR(j,0,escaneo.size()){
-            string s1=escaneo.substr(0,max(0ll,j-1));
-            string s2=escaneo.substr(j+1);
-            reverse(all(s2));
-            ll dist=minDistance(s1,s2);
-            ans=min(ans,dist);
+        ll sumita=0;
+        FOR(j,0,8){
+            if(auxiliar[j]%2==1){
+                sumita+=1<<j;
+            }
         }
-        FOR(j,0,escaneo.size()-1){
-            string s1=escaneo.substr(0,max(0ll,j+1));
-            string s2=escaneo.substr(j+1);
-            reverse(all(s2));
-            ll dist=minDistance(s1,s2);
-            ans=min(ans,dist);
-        }
-        cout<<"Prueba "<<i+1<<": "<<ans<<"\n";
+        ans=max(ans,sumita);
     }
-}
+    cout<<ans<<"\n";
 
-int main() {
-    int t = 1;
-    while(t--)
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int t=1;
+    cin>>t;
+    while(t--){
         solve();
+    }
     return 0;
 }
+
+
+
+
+
+
+
+

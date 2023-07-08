@@ -24,30 +24,48 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 1000005;
 const int N=1000+3;
+
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,x;
+    cin>>n>>x;
+    ll a[n];
+    vll coun(MX,0);
     FOR(i,0,n){
-        double C,t;
-        cin>>C>>t;
-        double periodo = C * t / 1000.0; // Convertir el tiempo a segundos
-        double frecuencia = 1.0 / periodo;
-        cout<<fixed<<setprecision(2)<<frecuencia<<" Hz"<<endl;
+        cin>>a[i];
+        coun[a[i]]++;
     }
+    sort(a,a+n,greater<ll>());
+    vll dp(x+1,0);
+    dp[0]=1;
+    FOR1(i,1,x){
+        FOR(j,0,n){
+            if(i-a[j]>=0){
+                dp[i]+=dp[i-a[j]];
+                dp[i]%=MOD;
+                if(coun[i-a[j]]>0){
+                    break;
+                }
+            }
+
+
+        }
+    }
+    cout<<dp[x]<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll t=1;
+    int t=1;
     //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
 
 
 

@@ -26,28 +26,69 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+vll valor={1,10,100,1000,10000};
+
 void solve(){
-    ll n;
-    cin>>n;
-    FOR(i,0,n){
-        double C,t;
-        cin>>C>>t;
-        double periodo = C * t / 1000.0; // Convertir el tiempo a segundos
-        double frecuencia = 1.0 / periodo;
-        cout<<fixed<<setprecision(2)<<frecuencia<<" Hz"<<endl;
+    string s;
+    cin>>s;
+    ll n=s.size();
+    vector<vector<ll>> a(n,vll(5,0));
+    vll pref(n,0);
+    vll masGrande(n,0);
+    masGrande[n-1]=s[n-1]-'A';
+    for(ll i=n-2;i>=0;i--){
+        masGrande[i]=max(masGrande[i+1],ll(s[i]-'A'));
     }
+    a[0][s[0]-'A']++;
+    ll primervalor=0;
+    if(s[0]-'A' >= masGrande[0]){
+        primervalor+=valor[s[0]-'A'];
+    }
+    else{
+        primervalor-=valor[s[0]-'A'];
+    }
+    pref[0]=primervalor;
+    FOR(i,1,n){
+        auto aux=a[i-1];
+        aux[s[i]-'A']++;
+        a[i]=aux;
+        ll toSum= s[i]-'A' >= masGrande[i] ? valor[s[i]-'A'] : -valor[s[i]-'A'];
+        pref[i]=pref[i-1]+toSum;
+    }
+    dbg(pref);
+    ll ans=LONG_LONG_MIN;
+    FOR(j,0,n){
+        FOR(i,0,5){
+            ll aux=('A'+i)>=masGrande[j] ? valor[i] : - valor[i];
+            FOR(k,0,max(i,masGrande[j])){
+                if(j>=1)
+                    aux-=a[j-1][k]*valor[k];
+            }
+            FOR(k,max(i,masGrande[j]),5){
+                if(j>=1)
+                    aux+=a[j-1][k]*valor[k];
+            }
+            if(aux+pref[n-1]-pref[j] > ans){
+                cout<<"MEJORARE CAMBIANDO EN LA POS:"<<j
+                <<"EL ELEMENTO TO:"<<char('A'+i)<<"\n";
+                cout<<ans<<" "<<aux<<" + "<<pref[n-1]<<" - "<<pref[j]<<"\n";
+            }
+            ans=max(ans,aux+pref[n-1]-pref[j]);
+        }
+    }
+
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll t=1;
-    //cin>>t;
+    int t=1;
+    cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
 
 
 

@@ -26,28 +26,52 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+
 void solve(){
     ll n;
     cin>>n;
+    ll a[n];
     FOR(i,0,n){
-        double C,t;
-        cin>>C>>t;
-        double periodo = C * t / 1000.0; // Convertir el tiempo a segundos
-        double frecuencia = 1.0 / periodo;
-        cout<<fixed<<setprecision(2)<<frecuencia<<" Hz"<<endl;
+        cin>>a[i];
     }
+    ll an=a[0];
+    FOR(i,1,n){
+        an&=a[i];
+    }
+    if(an==0){
+        ll cont=0;
+        FOR(i,0,n){
+            ll j=i;
+            ll aux=a[j];
+            if(aux==an){
+                cont++;
+                continue;
+            }
+            while(j<n && aux!=an){
+                aux&=a[j];
+                j++;
+            }
+            if(aux==an)
+                cont++;
+            i=j-1;
+        }
+        cout<<cont<<"\n";
+    }
+    else{
+        cout<<"1\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    ll t=1;
-    //cin>>t;
+    int t=1;
+    cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
 
 
 
