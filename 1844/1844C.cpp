@@ -30,25 +30,40 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+
+    ll a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll vis((1ll<<8),0);
-    ll xo=0,ans=LONG_LONG_MIN;
-    vis[0]=true;
-    FOR(i,0,n){
-
-        xo^=a[i];
-        FOR(j,0,vis.size()){
-            if(vis[j]){
-                ans=max(ans,xo^j);
+    if(n==1){
+        cout<<a[0]<<"\n";
+        return;
+    }
+    ll maxi=0;
+    FOR(i,1,n){
+        if(i==1){
+            if(a[i-1]+a[i+1] > a[i]){
+                maxi+=a[i-1]+a[i+1];
+                i++;
+            }
+            else{
+                maxi+=max(a[i-1],max(a[i],a[i+1]));
+                i++;
             }
         }
-        vis[xo]=true;
+        else{
+            if(a[i-1]+a[i+1] > a[i]){
+                maxi+=a[i+1];
+                i++;
+            }
+            else{
+                maxi+=max(a[i],a[i+1]);
+                i++;
+            }
+        }
 
     }
-    cout<<ans<<"\n";
+    cout<<maxi<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

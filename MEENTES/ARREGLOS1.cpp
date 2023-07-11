@@ -28,25 +28,31 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
+    ll n,m;
+    cin>>n>>m;
+    ll a[n][m];
     FOR(i,0,n){
-        cin>>a[i];
-    }
-    vll vis((1ll<<8),0);
-    ll xo=0,ans=LONG_LONG_MIN;
-    vis[0]=true;
-    FOR(i,0,n){
-
-        xo^=a[i];
-        FOR(j,0,vis.size()){
-            if(vis[j]){
-                ans=max(ans,xo^j);
+        string s;
+        cin>>s;
+        FOR(j,0,m){
+            if(s[j]=='_'){
+                a[i][j]=0;
+            }
+            else{
+                a[i][j]=1;
             }
         }
-        vis[xo]=true;
-
+    }
+    ll ans=1;
+    FOR(j,0,m){
+        bool ok=true;
+        FOR(i,0,n){
+            if(a[i][j]!=0){
+                ok=false;
+                break;
+            }
+        }
+        if(ok) ans++;
     }
     cout<<ans<<"\n";
 }
@@ -54,7 +60,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

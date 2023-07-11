@@ -26,29 +26,34 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+vector<pair<ll,ll>> getPrimes(ll x){
+    vpll ans;
+    ll hasta=x;
+    for(ll i=2;i*i<=hasta;i++){
+        ll cont=0;
+        while((x%i)==0){
+            x/=i;
+            cont++;
+        }
+        if(cont>0){
+            ans.pb({i,cont});
+        }
+    }
+    if(x>1) ans.pb({x,1});
+    return ans;
+}
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
+    auto x=getPrimes(n);
+    ll ans=2;
+    for(auto & e : x){
+        ans+=e.se;
     }
-    vll vis((1ll<<8),0);
-    ll xo=0,ans=LONG_LONG_MIN;
-    vis[0]=true;
     FOR(i,0,n){
-
-        xo^=a[i];
-        FOR(j,0,vis.size()){
-            if(vis[j]){
-                ans=max(ans,xo^j);
-            }
-        }
-        vis[xo]=true;
-
+        cout<<char('a'+(i)%ans);
     }
-    cout<<ans<<"\n";
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
