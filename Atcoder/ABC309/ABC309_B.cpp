@@ -28,9 +28,42 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll a,b;
-    cin>>a>>b;
-    cout<<(a+b-1)/b<<"\n";
+    ll n;
+    cin>>n;
+    ll a[n][n];
+    FOR(i,0,n){
+        string s;
+        cin>>s;
+        FOR(j,0,n){
+            a[i][j]=s[j]-'0';
+        }
+    }
+    cout<<a[1][0];
+    FOR(i,0,n-1){
+        cout<<a[0][i];
+    }
+    cout<<"\n";
+    FOR(i,1,n-1){
+        FOR(j,0,n){
+            if(j==0){
+                cout<<a[i+1][j];
+            }
+            else if(j==(n-1)){
+                //cout<<"HOLA ESTOY EN J=N-1 "<<j<<" "<<i-1<<" "<<a[i-1][j]<<"->";
+                cout<<a[i-1][j];
+            }
+            else{
+                cout<<a[i][j];
+            }
+        }
+        cout<<"\n";
+    }
+    FOR(i,1,n){
+        cout<<a[n-1][i];
+    }
+    cout<<a[n-2][n-1]<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

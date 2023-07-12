@@ -26,34 +26,66 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
-    }
-    sort(all(a));
+ll getA(ll a){
     ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
-        }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+    while(a>0){
+        a/=2;
+        cont++;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
+    return cont;
+}
+void solve(){
+    string s;
+    cin>>s;
+    map<char,ll> m;
+    FOR(i,0,s.size()){
+        m[s[i]]++;
+    }
+    if(m.size()==1){
+        cout<<"0\n";
+        return;
+    }
+    ll n=s.size();
+    ll ans=LONG_LONG_MAX;
+
+    FOR(j,0,26){
+
+        ll cont=0;
+        vll nums;
+        char act=char('a'+j);
+        if(!m.count(act)) continue;
+        FOR(i,0,n){
+            if(s[i]!=act){
+                cont++;
+            }
+            else{
+                if(cont>0)
+                    nums.pb(cont);
+                cont=0;
+            }
+        }
+        if(cont>0) nums.pb(cont);
+
+        ll maxLocal=LONG_LONG_MIN;
+        for(auto &e:nums){
+            //dbg(getA(e));
+            maxLocal=max(maxLocal,getA(e));
+        }
+        if(maxLocal==LONG_LONG_MIN){
+            maxLocal=LONG_LONG_MAX;
+        }
+        //dbg("\n");
+        ans=min(ans,maxLocal);
+    }
+    cout<<ans<<"\n";
+
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

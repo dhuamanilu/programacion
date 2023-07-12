@@ -26,34 +26,49 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+long long gcd(long long int a, long long int b)
+{
+  if (b == 0)
+    return a;
+  return gcd(b, a % b);
+}
 
+// Function to return LCM of two numbers
+long long lcm(ll a, ll b)
+{
+    return (a / gcd(a, b)) * b;
+}
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
+    ll n;
+    cin>>n;
     vpll a(n);
     FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+        cin>>a[i].f;
+        a[i].se=i;
     }
     sort(all(a));
-    ll cont=0;
+    ll mc=1;
+    vpll ans;
     FOR(i,0,n){
-        if(sum<=k){
-            break;
+        while(a[i].f%mc){
+            ans.pb({a[i].se+1,mc-a[i].f%mc});
+            a[i].f+=mc-a[i].f%mc;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+        mc=lcm(mc,a[i].f);
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
+    assert((ll)ans.size()<=n);
+    cout<<ans.size()<<"\n";
+    for(auto & e: ans){
+        cout<<e.f<<" "<<e.se<<"\n";
+    }
+
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

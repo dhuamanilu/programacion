@@ -25,29 +25,43 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=1000+5;
+vector<vll> a(N,vll(N,0));
+ll len;
+ll guarda1,guarda2;
+void go(ll num,ll x,ll y,bool ok){
+    if(x<0) x+=len;
+    if(y<0) y+=len;
+    x%=len;
+    y%=len;
+    if(!ok && x== guarda1 && y==guarda2){
+        return;
+    }
 
+    a[x][y]=num++;
+    x--;
+    y--;
+    if(x<0) x+=len;
+    if(y<0) y+=len;
+    x%=len;
+    y%=len;
+    if(a[x][y]!=0){
+        x+=2;
+        y++;
+    }
+    go(num,x,y,false);
+}
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
-    }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
+    cin>>len;
+    guarda1=0;
+    guarda2=len/2;
+    go(1,guarda1,guarda2,true);
+    FOR(i,0,len){
+        FOR(j,0,len){
+            cout<<a[i][j]<<" ";
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+        cout<<"\n";
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -24,13 +24,46 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 300005;
 const int N=1000+3;
-
+vector<ll> G[MX];
+ll bfs(ll tam,ll inicial,vector<bool> & vis){
+    vll dist(tam,-1);
+    queue<ll> cola;
+    cola.push(inicial);
+    dist[inicial]=0;
+    while(!cola.empty()){
+        ll x=cola.front();
+        cola.pop();
+        vis[x]=true;
+        for(auto & e : G[x]){
+            if(dist[e]==-1){
+                dist[e]=dist[x]+1;
+                cola.push(e);
+            }
+        }
+    }
+    return *(max_element(all(dist)));
+}
 void solve(){
-    ll a,b;
-    cin>>a>>b;
-    cout<<(a+b-1)/b<<"\n";
+    ll n1,n2,m;
+    cin>>n1>>n2>>m;
+    FOR(i,0,m){
+        ll u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    vector<bool> vis(MX,false);
+    ll dist=bfs(n1+n2,0,vis);
+    FOR(i,0,n1+n2){
+        vis[i]=false;
+    }
+    ll bfs2=bfs(n1+n2,n1+n2-1,vis);
+    dist+=bfs2+1;
+    cout<<dist<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

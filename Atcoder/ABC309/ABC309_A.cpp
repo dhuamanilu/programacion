@@ -30,7 +30,12 @@ const int N=1000+3;
 void solve(){
     ll a,b;
     cin>>a>>b;
-    cout<<(a+b-1)/b<<"\n";
+    if(b-a==1 && b!=4 && b!=7){
+        cout<<"Yes\n";
+    }
+    else{
+        cout<<"No\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

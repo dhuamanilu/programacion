@@ -26,34 +26,34 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll ask(ll l,ll r){
+    cout<<"? "<<l<<" "<<r<<endl;
+    ll movements;
+    cin>>movements;
+    return movements;
+}
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+    ll n,m;
+    cin>>n>>m;
+    ll k=ask(1,1);
+
+    ll p=ask(1,min(k+1,m)),q=ask(min(n,k+1),1);
+    if(k==p && p==q){
+        cout<<"! "<<k+1<<" "<<k+1<<endl;
     }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
-        }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+    else if(q<p){
+        cout<<"! "<<k+1<<" "<<q+1<<endl;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
+    else{
+        cout<<"! "<<p+1<<" "<<k+1<<endl;
+    }
 
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

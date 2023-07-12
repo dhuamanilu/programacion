@@ -28,32 +28,45 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
+    ll n;
+    cin>>n;
+    ll a[n];
     FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+        cin>>a[i];
     }
-    sort(all(a));
-    ll cont=0;
+    ll b[n];
     FOR(i,0,n){
-        if(sum<=k){
-            break;
+        cin>>b[i];
+    }
+    ll l=0,r=0,maxLen=LONG_LONG_MIN;
+    FOR(i,0,n){
+        ll j=i;
+        while(j+1<n && b[j]<=b[j+1]){
+            j++;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+        if(j-i+1>maxLen){
+            bool ok=false;
+            FOR1(k,i,j){
+                if(a[k]!=b[k]){
+                    ok=true;
+                    break;
+                }
+            }
+            if(ok){
+                maxLen=j-i+1;
+                l=i;
+                r=j;
+            }
+        }
+        i=j;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
+    cout<<l+1<<" "<<r+1<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

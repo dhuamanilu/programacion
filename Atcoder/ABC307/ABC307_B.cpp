@@ -26,28 +26,37 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
-    }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
+bool isPalindrome(string & a){
+    ll i=0,j=(ll)a.size()-1;
+    bool ok=true;
+    while(i<j){
+        if(a[i]!=a[j]){
+            ok=false;
             break;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
+        i++;
+        j--;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
+    return ok;
+}
+void solve(){
+    ll n;
+    cin>>n;
+    string a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    FOR(i,0,n){
+        FOR(j,0,n){
+            if(i==j) continue;
+            string aux=a[i]+a[j];
+            if(isPalindrome(aux)){
+                cout<<"Yes\n";
+                return;
+            }
+        }
+    }
+    cout<<"No\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

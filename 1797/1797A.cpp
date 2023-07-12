@@ -26,34 +26,42 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll n,m;
+ll dx[]={1,-1,0,0};
+ll dy[]={0,0,1,-1};
+bool isValid(ll x,ll y){
+    return x>=1 && x<=n && y>=1 && y<=m;
+}
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
-    }
-    sort(all(a));
+    cin>>n>>m;
+    ll x1,y1,x2,y2;
+    cin>>x1>>y1>>x2>>y2;
     ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
+    FOR(i,0,4){
+        ll nx=x1+dx[i],ny=y1+dy[i];
+        //dbgm(nx,ny);
+        if(isValid(nx,ny)){
+            cont++;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
+    ll cont2=0;
+    //dbg("barra n \n");
+    FOR(i,0,4){
 
+        ll nx=x2+dx[i],ny=y2+dy[i];
+        //dbgm(nx,ny);
+        if(isValid(nx,ny)){
+            cont2++;
+        }
+    }
+    //dbgm(cont,cont2);
+    cout<<min(cont,cont2)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

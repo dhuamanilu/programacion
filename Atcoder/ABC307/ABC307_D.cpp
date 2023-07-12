@@ -26,28 +26,37 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll h,w;
+bool isValid(ll a,ll b){
+    return a>=0 && a<h && b>=0 && b<w;
+}
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
-    }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
+    cin>>h>>w;
+    vector<vector<char>> a(h,vector<char>(w));
+    FOR(i,0,h){
+        FOR(j,0,w){
+            cin>>a[i][j];
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
+    ll dx[]={1,-1,0,0};
+    ll dy[]={0,0,1,-1};
+    FOR(i,0,h){
+        FOR(j,0,w){
+            if(a[i][j]=='#') continue;
+            ll cont=0;
+            FOR(k,0,4){
+                ll nx=i+dx[k],ny=j+dy[k];
+                if(isValid(nx,ny)){
+                    if(a[nx][ny]=='#')
+                        cont++;
+                }
+            }
+            if(cont>=2){
+                cout<<i+1<<" "<<j+1<<"\n";
+                return;
+            }
+        }
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

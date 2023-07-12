@@ -28,26 +28,20 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+    ll n;
+    cin>>n;
+    ll a[7*n];
+    FOR(i,0,7*n){
+        cin>>a[i];
     }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
+    ll aux=0;
+    FOR(i,0,7*n){
+        aux+=a[i];
+        if(i%7==6){
+            cout<<aux<<" ";
+            aux=0;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
 }
 int main(){
     ios_base::sync_with_stdio(0);

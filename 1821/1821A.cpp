@@ -28,32 +28,29 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
-    FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+    string s;
+    cin>>s;
+    if(s=="0" ||s[0]=='0'){
+        cout<<"0\n";
+        return;
     }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
+    ll n=s.size();
+    ll ans=1;
+    if(s[0]=='?'){
+        ans*=9;
+    }
+    FOR(i,1,n){
+        if(s[i]=='?'){
+            ans*=10;
         }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
     }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
-
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

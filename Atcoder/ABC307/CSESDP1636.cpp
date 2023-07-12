@@ -24,29 +24,18 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 1000005;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll sum=0;
-    vpll a(n);
+    ll n,x;
+    cin>>n>>x;
+    ll a[n];
     FOR(i,0,n){
-        cin>>a[i].f>>a[i].se;
-        sum+=a[i].se;
+        cin>>a[i];
     }
-    sort(all(a));
-    ll cont=0;
-    FOR(i,0,n){
-        if(sum<=k){
-            break;
-        }
-        sum-=a[i].se;
-        cont+=a[i].f-cont;
-    }
-    //if(sum==k) cont++;
-    cout<<cont+1<<"\n";
+    vector<vll> dp();
+
 
 }
 int main(){
@@ -59,11 +48,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
