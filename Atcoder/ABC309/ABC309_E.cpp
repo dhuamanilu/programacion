@@ -28,9 +28,33 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll a,b;
-    cin>>a>>b;
-    cout<<(a+b-1)/b<<"\n";
+    ll n,m;
+    cin>>n>>m;
+    vll p(n);
+    p[0]=0;
+    FOR(i,1,n){
+        cin>>p[i];
+        p[i]--;
+    }
+    vll dp(n+1,-1);
+    FOR(i,0,m){
+        ll x,y;
+        cin>>x>>y;
+        x--;
+        dp[x]=max(dp[x],y);
+    }
+    //dbg(dp);
+    FOR(i,0,n){
+        dp[i]=max(dp[i],dp[p[i]]-1);
+    }
+    //dbg(dp);
+    ll ans=0;
+    FOR(i,0,n){
+        if(dp[i]>=0)
+            ans++;
+    }
+    cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

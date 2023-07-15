@@ -30,40 +30,22 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-
-    ll a[n];
+    vll a(n);
+    bool allNegative=true;
     FOR(i,0,n){
         cin>>a[i];
+        if(a[i]>0) allNegative=false;
     }
-    if(n==1){
-        cout<<a[0]<<"\n";
+    if(allNegative){
+        cout<<*(max_element(all(a)))<<"\n";
         return;
     }
-    ll maxi=0;
-    FOR(i,1,n){
-        if(i==1){
-            if(a[i-1]+a[i+1] > a[i]){
-                maxi+=a[i-1]+a[i+1];
-                i++;
-            }
-            else{
-                maxi+=max(a[i-1],max(a[i],a[i+1]));
-                i++;
-            }
-        }
-        else{
-            if(a[i-1]+a[i+1] > a[i]){
-                maxi+=a[i+1];
-                i++;
-            }
-            else{
-                maxi+=max(a[i],a[i+1]);
-                i++;
-            }
-        }
-
+    ll sum1=0,sum2=0;
+    FOR(i,0,n){
+        if(i%2==0) sum1+=max(a[i],0ll);
+        else sum2+=max(a[i],0ll);
     }
-    cout<<maxi<<"\n";
+    cout<<max(sum1,sum2)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

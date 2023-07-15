@@ -28,21 +28,28 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    while((n%ans)==0)
-        ans++;
+    string s;
+    cin>>s;
+    ll n=s.size();
+    stack<char> st;
+    string ans="";
     FOR(i,0,n){
-        cout<<char('a'+(i)%ans);
+        if(s[i]!='<')
+            st.push(s[i]);
+        if(s[i]=='<') st.pop();
     }
-    cout<<"\n";
+    while(!st.empty()){
+        ans+=st.top();
+        st.pop();
+    }
+    reverse(all(ans));
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
