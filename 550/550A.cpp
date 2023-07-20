@@ -31,27 +31,30 @@ void solve(){
     string s;
     cin>>s;
     ll n=s.size();
-    mll ab,ba;
-    FOR(i,0,n-1){
-        if(s[i]=='A' && s[i+1]=='B') ab[i]++;
-        else if(s[i]=='B' && s[i+1]=='A') ba[i]++;
-    }
-    for(auto & e : ab){
-        if(!ba.count(e.f+1) && !ba.count(e.f-1)){
-            //cout<<e.f<<" "<<e.se<<"\n";
-            //cout<<"HOLA1\n";
-            cout<<"YES\n";
-            return;
+    bool ok=false;
+    auto x=s.find("AB");
+    if(x!=string::npos){
+        auto y=s.find("BA",x+2);
+        if(y!=string::npos){
+            ok=true;
         }
-    }
-    for(auto & e : ba){
-        if(!ab.count(e.f+1) && !ab.count(e.f-1)){
-            //cout<<"HOLA2\n";
-            cout<<"YES\n";
-            return;
+        else{
+            auto b1=s.find("BA");
+            if(b1!=string::npos){
+                auto b2=s.find("AB",b1+2);
+                if(b2!=string::npos){
+                    ok=true;
+                }
+            }
         }
+
     }
-    cout<<"NO\n";
+    if(ok){
+        cout<<"YES\n";
+    }
+    else{
+        cout<<"NO\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -63,11 +66,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-

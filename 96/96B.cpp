@@ -5,6 +5,9 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -21,45 +24,44 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 2005;
+const int MX = 100001;
 const int N=1000+3;
-
-
 
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll n2=n;
+    ll tam=0;
+    while(n2>0){
+        tam++;
+        n2/=10;
     }
-    vector<vll> dp(n,vll(n+1,(ll)-1e15));
-    dp[0][0]=0;
-    if(a[0]>=0)
-        dp[0][1]=a[0];
-    FOR(i,1,n){
-        FOR1(j,0,i){
-            if(dp[i-1][j]+a[i]>=0){
-                dp[i][j+1]=max(dp[i-1][j+1],dp[i-1][j]+a[i]);
-            }
-            else{
-                dp[i][j+1]=dp[i-1][j+1];
-            }
+    if(tam%2==1){
+        tam++;
+    }
+    string s="";
+    FOR(i,0,tam){
+        if(i<tam/2) s+="4";
+        else s+="7";
+    }
+    bool ok=false;
+    do{
+        ll x=stoll(s, nullptr, 10);
+        if(x >= n){
+            cout<<x<<"\n";
+            ok=true;
+            break;
         }
-    }
-    FOR(i,0,dp.size()){
-        FOR(j,0,dp[i].size()){
-            cout<<dp[i][j]<<" ";
+    }while(next_permutation(all(s)));
+    if(!ok){
+        FOR(i,0,tam+2){
+            if(i<(tam)/2 +1 ){
+                cout<<4;
+            }
+            else cout<<7;
         }
         cout<<"\n";
     }
-    ll bot=0;
-    FOR1(j,0,n){
-        if(dp[n-1][j]>=0){
-            bot=max(bot,j);
-        }
-    }
-    cout<<bot<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

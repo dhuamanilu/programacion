@@ -5,6 +5,9 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> prioq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -21,45 +24,79 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 2005;
+const int MX = 100001;
 const int N=1000+3;
 
-
-
 void solve(){
+    //freopen("in2.txt","r",stdin);
     ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    vector<vll> dp(n,vll(n+1,(ll)-1e15));
-    dp[0][0]=0;
-    if(a[0]>=0)
-        dp[0][1]=a[0];
-    FOR(i,1,n){
-        FOR1(j,0,i){
-            if(dp[i-1][j]+a[i]>=0){
-                dp[i][j+1]=max(dp[i-1][j+1],dp[i-1][j]+a[i]);
+    while(cin>>n){
+        stack<ll> st;
+        queue<ll> q;
+        priority_queue<ll> pq1;
+        bool ok1=true,ok2=true,ok3=true;
+        FOR(i,0,n){
+            ll tipo,num;
+            cin>>tipo>>num;
+            if(tipo==1){
+                if(ok1)
+                    st.push(num);
+                if(ok2)
+                    q.push(num);
+                if(ok3)
+                    pq1.push(num);
             }
             else{
-                dp[i][j+1]=dp[i-1][j+1];
+                if(ok1){
+                    if(!st.empty()){
+                        ll x=st.top();
+                        st.pop();
+                        if(x!=num){
+                            ok1=false;
+                        }
+                    }
+                    else{
+                        ok1=false;
+                    }
+
+                }
+                if(ok2){
+                    ll col=q.front();
+                    q.pop();
+                    if(col!=num){
+                        ok2=false;
+                    }
+                }
+                if(ok3){
+                    if(!pq1.empty()){
+                        ll prio=pq1.top();
+                        pq1.pop();
+                        if(prio!=num){
+                            ok3=false;
+                        }
+                    }
+                    else{
+                        ok3=false;
+                    }
+                }
             }
         }
-    }
-    FOR(i,0,dp.size()){
-        FOR(j,0,dp[i].size()){
-            cout<<dp[i][j]<<" ";
+        if(ok1 && !ok2 && !ok3){
+            cout<<"stack\n";
         }
-        cout<<"\n";
-    }
-    ll bot=0;
-    FOR1(j,0,n){
-        if(dp[n-1][j]>=0){
-            bot=max(bot,j);
+        else if(!ok1 && ok2 && !ok3){
+            cout<<"queue\n";
+        }
+        else if(!ok1 && !ok2 && ok3){
+            cout<<"priority queue\n";
+        }
+        else if(!ok1 && !ok2 && !ok3){
+            cout<<"impossible\n";
+        }
+        else{
+            cout<<"not sure\n";
         }
     }
-    cout<<bot<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -71,11 +108,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-

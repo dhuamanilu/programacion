@@ -5,6 +5,9 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -21,10 +24,8 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 2005;
+const int MX = 100001;
 const int N=1000+3;
-
-
 
 void solve(){
     ll n;
@@ -33,39 +34,33 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    vector<vll> dp(n,vll(n+1,(ll)-1e15));
-    dp[0][0]=0;
-    if(a[0]>=0)
-        dp[0][1]=a[0];
-    FOR(i,1,n){
-        FOR1(j,0,i){
-            if(dp[i-1][j]+a[i]>=0){
-                dp[i][j+1]=max(dp[i-1][j+1],dp[i-1][j]+a[i]);
+    ll ans=LONG_LONG_MAX;
+    FOR1(it,0,3){
+        FOR1(it2,0,3){
+            FOR1(it3,0,3){
+                ll sum=it+it2+it3;
+                if(sum%3!=0) continue;
+                vll mo={it,it2,it3};
+                ll cont=0;
+                FOR(i,0,n){
+                    ll sum=mo[i%3]-(a[i]%3);
+                    if(sum<0){
+                        sum+=3;
+                    }
+                    cont+=sum%3;
+                }
+                ans=min(ans,cont);
             }
-            else{
-                dp[i][j+1]=dp[i-1][j+1];
-            }
         }
     }
-    FOR(i,0,dp.size()){
-        FOR(j,0,dp[i].size()){
-            cout<<dp[i][j]<<" ";
-        }
-        cout<<"\n";
-    }
-    ll bot=0;
-    FOR1(j,0,n){
-        if(dp[n-1][j]>=0){
-            bot=max(bot,j);
-        }
-    }
-    cout<<bot<<"\n";
+    cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

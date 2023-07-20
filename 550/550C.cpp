@@ -27,50 +27,39 @@ const char nl = '\n';
 const int MX = 105;
 const int MO = 8;
 const int N=1000+3;
-bool dp[MX][MO];
-ll aux[MX][MO];
+
 void solve(){
     string s;
     cin>>s;
     ll n=s.size();
-    vll a;
     FOR(i,0,n){
-        a.pb(s[i]-'0');
-    }
-    FOR(i,0,MX){
-        FOR(j,0,MO){
-            aux[i][j]=-1;
-        }
-    }
-    dp[0][a[0]%MO]=true;
-    FOR(i,1,n){
-        dp[i][a[i]%MO]=true;
-        FOR(j,0,8){
-            if(dp[i-1][j]){
-                dp[i][(j*10+a[i])%MO]=true;
-                dp[i][j]=true;
-                aux[i][(j*10+a[i])%MO]=j;
-                aux[i][j]=j;
-            }
-        }
-    }
-    FOR(i,0,n){
-        if(dp[i][0]){
-            cout<<"YES\n";
-            ll curi=i,curj=0;
-            string ans="";
-            while(true){
-                if(aux[curi][curj]==-1 || aux[curi][curj]!=curj
-                    ){
-                    ans.append(1,'0'+a[curi]);
-                }
-                if(aux[curi][curj]==-1) break;
-                curj=aux[curi][curj];
-                curi--;
-            }
-            reverse(all(ans));
-            cout<<ans<<"\n";
+        ll x=s[i]-'0';
+        //dbg(x);
+        if(x%8==0){
+            cout<<"YES\n"<<x<<"\n";
             return;
+        }
+    }
+    FOR(i,0,n){
+        FOR(k,i+1,n){
+            ll x=s[k]-'0'+(s[i]-'0')*10;
+            //dbg(x);
+            if(x%8==0){
+                cout<<"YES\n"<<x<<"\n";
+                return;
+            }
+        }
+    }
+    FOR(i,0,n){
+        FOR(j,i+1,n){
+            FOR(k,j+1,n){
+                ll x=s[k]-'0'+(s[j]-'0')*10+(s[i]-'0')*100;
+                //dbg(x);
+                if(x%8==0){
+                    cout<<"YES\n"<<x<<"\n";
+                    return;
+                }
+            }
         }
     }
     cout<<"NO\n";
