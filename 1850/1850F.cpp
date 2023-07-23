@@ -32,26 +32,20 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
+    ll a[n+1];
+    vll cont(n+2,0);
+    FOR1(i,1,n){
         cin>>a[i];
+        if(a[i]<=n) cont[a[i]]++;
     }
-    vll cont(n+1,0);
-    ll esp=0;
-    FOR(i,0,n){
-        if(a[i]==1){
-            esp++;
-            continue;
-        }
-        for(ll j=a[i];j<=n;j+=a[i]){
-            cont[j]++;
+    vll cont2(n+1,0);
+    FOR1(i,1,n){
+        for(ll j=i;j<=n;j+=i){
+            cont2[j]+=cont[i];
         }
     }
-    ll maxi=0;
-    for(auto & e: cont){
-        maxi=max(maxi,e);
-    }
-    cout<<maxi+esp<<"\n";
+    cout<<*(max_element(all(cont2)))<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

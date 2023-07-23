@@ -24,53 +24,40 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
-const int N=1000+3;
-
-void solve(){
-    ll n;
-    cin>>n;
-    ll x[n];
-    ll y[n];
-    mll m1,m2,m3,m4;
+const int MX = 1000005;
+const int N=105;
+vll dp(MX,-1);
+vll a(N);
+ll n;
+ll go(ll x){
+    if(dp[x]!=-1) return dp[x];
+    if(x==0) return 0;
+    ll comb=(ll)1e15;
     FOR(i,0,n){
-        cin>>x[i]>>y[i];
-        m1[y[i]-x[i]]++;
-        m2[x[i]+y[i]]++;
-        m3[x[i]]++;
-        m4[y[i]]++;
+        if(x-a[i]>=0){
+            comb=min(comb,go(x-a[i])+1);
+        }
     }
-    ll ans=0;
-    //dbgm(m1,m2);
-    for(auto & e : m1){
-        ans+=e.se*(e.se-1);
+    return dp[x]=comb;
+}
+void solve(){
+    ll x;
+    cin>>n>>x;
+    FOR(i,0,n){
+        cin>>a[i];
     }
-    for(auto & e : m2){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m3){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m4){
-        ans+=e.se*(e.se-1);
-    }
+    ll ans=go(x);
+    if(ans==(ll)1e15) ans=-1;
     cout<<ans<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
-

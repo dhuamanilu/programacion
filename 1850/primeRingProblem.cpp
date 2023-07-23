@@ -26,41 +26,60 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+bool isPrime(ll x){
+    for(ll i=2;i*i<=x;i++){
+        if(x%i==0) return false;
+    }
+    return true;
+}
 void solve(){
     ll n;
-    cin>>n;
-    ll x[n];
-    ll y[n];
-    mll m1,m2,m3,m4;
-    FOR(i,0,n){
-        cin>>x[i]>>y[i];
-        m1[y[i]-x[i]]++;
-        m2[x[i]+y[i]]++;
-        m3[x[i]]++;
-        m4[y[i]]++;
+    ll cont=1;
+    while(cin>>n){
+        vll a;
+        FOR1(i,1,n){
+            a.pb(i);
+        }
+        bool ok1era=true,todook=true;
+        do{
+            bool ok=true;
+            if(a[0]!=1){
+                todook=false;
+                break;
+            }
+            FOR(i,0,n-1){
+                if(!isPrime(a[i]+a[i+1])){
+                    ok=false;
+                    break;
+                }
+            }
+            if(!isPrime(a[n-1]+a[0])) ok=false;
+            if(ok){
+                if(ok1era){
+                    cout<<"Case "<<cont<<":\n";
+                    ok1era=false;
+                    cont++;
+                }
+                for(auto & e : a){
+                    cout<<e<<" ";
+                }
+                cout<<"\n";
+            }
+
+        }while(next_permutation(all(a)) && todook);
+        cout<<"\n";
+
     }
-    ll ans=0;
-    //dbgm(m1,m2);
-    for(auto & e : m1){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m2){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m3){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m4){
-        ans+=e.se*(e.se-1);
-    }
-    cout<<ans<<"\n";
+
 }
 int main(){
+    //freopen("in.txt","r",stdin);
+    //freopen("out.txt","w",stdout);
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

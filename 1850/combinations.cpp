@@ -27,40 +27,42 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 
+int print_uint128(__int128 n) {
+  if (n == 0)  return printf("0\n");
+
+  char str[40] = {0}; // log10(1 << 128) + '\0'
+  char *s = str + sizeof(str) - 1; // start at the end
+  while (n != 0) {
+    if (s == str) return -1; // never happens
+
+    *--s = "0123456789"[n % 10]; // save last digit
+    n /= 10;                     // drop it
+  }
+  return printf("%s\n", s);
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll x[n];
-    ll y[n];
-    mll m1,m2,m3,m4;
-    FOR(i,0,n){
-        cin>>x[i]>>y[i];
-        m1[y[i]-x[i]]++;
-        m2[x[i]+y[i]]++;
-        m3[x[i]]++;
-        m4[y[i]]++;
+    ll n,m;
+    while(cin>>n && cin>>m && n && m){
+        __int128 ans=1;
+        for(ll i=n;i>n-m;i--){
+            ans*=i;
+        }
+        FOR1(i,1,m){
+            ans/=i;
+        }
+        cout<<n<<" things taken "<<m<<" at a time is "<<print_uint128(ans)<<" exactly.\n";
     }
-    ll ans=0;
-    //dbgm(m1,m2);
-    for(auto & e : m1){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m2){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m3){
-        ans+=e.se*(e.se-1);
-    }
-    for(auto & e : m4){
-        ans+=e.se*(e.se-1);
-    }
-    cout<<ans<<"\n";
+
+
 }
 int main(){
+    //freopen("in.txt","r",stdin);
+    //freopen("out.txt","w",stdout);
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

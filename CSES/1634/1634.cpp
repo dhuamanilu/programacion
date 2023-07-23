@@ -39,7 +39,6 @@ void solve(){
     FOR1(i,1,x){
         FOR(j,0,n){
             if(i-a[j]>=0){
-                //dbgm(dp[i],dp[i-a[j]]+1);
                 dp[i]=min(dp[i-a[j]]+1,dp[i]);
             }
         }
