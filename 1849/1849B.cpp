@@ -24,44 +24,109 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 1000005;
+const int MX = 100001;
 const int N=1000+3;
+class Compare {
+public:
+    bool operator()(pair<ll,ll>& a, pair<ll,ll>& b)
+    {
+        if (a.first < b.first) {
+            return true;
+        }
+        else if (a.first == b.first
+                 && a.second > b.second) {
+            return true;
+        }
 
+        return false;
+    }
+};
 void solve(){
-    ll n,x;
-    cin>>n>>x;
+    ll n,k;
+    cin>>n>>k;
     ll a[n];
+    priority_queue<pair<ll,ll>,vector<pair<ll,ll>>,Compare> pq1;
+    vll ans;
     FOR(i,0,n){
         cin>>a[i];
+        a[i]%=k;
+        if(a[i]==0){
+            ans.pb(i+1);
+        }
+        else{
+            pq1.push({a[i],i+1});
+        }
+
     }
-    sort(a,a+n);
-    vector<vll> dp(x+1,vll(n,0));
-    dp[0][0]=1;
-    FOR1(j,1,x){
-        FOR(i,0,n){
-            if(j-a[i]>=0){
-                FOR(k,i,n){
-                    dp[j-a[i]][k]+=dp[j-a[i]][i];
-                    dp[j-a[i]][k]%=MOD;
+
+    while(!pq1.empty()){
+        auto x=pq1.top();
+        pq1.pop();
+        //dbg(x);
+        pair<ll,ll> y={-1,-1};
+        if(!pq1.empty()){
+
+            y=pq1.top();
+            pq1.pop();
+            //dbg(y);
+            if(x.f==y.f){
+
+                if(x.se < y.se){
+                    ll alfa=(x.f-y.f + k-1)/k;
+                    alfa=max(alfa,1ll);
+                    ll nuevox=x.f-alfa*k;
+                    if(nuevox>0){
+                        pq1.push({nuevox,x.se});
+                    }
+                    else{
+                        ans.pb(x.se);
+                    }
+
+                    pq1.push({y.f,y.se});
+                }
+                else{
+                    ll alfa=(y.f-x.f + k-1)/k;
+                    alfa=max(alfa,1ll);
+                    ll nuevoy=y.f-alfa*k;
+                    if(nuevoy>0){
+                        pq1.push({nuevoy,y.se});
+                    }
+                    else{
+                        ans.pb(y.se);
+                    }
+
+                    pq1.push({x.f,x.se});
                 }
             }
+            else{
+                ll alfa=(x.f-y.f + k-1)/k;
+                alfa=max(alfa,1ll);
+                ll nuevox=x.f-alfa*k;
+                if(nuevox>0){
+                    pq1.push({nuevox,x.se});
+                }
+                else{
+                    ans.pb(x.se);
+                }
+                pq1.push({y.f,y.se});
+            }
+
+        }
+        else{
+            ans.pb(x.se);
+            break;
         }
     }
-    dbgm(dp);
-    ll ans=0;
-    FOR(i,0,n){
-        ans+=dp[x][i];
-        ans%=MOD;
+    for(auto & e : ans){
+        cout<<e<<" ";
     }
-    cout<<ans<<"\n";
-
-
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

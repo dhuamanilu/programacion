@@ -24,44 +24,116 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 1000005;
+const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n,x;
-    cin>>n>>x;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+class NumArray {
+public:
+    vector<int> seg;
+    int n;
+    void buildTree(vector<int>& nums, int pos, int left, int right){
+        if (left == right){
+            seg[pos] = nums[left];
+            return;
+        }
+        int mid = (left+right)/2;
+        buildTree(nums, 2*pos+1, left, mid);
+        buildTree(nums, 2*pos+2, mid+1, right);
+        seg[pos]=seg[2*pos+1]+ seg[2*pos+2];
     }
-    sort(a,a+n);
-    vector<vll> dp(x+1,vll(n,0));
-    dp[0][0]=1;
-    FOR1(j,1,x){
-        FOR(i,0,n){
-            if(j-a[i]>=0){
-                FOR(k,i,n){
-                    dp[j-a[i]][k]+=dp[j-a[i]][i];
-                    dp[j-a[i]][k]%=MOD;
-                }
-            }
+    void updateUtil(int pos, int left, int right, int index, int val) {
+        if(index <left || index >right) return;
+        if(left==right){
+            if(left==index)
+                seg[pos]=val;
+            return;
+        }
+        int mid=(left+right)/2;
+        updateUtil(2*pos+1,left,mid,index,val);
+        updateUtil(2*pos+2,mid+1,right,index,val);
+        seg[pos]=seg[2*pos+1]+seg[2*pos+2];
+    }
+    int rangeUtil(int qlow, int qhigh, int low, int high, int pos){
+        if (qlow <= low && qhigh>= high){
+            return seg[pos];
+        }
+        if (qlow > high || qhigh < low) {
+            return 0;
+        }
+        int mid = low+(high-low)/2;
+        return (rangeUtil(qlow, qhigh, low, mid, 2*pos+1) + rangeUtil(qlow, qhigh, mid+1, high, 2*pos+2));
+    }
+    NumArray(vector<int>& nums) {
+        if(nums.size() > 0){
+            n = nums.size();
+            seg.resize(4*n,0);
+            buildTree(nums, 0, 0, n-1);
         }
     }
-    dbgm(dp);
-    ll ans=0;
-    FOR(i,0,n){
-        ans+=dp[x][i];
-        ans%=MOD;
+    void update(int index, int val) {
+        if(n==0)return;
+        updateUtil(0,0,n-1, index, val);
     }
-    cout<<ans<<"\n";
+    int sumRange(int left, int right) {
+        if(n==0)return 0;
+        return rangeUtil(left, right, 0, n-1, 0);
+    }
+};
+void solve(){
+    //1 6 6 111111 1 6 2 5 3 4 2 6 1 4 3 5
+    //1 6 6 000000 1 6 2 5 3 4 2 6 1 4 3 5
 
+    ll n,m;
+    cin>>n>>m;
+    string s;
+    cin>>s;
+    vector<int> hola;
+    FOR(i,0,n){
+        hola.pb(s[i]-'0');
+    }
+    NumArray* obj = new NumArray(hola);
+    vll nums(n,-1);
+    nums[0]=s[0]=='0' ? 0 : -1;
+    FOR(i,1,n){
+        if(s[i]=='0'){
+            nums[i]=i;
+        }
+        else{
+            nums[i]=nums[i-1];
+        }
+    }
+    set<pair<ll,ll>> se;
+    FOR(i,0,m){
+        ll l,r;
+        cin>>l>>r;
+        l--;
+        r--;
+        if(l==r){
+            se.insert({1,1});
+        }
+        else{
+            if(nums[r]!=-1){
+                r=max(l,nums[r]);
+                ll x=obj->sumRange(l,r);
+                if(x==0 || r-l+1==1){
+                    se.insert({1,1});
+                }
+                else{
+                    se.insert({l,r});
+                }
+            }
+            else{
+                se.insert({1,1});
+            }
 
+        }
+    }
+    cout<<(ll)se.size()<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

@@ -24,44 +24,22 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 1000005;
+const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,x;
-    cin>>n>>x;
+    ll n;
+    cin>>n;
     ll a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
-    sort(a,a+n);
-    vector<vll> dp(x+1,vll(n,0));
-    dp[0][0]=1;
-    FOR1(j,1,x){
-        FOR(i,0,n){
-            if(j-a[i]>=0){
-                FOR(k,i,n){
-                    dp[j-a[i]][k]+=dp[j-a[i]][i];
-                    dp[j-a[i]][k]%=MOD;
-                }
-            }
-        }
-    }
-    dbgm(dp);
-    ll ans=0;
-    FOR(i,0,n){
-        ans+=dp[x][i];
-        ans%=MOD;
-    }
-    cout<<ans<<"\n";
-
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }
