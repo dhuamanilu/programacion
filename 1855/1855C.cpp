@@ -28,39 +28,95 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
+    ll n;
+    cin>>n;
+    vll a(n);
+    ll maxi=LONG_LONG_MIN,mini=LONG_LONG_MAX,posmaxi=0,posmini=0;
+    bool allposi=true,allnega=true;
+    FOR(i,0,n){
+        cin>>a[i];
+        if(a[i]>maxi){
+            maxi=a[i];
+            posmaxi=i;
         }
-        else{
-            nums[i]=nums[i-1];
+        if(a[i]<mini){
+            mini=a[i];
+            posmini=i;
         }
-    }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
+        if(a[i]<0){
+            allposi=false;
         }
-        else{
-            nums2[i]=nums2[i+1];
+        if(a[i]>0){
+            allnega=false;
         }
     }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
+    if(allposi){
+        vpll ans;
+        FOR(i,0,n-1){
+            ans.pb({i+2,i+1});
+        }
+        //assert(ans.size()<=31);
+        cout<<ans.size()<<"\n";
+        for(auto & e : ans){
+            cout<<e.f<<" "<<e.se<<"\n";
+        }
+    }
+    else if(allnega){
+        vpll ans;
+        for(ll i=n-1;i>0;i--){
+            ans.pb({i,i+1});
+        }
+        //assert(ans.size()<=31);
+        cout<<ans.size()<<"\n";
+        for(auto & e : ans){
+            cout<<e.f<<" "<<e.se<<"\n";
+        }
+    }
+    else{
+        ll cont1=0,cont2=0;
+        vpll ans1;
+        while(maxi<=20){
+            maxi*=2;
+            ans1.pb({posmaxi+1,posmaxi+1});
+            cont1++;
+        }
+        vpll ans2;
+        while(mini>=-20){
+            mini*=2;
+            ans2.pb({posmini+1,posmini+1});
+            cont2++;
+        }
 
+        if(cont1<cont2){
+            FOR(i,0,n){
+                ans1.pb({i+1,posmaxi+1});
+                cont1++;
+            }
+            FOR(i,0,n-1){
+                ans1.pb({i+2,i+1});
+            }
+            //assert(ans1.size()<=31);
+            cout<<ans1.size()<<"\n";
+            for(auto & e : ans1){
+                cout<<e.f<<" "<<e.se<<"\n";
+            }
+        }
+        else{
+            FOR(i,0,n){
+                ans2.pb({i+1,posmini+1});
+                cont2++;
+            }
+            for(ll i=n-1;i>0;i--){
+                ans2.pb({i,i+1});
+            }
+            //assert(ans2.size()<=31);
+            cout<<ans2.size()<<"\n";
+            for(auto & e : ans2){
+                cout<<e.f<<" "<<e.se<<"\n";
+            }
+
+        }
     }
-    cout<<(ll)se.size()<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -28,39 +28,14 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
-        }
-        else{
-            nums[i]=nums[i-1];
-        }
+    ll n;
+    cin>>n;
+    ll pot=1,cont=0;
+    while(pot<=n){
+        pot*=2;
+        cont++;
     }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
-        }
-        else{
-            nums2[i]=nums2[i+1];
-        }
-    }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-
-    }
-    cout<<(ll)se.size()<<"\n";
+    cout<<cont-__builtin_popcount(n)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

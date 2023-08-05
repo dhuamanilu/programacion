@@ -28,39 +28,25 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
-        }
-        else{
-            nums[i]=nums[i-1];
-        }
+    ll n;
+    cin>>n;
+    ll a[n];
+    ll cont1=0,sum=0;
+    FOR(i,0,n){
+        cin>>a[i];
+        if(a[i]==1) cont1++;
+        else sum+=a[i];
     }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
-        }
-        else{
-            nums2[i]=nums2[i+1];
-        }
+    if(n==1){
+        cout<<"NO\n";
+        return;
     }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-
+    if(sum >=n){
+        cout<<"YES\n";
     }
-    cout<<(ll)se.size()<<"\n";
+    else{
+        cout<<"NO\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

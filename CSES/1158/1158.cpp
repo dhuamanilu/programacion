@@ -24,49 +24,44 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 1000005;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
-        }
-        else{
-            nums[i]=nums[i-1];
+    ll n;
+    cin>>n;
+    char a[n][n];
+    FOR(i,0,n){
+        string s;
+        cin>>s;
+        FOR(j,0,n){
+            a[i][j]=s[j];
         }
     }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
-        }
-        else{
-            nums2[i]=nums2[i+1];
+    vector<vll> dp(n,vll(n,0));
+    dp[0][0]=1;
+    FOR(i,0,n){
+        FOR(j,0,n){
+            if(a[i][j]=='*'){
+                dp[i][j]=0;
+                continue;
+            }
+            if(i>=1){
+                dp[i][j]+=dp[i-1][j];
+                dp[i][j]%=MOD;
+            }
+            if(j>=1){
+                dp[i][j]+=dp[i][j-1];
+                dp[i][j]%=MOD;
+            }
         }
     }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-
-    }
-    cout<<(ll)se.size()<<"\n";
+    cout<<dp[n-1][n-1]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }

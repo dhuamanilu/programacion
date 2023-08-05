@@ -24,49 +24,43 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 1000005;
 const int N=1000+3;
 
 void solve(){
     ll n,m;
     cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
-        }
-        else{
-            nums[i]=nums[i-1];
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    ll ans=1;
+    FOR(i,0,n){
+        ll cont=0;
+        if(a[i]==0){
+            ll use;
+            if(i>=1){
+                use=a[i-1];
+                FOR(j,-1,2){
+                    ll diff=i+1<n ? abs(use+j-a[i+1]) : 1;
+                    if(diff<=1){
+                        cont++;
+                    }
+                }
+            }
+            else{
+                cont+=3;
+            }
+            ans*=cont;
+            ans%=MOD;
         }
     }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
-        }
-        else{
-            nums2[i]=nums2[i+1];
-        }
-    }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-
-    }
-    cout<<(ll)se.size()<<"\n";
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }

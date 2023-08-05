@@ -30,33 +30,17 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n][2];
-    FOR(i,0,n){
-        cin>>a[i][0]>>a[i][1];
-    }
-    ll alt=0;
-    FOR(i,1,403){
-        bool ok=true;
-        FOR(j,0,n){
-            if(a[j][0]+a[j][1]>= i || a[j][0]-a[j][1]>=0){
-
-            }
-            else{
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            alt=i;
-            break;
-        }
-    }
-    dbg(alt);
+    vpll a(n);
     ll cont=0;
     FOR(i,0,n){
-        if(a[i][0]>alt ) cont++;
+        cin>>a[i].f>>a[i].se;
+        if(a[i].f-a[i].se>0) cont++;
     }
+
+
     cout<<cont<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

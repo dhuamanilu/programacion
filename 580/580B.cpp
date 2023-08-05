@@ -24,49 +24,53 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 100005;
 const int N=1000+3;
-
+vector<ll> G[MX];
+ll a[MX];
 void solve(){
     ll n,m;
     cin>>n>>m;
-    string s;
-    cin>>s;
-    vll nums(n,-1);
-    nums[0]=s[0]=='0' ? 0 : -1;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            nums[i]=i;
-        }
-        else{
-            nums[i]=nums[i-1];
-        }
+    FOR1(i,1,n){
+        G[i].clear();
     }
-    vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
-    for(ll i=n-2;i>=0;i--){
-        if(s[i]=='1'){
-            nums2[i]=i;
-        }
-        else{
-            nums2[i]=nums2[i+1];
-        }
+    FOR1(i,1,n){
+        cin>>a[i];
     }
-    set<pair<ll,ll>> se;
-    FOR(i,0,m){
-        ll l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-
+    FOR(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
     }
-    cout<<(ll)se.size()<<"\n";
+    ll ans=0;
+    function<void(ll,ll,ll)> dfs = [&](ll cont,ll u, ll parent) {
+        if (G[u].size()==1 && u!=1) {
+            if (cont<=m) {
+                //cout<<"aumentar ans\n";
+                ans++;
+            }
+            return;
+        }
+        for(auto & v : G[u]){
+            if(v != parent){
+                ll newCont=a[v] ? cont+1 : 0ll;
+                if(newCont > m) continue;
+                dfs(newCont,v, u);
+            }
+        }
+    };
+    ll inicial=a[1];
+    //dbg(inicial);
+    dfs(inicial,1, -1);
+    cout<<ans<<"\n";
 }
+
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -29,7 +29,7 @@ const int N=1000+3;
 ll memo[MX];
 ll ans(ll x,ll cont){
     if(memo[x]!=-1) return memo[x];
-    if(x==0){
+    if(x<=0){
         return memo[x]=cont;
     }
     ll x2=x;
