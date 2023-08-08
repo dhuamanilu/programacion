@@ -27,38 +27,35 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool bb(vll & a , ll t){
-	ll s=0,e=a.size(),m=s+(e-s)/2;
+ll bb(vll & a , ll t){
+	ll s=0,e=(ll)1e18,m=s+(e-s)/2,ans=0;
 	while(s<=e){
 		m=s+(e-s)/2;
-		if(a[m]==t) return true;
-		else if(a[m]<t){
-			s=m+1;
-		}
-		else{
-			e=m-1;
-		}
+		ll tot=0;
+        FOR(i,0,a.size()){
+            tot+=m/a[i];
+            if(tot>=t) break;
+        }
+        if(tot < t){
+            s=m+1;
+        }
+        else{
+            //dbg(ans);
+            ans=m;
+            e=m-1;
+        }
 	}
-	return false;
+    return ans;
 
 }
 int main(){
-	ll n,q;
-	cin>>n>>q;
+	ll n,t;
+	cin>>n>>t;
 	vll a(n);
 	FOR(i,0,n){
 		cin>>a[i];
 	}
-	FOR(i,0,q){
-		ll x;
-		cin>>x;
-		if(bb(a,x)){
-            cout<<"YES\n";
-		}
-		else{
-            cout<<"NO\n";
-		}
-	}
+	cout<<bb(a,t)<<"\n";
 }
 
 
