@@ -58,7 +58,15 @@ void solve(){
         cin>>l>>r;
         l--;
         r--;
+        l=nums[l];
+        r=nums2[r];
+        if(l>r){
+            se.insert({-1,-1});
 
+        }
+        else{
+            se.insert({l,r});
+        }
     }
     cout<<(ll)se.size()<<"\n";
 }
