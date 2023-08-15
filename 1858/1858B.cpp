@@ -26,63 +26,61 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool customComparator(array<ll,4> & a1,array<ll,4>& a2){
-    return (a1[0]<a2[0]);
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    vector<array<ll,4>> v;
-    FOR(i,0,n){
-        array<ll,4> aux;
-        FOR(j,0,4){
-            cin>>aux[j];
-        }
-        v.pb(aux);
+    ll n,m,d;
+    cin>>n>>m>>d;
+    vll a(m);
+    FOR(i,0,m){
+        cin>>a[i];
     }
-    sort(all(v),customComparator);
-    //dbg(v);
-    vpll ans;
-    FOR(i,0,n){
-        ll j=i;
-        ll auxili=v[i][3];
-        while(j+1<n && v[j][3]>=v[j+1][0]){
-            //dbg(v[j][3]);
-            auxili=max(auxili,v[j][3]);
-            j++;
-        }
-        auxili=max(auxili,v[j][3]);
-        ans.pb({v[i][0],auxili});
-        i=j;
+    ll ok=0;
+    if(a[0]!=1){
+        a.insert(a.begin(), 1);
     }
-    //dbg(ans);
-    ll q;
-    cin>>q;
-    ll tam=ans.size();
-    FOR(i,0,q){
-        ll x;
-        cin>>x;
-        ll s=0,e=tam-1,m=s+(e-s)/2;
-        bool ok=false;
-        while(s<=e){
-            m=s+(e-s)/2;
-            if(ans[m].f<=x && x<=ans[m].se){
-                ok=true;
-                cout<<ans[m].se<<" ";
-                break;
-            }
-            else if(x>ans[m].se){
-                s=m+1;
-            }
-            else{
-                e=m-1;
-            }
-        }
-        if(!ok){
-            cout<<x<<" ";
+    if(a[a.size()-1]!=n){
+        a.push_back(n);
+    }
+    else{
+        ok=1;
+    }
+    m=a.size();
+    vll tramos;
+    FOR(i,0,m-1){
+        auto ax=floor((double)(a[i+1]-a[i])/(double)d);
+        if((a[i+1]-a[i])%d==0) ax--;
+        tramos.pb(max(0ll,(ll)ax));
+    }
+    ll sum=m-1;
+    for(auto &e  : tramos){
+        sum+=e;
+    }
+
+    //dbg(sum);
+    ll cont=0,ans=sum;
+    FOR(i,1,m-1){
+        //dbg(a[i]);
+        //suppngoams q elminiamos a[i]
+        auto ax=(ll)floor((double)(a[i+1]-a[i-1])/(double)d);
+
+        if((a[i+1]-a[i-1])%d==0) ax--;
+
+        ll loque=tramos[i-1]+tramos[i]+1;
+        //cout<<"ax y loque"<<ax<<" "<<loque<<"\n";
+        ans=min(ans,sum-loque+ax+ok);
+    }
+
+    FOR(i,1,m-1){
+        auto ax=(ll)floor((double)(a[i+1]-a[i-1])/(double)d);
+        if((a[i+1]-a[i-1])%d==0) ax--;
+        ll loque=tramos[i-1]+tramos[i]+1;
+        //dbgm(loq)
+        if(sum-loque+ax+ok==ans){
+            cont++;
         }
     }
-    cout<<"\n";
+    cout<<ans<<" "<<cont<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

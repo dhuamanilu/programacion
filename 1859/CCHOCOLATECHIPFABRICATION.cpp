@@ -26,69 +26,29 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool customComparator(array<ll,4> & a1,array<ll,4>& a2){
-    return (a1[0]<a2[0]);
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    vector<array<ll,4>> v;
+    ll n,m;
+    cin>>n>>m;
+    ll a[n][m];
     FOR(i,0,n){
-        array<ll,4> aux;
-        FOR(j,0,4){
-            cin>>aux[j];
-        }
-        v.pb(aux);
-    }
-    sort(all(v),customComparator);
-    //dbg(v);
-    vpll ans;
-    FOR(i,0,n){
-        ll j=i;
-        ll auxili=v[i][3];
-        while(j+1<n && v[j][3]>=v[j+1][0]){
-            //dbg(v[j][3]);
-            auxili=max(auxili,v[j][3]);
-            j++;
-        }
-        auxili=max(auxili,v[j][3]);
-        ans.pb({v[i][0],auxili});
-        i=j;
-    }
-    //dbg(ans);
-    ll q;
-    cin>>q;
-    ll tam=ans.size();
-    FOR(i,0,q){
-        ll x;
-        cin>>x;
-        ll s=0,e=tam-1,m=s+(e-s)/2;
-        bool ok=false;
-        while(s<=e){
-            m=s+(e-s)/2;
-            if(ans[m].f<=x && x<=ans[m].se){
-                ok=true;
-                cout<<ans[m].se<<" ";
-                break;
-            }
-            else if(x>ans[m].se){
-                s=m+1;
+        string s;
+        cin>>s;
+        FOR(j,0,m){
+            if(s[j]=='X'){
+                a[i][j]=1;
             }
             else{
-                e=m-1;
+                a[i][j]=0;
             }
         }
-        if(!ok){
-            cout<<x<<" ";
-        }
     }
-    cout<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }

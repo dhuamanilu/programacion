@@ -26,69 +26,46 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool customComparator(array<ll,4> & a1,array<ll,4>& a2){
-    return (a1[0]<a2[0]);
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    vector<array<ll,4>> v;
+    ll n,l,h;
+    cin>>n>>l>>h;
+    ll a[n];
     FOR(i,0,n){
-        array<ll,4> aux;
-        FOR(j,0,4){
-            cin>>aux[j];
-        }
-        v.pb(aux);
+        cin>>a[i];
     }
-    sort(all(v),customComparator);
-    //dbg(v);
-    vpll ans;
-    FOR(i,0,n){
-        ll j=i;
-        ll auxili=v[i][3];
-        while(j+1<n && v[j][3]>=v[j+1][0]){
-            //dbg(v[j][3]);
-            auxili=max(auxili,v[j][3]);
-            j++;
-        }
-        auxili=max(auxili,v[j][3]);
-        ans.pb({v[i][0],auxili});
-        i=j;
+    vll pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+        pref[i]=pref[i-1]+a[i];
     }
-    //dbg(ans);
-    ll q;
-    cin>>q;
-    ll tam=ans.size();
-    FOR(i,0,q){
-        ll x;
-        cin>>x;
-        ll s=0,e=tam-1,m=s+(e-s)/2;
-        bool ok=false;
-        while(s<=e){
-            m=s+(e-s)/2;
-            if(ans[m].f<=x && x<=ans[m].se){
-                ok=true;
-                cout<<ans[m].se<<" ";
-                break;
+    ll ans=LONG_LONG_MIN,ans2=LONG_LONG_MAX;
+    FOR1(i,l,h){
+        FOR1(j,1,i){
+            ll cont=0;
+            if(pref[j-1]>0){
+                    cont++;
             }
-            else if(x>ans[m].se){
-                s=m+1;
+            ll guarda=j;
+            FOR(k,j,n){
+                if(k+i-1 >= n) break;
+                cont+=(pref[k+i-1]-pref[k-1]>0);
+                k+=i-1;
+                guarda=k+1;
             }
-            else{
-                e=m-1;
+            if(guarda<=n-1){
+                cont+=(pref[n-1]-pref[guarda-1]>0);
             }
-        }
-        if(!ok){
-            cout<<x<<" ";
+            ans2=min(ans2,cont);
+            ans=max(ans,cont);
         }
     }
-    cout<<"\n";
+    cout<<ans2<<" "<<ans<<endl;
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
         solve();
     }
