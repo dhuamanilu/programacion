@@ -34,19 +34,22 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i]>>h[i];
     }
-    ll stay[n];
-    ll left[n];
-    ll derecha[n];
-
-    stay[0]=0;
+    ll ans=1,l=a[0];
     FOR(i,1,n){
-        //quedarme
-        stay[i]=max(stay[i-1],max(left[i-1],derecha[i-1]));
-        //cortarlo a la izquierda
-        left[i]=
-        //o cortarlo a la derecha
+        ll lim=i+1<n ? a[i+1]  : LONG_LONG_MAX;
+        if(a[i]-h[i] >l){
+            ans++;
+            l=a[i];
+        }
+        else if(a[i]+h[i]<lim){
+            ans++;
+            l=a[i]+h[i];
+        }
+        else{
+            l=a[i];
+        }
     }
-    cout<<max(stay[n-1],max(left[n-1],derecha[n-1]))<<"\n";
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

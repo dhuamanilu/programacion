@@ -24,16 +24,50 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+vpll G[MX];
+vector<bool> vis(MX,false);
+vll dist(MX);
+void dfs(ll x){
+    vis[x]=true;
+    for(auto & e : G[x]){
+        if(!vis[e.f]){
+            dist[e.f]=dist[x]+e.se;
+            dfs(e.f);
+        }
     }
+}
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+    FOR(i,0,n){
+        G[i].clear();
+        vis[i]=false;
+        dist[i]=0;
+    }
+    vector<array<ll,3>> guarda;
+    FOR(i,0,m){
+        ll a,b,d;
+        cin>>a>>b>>d;
+        a--;
+        b--;
+        G[b].pb({a,d});
+        G[a].pb({b,-d});
+        guarda.pb({a,b,d});
+    }
+    FOR(i,0,n){
+        if(!vis[i]) dfs(i);
+    }
+    bool ok=true;
+    FOR(i,0,m){
+        if(dist[guarda[i][1]]+guarda[i][2]!=dist[guarda[i][0]]){
+            cout<<"NO\n";
+            return;
+        }
+    }
+    cout<<"YES\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

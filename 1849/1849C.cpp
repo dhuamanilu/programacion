@@ -43,7 +43,7 @@ void solve(){
         }
     }
     vll nums2(n,-1);
-    nums2[n-1]=s[n-1]=='1' ? n-1 : -1;
+    nums2[n-1]=s[n-1]=='1' ? n-1 : n;
     for(ll i=n-2;i>=0;i--){
         if(s[i]=='1'){
             nums2[i]=i;
@@ -58,14 +58,13 @@ void solve(){
         cin>>l>>r;
         l--;
         r--;
-        l=nums[l];
-        r=nums2[r];
-        if(l>r){
+        ll next1=nums2[l];
+        ll next2=nums[r];
+        if(next1>next2){
             se.insert({-1,-1});
-
         }
         else{
-            se.insert({l,r});
+            se.insert({next1,next2});
         }
     }
     cout<<(ll)se.size()<<"\n";
