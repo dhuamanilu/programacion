@@ -26,51 +26,42 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100005;
 const int N=1000+3;
-vector<ll> G[MX];
-ll a[MX];
+
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    FOR1(i,1,n){
-        G[i].clear();
+    ll n,d;
+    cin>>n>>d;
+    vpll ans;
+    FOR(i,0,n){
+        ll m,s;
+        cin>>m>>s;
+        ans.pb({m,s});
     }
-    FOR1(i,1,n){
-        cin>>a[i];
-    }
-    FOR(i,0,n-1){
-        ll u,v;
-        cin>>u>>v;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    ll ans=0;
-    function<void(ll,ll,ll)> dfs = [&](ll cont,ll u, ll parent) {
-        if (G[u].size()==1 && u!=1) {
-            if (cont<=m) {
-                //cout<<"aumentar ans\n";
-                ans++;
-            }
-            return;
+    sort(all(ans));
+    vll ans2,pref(n,0);
+    pref[0]=ans[0].se;
+    FOR(i,0,ans.size()){
+        if(i>=1){
+            pref[i]=pref[i-1]+ans[i].se;
         }
-        for(auto & v : G[u]){
-            if(v != parent){
-                ll newCont=a[v] ? cont+1 : 0ll;
-                if(newCont > m) continue;
-                dfs(newCont,v, u);
-            }
-        }
-    };
-    ll inicial=a[1];
-    //dbg(inicial);
-    dfs(inicial,1, -1);
-    cout<<ans<<"\n";
+        ans2.pb(ans[i].f);
+    }
+    //dbgm(ans,ans2,pref);
+    ll res=LONG_LONG_MIN;
+    FOR(i,0,n){
+        ll r=upper_bound(all(ans2),ans[i].f+d-1)-ans2.begin();
+        if(r==n || (ans2[r] > ans[i].f+d-1)) r--;
+        /*ll l=lower_bound(all(ans2),ans[i].f-d)-ans2.begin();*/
+        ll torest=(i-1>=0? pref[i-1] : 0);
+
+        res=max(res,pref[r]-torest);
+    }
+    cout<<res<<"\n";
 }
 
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
         solve();
     }
