@@ -3,7 +3,7 @@
 using namespace std;
 
 signed main() {
-    freopen("entrada.txt","w",stdout);
+    //freopen("entrada.txt","w",stdout);
     int t = 30000;
     cout << t << "\n";
     for(int i = 0; i < t; i++) {

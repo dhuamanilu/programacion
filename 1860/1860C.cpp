@@ -28,25 +28,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,q;
-    cin>>n>>q;
+    ll n;
+    cin>>n;
     ll a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n){
-        pref[i]=pref[i-1]+a[i];
-    }
-    FOR(i,0,q){
-        ll b,c;
-        cin>>b>>c;
-        b--;
-        c--;
-        ll torest=b>=1 ? pref[b-1] : 0;
-        cout<<pref[c]-torest<<"\n";
-    }
+
 
 
 }
