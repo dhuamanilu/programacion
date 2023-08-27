@@ -30,17 +30,33 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    vll a(n);
+    ll cont=1;
+    vll libres;
+    FOR(i,0,n){
+        cin>>a[i];
+        ll x=lower_bound(all(a),cont)-a.begin();
+        if(x==n){
+            libres.pb(cont);
+        }
+        else{
+            if(a[x]!=cont){
+                libres.pb(cont);
+            }
+        }
+        cont++;
+    }
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+        cin>>ind;
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -30,10 +30,13 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    ll a[n][n];
+    FOR(i,0,n){
+        string s;
+        cin>>s;
+        FOR(j,0,n){
+            a[i][j]=s[j]-'0';
+        }
     }
 }
 int main(){

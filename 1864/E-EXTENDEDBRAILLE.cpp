@@ -30,17 +30,35 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    map<set<pair<ll,ll>>,ll> ma;
+    FOR(i,0,n){
+        ll m;
+        cin>>m;
+        ll minix=LONG_LONG_MAX,miniy=LONG_LONG_MAX;
+        vector<pair<ll,ll>> fig;
+        FOR(j,0,m){
+            ll x,y;
+            cin>>x>>y;
+            fig.pb({x,y});
+            minix=min(minix,x);
+            miniy=min(miniy,y);
+        }
+        set<pair<ll,ll>> poin;
+        FOR(i,0,fig.size()){
+            ll x=fig[i].f,y=fig[i].se;
+            x-=minix;
+            y-=miniy;
+            poin.insert({x,y});
+        }
+        ma[poin]++;
     }
+    cout<<ma.size()<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

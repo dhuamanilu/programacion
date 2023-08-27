@@ -28,12 +28,35 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    ll n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    if(k%2==0){
+        string s2=s;
+        sort(all(s2));
+        cout<<s2<<"\n";
+    }
+    else{
+        vector<char> par,impar;
+        FOR(i,0,n){
+            if(i%2==0){
+                par.pb(s[i]);
+            }
+            else impar.pb(s[i]);
+        }
+        sort(all(par));
+        sort(all(impar));
+        string ans="";
+        ll pt1=0,pt2=0;
+        FOR(i,0,n){
+            if(i%2==0){
+                ans+=par[pt1++];
+            }
+            else ans+=impar[pt2++];
+        }
+        cout<<ans<<"\n";
+
     }
 }
 int main(){

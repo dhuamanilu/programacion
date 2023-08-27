@@ -28,13 +28,31 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    ll x;
+    cin>>x;
+    vll ans;
+    ans.pb(x);
+    ll pot=0,calc=(1<<pot),guarda=0;
+    while(calc<=x){
+        if(calc==ans.back()){
+            guarda=calc;
+            break;
+        }
+        if(calc&ans.back()){
+            ans.pb(ans.back()-calc);
+        }
+        pot++;
+        calc=(1<<pot);
     }
+    while(guarda>1){
+        ans.pb(guarda/2);
+        guarda/=2;
+    }
+    cout<<ans.size()<<"\n";
+    for(auto & e : ans){
+        cout<<e<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

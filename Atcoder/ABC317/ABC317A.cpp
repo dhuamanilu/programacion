@@ -28,19 +28,20 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    ll n,h,x;
+    cin>>n>>h>>x;
+    vll a(n);
+    FOR(i,0,n){
+        cin>>a[i];
     }
+    ll ind=lower_bound(all(a),x-h)-a.begin()+1;
+    cout<<ind<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

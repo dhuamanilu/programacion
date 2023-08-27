@@ -28,12 +28,23 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    ll x,y,n;
+    cin>>x>>y>>n;
+    if(y-x < n*(n-1)/2){
+        cout<<"-1\n";
+    }
+    else{
+        vll a;
+        a.pb(y);
+        FOR(i,0,n-2){
+            a.pb(a.back()-(i+1));
+        }
+        a.pb(x);
+        reverse(all(a));
+        for(auto & e : a){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
 }
 int main(){

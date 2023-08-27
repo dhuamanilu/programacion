@@ -30,17 +30,47 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    vpll cambios;
+    ll takashi=0,aoki=0;
+    FOR(i,0,n){
+        ll x,y,z;
+        cin>>x>>y>>z;
+        if(x>y){
+            takashi+=z;
+        }
+        else{
+            aoki+=z;
+            ll dis=(y-x)/2;
+            if(x+dis<=y-dis) dis++;
+            cambios.pb({z,dis});
+        }
+    }
+    if(takashi>aoki){
+        cout<<"0\n";
+    }
+    else{
+
+        sort(all(cambios),greater<pair<ll,ll>>());
+        ll ans=0;
+        FOR(i,0,cambios.size()){
+            ans+=cambios[i].se;
+            dbg(cambios[i]);
+            takashi+=cambios[i].f;
+            aoki-=cambios[i].f;
+            dbgm(takashi,aoki);
+            if(takashi>aoki){
+                cout<<ans<<"\n";
+                break;
+            }
+        }
+
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -25,22 +25,50 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
-void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+const int N=10+5;
+vector<pair<ll,ll>> G[N];
+vector<bool> vis(N,false);
+ll maxLen=0;
+ll dfs(ll ind,ll prevLen){
+    vis[ind]=true;
+    ll currLen=0;
+    for(auto &e : G[ind]){
+        if(!vis[e.f]){
+            currLen=prevLen+e.se;
+            dfs(e.f,currLen);
+        }
+        if(maxLen<currLen){
+            maxLen=currLen;
+        }
+        currLen=0;
     }
+    return maxLen;
+}
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+    FOR(i,0,m){
+        ll u,v,w;
+        cin>>u>>v>>w;
+        u--;
+        v--;
+        G[u].pb({v,w});
+        G[v].pb({u,w});
+    }
+    ll ans=LONG_LONG_MIN;
+    FOR(i,0,n){
+        FOR(j,0,vis.size()){
+            vis[j]=false;
+        }
+        ans=max(ans,dfs(i,0));
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

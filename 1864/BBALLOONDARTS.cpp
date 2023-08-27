@@ -26,21 +26,48 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+int minimumLines(vector<pair<ll,ll>>& arr){
+    int n = arr.size();
+    if (n==1) return 1;
+    sort(all(arr));
+    int numoflines=1;
+    FOR(i,2,n) {
+        int x1 = arr[i].f;
+        int x2 = arr[i - 1].f;
+        int x3 = arr[i - 2].f;
+        int y1 = arr[i].se;
+        int y2 = arr[i - 1].se;
+        int y3 = arr[i - 2].se;
+        int slope1 = (y3 - y2) * (x2 - x1);
+        int slope2 = (y2 - y1) * (x3 - x2);
 
+        if (slope1 != slope2)
+            numoflines++;
+    }
+    return numoflines;
+}
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    vpll a;
+    FOR(i,0,n){
+        ll x,y;
+        cin>>x>>y;
+        a.pb({x,y});
     }
+    if(minimumLines(a)>3){
+        cout<<"impossible\n";
+    }
+    else{
+        cout<<"possible\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

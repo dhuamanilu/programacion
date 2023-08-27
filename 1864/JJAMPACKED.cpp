@@ -28,12 +28,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
+    ll n,k;
+    cin>>n>>k;
+    ll s=0,e=k,m=s+(e-s)/2;
     while(s<=e){
         m=s+(e-s)/2;
-        if()
+        if(n%m==0 n%m==)
+
     }
 }
 int main(){

@@ -26,21 +26,65 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+int knapSack(int W, int wt[], int val[], int n)
+{
+    int i, w;
+    int K[n + 1][W + 1];
 
+    // Build table K[][] in bottom up manner
+    for (i = 0; i <= n; i++) {
+        for (w = 0; w <= W; w++) {
+            if (i == 0 || w == 0)
+                K[i][w] = 0;
+            else if (wt[i - 1] <= w)
+                K[i][w] = max(val[i - 1]
+                                  + K[i - 1][w - wt[i - 1]],
+                              K[i - 1][w]);
+            else
+                K[i][w] = K[i - 1][w];
+        }
+    }
+
+    return K[n][W];
+}
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
+    vpll cambios;
+    ll takashi=0,aoki=0;
+    FOR(i,0,n){
+        ll x,y,z;
+        cin>>x>>y>>z;
+        if(x>y){
+            takashi+=z;
+        }
+        else{
+            aoki+=z;
+            ll dis=(y-x)/2;
+            if(x+dis<=y-dis) dis++;
+            cambios.pb({dis,z});
+        }
+    }
+    if(takashi>aoki){
+        cout<<"0\n";
+    }
+    else{
+
+        sort(all(cambios));
+        vll profit;
+        vll weight;
+        ll ans=0;
+        int W = 50;
+        int n = profit.size();
+        printf("%d", knapSack(W, weight, profit, n));
+
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
