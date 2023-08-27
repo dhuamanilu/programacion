@@ -38,6 +38,16 @@ void solve(){
             a[i][j]=s[j]-'0';
         }
     }
+    vector<vll> b(n,vector<ll> (n,0));
+    vector<vll> c(n,vector<ll> (n,0));
+    FOR(i,0,n){
+        FOR(j,0,n){
+            if(a[i][j]==1){
+
+            }
+        }
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
