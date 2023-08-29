@@ -30,11 +30,10 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll s=0,e=ll(1e17),m=s+(e-s)/2;
-    while(s<=e){
-        m=s+(e-s)/2;
-        if()
-    }
+    ll a=1,b=-1,c=-2*n;
+    ll raiz=(-b+(ll)sqrtl(b*b-4*a*c))/(2*a);
+    ll resto=n-raiz*(raiz-1)/2;
+    cout<<raiz+resto<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

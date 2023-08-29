@@ -26,9 +26,7 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool fun(array<ll,3> &a ,array<ll,3> &b){
-    return a[2]<b[2];
-}
+
 void solve(){
     ll n,m,d;
     cin>>n>>m>>d;
@@ -40,19 +38,12 @@ void solve(){
         a.pb({val,num,i+1});
     }
     sort(all(a),greater<array<ll,3>>());
-    dbg(a);
-    vector<array<ll,3>> b;
-    FOR(i,0,m){
-        b.pb(a[i]);
-    }
-    sort(all(b),fun);
-
-    dbg(b);
+    //dbg(a);
     ll ans=0,var=0;
     FOR(i,0,m){
-        ll val=b[i][0];
-        ll num=b[i][1];
-        ll ind=b[i][2];
+        ll val=a[i][0];
+        ll num=a[i][1];
+        ll ind=a[i][2];
         if(num-d*abs(ind-var)>0){
             ans+=num-d*abs(ind-var);
         }
