@@ -28,28 +28,35 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m,d;
-    cin>>n>>m>>d;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    set<pair<ll,ll>> se;
-    ll ans=0,sum=0;
-    FOR(i,0,n){
-        if(a[i]>0){
-            sum+=a[i];
-            se.insert({a[i],i+1});
-            if(se.size()>m){
-                auto x=se.begin();
-                sum-=x->first;
-                se.erase(se.begin());
-            }
-            ans=max(ans,sum-d*(i+1));
+    ll n,a,q;
+    cin>>n>>a>>q;
+    string s;
+    cin>>s;
+    ll cont=a,cont2=a;
+    FOR(i,0,q){
+        if(cont>=n){
+            cout<<"YES\n";
+            return;
+        }
+        if(s[i]=='+'){
+            cont++;
+            cont2++;
+        }
+        else{
+            cont--;
         }
 
     }
-    cout<<ans<<"\n";
+    if(cont>=n){
+        cout<<"YES\n";
+        return;
+    }
+    else if(cont2<n){
+        cout<<"NO\n";
+    }
+    else{
+        cout<<"MAYBE\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

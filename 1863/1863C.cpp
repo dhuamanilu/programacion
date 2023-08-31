@@ -28,28 +28,42 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m,d;
-    cin>>n>>m>>d;
+    ll n,k;
+    cin>>n>>k;
     ll a[n];
+    mll m;
+    ll mini=LONG_LONG_MAX;
     FOR(i,0,n){
         cin>>a[i];
+        m[a[i]]++;
+        mini=min(mini,a[i]);
     }
-    set<pair<ll,ll>> se;
-    ll ans=0,sum=0;
-    FOR(i,0,n){
-        if(a[i]>0){
-            sum+=a[i];
-            se.insert({a[i],i+1});
-            if(se.size()>m){
-                auto x=se.begin();
-                sum-=x->first;
-                se.erase(se.begin());
-            }
-            ans=max(ans,sum-d*(i+1));
+    ll mex=0;
+    while(m.count(mex)){
+        mex++;
+    }
+    if(mini>=2){
+        FOR(i,0,n){
+            a[i]-=(mini-1);
         }
-
     }
-    cout<<ans<<"\n";
+    vll ans;
+    ans.pb(mex);
+    reverse(a,a+n);
+    FOR(i,0,n){
+        ans.pb(a[i]);
+    }
+    ll mo=k%(n+1);
+    for(ll i=mo-1;i>=0;i--){
+        cout<<ans[i]<<" ";
+    }
+    ll cont=0,i=n;
+    while(cont<n-mo){
+        cont++;
+        cout<<ans[i--]<<" ";
+    }
+    cout<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
