@@ -42,6 +42,7 @@ ll dfs(ll ind,ll prevLen){
         }
         currLen=0;
     }
+    vis[ind]=false;
     return maxLen;
 }
 void solve(){
@@ -57,9 +58,9 @@ void solve(){
     }
     ll ans=LONG_LONG_MIN;
     FOR(i,0,n){
-        FOR(j,0,vis.size()){
+        /*FOR(j,0,vis.size()){
             vis[j]=false;
-        }
+        }*/
         ans=max(ans,dfs(i,0));
     }
     cout<<ans<<"\n";

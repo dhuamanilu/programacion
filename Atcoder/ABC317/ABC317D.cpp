@@ -40,8 +40,7 @@ void solve(){
         }
         else{
             aoki+=z;
-            ll dis=(y-x)/2;
-            if(x+dis<=y-dis) dis++;
+            ll dis=(y-x+1)/2;
             cambios.pb({z,dis});
         }
     }
@@ -50,19 +49,7 @@ void solve(){
     }
     else{
 
-        sort(all(cambios),greater<pair<ll,ll>>());
-        ll ans=0;
-        FOR(i,0,cambios.size()){
-            ans+=cambios[i].se;
-            dbg(cambios[i]);
-            takashi+=cambios[i].f;
-            aoki-=cambios[i].f;
-            dbgm(takashi,aoki);
-            if(takashi>aoki){
-                cout<<ans<<"\n";
-                break;
-            }
-        }
+
 
     }
 }
