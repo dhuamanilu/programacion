@@ -30,15 +30,45 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    if(n==1){
+        cout<<"1\n";
+        return;
     }
-    ll gc=0;
-    FOR(i,0,n/2){
-        gc=__gcd(gc,abs(a[i]-a[n-i-1]));
+    if((n*(n+1)/2 )%n==0){
+        cout<<"-1\n";
     }
-    cout<<gc<<"\n";
+    else{
+        cout<<n<<" ";
+        ll var1=n-1,var2=2;
+        FOR(i,0,(n-1)/2){
+            if(var1>0)
+                cout<<var1<<" ";
+            else break;
+            if(var2>0)
+                cout<<var2<<" ";
+            else break;
+            var1-=2;
+            var2+=2;
+        }
+        cout<<1<<"\n";
+        /*vll a;
+        a.pb(n);
+        FOR(i,1,n){
+            a.pb(i);
+        }
+        do{
+            set<ll> se;
+            ll sum=0;
+            FOR(i,0,n){
+                sum+=a[i];
+                se.insert(sum%n);
+            }
+            if(se.size()==n){
+                dbg(a);
+            }
+        }while(next_permutation(all(a)));*/
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

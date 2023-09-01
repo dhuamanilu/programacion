@@ -28,17 +28,27 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
+    ll n,ti;
+    cin>>n>>ti;
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f;
+        a[i].f+=i;
     }
-    ll gc=0;
-    FOR(i,0,n/2){
-        gc=__gcd(gc,abs(a[i]-a[n-i-1]));
+    FOR(i,0,n){
+        cin>>a[i].se;
     }
-    cout<<gc<<"\n";
+
+    ll ans=LONG_LONG_MIN,ind=-1;
+    FOR(i,0,n){
+        if(a[i].f<=ti){
+            if(a[i].se>ans){
+                ans=a[i].se;
+                ind=i+1;
+            }
+        }
+    }
+    cout<<ind<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

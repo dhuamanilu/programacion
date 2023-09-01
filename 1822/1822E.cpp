@@ -30,15 +30,28 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    string s;
+    cin>>s;
+    if(n%2==1){
+        cout<<"-1\n";
     }
-    ll gc=0;
-    FOR(i,0,n/2){
-        gc=__gcd(gc,abs(a[i]-a[n-i-1]));
+    else{
+        map<char,ll> m;
+        FOR(i,0,n){
+            m[s[i]]++;
+        }
+        for(auto & e : m){
+            if(e.se>n/2){
+                cout<<"-1\n";
+                return;
+            }
+        }
+
+
+
+
     }
-    cout<<gc<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

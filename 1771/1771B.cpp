@@ -29,6 +29,7 @@ void solve(){
         cin>>x>>y;
         x--;
         y--;
+        if(x>y) swap(x,y);
         mn[x]=min(mn[x],y-1);
     }
     for(ll i=n-2;i>=0;i--){

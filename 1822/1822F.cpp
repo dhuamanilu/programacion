@@ -34,11 +34,6 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    ll gc=0;
-    FOR(i,0,n/2){
-        gc=__gcd(gc,abs(a[i]-a[n-i-1]));
-    }
-    cout<<gc<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
