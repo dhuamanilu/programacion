@@ -23,17 +23,22 @@ const int N=1000+3;
 void solve(){
     ll n,m;
     cin>>n>>m;
-    vector <ll> dp(n+1,0);
-    dp[1]=1;
-    ll xi,yi;
-    FOR1(i,1,m){
-        cin>>xi>>yi;
-        dp[yi]=0;
+    vll mn(n,n-1);
+    FOR(i,0,m){
+        ll x,y;
+        cin>>x>>y;
+        x--;
+        y--;
+        mn[x]=min(mn[x],y-1);
     }
-    FOR1(i,2,n){
-        dp[i]+=dp[i-1];
+    for(ll i=n-2;i>=0;i--){
+        mn[i]=min(mn[i],mn[i+1]);
     }
-    cout<<dp[n]+n<<"\n";
+    ll ans=0;
+    FOR(i,0,n){
+        ans+=(mn[i]-i+1);
+    }
+    cout<<ans<<"\n";
 
 
 }
