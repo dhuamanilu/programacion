@@ -46,6 +46,19 @@ void solve(){
                 return;
             }
         }
+        ll ans=0;
+        mll m2;
+        FOR(i,0,n/2){
+            if(s[i]==s[n-i-1]){
+                ans++;
+                m2[s[i]]++;
+            }
+        }
+        ans=(ans+1)/2;
+        for(auto & e : m2){
+            ans=max(ans,e.se);
+        }
+        cout<<ans<<"\n";
 
 
 

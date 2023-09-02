@@ -26,74 +26,46 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll val(char c){
-    if (c >= '0' && c <= '9')
-        return (ll)c - '0';
-    else
-        return (ll)c - 'A' + 10;
-}
-
-ll toDeci(string &str, ll base){
-    ll len = str.size();
-    ll power = 1;
-    ll num = 0;
-    for (ll i = len - 1; i >= 0; i--) {
-        if (val(str[i]) >= base) {
-            //printf("Invalid Number");
-            return -1;
+set<ll> se;
+void precalc(){
+    FOR1(k,2,(ll)1e6){
+        ll tosum=1+k+k*k;
+        ll mult=k*k*k;
+        while(tosum<(ll)(1e18)){
+            tosum+=mult;
+            se.insert(tosum);
+            if(mult>ll(1e18)/k) break;
+            mult*=k;
         }
-        num += val(str[i]) * power;
-        power = power * base;
     }
-    return num;
-}
-
-char reVal(ll num){
-    if (num >= 0 && num <= 9)
-        return (char)(num + '0');
-    else
-        return (char)(num - 10 + 'A');
-}
-
-string fromDeci(ll base, ll inputNum){
-
-    string res = "";
-    while (inputNum > 0) {
-        res += reVal(inputNum % base);
-        inputNum /= base;
-    }
-    reverse(res.begin(), res.end());
-    return res;
-}
-
-string convertBase(string &s, ll a, ll b){
-   ll num = toDeci(s, a);
-   return fromDeci(b, num);
 }
 void solve(){
     ll n;
     cin>>n;
-    string num=to_string(n);
-
-    string x=convertBase(num,10,m);
-    if(x.size()<3) continue;
-    bool ok=true;
-    for(auto & e : x){
-        if(e!='1'){
-            ok=false;
-            break;
+    if(se.count(n)){
+        cout<<"YES1\n";
+    }
+    else{
+        ll a=1,b=1,c=1-n;
+        ll sq=(ll)sqrtl(b*b-4*a*c);
+        if((sq*sq)==(b*b-4*a*c)){
+            if((-b+sq)%(2*a)==0 || (-b-sq)%(2*a)==0){
+                cout<<"YES2\n";
+            }
+            else{
+                cout<<"NO\n";
+            }
         }
     }
-    if(ok){
-        cout<<"YES\n";
-        return;
-    }
 
-    cout<<"NO\n";
+
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+    precalc();
     int t=1;
     cin>>t;
     while(t--){

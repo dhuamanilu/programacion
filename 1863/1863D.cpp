@@ -36,131 +36,58 @@ void solve(){
             cin>>a[i][j];
         }
     }
-    vector<vector<char>> b;
-    b=a;
-
+    bool ok=true;
     FOR(i,0,n){
+        ll cont=0;
+        FOR(j,0,m){
+            if(a[i][j]=='U'){
+                cont++;
+            }
+        }
+        if(cont%2==1){
+            ok=false;
+            break;
+        }
         ll aux=0;
         FOR(j,0,m){
-            if(a[i][j]!='.'){
-                if(b[i][j]=='W' || b[i][j]=='B') continue;
-                if(a[i][j]=='U'){
-                    if(i%2==0){
-                        if((aux)%2==1){
-                            b[i][j]='B';
-                            b[i+1][j]='W';
-                        }
-                        else{
-                            b[i][j]='W';
-                            b[i+1][j]='B';
-                        }
-                    }
-                    else{
-                        if((aux)%2==1){
-                            b[i][j]='W';
-                            b[i+1][j]='B';
-                        }
-                        else{
-                            b[i][j]='B';
-                            b[i+1][j]='W';
-                        }
-                    }
-                    aux++;
-                }
-                else if(a[i][j]=='D'){
-                    if(i%2==0){
-                        if((aux)%2==1){
-                            b[i][j]='B';
-                            b[i-1][j]='W';
-                        }
-                        else{
-                            b[i][j]='W';
-                            b[i-1][j]='B';
-                        }
-                    }
-                    else{
-                        if((aux)%2==1){
-                            b[i][j]='W';
-                            b[i-1][j]='B';
-                        }
-                        else{
-                            b[i][j]='B';
-                            b[i-1][j]='W';
-                        }
-                    }
-                    aux++;
-                }
-                else if(a[i][j]=='L'){
-                    if(i%2==0){
-                        if((aux)%2==1){
-                            b[i][j]='B';
-                            b[i][j+1]='W';
-                        }
-                        else{
-                            b[i][j]='W';
-                            b[i][j+1]='B';
-                        }
-                    }
-                    else{
-                        if((aux)%2==1){
-                            b[i][j]='W';
-                            b[i][j+1]='B';
-                        }
-                        else{
-                            b[i][j]='B';
-                            b[i][j+1]='W';
-                        }
-                    }
-                    aux++;
-                }
-                else if(a[i][j]=='R'){
-                    if(i%2==0){
-                        if((aux)%2==1){
-                            b[i][j]='B';
-                            b[i][j-1]='W';
-                        }
-                        else{
-                            b[i][j]='W';
-                            b[i][j-1]='B';
-                        }
-                    }
-                    else{
-                        if((aux)%2==1){
-                            b[i][j]='W';
-                            b[i][j-1]='B';
-                        }
-                        else{
-                            b[i][j]='B';
-                            b[i][j-1]='W';
-                        }
-                    }
-                    aux++;
-                }
+            if(a[i][j]=='U'){
 
+                if(aux<cont/2){
+                    a[i][j]='B';
+                    a[i+1][j]='W';
+                }
+                else{
+                    a[i][j]='W';
+                    a[i+1][j]='B';
+                }
+                aux++;
             }
         }
     }
-    bool ok=true;
-    FOR(i,0,n){
-        ll contw=0,contb=0;
-        FOR(j,0,m){
-            if(b[i][j]=='W') contw++;
-            else if(b[i][j]=='B') contb++;
-        }
-        if(contw!=contb){
-            ok=false;
-            break;
-        }
-    }
     FOR(j,0,m){
-        ll contw=0,contb=0;
+        ll cont=0;
         FOR(i,0,n){
-            if(b[i][j]=='W') contw++;
-            else if(b[i][j]=='B') contb++;
+            if(a[i][j]=='L'){
+                cont++;
+            }
         }
-        if(contw!=contb){
+        if(cont%2==1){
             ok=false;
             break;
+        }
+        ll aux=0;
+        FOR(i,0,n){
+            if(a[i][j]=='L'){
+                if(aux<cont/2){
+                    a[i][j]='B';
+                    a[i][j+1]='W';
+                }
+                else{
+                    a[i][j]='W';
+                    a[i][j+1]='B';
+                }
+                aux++;
+            }
         }
     }
     if(!ok){
@@ -169,11 +96,14 @@ void solve(){
     else{
         FOR(i,0,n){
             FOR(j,0,m){
-                cout<<b[i][j];
+                cout<<a[i][j];
             }
             cout<<"\n";
         }
     }
+
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
