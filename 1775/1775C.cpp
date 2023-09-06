@@ -26,65 +26,19 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool isBalanced(string & s){
-    ll n=s.size(),cont=0;
-    FOR(i,0,n){
-        if(s[i]=='(') cont++;
-        else cont--;
-        if(cont<0) return false;
-    }
-    return true;
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    string s;
-    cin>>s;
-    ll cont=0;
-    FOR(i,0,n){
-        if(s[i]=='(') cont++;
-        else cont--;
-    }
-    if(cont!=0){
-        cout<<"-1\n";
-    }
-    else{
-        string s2=s;
-        reverse(all(s2));
-        if(isBalanced(s) || isBalanced(s2)){
-            cout<<"1\n";
-            FOR(i,0,n){
-                cout<<"1 ";
-            }
-            cout<<"\n";
+    ll n,x;
+    cin>>n>>x;
+    ll pot=0,ind=0,cont=0;
+    while((1ll<<pot)<n){
+        if(pot&n && (pot&x)){
+            ind=cont;
         }
-        else{
-            vll color(n,0);
-            ll aux=0;
-            bool greate=false;
-            FOR(i,0,n){
-                if(s[i]=='(') aux++;
-                else aux--;
-
-                if(aux<0 || greate){
-                    color[i]=2;
-                    greate=true;
-                }
-                else{
-                    color[i]=1;
-                }
-                if(aux==0){
-                    greate=false;
-                }
-            }
-            cout<<"2\n";
-            FOR(i,0,n){
-                cout<<color[i]<<" ";
-            }
-            cout<<"\n";
-        }
-
+        cont++;
+        pot++;
     }
+    dbg(ind);
 
 }
 int main(){
