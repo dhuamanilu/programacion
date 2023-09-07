@@ -26,54 +26,18 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-set<ll> se;
-void precalc(){
-    FOR1(k,2,(ll)1e6){
-        ll tosum=1+k+k*k;
-        ll mult=k*k*k;
-        while(tosum<(ll)(1e18)){
-            tosum+=mult;
-            se.insert(tosum);
-            if(mult>ll(1e18)/k) break;
-            mult*=k;
-        }
-    }
-}
+
 void solve(){
     ll n;
     cin>>n;
-    if(n<=3){
-        cout<<"NO\n";
-        return;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
     }
-    if(se.count(n)){
-        cout<<"YES\n";
-    }
-    else{
-        ll a=1,b=1,c=1-n;
-        ll sq=(ll)sqrtl(b*b-4*a*c);
-        if(b*b-4*a*c>=0 && (sq*sq)==(b*b-4*a*c)){
-            if((-b+sq)%(2*a)==0 || (-b-sq)%(2*a)==0){
-                cout<<"YES\n";
-            }
-            else{
-                cout<<"NO\n";
-            }
-        }
-        else{
-            cout<<"NO\n";
-        }
-    }
-
-
-
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    precalc();
-    //dbg(se);
     int t=1;
     cin>>t;
     while(t--){
