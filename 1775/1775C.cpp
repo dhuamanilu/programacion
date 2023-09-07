@@ -30,15 +30,45 @@ const int N=1000+3;
 void solve(){
     ll n,x;
     cin>>n>>x;
-    ll pot=0,ind=0,cont=0;
-    while((1ll<<pot)<n){
-        if(pot&n && (pot&x)){
-            ind=cont;
+    ll pot=1,lsb=59,cont=0;
+    while(pot<=x){
+        if(pot&x){
+            lsb=cont;
+            break;
         }
+        pot*=2;
         cont++;
-        pot++;
     }
-    dbg(ind);
+    //dbg(lsb);
+    pot=(1ll<<lsb);
+    bool ok=true;
+    while(pot<max(n,x)){
+        if((pot&n)!=(pot&x)){
+            ok=false;
+            break;
+        }
+        pot*=2;
+    }
+    if(ok){
+        ll sum=0;
+        FOR(i,0,max(0ll,lsb-1)){
+            ll pot=(1ll<<i);
+            if(pot&n){
+                sum+=pot;
+            }
+        }
+        ll ans=(1ll<<max(0ll,lsb-1))-sum;
+        if(ans<0){
+            cout<<"-1\n";
+        }
+        else{
+            cout<<n+ans<<"\n";
+        }
+
+    }
+    else{
+        cout<<"-1\n";
+    }
 
 }
 int main(){
