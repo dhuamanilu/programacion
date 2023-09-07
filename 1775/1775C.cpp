@@ -26,64 +26,48 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-bool isBalanced(string & s){
-    ll n=s.size(),cont=0;
-    FOR(i,0,n){
-        if(s[i]=='(') cont++;
-        else cont--;
-        if(cont<0) return false;
-    }
-    return true;
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    string s;
-    cin>>s;
-    ll cont=0;
-    FOR(i,0,n){
-        if(s[i]=='(') cont++;
-        else cont--;
+    ll n,x;
+    cin>>n>>x;
+    ll pot=1,lsb=59,cont=0;
+    while(pot<=x){
+        if(pot&x){
+            lsb=cont;
+            break;
+        }
+        pot*=2;
+        cont++;
     }
-    if(cont!=0){
-        cout<<"-1\n";
+    //dbg(lsb);
+    pot=(1ll<<lsb);
+    bool ok=true;
+    while(pot<max(n,x)){
+        if((pot&n)!=(pot&x)){
+            ok=false;
+            break;
+        }
+        pot*=2;
     }
-    else{
-        string s2=s;
-        reverse(all(s2));
-        if(isBalanced(s) || isBalanced(s2)){
-            cout<<"1\n";
-            FOR(i,0,n){
-                cout<<"1 ";
+    if(ok){
+        ll sum=0;
+        FOR(i,0,max(0ll,lsb-1)){
+            ll pot=(1ll<<i);
+            if(pot&n){
+                sum+=pot;
             }
-            cout<<"\n";
+        }
+        ll ans=(1ll<<max(0ll,lsb-1))-sum;
+        if(ans<0){
+            cout<<"-1\n";
         }
         else{
-            vll color(n,0);
-            ll aux=0;
-            bool greate=false;
-            FOR(i,0,n){
-                if(s[i]=='(') aux++;
-                else aux--;
-
-                if(aux<0 || greate){
-                    color[i]=2;
-                    greate=true;
-                }
-                else{
-                    color[i]=1;
-                }
-                if(aux==0){
-                    greate=false;
-                }
-            }
-            cout<<"2\n";
-            FOR(i,0,n){
-                cout<<color[i]<<" ";
-            }
-            cout<<"\n";
+            cout<<n+ans<<"\n";
         }
 
+    }
+    else{
+        cout<<"-1\n";
     }
 
 }
