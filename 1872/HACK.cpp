@@ -24,84 +24,18 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
 
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    string s;
-    cin>>s;
-
-    vll pref0(n,0),pref1(n,0);
-    pref0[0]=s[0]=='0' ? a[0] : 0;
-    pref1[0]=s[0]=='1' ? a[0] : 0;
-    FOR(i,1,n){
-        if(s[i]=='0'){
-            pref0[i]=pref0[i-1]^a[i];
-            pref1[i]=pref1[i-1];
-        }
-        else{
-            pref0[i]=pref0[i-1];
-            pref1[i]=pref1[i-1]^a[i];
-        }
-    }
-
-    ll xo0=0,xo1=0;
-    FOR(i,0,n){
-        if(s[i]=='0'){
-            xo0^=a[i];
-        }
-        else{
-            xo1^=a[i];
-        }
-    }
-    ll q;
-    cin>>q;
-    FOR(i,0,q){
-        ll num;
-        cin>>num;
-        if(num==1){
-            ll l,r;
-            cin>>l>>r;
-            l--;
-            r--;
-
-            ll resta1=l-1>=0 ? pref1[l-1] : 0;
-            ll xo1enrango=pref1[r]-resta1;
-            xo1^=xo1enrango;
-
-            ll resta2=l-1>=0 ? pref0[l-1] : 0;
-            ll xo0enrango=pref0[r]-resta2;
-            xo0^=xo0enrango;
-
-            xo1^=xo0enrango;
-            xo0^=xo1enrango;
-        }
-        else{
-            ll g;
-            cin>>g;
-            if(g==0){
-                cout<<xo0<<" ";
-            }
-            else{
-                cout<<xo1<<" ";
-            }
-        }
-    }
-    cout<<"\n";
-}
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int t=1;
-    cin>>t;
-    while(t--){
-        solve();
+    ll t=1000;
+    cout<<t<<"\n";
+    FOR(i,0,t){
+        ll n=100;
+        cout<<n<<"\n";
+        FOR(j,0,n){
+            cout<<"200 200\n";
+        }
     }
     return 0;
 }

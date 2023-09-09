@@ -28,12 +28,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll a,b,c;
+    cin>>a>>b>>c;
+    if(a<b){
+        swap(a,b);
     }
+    cout<<((a-b+c-1)/c+1)/2<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

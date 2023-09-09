@@ -26,14 +26,25 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+long long gcd(long long a, long long b){
+  if (b == 0)
+    return a;
+  return gcd(b, a % b);
+}
+long long lcm(long long a,long long b){
+    return (a / gcd(a, b)) * b;
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
+    ll n,x,y;
+    cin>>n>>x>>y;
+    ll cuantos=n/lcm(x,y);
+    //dbg(cuantos);
+    ll dex=(n/x)-cuantos,dey=(n/y)-cuantos;
+    //dbg((n+n-dex+1)/2);
+    ll sum1=(dex*(n+n-dex+1))/2,sum2=(dey*(1+dey))/2;
+    //dbgm(sum1,sum2);
+    cout<<sum1-sum2<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

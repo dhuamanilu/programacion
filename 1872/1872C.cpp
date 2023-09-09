@@ -26,14 +26,45 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+vpll get_factors(ll n){
+    vpll ans;
+    ll num=n;
+    for(ll i=2;i*i<=n;i++){
+        ll cont=0;
+        if(num%i==0){
+            while(num%i==0){
+                cont++;
+                num/=i;
+            }
+        }
+        if(cont>0){
+            ans.pb({i,cont});
+        }
     }
+    /*if(num>1){
+        ans.pb({num,1});
+    }*/
+    return ans;
+}
+void solve(){
+    ll l,r;
+    cin>>l>>r;
+    if(l!=2 && l%2==0){
+        cout<<l/2<<" "<<l/2<<"\n";
+    }
+    else if(r!=2 && r%2==0){
+        cout<<r/2<<" "<<r/2<<"\n";
+    }
+    else{
+        FOR1(i,l,r){
+            auto x=get_factors(i);
+            if(x.size()==0) continue;
+            cout<<x[0].f<<" "<<i-x[0].f<<"\n";
+            return;
+        }
+        cout<<"-1\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

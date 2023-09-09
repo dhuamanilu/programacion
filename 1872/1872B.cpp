@@ -30,10 +30,16 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f>>a[i].se;
     }
+    sort(all(a));
+    ll ans=LONG_LONG_MAX;
+    FOR(i,0,n){
+        ans=min(ans,a[i].f+(a[i].se-1)/2);
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
