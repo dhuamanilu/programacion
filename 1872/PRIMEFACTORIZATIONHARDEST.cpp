@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -7,7 +5,9 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map<ll,ll> mll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -24,38 +24,127 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
+const int MX = 100001;
+const int N=1000000+1;
+using u64 = uint64_t;
+using u128 = __uint128_t;
+vector<int> lp(N+1);
+vector<int> pr;
+u64 binpower(u64 base, u64 e, u64 mod) {
+    u64 result = 1;
+    base %= mod;
+    while (e) {
+        if (e & 1)
+            result = (u128)result * base % mod;
+        base = (u128)base * base % mod;
+        e >>= 1;
+    }
+    return result;
+}
 
+bool check_composite(u64 n, u64 a, u64 d, int s) {
+    u64 x = binpower(a, d, n);
+    if (x == 1 || x == n - 1)
+        return false;
+    for (int r = 1; r < s; r++) {
+        x = (u128)x * x % n;
+        if (x == n - 1)
+            return false;
+    }
+    return true;
+};
+bool MillerRabin(u64 n) { // returns true if n is prime, else returns false.
+    if (n < 2)
+        return false;
+
+    int r = 0;
+    u64 d = n - 1;
+    while ((d & 1) == 0) {
+        d >>= 1;
+        r++;
+    }
+
+    for (int a : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37}) {
+        if (n == a)
+            return true;
+        if (check_composite(n, a, d, r))
+            return false;
+    }
+    return true;
+}
+void precalc(){
+    for (int i=2; i <= N; ++i) {
+        if (lp[i] == 0) {
+            lp[i] = i;
+            pr.push_back(i);
+        }
+        for (int j = 0; i * pr[j] <= N; ++j) {
+            lp[i * pr[j]] = pr[j];
+            if (pr[j] == lp[i]) {
+                break;
+            }
+        }
+    }
+}
+long long mult(long long a, long long b, long long mod) {
+    return (__int128)a * b % mod;
+}
+
+long long f(long long x, long long c, long long mod) {
+    return (mult(x, x, mod) + c) % mod;
+}
+
+long long rho(long long n, long long x0=2, long long c=1) {
+    long long x = x0;
+    long long y = x0;
+    long long g = 1;
+    while (g == 1) {
+        x = f(x, c, n);
+        y = f(y, c, n);
+        y = f(y, c, n);
+        g = gcd(abs(x - y), n);
+    }
+    return g;
+}
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    vll m(n+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-        m[a[i]]++;
+    if(MillerRabin(n)){
+        cout<<n<<"\n";
     }
-    vll pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n){
-        pref[i]=pref[i-1]+a[i];
-    }
-    ll ans=0;
-    FOR(i,0,n){
-        FOR(j,i+1,n){
-            ll sum=pref[j]-(i>=1 ? pref[i-1] : 0ll);
-            if(sum>n) break;
-            ans+=m[sum];
-            m[sum]=0;
+    else{
+        vll ans;
+        ll tam=pr.size();
+        for(ll i=0;i<tam && pr[i]*pr[i]<=n;i++){
+            if(n%pr[i]==0){
+                while(n%pr[i]==0){
+                    ans.pb(pr[i]);
+                    n/=pr[i];
+                }
+            }
         }
+        if(MillerRabin(n)){
+            ans.pb(n);
+        }
+        else{
+            ll fact=rho(n);
+            ans.pb(fact);
+            n/=fact;
+            if(n>1)
+                ans.pb(n);
+        }
+        for(auto & e : ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
-    cout<<ans<<"\n";
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
     cin>>t;
+    precalc();
     while(t--){
         solve();
     }

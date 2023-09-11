@@ -36,21 +36,11 @@ void solve(){
     }
     string s;
     cin>>s;
-
-    vll pref0(n,0),pref1(n,0);
-    pref0[0]=s[0]=='0' ? a[0] : 0;
-    pref1[0]=s[0]=='1' ? a[0] : 0;
+    vll pref(n,0);
+    pref[0]=a[0];
     FOR(i,1,n){
-        if(s[i]=='0'){
-            pref0[i]=pref0[i-1]^a[i];
-            pref1[i]=pref1[i-1];
-        }
-        else{
-            pref0[i]=pref0[i-1];
-            pref1[i]=pref1[i-1]^a[i];
-        }
+        pref[i]=pref[i-1]^a[i];
     }
-
     ll xo0=0,xo1=0;
     FOR(i,0,n){
         if(s[i]=='0'){
@@ -70,17 +60,13 @@ void solve(){
             cin>>l>>r;
             l--;
             r--;
-
-            ll resta1=l-1>=0 ? pref1[l-1] : 0;
-            ll xo1enrango=pref1[r]-resta1;
-            xo1^=xo1enrango;
-
-            ll resta2=l-1>=0 ? pref0[l-1] : 0;
-            ll xo0enrango=pref0[r]-resta2;
-            xo0^=xo0enrango;
-
-            xo1^=xo0enrango;
-            xo0^=xo1enrango;
+            ll lef=0;
+            if(l>=1){
+                lef=pref[l-1];
+            }
+            ll affect=pref[r]^lef;
+            xo1^=affect;
+            xo0^=affect;
         }
         else{
             ll g;

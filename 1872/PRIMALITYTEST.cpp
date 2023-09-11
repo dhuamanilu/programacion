@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -7,7 +5,9 @@ typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef map<ll,ll> mll;
+typedef map <ll,ll> mll;
+typedef vector <pair<ll,ll>> vpll;
+typedef priority_queue<ll> pq;
 #define FOR(i, a, b) for (long long i=a; i<(b); i++)
 #define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
 #define mp make_pair
@@ -24,38 +24,31 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
+const int MX = 100001;
+const int N=1000+3;
 
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    vll m(n+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-        m[a[i]]++;
-    }
-    vll pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n){
-        pref[i]=pref[i-1]+a[i];
-    }
-    ll ans=0;
-    FOR(i,0,n){
-        FOR(j,i+1,n){
-            ll sum=pref[j]-(i>=1 ? pref[i-1] : 0ll);
-            if(sum>n) break;
-            ans+=m[sum];
-            m[sum]=0;
+    bool ok=true;
+    for(ll i=2;i*i<=n;i++){
+        if(n%i==0){
+            ok=false;
+            break;
         }
     }
-    cout<<ans<<"\n";
-
+    if(ok){
+        cout<<"YES\n";
+    }
+    else{
+        cout<<"NO\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
