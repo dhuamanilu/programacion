@@ -25,42 +25,31 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-
-    ll xo=0;
+    vll a(n);
     FOR(i,0,n){
         cin>>a[i];
-        xo^=a[i];
     }
-    if(n==2){
-        if(a[0]==a[1]){
-            cout<<"YES\n";
-        }
-        else{
-            cout<<"NO\n";
-        }
-        return;
+    vll pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+        pref[i]=pref[i-1]^a[i];
     }
-    if(xo==0){
+    if(pref[n-1]==0){
         cout<<"YES\n";
     }
     else{
-        ll xo2=0,cont=0;
         FOR(i,0,n){
-            xo2^=a[i];
-            if(xo2==xo){
-                xo2=0;
-                cont++;
+            FOR(j,i+1,n){
+                ll xo1=pref[i],restar1=i>=1 ? pref[i-1] : 0ll;
+                ll xo2=pref[j]^restar1,restar2=j>=1 ? pref[j-1] : 0ll;
+                ll xo3=pref[n-1]^restar2;
+                if(xo1==xo2 && xo2==xo3){
+                    cout<<"YES\n";
+                    return;
+                }
             }
         }
-        if(cont>=3){
-            cout<<"YES\n";
-        }
-        else{
-            cout<<"NO\n";
-        }
-
-
+        cout<<"NO\n";
     }
 }
 int main(){
