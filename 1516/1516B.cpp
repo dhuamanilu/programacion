@@ -26,7 +26,6 @@ void solve(){
     ll n;
     cin>>n;
     ll a[n];
-
     ll xo=0;
     FOR(i,0,n){
         cin>>a[i];
