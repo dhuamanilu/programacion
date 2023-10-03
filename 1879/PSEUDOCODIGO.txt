@@ -1,0 +1,115 @@
+Algoritmo Evaluar_Polinomio
+    // Declaración de variables globales
+    ListaEnlazada PrimerNodo = Nulo
+
+    Procedimiento CrearPolinomio()
+    Inicio
+        Nodo Temporal, Nuevo, Previo
+        Entero coeficiente, potencia
+        Mostrar "Ingrese el coeficiente y la potencia terminada por coeficiente 0"
+        Leer coeficiente, potencia
+
+        Mientras coeficiente != 0 Hacer
+            Nuevo = Nuevo Nodo()
+            Nuevo.coeficiente = coeficiente
+            Nuevo.potencia = potencia
+            Nuevo.siguiente = Nulo
+
+            Si PrimerNodo == Nulo Entonces
+                PrimerNodo = Nuevo
+            Sino
+                Si potencia > PrimerNodo.potencia Entonces
+                    Nuevo.siguiente = PrimerNodo
+                    PrimerNodo = Nuevo
+                Sino
+                    Temporal = PrimerNodo
+                    Mientras (Temporal != Nulo) Y (potencia < Temporal.potencia) Hacer
+                        Previo = Temporal
+                        Temporal = Temporal.siguiente
+                    Fin Mientras
+
+                    Si Temporal == Nulo Entonces
+                        Previo.siguiente = Nuevo
+                        Nuevo.siguiente = Temporal
+                    Sino
+                        Previo.siguiente = Nuevo
+                        Nuevo.siguiente = Temporal
+                    Fin Si
+                Fin Si
+            Fin Si
+            Mostrar "Ingrese el coeficiente y la potencia terminada por coeficiente 0"
+            Leer coeficiente, potencia
+        Fin Mientras
+    Fin Procedimiento
+
+    Función EvaluarPolinomio(Entero x) -> Entero
+    Inicio
+        Nodo Temporal
+   
+        Temporal = PrimerNodo
+
+        Mientras Temporal != Nulo Hacer
+            resultado = resultado + Temporal.coeficiente * Potencia(x, Temporal.potencia)
+Temporal = Temporal.siguiente
+        Fin Mientras
+
+        Devolver resultado
+    Fin Función
+
+    Procedimiento MostrarPolinomio()
+    Inicio
+        Nodo Temporal
+        Si PrimerNodo == Nulo Entonces
+            Mostrar "Polinomio Vacío"
+            Devolver
+        Fin Si
+
+        Temporal = PrimerNodo
+        Mostrar "Polinomio:"
+        Mientras Temporal != Nulo Hacer
+            Mostrar "|", Temporal.coeficiente, "|", Temporal.potencia, "| -->"
+            Temporal = Temporal.siguiente
+        Fin Mientras
+        Mostrar "Nulo"
+    Fin Procedimiento
+   
+    // Función principal
+    Función Principal()
+    Inicio
+   map <int,int> guardarResultados
+        Entero eleccion, resultado
+        Repetir
+            Mostrar "1. Crear Polinomio"
+            Mostrar "2. Evaluar"
+            Mostrar "3. Mostrar"
+            Mostrar "4. Salir"
+            Mostrar "Ingrese su elección: "
+            Leer eleccion
+
+            Según eleccion Hacer
+                Caso 1:
+                    CrearPolinomio()
+                    Mostrar "Polinomio Después de la Creación:"
+                    MostrarPolinomio()
+                Fin Caso
+                Caso 2:
+           Entero resultado = 0, x
+                        Mostrar "Ingrese el valor de X en el polinomio"
+                        Leer x
+                    resultado = EvaluarPolinomio(x)
+                    Mostrar "El resultado es ", resultado
+       guardarResultados[x]=resultado
+ 		Fin Caso
+                Caso 3:
+                    Mostrar "Polinomio:"
+                    MostrarPolinomio()
+                Fin Caso
+                Caso 4:
+                    Salir
+                Fin Caso
+                De Otro Modo:
+                    Mostrar "Opción inválida"
+            Fin Según
+        Hasta Que eleccion = 4
+    Fin Función
+Fin Algoritmo
