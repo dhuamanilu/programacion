@@ -40,11 +40,9 @@ bool puede(ll s,ll d,ll k){
 void solve(ll ind){
     ll a,b,c;
     cin>>a>>b>>c;
-    ll s=0,e=(ll)(1e16),m=s+(e-s)/2,guarda=0;
+    ll s=0,e=(ll)(2e16)+5,m=s+(e-s)/2,guarda=0;
     while(s<=e){
-
         m=s+(e-s)/2;
-        //dbgm(s,e,m);
         //Supongamos que puedo hacer una torre de m-burgers
         ll masBarato=0,masCaro=0;
         if(2*a < b){
@@ -60,10 +58,6 @@ void solve(ll ind){
 
         newC-=masBarato*cantidad;
         ll cantidad2=min(m-cantidad,newC/masCaro);
-        /*if(m==2000000000000-1){
-            dbgm("ASDASASD",cantidad,cantidad2);
-        }
-        dbgm(cantidad,cantidad2);*/
         if(masBarato==b){
             if(puede(cantidad2,cantidad,m)){
                 guarda=m;
@@ -88,10 +82,10 @@ void solve(ll ind){
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    if (fopen("cheeseburger_corollary_2_input.txt", "r")) {
+    /*if (fopen("cheeseburger_corollary_2_input.txt", "r")) {
 		freopen("cheeseburger_corollary_2_input.txt", "r", stdin);
 		freopen("outA2.txt", "w", stdout);
-    }
+    }*/
     int t=1;
     cin>>t;
     FOR(i,0,t){
