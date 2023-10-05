@@ -32,12 +32,10 @@ void solve(){
         cin>>a[i];
         pos[a[i]]=i;
     }
-    ll l=(n+1)/2,r=(n+2)/2;
-    while(l>0 && (l==r || (pos[l]<pos[l+1] && pos[r]>pos[r-1]))){
-        l--;
-        r++;
+    ll l=0,r=0;
+    while(true){
+
     }
-    cout<<(n-(r-l)+1)/2<<"\n";
 
 
 }
