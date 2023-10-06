@@ -30,15 +30,28 @@ void solve(){
     vll pos(n+1);
     FOR(i,0,n){
         cin>>a[i];
+        a[i]--;
         pos[a[i]]=i;
     }
-    ll l=(n+1)/2,r=(n+2)/2;
-    while(l>0 && (l==r || (pos[l]<pos[l+1] && pos[r]>pos[r-1]))){
-        l--;
-        r++;
+    ll s=0,e=n/2,m=s+(e-s)/2,guarda=0;
+    while(s<=e){
+        m=s+(e-s)/2;
+        bool ok=true;
+        FOR(i,m,n-m-1){
+            if(pos[i]>pos[i+1]){
+                ok=false;
+                break;
+            }
+        }
+        if(ok){
+            guarda=m;
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
     }
-    cout<<(n-(r-l)+1)/2<<"\n";
-
+    cout<<guarda<<"\n";
 
 }
 int main(){
