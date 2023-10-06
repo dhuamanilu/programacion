@@ -24,25 +24,76 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 600010+5;
 const int N=1000+3;
-
+ll a[MX];
+ll n;
+ll go(ll sum){
+    ll l=0,r=2*n-2,cont=0,ans,act=0;
+    while(l<r){
+        //dbgm(a[l],a[r]);
+        if(a[l]+a[r]==sum){
+            l++;
+            r--;
+            continue;
+        }
+        else if(a[l]+a[r]>sum){
+            act=sum-a[r];
+            r--;
+            cont++;
+        }
+        else{
+            act=sum-a[l];
+            l++;
+            cont++;
+        }
+    }
+    if(cont==0){
+        if(l==r){
+            act=sum-a[l];
+            cont=1;
+        }
+    }
+    if(cont==1 && act>0){
+        ans=act;
+    }
+    else{
+        ans=-1;
+    }
+    return ans;
+}
 void solve(ll ind){
-    ll n;
     cin>>n;
-    ll a[2*n-1];
     FOR(i,0,2*n-1){
         cin>>a[i];
     }
-    //cout<<"Case #"<<ind<<": "<<guarda<<"\n";
+    sort(a,a+2*n-1);
+    if(n==1){
+        cout<<"Case #"<<ind<<": "<<1<<"\n";
+        return;
+    }
+    vll sums={a[0]+a[2*n-2],a[0]+a[2*n-3],a[1]+a[2*n-2]};
+    //dbg(sums);
+    ll ans=LONG_LONG_MAX;
+    for(auto& sum : sums){
+        ll res=go(sum);
+        if(res==-1){
+
+        }
+        else{
+            ans=min(ans,res);
+        }
+    }
+    if(ans==LONG_LONG_MAX) ans=-1;
+    cout<<"Case #"<<ind<<": "<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("dim_sum_delivery_input.txt", "r")) {
-		freopen("dim_sum_delivery_input.txt", "r", stdin);
-		freopen("outB.txt", "w", stdout);
-    }*/
+    if (fopen("two_apples_a_day_input.txt", "r")) {
+		freopen("two_apples_a_day_input.txt", "r", stdin);
+		freopen("outC.txt", "w", stdout);
+    }
     int t=1;
     cin>>t;
     FOR(i,0,t){

@@ -33,6 +33,7 @@ void solve(){
         a[i]--;
         pos[a[i]]=i;
     }
+<<<<<<< HEAD
     ll s=0,e=n/2,m=s+(e-s)/2,guarda=0;
     while(s<=e){
         m=s+(e-s)/2;
@@ -52,6 +53,13 @@ void solve(){
         }
     }
     cout<<guarda<<"\n";
+=======
+    ll l=0,r=0;
+    while(true){
+
+    }
+
+>>>>>>> c630fefcf3e30e3ae4cfb7ad0283d0a177c7fc06
 
 }
 int main(){

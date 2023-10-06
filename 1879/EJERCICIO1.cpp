@@ -1,31 +1,8 @@
 #include "StackComoListaEnlazada.h"
-
+#include "ProcesadorOperacion.h"
+#include "ExpresionTree.h"
 #include <bits/stdc++.h>
-
 using namespace std;
-
-// Encontrar la precedencia de los operadores
-int precedence(char op){
-    if(op=='+'||op=='-')
-        return 1;
-    if(op=='*'||op=='/')
-        return 2;
-    return 0;
-}
-
-// Clase que es el "core",la que hace las operaciones en si
-class ProcesadorOperacion {
-    public:
-        int applyOp(int a, int b, char op){
-            switch(op){
-                case '+': return a + b;
-                case '-': return a - b;
-                case '*': return a * b;
-                case '/': return a / b;
-            }
-        }
-};
-
 
 // Clase que evalua toda la expresion
 class EvaluadorExpresion{
@@ -75,7 +52,7 @@ public:
                     ops.pop();
                     //Usamos la clase que procesa en si la operacion
                     ProcesadorOperacion procesador;
-                    values.push(procesador.applyOp(val1, val2, op));
+                    values.push(procesador.aplicarOperacion(val1, val2, op));
                 }
                 // Borramos el parentesis del stack de operadores
                 if(!ops.empty())
@@ -86,7 +63,9 @@ public:
             else{
                 /* Mientras la precedencia del operador en el top
                 sea mayor igual que la actual se debe de hacer la operacion*/
-                while(!ops.empty() && precedence(ops.top()) >= precedence(tokens[i])){
+                ProcesadorOperacion procesador;
+                while(!ops.empty() && procesador.precedencia(ops.top()) >=
+                      procesador.precedencia(tokens[i])){
                     int val2 = values.top();
                     values.pop();
                     int val1 = values.top();
@@ -94,8 +73,7 @@ public:
                     char op = ops.top();
                     ops.pop();
                     //Usamos la clase que procesa en si la operacion
-                    ProcesadorOperacion procesador;
-                    values.push(procesador.applyOp(val1, val2, op));
+                    values.push(procesador.aplicarOperacion(val1, val2, op));
                 }
 
                 /*Ponemos el token actual a las operaciones,este tiene mayor precedencia
@@ -115,7 +93,7 @@ public:
             ops.pop();
             //Usamos la clase que procesa en si la operacion
             ProcesadorOperacion procesador;
-            values.push(procesador.applyOp(val1, val2, op));
+            values.push(procesador.aplicarOperacion(val1, val2, op));
         }
 
         //El valor que este en el top del stack sera la respuesta
@@ -129,12 +107,33 @@ int main() {
     cout<<"Ingrese operacion matematica (por ejemplo : \"100 *(19+26-17/1)/14\"):\n";
     string expresion;
     getline(cin,expresion);
-
     cout<<"El resultado es :"<<calc.evaluar(expresion)<<endl;
-    /*Ejemplos de evaluacion
 
-    evaluar("10+4* 5 - 2 +8/4");
-    evaluar("100 * ( 2 + 12 ) / 14");*/
+    StackComoListaEnlazada<char> e;
+    ExpresionTree<char> a;
+    Node<char> *x, *y, *z;
+    int l = expresion.length();
+    for (int i = 0; i < l; i++) {
+        if (expresion[i] == '+' || expresion[i] == '-' || expresion[i] == '*'
+            || expresion[i] == '/' || expresion[i] == '^') {
+            z = new Node<char>(expresion[i]);
+            x = e.pop();
+            y = e.pop();
+            z->left = y;
+            z->right = x;
+            e.push(z);
+        }
+        else {
+            z = new Node<char>(expresion[i]);
+            e.push(z);
+        }
+    }
+    cout << "El Binary Expresion Tree es :\n";
+    a.imprimir(z);
+
+
+    /*Ejemplos de evaluacion
+    10+4* 5 - 2 +8/4*/
     return 0;
 }
 

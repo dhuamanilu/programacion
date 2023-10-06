@@ -24,24 +24,28 @@ void solve(){
     ll n,m,k;
     cin>>n>>m>>k;
     ll a[m];
-    bool ok=true;
-    ll sum=0,maxi=LONG_LONG_MIN;
     FOR(i,0,m){
         cin>>a[i];
-        sum+=a[i];
-        maxi=max(maxi,a[i]);
-        ok&=a[i]==1;
     }
-    if(k==n){
-        if(!ok){
-            cout<<"NO\n";
-        }
-        else{
-            cout<<"YES\n";
-        }
+    if(m<k){
+        cout<<"NO\n";
     }
     else{
-        if((sum+k-1)/k >= maxi){
+        sort(a,a+m,greater<ll>());
+        ll cuantos=n/m;
+        bool ok=true;
+        ll restos=0;
+        FOR(i,0,m){
+            if(a[i]<cuantos){
+                ok=false;
+                break;
+            }
+            restos+=(a[i]-cuantos);
+        }
+        if(n%k!=restos){
+            ok=false;
+        }
+        if(ok){
             cout<<"YES\n";
         }
         else{

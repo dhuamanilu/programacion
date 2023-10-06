@@ -36,7 +36,6 @@ void solve(ll ind){
     else{
         cout<<"Case #"<<ind<<": "<<"NO\n";
     }
-
 }
 int main(){
     ios_base::sync_with_stdio(0);
