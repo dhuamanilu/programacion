@@ -28,48 +28,58 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m,k;
-    cin>>n>>m>>k;
-    multiset<ll> ms1;
+    ll n,k;
+    cin>>n>>k;
+    ll a[n];
+    vector<vector<ll>> pos(k+1,vector<ll>());
     FOR(i,0,n){
-        ll x;
-        cin>>x;
-        ms1.insert(x);
+        cin>>a[i];
+        pos[a[i]].pb(i);
     }
-    multiset<ll> ms2;
-    FOR(i,0,m){
-        ll x;
-        cin>>x;
-        ms2.insert(x);
+    dbg(pos);
+    vector<vector<ll>> valores(k+2,vector<ll>(2,0));
+    //Minimo
+    valores[k][0]=0;
+    //Maximo
+    valores[k][1]=0;
+    //ACAAAAAA
+    for(ll i=k;i>=1;i--){
+        if(pos[i].size()>0){
+            //cout<<"asdasds : "<<pos[i].front()<<"\n";
+            valores[i][0]=min(valores[i][0],pos[i].back());
+            valores[i][1]=max(valores[i][1],pos[i].back());
+        }
+        else{
+            valores[i][0]=0;
+            valores[i][1]=0;
+        }
     }
-    vll ans(2,0);
-    ll mini1=*(ms1.begin());
-    ll maxi1=*prev(ms2.end());
-
-    if(maxi1>mini1){
-        ms1.erase(ms1.find(mini1));
-        ms1.insert(maxi1);
-        ms2.erase(ms2.find(maxi1));
-        ms2.insert(mini1);
+    if(pos[k].size()>0){
+        valores[k+1][0]=pos[k].front();
+        valores[k+1][1]=pos[k].back();
     }
-    ll sumita=0;
-    for(auto & e : ms1) sumita+=e;
-    ans[0]=sumita;
-
-
-    ll mini2=*(ms2.begin());
-    ll maxi2=*prev(ms1.end());
-
-    if(maxi2>mini2){
-        ms2.erase(ms2.find(mini2));
-        ms2.insert(maxi2);
-        ms1.erase(ms1.find(maxi2));
-        ms1.insert(mini2);
+    else{
+        valores[k+1][0]=0;
+        valores[k+1][1]=0;
     }
-    ll suma2=0;
-    for(auto &e:ms1) suma2+=e;
-    ans[1]=suma2;
-    cout<<ans[(k-1)%2]<<"\n";
+    dbg(valores);
+    //No useaos valores[0][j]
+    //Para hallar el diff es el maximo entre
+    FOR1(i,1,k){
+        ll ans1=0;
+        //cout<<"2 ";
+        if(pos[i].size()>0){
+            ans1=max(abs(pos[i].front()-valores[i+1][1]),
+                 abs(pos[i].back()-valores[i+1][0]));
+            cout<<2*(ans1+1)<<" ";
+        }
+        else{
+            cout<<"0 ";
+        }
+    }
+    cout<<"\n";
+    //dbg(valores);
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
