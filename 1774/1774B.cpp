@@ -31,20 +31,18 @@ void solve(){
         cout<<"NO\n";
     }
     else{
-        sort(a,a+m,greater<ll>());
-        ll cuantos=n/m;
+        ll maximo=(n+k-1)/k,cont=0;
         bool ok=true;
-        ll restos=0;
         FOR(i,0,m){
-            if(a[i]<cuantos){
+            if(a[i]>maximo){
                 ok=false;
                 break;
             }
-            restos+=(a[i]-cuantos);
+            if(a[i]>n/k){
+                cont++;
+            }
         }
-        if(n%k!=restos){
-            ok=false;
-        }
+        if(cont>n%k) ok=false;
         if(ok){
             cout<<"YES\n";
         }

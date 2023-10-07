@@ -28,48 +28,44 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m,k;
-    cin>>n>>m>>k;
-    multiset<ll> ms1;
+    ll n,m;
+    cin>>n>>m;
+    ll a[n];
     FOR(i,0,n){
-        ll x;
-        cin>>x;
-        ms1.insert(x);
+        cin>>a[i];
     }
-    multiset<ll> ms2;
+    ll b[m];
+    ll orde=0;
     FOR(i,0,m){
-        ll x;
-        cin>>x;
-        ms2.insert(x);
+        cin>>b[i];
+        orde|=b[i];
     }
-    vll ans(2,0);
-    ll mini1=*(ms1.begin());
-    ll maxi1=*prev(ms2.end());
-
-    if(maxi1>mini1){
-        ms1.erase(ms1.find(mini1));
-        ms1.insert(maxi1);
-        ms2.erase(ms2.find(maxi1));
-        ms2.insert(mini1);
+    if(n%2==0){
+        ll mini=0,maxi=0;
+        FOR(i,0,n){
+            maxi^=a[i];
+        }
+        FOR(i,0,n){
+            a[i]|=orde;
+        }
+        FOR(i,0,n){
+            mini^=a[i];
+        }
+        cout<<mini<<" "<<maxi<<"\n";
     }
-    ll sumita=0;
-    for(auto & e : ms1) sumita+=e;
-    ans[0]=sumita;
-
-
-    ll mini2=*(ms2.begin());
-    ll maxi2=*prev(ms1.end());
-
-    if(maxi2>mini2){
-        ms2.erase(ms2.find(mini2));
-        ms2.insert(maxi2);
-        ms1.erase(ms1.find(maxi2));
-        ms1.insert(mini2);
+    else{
+        ll mini=0,maxi=0;
+        FOR(i,0,n){
+            mini^=a[i];
+        }
+        FOR(i,0,n){
+            a[i]|=orde;
+        }
+        FOR(i,0,n){
+            maxi^=a[i];
+        }
+        cout<<mini<<" "<<maxi<<"\n";
     }
-    ll suma2=0;
-    for(auto &e:ms1) suma2+=e;
-    ans[1]=suma2;
-    cout<<ans[(k-1)%2]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

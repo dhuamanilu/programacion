@@ -30,13 +30,36 @@ void solve(){
     vll pos(n+1);
     FOR(i,0,n){
         cin>>a[i];
+        a[i]--;
         pos[a[i]]=i;
     }
+<<<<<<< HEAD
+    ll s=0,e=n/2,m=s+(e-s)/2,guarda=0;
+    while(s<=e){
+        m=s+(e-s)/2;
+        bool ok=true;
+        FOR(i,m,n-m-1){
+            if(pos[i]>pos[i+1]){
+                ok=false;
+                break;
+            }
+        }
+        if(ok){
+            guarda=m;
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
+    }
+    cout<<guarda<<"\n";
+=======
     ll l=0,r=0;
     while(true){
 
     }
 
+>>>>>>> c630fefcf3e30e3ae4cfb7ad0283d0a177c7fc06
 
 }
 int main(){
