@@ -36,7 +36,7 @@ void solve(){
         cin>>a[i];
         pos[a[i]].pb(i);
     }
-    dbg(pos);
+    //dbg(pos);
     vector<vector<ll>> valores(k+2,vector<ll>(2,0));
     //Minimo
     valores[k][0]=0;
@@ -46,12 +46,12 @@ void solve(){
     for(ll i=k;i>=1;i--){
         if(pos[i].size()>0){
             //cout<<"asdasds : "<<pos[i].front()<<"\n";
-            valores[i][0]=min(valores[i][0],pos[i].back());
-            valores[i][1]=max(valores[i][1],pos[i].back());
+            valores[i][0]=min(valores[i+1][0],pos[i].back());
+            valores[i][1]=max(valores[i+1][1],pos[i].back());
         }
         else{
-            valores[i][0]=0;
-            valores[i][1]=0;
+            valores[i][0]=valores[i+1][0];
+            valores[i][1]=valores[i+1][1];
         }
     }
     if(pos[k].size()>0){
@@ -62,15 +62,14 @@ void solve(){
         valores[k+1][0]=0;
         valores[k+1][1]=0;
     }
-    dbg(valores);
+    //dbg(valores);
     //No useaos valores[0][j]
     //Para hallar el diff es el maximo entre
     FOR1(i,1,k){
         ll ans1=0;
         //cout<<"2 ";
         if(pos[i].size()>0){
-            ans1=max(abs(pos[i].front()-valores[i+1][1]),
-                 abs(pos[i].back()-valores[i+1][0]));
+            ans1=abs(pos[i].front()-valores[i+1][1])+abs(pos[i].back()-valores[i+1][0]);
             cout<<2*(ans1+1)<<" ";
         }
         else{
