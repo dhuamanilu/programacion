@@ -26,90 +26,97 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
+long long binpow(long long a, long long b) {
+    if (b == 0)
+        return 1;
+    long long res = binpow(a, b / 2);
+    if (b % 2)
+        return res * res * a;
+    else
+        return res * res;
+}
+vpll get_factors(ll x){
+    vpll ans;
+    ll x2=x;
+    for(ll i=2;i*i<=x;i++){
+        if(x2%i==0){
+            ll cont=0;
+            while(x2%i==0){
+                cont++;
+                x2/=i;
+            }
+            if(cont>0){
+                ans.pb({i,cont});
+            }
         }
     }
-    return true;
-}*/
-void solve(){
-    ll n,x;
-    cin>>n>>x;
-
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
+    if(x2>1){
+        ans.pb({x2,1});
     }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
+    return ans;
+}
+void solve(ll ind){
+    ll n;
+    cin>>n;
+    auto x=get_factors(n);
     bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
+    ll sum=0;
+    vll ans;
+    for(auto & e : x){
+        ll primo=e.f;
+        ll expo=e.se;
+        if(primo>41){
             ok=false;
             break;
         }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
+        FOR(i,0,expo){
+            ans.pb(primo);
+            sum+=primo;
         }
-        cout<<"\n";
     }
-    else{
-        cout<<"-1\n";
+    //dbg(ans);
+    if(!ok){
+        cout<<"Case #"<<ind<<": "<<"-1\n";
     }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
 
-    dbg(ans);*/
+    else{
+        if(sum<=41){
+            FOR(i,0,41-sum){
+                ans.pb(1);
+            }
+            cout<<"Case #"<<ind<<": "<<ans.size()<<" ";
+            FOR(i,0,(ll)ans.size()){
+                if(i<(ll)ans.size()-1){
+                    cout<<ans[i]<<" ";
+                }
+                else cout<<ans[i];
+            }
+            cout<<"\n";
+        }
+        else{
+            cout<<"Case #"<<ind<<": "<<"-1\n";
+        }
+    }
+
+
+
+
+
+
 
 
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
-    }*/
+    if (fopen("sum_41_chapter_1_input.txt", "r")) {
+		freopen("sum_41_chapter_1_input.txt", "r", stdin);
+		freopen("out2true.txt", "w", stdout);
+    }
     int t=1;
     cin>>t;
-    while(t--){
-        solve();
+    FOR(i,0,t){
+        solve(i+1);
     }
     return 0;
 }

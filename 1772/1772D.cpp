@@ -30,32 +30,26 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    ll l=0,r=LONG_LONG_MAX;
+    vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
+    ll l=0,r=1000000000;
     FOR(i,0,n-1){
-        ll x=a[i],y=a[i+1];
-        ll ele=(a[i]+a[i+1])/2,erre=(a[i]+a[i+1]+1)/2;
-        if(x<y){
-            r=min(r,ele);
+        if(a[i]<a[i+1]){
+            r=min(r,(a[i]+a[i+1])/2);
         }
-        if(x>y){
-            l=max(l,erre);
+        else if(a[i]>a[i+1]){
+            l=max(l,(a[i]+a[i+1]+1)/2);
         }
     }
-
-
-    if(l<=r){
-        cout<<l<<"\n";
-    }
-    else{
+    //dbgm(l,r);
+    if(l>r){
         cout<<"-1\n";
     }
-
-
-
+    else{
+        cout<<l<<"\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

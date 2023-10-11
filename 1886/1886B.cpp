@@ -26,86 +26,31 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
-        }
-    }
-    return true;
-}*/
+struct Point {
+    int x = 0;
+    int y = 0;
+};
+double dist(Point &a,Point &b){
+    return hypot(a.x-b.x,a.y-b.y);
+}
+double getR(Point &x,Point &p,Point &o){
+    double r1=dist(x,o),r2=dist(x,p);
+    return max(r1,r2);
+}
 void solve(){
-    ll n,x;
-    cin>>n>>x;
-
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
-    }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
-            ok=false;
-            break;
-        }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
-        }
-        cout<<"\n";
-    }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
-
-    dbg(ans);*/
-
-
+    Point P,O,A,B;
+    cin>>P.x>>P.y;
+    cin>>A.x>>A.y;
+    cin>>B.x>>B.y;
+    //tangenciales,a todo,b todo
+    double ans=min(getR(A,P,O),getR(B,P,O));
+    ans=min(ans,max({dist(O,A),dist(A,B)/2,dist(B,P)}));
+    ans=min(ans,max({dist(O,B),dist(A,B)/2,dist(A,P)}));
+    cout<<fixed<<setprecision(7)<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
-    }*/
     int t=1;
     cin>>t;
     while(t--){

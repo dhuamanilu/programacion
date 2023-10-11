@@ -26,86 +26,40 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
-        }
-    }
-    return true;
-}*/
-void solve(){
-    ll n,x;
-    cin>>n>>x;
 
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
-    }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
+void solve(){
+    string s;
+    cin>>s;
+    ll n=s.size();
+    ll pos;
+    cin>>pos;
+    pos--;
+    ll x=0,y=0;
+    FOR(i,0,n){
+        if(pos>=(n-i)){
+            pos-=n-i;
         }
-        if(j>n){
-            ok=false;
+        else{
+            x=i;
+            y=pos;
             break;
         }
-        vis[j]=true;
-        ans[i]=j;
     }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
+    //dbg(pos);
+    s+="$";
+    vector<char> st;
+    FOR(i,0,n){
+        while (x>0 && !st.empty() && st.back()>s[i]){
+            st.pop_back();
+            x--;
         }
-        cout<<"\n";
+        st.push_back(s[i]);
     }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
-
-    dbg(ans);*/
-
-
+    cout<<st[y];
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
-    }*/
     int t=1;
     cin>>t;
     while(t--){

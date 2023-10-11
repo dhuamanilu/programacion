@@ -26,88 +26,27 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
-        }
-    }
-    return true;
-}*/
+
 void solve(){
-    ll n,x;
-    cin>>n>>x;
-
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
+    ll cont=36;
+    cout<<cont<<"\n";
+    FOR(i,2,10){
+        FOR1(j,2,i){
+            cout<<i<<" "<<j<<"\n";
+            cont++;
+        }
     }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
-            ok=false;
-            break;
-        }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
-        }
-        cout<<"\n";
-    }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
-
-    dbg(ans);*/
-
-
+    //cout<<cont<<"\n";
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
-    }*/
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
     int t=1;
-    cin>>t;
+    //cin>>t;
+    if (fopen("bruta.in", "r")) {
+		//freopen("pairup.in", "r", stdin);
+		freopen("bruta.in", "w", stdout);
+    }
     while(t--){
         solve();
     }

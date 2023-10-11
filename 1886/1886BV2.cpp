@@ -26,86 +26,46 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
-        }
-    }
-    return true;
-}*/
+struct Point {
+    int x = 0;
+    int y = 0;
+};
+double dist(Point &a,Point &b){
+    return hypot(a.x-b.x,a.y-b.y);
+}
+bool check(Point & p,Point & o,Point & a,Point & b,double r){
+    bool ok=dist(p,a)<=r ||  dist(p,b)<=r;
+    bool ok2=dist(o,a)<=r ||  dist(o,b)<=r;
+    if(!ok || !ok2) return false;
+    bool ok3=dist(p,a)<=r && dist(o,a)<=r;
+    if(ok3) return true;
+    bool ok4=dist(p,b)<=r && dist(o,b)<=r;
+    if(ok4) return true;
+    return dist(a,b)<=2*r;
+}
 void solve(){
-    ll n,x;
-    cin>>n>>x;
+    Point P,O,A,B;
+    cin>>P.x>>P.y;
+    cin>>A.x>>A.y;
+    cin>>B.x>>B.y;
+    double s=0,e=1e4,m=s+(e-s)/2,guarda=0;
+    FOR(i,0,300){
 
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
+        m=s+(e-s)/2;
+        //dbgm(s,e,m);
+        if(check(P,O,A,B,m)){
+            guarda=m;
+            e=m;
+        }
+        else{
+            s=m;
+        }
     }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
-            ok=false;
-            break;
-        }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
-        }
-        cout<<"\n";
-    }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
-
-    dbg(ans);*/
-
-
+    cout<<fixed<<setprecision(7)<<guarda<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
-    }*/
     int t=1;
     cin>>t;
     while(t--){
