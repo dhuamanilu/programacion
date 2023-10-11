@@ -26,57 +26,29 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
+bool menor(vll &a ,vll &b){
     FOR(i,0,a.size()){
         if(a[i] > b[i]){
             return false;
         }
     }
     return true;
-}*/
+}
 void solve(){
     ll n,x;
     cin>>n>>x;
-
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
+    vll a(n);
     ll cont=2;
-    FOR1(i,2,n-1){
+    FOR(i,1,n-1){
         if(cont==x) cont++;
         a[i]=cont;
         cont++;
     }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
-            ok=false;
-            break;
-        }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
-        FOR1(i,1,n){
-        cout<<ans[i]<<" ";
-        }
-        cout<<"\n";
-    }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
+
+    a[0]=x;
+    a[n-1]=1;
+    vll ans;
+    bool hayRpta=false;
     do{
         if(a[0]!=x) break;
         bool ok=true;
@@ -87,24 +59,32 @@ void solve(){
             }
         }
         if(ok){
-            dbg(a);
+            //dbg(a);
             if(!hayRpta || menor(a,ans)){
                 ans=a;
             }
             hayRpta=true;
         }
     }while(next_permutation(all(a)));
+    if(!hayRpta){
+        cout<<"-1\n";
+    }
+    else{
+        for(auto & e : ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
+    }
 
-    dbg(ans);*/
-
-
+    //dbg(ans);
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    /*if (fopen("gosu.in", "r")) {
-		freopen("gosu.in", "r", stdin);
-		freopen("gosu.out", "w", stdout);
+
+    /*if (fopen("bruta.in", "r")) {
+		freopen("bruta.in", "r", stdin);
+		freopen("bruta.out", "w", stdout);
     }*/
     int t=1;
     cin>>t;

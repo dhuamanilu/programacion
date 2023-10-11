@@ -26,62 +26,36 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-string get(string &S, int k){
-    string ans = "";
-    int l = S.length();
-    /*if (l & (l - 1))
-        k += k;
-    else
-        k /= 2;*/
-    if (k >= l)
-        return "-1";
-    stack<char> st;
-    for (int i = 0; i < l; i++) {
-        while (!st.empty() && k > 0 && st.top() > S[i]) {
-            st.pop();
-            k--;
-        }
-        st.push(S[i]);
-    }
-    if (k > 0)
-        while (k--)
-            st.pop();
-    while (!st.empty()) {
-        ans = st.top() + ans;
-        st.pop();
-    }
-    return ans;
-}
+
 void solve(){
     string s;
     cin>>s;
     ll n=s.size();
     ll pos;
     cin>>pos;
-    ll st=0,e=n-1,m=st+(e-st)/2,guarda=0;
-    while(st<=e){
-        m=st+(e-st)/2;
-        ll sum=(m+1)*((2*n-m)/2);
-        //dbgm(sum,pos,st,e,m);
-        if(sum<pos){
-            guarda=m;
-            st=m+1;
+    pos--;
+    ll x=0,y=0;
+    FOR(i,0,n){
+        if(pos>=(n-i)){
+            pos-=n-i;
         }
         else{
-            e=m-1;
+            x=i;
+            y=pos;
+            break;
         }
     }
-    //dbg(guarda);
-    ll verda=(guarda+1)*(2*n-guarda)/2;
-    string ans=get(s,guarda+1);
-    //dbgm(ans,pos,verda);
-    if(pos-verda-1>=0){
-        cout<<ans[pos-verda-1];
+    //dbg(pos);
+    s+="$";
+    vector<char> st;
+    FOR(i,0,n){
+        while (x>0 && !st.empty() && st.back()>s[i]){
+            st.pop_back();
+            x--;
+        }
+        st.push_back(s[i]);
     }
-    else{
-        cout<<s[pos-1];
-    }
-
+    cout<<st[y];
 }
 int main(){
     ios_base::sync_with_stdio(0);
