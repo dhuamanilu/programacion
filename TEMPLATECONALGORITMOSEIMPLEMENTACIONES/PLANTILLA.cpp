@@ -217,6 +217,29 @@ struct Sieve {
 };
 
 //Sieve sieve(sqrt(1e9) + 20, true);
+
+
+vpll get_factors(ll x){
+    vpll ans;
+    ll x2=x;
+    for(ll i=2;i*i<=x;i++){
+        if(x2%i==0){
+            ll cont=0;
+            while(x2%i==0){
+                cont++;
+                x2/=i;
+            }
+            if(cont>0){
+                ans.pb({i,cont});
+            }
+        }
+    }
+    if(x2>1){
+        ans.pb({x2,1});
+    }
+    return ans;
+}
+
 void solve(){
     ll n;
     cin>>n;

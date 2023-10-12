@@ -26,76 +26,64 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-/*bool menor(vll &a ,vll &b){
-    FOR(i,0,a.size()){
-        if(a[i] > b[i]){
-            return false;
+vpll get_factors(ll x){
+    vpll ans;
+    ll x2=x;
+    for(ll i=2;i*i<=x;i++){
+        if(x2%i==0){
+            ll cont=0;
+            while(x2%i==0){
+                cont++;
+                x2/=i;
+            }
+            if(cont>0){
+                ans.pb({i,cont});
+            }
         }
     }
-    return true;
-}*/
+    if(x2>1){
+        ans.pb({x2,1});
+    }
+    return ans;
+}
 void solve(){
     ll n,x;
     cin>>n>>x;
-
-    vll a(n+1);
-    vector<bool> vis(n+1,false);
-    ll cont=2;
-    FOR1(i,2,n-1){
-        if(cont==x) cont++;
-        a[i]=cont;
-        cont++;
+    if(n%x!=0){
+        cout<<"-1\n";
     }
-    vis[x]=true;
-    vis[1]=true;
-    a[1]=x;
-    a[n]=1;
-    //dbg(a);
-    vll ans(n+1);
-    ans[1]=x;
-    ans[n]=1;
-    bool ok=true;
-    FOR1(i,2,n-1){
-        ll j=i;
-        while(j<=n && vis[j]){
-            j+=i;
-        }
-        if(j>n){
-            ok=false;
-            break;
-        }
-        vis[j]=true;
-        ans[i]=j;
-    }
-    if(ok){
+    else{
+        vll a(n+1,0);
         FOR1(i,1,n){
-        cout<<ans[i]<<" ";
+            a[i]=i;
+        }
+        a[1]=x;
+        a[n]=1;
+        ll num=n/x;
+        vll factors;
+        auto vec=get_factors(num);
+        for(auto & e : vec){
+            FOR(j,0,e.se){
+                factors.pb(e.f);
+            }
+        }
+        ll it=x;
+        //ll nextValue=1;
+        for(auto& e : factors){
+
+
+            a[it]=it*e;
+            it*=e;
+            //nextValue=it;
+        }
+        //a[nextValue]=it;
+        FOR(i,1,n+1){
+            cout<<a[i]<<" ";
         }
         cout<<"\n";
     }
-    else{
-        cout<<"-1\n";
-    }
-    /*bool hayRpta=false;
-    do{
-        if(a[0]!=x) break;
-        bool ok=true;
-        FOR(i,0,n-1){
-            if((a[i]%(i+1))!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-            if(!hayRpta || menor(a,ans)){
-                ans=a;
-            }
-            hayRpta=true;
-        }
-    }while(next_permutation(all(a)));
 
-    dbg(ans);*/
+
 
 
 }
