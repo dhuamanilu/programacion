@@ -27,46 +27,32 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=100+5;
 const int CAP=10005;
-ll v[N];
-ll w[N];
-ll n;
-ll memo[N][CAP];
-/*ll go(ll pos,ll cap){
-    if(pos==n) return 0;
-    if(memo[pos][cap]!=-1) return memo[pos][cap];
-    ll ans=go(pos+1,cap);
-    if(cap>=w[pos]){
-        ans=max(ans,go(pos+1,cap-w[pos])+v[pos]);
-    }
-    return memo[pos][cap]=ans;
-}*/
+
 void solve(){
-    memset(memo,0,sizeof(memo));
-    ll peso;
-    cin>>n>>peso;
+    ll n,q;
+    cin>>n>>q;
+    ll a[n];
     FOR(i,0,n){
-        cin>>v[i]>>w[i];
+        cin>>a[i];
     }
-    for(ll i=n-1;i>=0;i--){
-        FOR1(j,0,peso){
-            memo[i][j]=memo[i+1][j];
-            if(j>=w[i])
-                memo[i][j]=max(memo[i][j],memo[i+1][j-w[i]]+v[i]);
-        }
+    vll pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+        pref[i]=pref[i-1]+a[i];
     }
-    /*FOR(i,0,n){
-        FOR1(j,0,peso){
-            cout<<memo[i][j]<<" ";
-        }
-        cout<<"\n";
-    }*/
-    cout<<memo[0][peso]<<"\n";
+    FOR(i,0,q){
+        ll l,r;
+        cin>>l>>r;
+        r--;
+        ll izq=l>=1 ? pref[l-1] : 0ll;
+        cout<<pref[r]-izq<<"\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
         solve();
     }
