@@ -217,7 +217,10 @@ struct Sieve {
 };
 
 //Sieve sieve(sqrt(1e9) + 20, true);
-
+/*if (fopen("pairup.in", "r")) {
+		freopen("pairup.in", "r", stdin);
+		freopen("pairup.out", "w", stdout);
+}*/
 
 vpll get_factors(ll x){
     vpll ans;
