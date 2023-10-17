@@ -25,37 +25,33 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=100+5;
-const int CAP=10005;
-const long long INF=100000000000;
+const int N=50+5;
+const int CAP=20005;
+const ll NORES = (ll)-1e11;
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vpll a(items+1);
-    FOR1(i,1,items){
-        cin>>a[i].f>>a[i].se;
+    ll l;
+    cin>>l;
+    ll a[l+1];
+    FOR1(i,1,l){
+        cin>>a[i];
     }
-    /*maximo valor que puedo obtener cuando
-    tengo disponible una capacidad de i*/
-    vll dp(capacity+1,0);
-    FOR1(i,0,capacity){
-        FOR1(j,1,items){
-            ll value=a[j].f;
-            ll weight=a[j].se;
-            if(i>=weight){
-                dp[i]=max(dp[i],dp[i-weight]+value);
-            }
+    ll memo[l+1];
+    FOR1(i,0,l){
+        memo[i]=NORES;
+    }
+    memo[0]=0;
+    FOR1(i,1,l){
+        FOR1(j,1,i){
+            memo[i]=max(memo[i],memo[i-(j)]+a[j]);
         }
     }
-    //dbg(dp);
-    cout<<dp.back()<<"\n";
+    cout<<memo[l]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
-    while(t--){
+    FOR(i,0,t){
         solve();
     }
     return 0;

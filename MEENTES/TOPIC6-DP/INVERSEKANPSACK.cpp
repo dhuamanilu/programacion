@@ -26,36 +26,41 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=100+5;
-const int CAP=10005;
-const long long INF=100000000000;
+const int CAP=20005;
+const ll NORES =(ll)1e11;
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vpll a(items+1);
-    FOR1(i,1,items){
-        cin>>a[i].f>>a[i].se;
+    ll n,peso;
+    cin>>n>>peso;
+    ll sum=0;
+    ll v[n+1];
+    ll w[n+1];
+    FOR1(i,1,n){
+        cin>>v[i]>>w[i];
+        sum+=v[i];
     }
-    /*maximo valor que puedo obtener cuando
-    tengo disponible una capacidad de i*/
-    vll dp(capacity+1,0);
-    FOR1(i,0,capacity){
-        FOR1(j,1,items){
-            ll value=a[j].f;
-            ll weight=a[j].se;
-            if(i>=weight){
-                dp[i]=max(dp[i],dp[i-weight]+value);
-            }
+    vll dp(sum+1,NORES);
+    dp[0]=0;
+    FOR1(i,1,n){
+        ll val=v[i];
+        ll weight=w[i];
+        for(ll j=sum;j>=val;j--){
+            dp[j]=min(dp[j],dp[j-val]+weight);
         }
     }
     //dbg(dp);
-    cout<<dp.back()<<"\n";
+    ll ans=LONG_LONG_MIN;
+    for(ll i=0;i<sum+1;i++){
+        if(dp[i]<=peso){
+            ans=max(ans,i);
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
-    while(t--){
+    FOR(i,0,t){
         solve();
     }
     return 0;
