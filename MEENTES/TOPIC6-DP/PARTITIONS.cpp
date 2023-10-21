@@ -28,40 +28,34 @@ const int MX = 100001;
 const int N=100+5;
 const int CAP=10005;
 const long long INF=100000000000;
-struct info{
-    ll value;
-    ll weight;
-    ll res;
-};
+int memo[10005][10005];
+int go(int n, int k){
+    if(k==0){
+        return 0;
+    }
+    if(n==0){
+        return 1;
+    }
+    if(n<0){
+        return 0;
+    }
+    if(memo[n][k]!=0)return memo[n][k];
+    int calc=(go(n,k-1)+go(n-k,k));
+    if(calc>=MOD) calc-=MOD;
+    memo[n][k]=calc;
+    return memo[n][k];
+}
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vector<info> a(items);
-    FOR(i,0,items){
-        cin>>a[i].value>>a[i].weight>>a[i].res;
-    }
-    /*FOR(i,0,items){
-        cout<<a[i].value<<" "<<a[i].weight<<" "<<a[i].res<<"\n";
-    }*/
-    vll dp(capacity+1,0);
-    FOR(j,0,items){
-        ll currVal=a[j].value;
-        ll weight=a[j].weight;
-        ll lim=a[j].res;
-        ll k=1ll;
-        while(k<lim){
-            for(ll i=capacity;i>=k*weight;i--){
-                dp[i]=max(dp[i],dp[i-k*weight]+k*currVal);
-            }
-            lim-=k;
-            k*=2;
-        }
-        for(ll i=capacity;i>=lim*weight;i--){
-            dp[i]=max(dp[i],dp[i-lim*weight]+lim*currVal);
+    //memset(memo,0,sizeof(memo));
+    FOR(i,0,10001){
+        FOR(j,0,10001){
+            memo[i][j]=0;
         }
     }
-    //dbg(dp);
-    cout<<dp.back()<<"\n";
+    ll num;
+    cin>>num;
+    cout<<go(num,num)<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

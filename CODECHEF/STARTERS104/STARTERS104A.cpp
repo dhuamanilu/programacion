@@ -25,49 +25,33 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=100+5;
-const int CAP=10005;
-const long long INF=100000000000;
-struct info{
-    ll value;
-    ll weight;
-    ll res;
-};
+const int N=1000+3;
+ll mcm(ll a,ll b){
+    return (a*b)/__gcd(a,b);
+}
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vector<info> a(items);
-    FOR(i,0,items){
-        cin>>a[i].value>>a[i].weight>>a[i].res;
+    ll a[2];
+    FOR(i,0,2){
+        cin>>a[i];
     }
-    /*FOR(i,0,items){
-        cout<<a[i].value<<" "<<a[i].weight<<" "<<a[i].res<<"\n";
-    }*/
-    vll dp(capacity+1,0);
-    FOR(j,0,items){
-        ll currVal=a[j].value;
-        ll weight=a[j].weight;
-        ll lim=a[j].res;
-        ll k=1ll;
-        while(k<lim){
-            for(ll i=capacity;i>=k*weight;i--){
-                dp[i]=max(dp[i],dp[i-k*weight]+k*currVal);
-            }
-            lim-=k;
-            k*=2;
-        }
-        for(ll i=capacity;i>=lim*weight;i--){
-            dp[i]=max(dp[i],dp[i-lim*weight]+lim*currVal);
-        }
+    ll k;
+    cin>>k;
+    FOR(i,0,k){
+        if(a[0]==a[1]) break;
+        //dbgm(a[0],a[1]);
+        sort(a,a+2);
+        ll gc=__gcd(a[0],a[1]);
+        a[1]=gc;
+        ll mc=mcm(a[0],a[1]);
+        a[0]=mc;
     }
-    //dbg(dp);
-    cout<<dp.back()<<"\n";
+    cout<<a[0]+a[1]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

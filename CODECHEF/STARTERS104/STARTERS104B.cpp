@@ -25,49 +25,52 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=100+5;
-const int CAP=10005;
-const long long INF=100000000000;
-struct info{
-    ll value;
-    ll weight;
-    ll res;
-};
+const int N=1000+3;
+
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vector<info> a(items);
-    FOR(i,0,items){
-        cin>>a[i].value>>a[i].weight>>a[i].res;
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+        cin>>a[i];
     }
-    /*FOR(i,0,items){
-        cout<<a[i].value<<" "<<a[i].weight<<" "<<a[i].res<<"\n";
-    }*/
-    vll dp(capacity+1,0);
-    FOR(j,0,items){
-        ll currVal=a[j].value;
-        ll weight=a[j].weight;
-        ll lim=a[j].res;
-        ll k=1ll;
-        while(k<lim){
-            for(ll i=capacity;i>=k*weight;i--){
-                dp[i]=max(dp[i],dp[i-k*weight]+k*currVal);
-            }
-            lim-=k;
-            k*=2;
+    ll maxi=LONG_LONG_MIN,posMaxi=-1,mini=LONG_LONG_MAX,posMini=-1;
+    FOR(i,0,n){
+        if(a[i]>=maxi){
+            //eres estrico mayor o estas mas a la derecha
+            if(i>posMaxi || a[i]>maxi)
+                posMaxi=i;
+            maxi=a[i];
+
         }
-        for(ll i=capacity;i>=lim*weight;i--){
-            dp[i]=max(dp[i],dp[i-lim*weight]+lim*currVal);
+        if(a[i]<=mini){
+            //estricto menor o estas mas a la izquierda
+            if(i<posMini || a[i]<mini)
+                posMini=i;
+            mini=a[i];
+
         }
     }
-    //dbg(dp);
-    cout<<dp.back()<<"\n";
+    ll aux=a[0];
+    FOR(i,0,posMaxi){
+        aux=max(aux,a[i]);
+        a[i]=aux;
+    }
+    aux=a[n-1];
+    for(ll j=n-1;j>posMini;j--){
+        aux=max(aux,a[j]);
+        a[j]=aux;
+    }
+    ll sum=0;
+    dbg(a);
+    for(auto & e : a) sum+=e;
+    cout<<sum<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }

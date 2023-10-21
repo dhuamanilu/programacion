@@ -28,40 +28,14 @@ const int MX = 100001;
 const int N=100+5;
 const int CAP=10005;
 const long long INF=100000000000;
-struct info{
-    ll value;
-    ll weight;
-    ll res;
-};
 void solve(){
-    ll items,capacity;
-    cin>>items>>capacity;
-    vector<info> a(items);
-    FOR(i,0,items){
-        cin>>a[i].value>>a[i].weight>>a[i].res;
-    }
-    /*FOR(i,0,items){
-        cout<<a[i].value<<" "<<a[i].weight<<" "<<a[i].res<<"\n";
-    }*/
-    vll dp(capacity+1,0);
-    FOR(j,0,items){
-        ll currVal=a[j].value;
-        ll weight=a[j].weight;
-        ll lim=a[j].res;
-        ll k=1ll;
-        while(k<lim){
-            for(ll i=capacity;i>=k*weight;i--){
-                dp[i]=max(dp[i],dp[i-k*weight]+k*currVal);
-            }
-            lim-=k;
-            k*=2;
-        }
-        for(ll i=capacity;i>=lim*weight;i--){
-            dp[i]=max(dp[i],dp[i-lim*weight]+lim*currVal);
-        }
-    }
-    //dbg(dp);
-    cout<<dp.back()<<"\n";
+    ll num;
+    cin>>num;
+    vector<vector<int>> dp(num + 1, vector<int>(num + 1, 0));
+
+
+    cout << dp[num][num] << "\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -73,6 +47,7 @@ int main(){
     }
     return 0;
 }
+
 
 
 
