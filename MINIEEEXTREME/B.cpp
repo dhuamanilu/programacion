@@ -28,43 +28,70 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll q;
-    cin>>q;
-    mll left;
-    mll right;
-    FOR(i,0,q){
-        char a;
-        cin>>a;
-        ll l,r;
-        cin>>l>>r;
-        if(a=='+'){
-            left[l]++;
-            right[r]++;
+    string str="HTRRYOMHD GTP, ,OMORRRCYTR,R-";
+
+    string str2="GREETINGS FROM MINIEEEXTREME.";
+    string str3="YJRTR STR VP,,SD SMF FPYD. ESYVJ PIY-";
+    string str4="THERE ARE COMMAS AND DOTS, WATCH OUT.";
+
+    map<char,char> m1;
+    map<char,ll> prueba;
+    m1['L']='K';
+    m1['U']='Y';
+    m1['N']='B';
+    m1['X']='Z';
+    //GIVE THE DECODE STRING
+    m1['B']='V';
+
+    //SUPONER
+    m1['A']='P';
+    m1['K']='J';
+    m1['Q']='L';
+    m1['W']='Q';
+    FOR(i,0,str.size()){
+        if(!m1.count(str[i]))
+            m1[str[i]]=str2[i];
+        prueba[str2[i]]++;
+    }
+    FOR(i,0,str3.size()){
+        if(!m1.count(str3[i]))
+            m1[str3[i]]=str4[i];
+        prueba[str4[i]]++;
+    }
+    //dbg(m1);
+
+    /*for (char a='A';a<='Z';a++){
+        if(!m1.count(a)){
+            cout<<"FALTA mapear :"<<a<<"\n";
+        }
+    }
+    for (char a='A';a<='Z';a++){
+        if(!prueba.count(a)){
+            cout<<"FALTA llegar :"<<a<<"\n";
+        }
+    }*/
+    string str5;
+    getline(cin, str5);
+    for(auto & e : str5){
+        if(e>='0' && e<='9'){
+            cout<<e;
         }
         else{
-            if(left[l]==1) left.erase(l);
-            else left[l]--;
-            if(right[r]==1) right.erase(r);
-            else right[r]--;
-        }
-        if(right.size()>=2 && left.size()>=2){
-            ll R=right.begin()->first;
-            ll L=prev(left.end())->first;
-            if(R<L){
-                cout<<"YES\n";
-            }
-            else{
-                cout<<"NO\n";
-            }
-        }
-        else{
-            cout<<"NO\n";
+            if(m1.count(e))
+                cout<<m1[e];
+            /*else{
+                assert(false);
+            }*/
         }
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+    if (fopen("in.txt", "r")) {
+		freopen("in.txt", "r", stdin);
+		//freopen("out.txt", "w", stdout);
+    }
     int t=1;
     //cin>>t;
     while(t--){

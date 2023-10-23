@@ -26,41 +26,85 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+struct node {
+	int val;
 
-void solve(){
-    ll q;
-    cin>>q;
-    mll left;
-    mll right;
-    FOR(i,0,q){
-        char a;
-        cin>>a;
-        ll l,r;
-        cin>>l>>r;
-        if(a=='+'){
-            left[l]++;
-            right[r]++;
+	node() {
+		val = 10000000;
+	}
+
+	node(int val) : val(val) {
+	}
+
+	node operator + (const node &rhs) const {
+		return node(min(val,rhs.val));
+	}
+};
+struct SegmentTree{
+    int n;
+    vector<node> tree;
+    SegmentTree(int sz){
+        n = 1;
+        while(n < sz){
+            n <<= 1;
         }
-        else{
-            if(left[l]==1) left.erase(l);
-            else left[l]--;
-            if(right[r]==1) right.erase(r);
-            else right[r]--;
-        }
-        if(right.size()>=2 && left.size()>=2){
-            ll R=right.begin()->first;
-            ll L=prev(left.end())->first;
-            if(R<L){
-                cout<<"YES\n";
-            }
-            else{
-                cout<<"NO\n";
-            }
-        }
-        else{
-            cout<<"NO\n";
+        tree.assign(2 * n, 0);
+    }
+    void update(int ind,node val){
+        ind += n;
+        tree[ind]=val;
+        ind >>= 1;
+        while(ind > 0){
+            tree[ind] = tree[2 * ind]+tree[2 * ind + 1];
+            ind >>= 1;
         }
     }
+    node query(int x){
+        node nodo(1);
+        while(nodo.val < n){
+            int left = (nodo.val << 1);
+            int right = (nodo.val << 1) + 1;
+            if(tree[left].val < x){
+                nodo.val = left;
+            }else{
+                nodo.val = right;
+            }
+        }
+        node ans(nodo.val-n);
+        return ans;
+    }
+};
+
+void solve(){
+    ll n;
+    cin>>n;
+    vll a(n+1);
+    FOR1(i,1,n){
+        cin>>a[i];
+    }
+    ll q;
+    cin>>q;
+    vector<vpll> que(n+1);
+    FOR1(i,1,q){
+        ll l,r;
+        cin>>l>>r;
+        que[r].pb({l,i});
+    }
+    vll ans(q+1);
+    SegmentTree st(n+1);
+    FOR1(i,1,n){
+        st.update(a[i],node(i));
+        //todas las querys que terminan aca
+        for(auto & e : que[i]){
+            //la respuesta para el indice e.se sera
+            //el nuevo query
+            ans[e.se]=st.query(e.f).val;
+        }
+    }
+    FOR(i,1,ans.size()){
+        cout<<ans[i]<<"\n";
+    }
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

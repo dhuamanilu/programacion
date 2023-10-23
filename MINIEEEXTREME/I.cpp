@@ -28,39 +28,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll q;
-    cin>>q;
-    mll left;
-    mll right;
-    FOR(i,0,q){
-        char a;
-        cin>>a;
-        ll l,r;
-        cin>>l>>r;
-        if(a=='+'){
-            left[l]++;
-            right[r]++;
-        }
-        else{
-            if(left[l]==1) left.erase(l);
-            else left[l]--;
-            if(right[r]==1) right.erase(r);
-            else right[r]--;
-        }
-        if(right.size()>=2 && left.size()>=2){
-            ll R=right.begin()->first;
-            ll L=prev(left.end())->first;
-            if(R<L){
-                cout<<"YES\n";
+    ll n;
+    cin>>n;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    vll cont(n+1,0);
+    FOR(i,0,n){
+        FOR(j,i,n){
+            vector<bool> vis(n+1,false);
+            FOR1(k,i,j){
+                vis[a[k]]=true;
             }
-            else{
-                cout<<"NO\n";
+            ll mex=0;
+            while(vis[mex]){
+                mex++;
             }
-        }
-        else{
-            cout<<"NO\n";
+            cont[mex]++;
         }
     }
+    FOR(i,0,n){
+        cout<<cont[i]<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

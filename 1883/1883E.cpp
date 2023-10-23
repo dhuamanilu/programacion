@@ -28,16 +28,7 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
+
 void solve(){
     ll n;
     cin>>n;
@@ -45,15 +36,30 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    ll ans=0;
+    vll pref(n,0);
     FOR(i,0,n-1){
-        if(a[i]<=a[i+1]) continue;
-        //dbgm(1.0*a[i]/a[i+1]);
-        ll calc=ceil(log2(1.0*a[i]/a[i+1]));
-        //dbg(log2(1.0*a[i]/a[i+1]));
-        ans+=calc;
-        a[i+1]*=binpow(2,calc);
+        ll last=i ? pref[i-1] : 0ll;
+        if(a[i]<=a[i+1]){
+            ll next=0,act=a[i],sig=a[i+1];
+            while(act*2<=sig){
+                next++;
+                act*=2;
+            }
+            //dbg(next);
+            pref[i]=max(0ll,last-next);
+        }
+        else{
+            ll next=0,act=a[i],sig=a[i+1];
+            while(act<sig){
+                next++;
+                act*=2;
+            }
+            //dbg(next);
+            pref[i]=last+next;
+        }
     }
+    ll ans=0;
+    for(auto & e  : pref) ans+=e;
     cout<<ans<<"\n";
 }
 int main(){

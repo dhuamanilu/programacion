@@ -1,0 +1,14 @@
+802.1
+1 definicion DEL GRUPO EN GENERAL (es un grupo de trabajo...que cosas gestiona) , definicion del grupo de mantenimiento,
+revision de proyectos : 802.1Q,802.1AC,802.1AS corrigendum etc 
+
+2 definicion del grupo de seguridad, 802.1X ,802.1 AE MAC SECURITY, 802.1AR
+
+3 definicion del grupo de redes sensibles al tiempo , 802.1Q ,802.1AB ,802.1AS ,802.1AX ,802.1CB ,802.1CS
+
+
+
+802.2
+1 definicion (es un estandar ...), TIPOS DE SERVICIOS DEL CONTROL DE ENLACE LOGICO
+2 MODO OPERATIVO TIPO 1, MODO OPERATIVO TIPO 2 , MODO OPERATIVO TIPO 3
+3 CABECERA LLC (dsap,ssap,campo control)

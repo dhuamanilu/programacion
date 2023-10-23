@@ -28,39 +28,59 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll q;
-    cin>>q;
-    mll left;
-    mll right;
-    FOR(i,0,q){
-        char a;
-        cin>>a;
-        ll l,r;
-        cin>>l>>r;
-        if(a=='+'){
-            left[l]++;
-            right[r]++;
-        }
-        else{
-            if(left[l]==1) left.erase(l);
-            else left[l]--;
-            if(right[r]==1) right.erase(r);
-            else right[r]--;
-        }
-        if(right.size()>=2 && left.size()>=2){
-            ll R=right.begin()->first;
-            ll L=prev(left.end())->first;
-            if(R<L){
-                cout<<"YES\n";
+    ll l;
+    cin>>l;
+    map<string,pair<ll,ll>> m;
+    map<string,set<ll>> m2;
+    vector<string> names;
+    FOR(i,0,l){
+        string str;
+        getline(cin, str);
+        ll posIni=str.find('(');
+        ll posFin=str.find(',');
+        string st=str.substr(posIni+1,posFin-posIni-1);
+        ll posFin2=str.find(posFin+1,',');
+        string end=str.substr(posFin+2,posFin2-(posFin+1)-1);
+        ll nameIni=str.find('"');
+        ll nameFin=str.find(nameIni+1,'"');
+        string name=str.substr(nameIni+1,nameFin-nameIni-1);
+        m[name]={stoll(st),stoll(end)};
+        names.pb(name);
+    }
+    ll t;
+    cin>>t;
+    FOR(i,0,t){
+        FOR(j,0,l){
+            ll var;
+            cin>>var;
+            //MINI 1 MAXI 2
+            if(var==m[names[j]].f){
+                m2[names[j]].insert(1);
+            }
+            if(var==m[names[j]].se){
+                m2[names[j]].insert(2);
+            }
+            if(var>= m[names[j]].f && var<= m[names[j]].se){
+                //ok=true;
             }
             else{
-                cout<<"NO\n";
+                cout<<"Error\n";
+                cout<<i+1<<" "<<var<<"\n";
             }
         }
-        else{
-            cout<<"NO\n";
-        }
     }
+    /*FOR(i,0,names.size()){
+        if(m2[names[i]].size()==2){
+            cout<<"Min OK\n";
+        }
+        else if(m2[names[i]].size()==1){
+
+        }
+        else{
+            cout<<"Warning: Min\n";
+
+        }
+    }*/
 }
 int main(){
     ios_base::sync_with_stdio(0);

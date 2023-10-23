@@ -28,45 +28,18 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll q;
-    cin>>q;
-    mll left;
-    mll right;
-    FOR(i,0,q){
-        char a;
-        cin>>a;
-        ll l,r;
-        cin>>l>>r;
-        if(a=='+'){
-            left[l]++;
-            right[r]++;
-        }
-        else{
-            if(left[l]==1) left.erase(l);
-            else left[l]--;
-            if(right[r]==1) right.erase(r);
-            else right[r]--;
-        }
-        if(right.size()>=2 && left.size()>=2){
-            ll R=right.begin()->first;
-            ll L=prev(left.end())->first;
-            if(R<L){
-                cout<<"YES\n";
-            }
-            else{
-                cout<<"NO\n";
-            }
-        }
-        else{
-            cout<<"NO\n";
-        }
+    ll n;
+    cin>>n;
+    ll a[n];
+    FOR(i,0,n){
+        cin>>a[i];
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }
