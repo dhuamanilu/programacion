@@ -36,30 +36,23 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll pref(n,0);
+    ll ans=0,last=0;
     FOR(i,0,n-1){
-        ll last=i ? pref[i-1] : 0ll;
+        //actual a[i]
         if(a[i]<=a[i+1]){
-            ll next=0,act=a[i],sig=a[i+1];
-            while(act*2<=sig){
-                next++;
-                act*=2;
+            ll numPrev=a[i];
+            ll numAct=a[i+1];
+            ll diff=0;
+            while(numPrev*2<=numAct){
+                numPrev*=2;
+                diff++;
             }
-            //dbg(next);
-            pref[i]=max(0ll,last-next);
+            ans+=max(0ll,);
         }
         else{
-            ll next=0,act=a[i],sig=a[i+1];
-            while(act<sig){
-                next++;
-                act*=2;
-            }
-            //dbg(next);
-            pref[i]=last+next;
+
         }
     }
-    ll ans=0;
-    for(auto & e  : pref) ans+=e;
     cout<<ans<<"\n";
 }
 int main(){

@@ -26,39 +26,36 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll get(vpll &a,ll k){
+    //ignoarar los de contienen  a k
+    vpll b;
+    ll n=a.size();
+    FOR(i,0,n){
+        ll l=a[i].f,r=a[i].se;
+        if(l==k || r==k) continue;
+        b.pb({l,1});
+        b.pb({r,2});
+    }
+    sort(all(b));
+    ll cont1=0,ans1=0;
+    for(auto & e  : b){
+        if(e.se==1) cont1++;
+        else cont1--;
+        ans1=max(ans1,cont1);
+    }
+    return ans1;
+}
 void solve(){
     ll n,m;
     cin>>n>>m;
     vpll a;
     FOR(i,0,n){
-        ll l;
-        cin>>l;
-        a.pb({l,1});
-        ll r;
-        cin>>r;
-        a.pb({r,2});
+        ll l,r;
+        cin>>l>>r;
+        a.pb({l,r});
     }
-    sort(all(a));
-    ll cont=0,ans=0;
-    ll L=1,R=m,trueL=0,trueR=0;
-    for(auto & e : a){
-        if(e.se==1){
-            cont++;
-            L=max(L,e.f);
-        }
-        else{
-            R=min(R,e.f);
-            cont--;
-        }
-        if(cont>=ans){
-            ans=cont;
-            trueL=L,trueR=R;
-        }
-        //ans=max(ans,cont);
-    }
-    dbgm(trueL,trueR);
-    cout<<ans<<"\n";
+    cout<<max(get(a,1),get(a,m))<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
