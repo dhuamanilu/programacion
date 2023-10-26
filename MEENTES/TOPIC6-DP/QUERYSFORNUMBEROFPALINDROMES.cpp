@@ -25,42 +25,56 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=10005;
+const int CAP=20005;
+const long long INF=10000000000;
 
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
+    string s;
+    cin>>s;
+    ll n=s.size();
+    vector<vector<int>> f(n,vector<int>(n,0));
     FOR(i,0,n){
-        cin>>a[i];
+        f[i][i]=1;
     }
-    vll l(n,0),r(n,0);
-    mll L,R;
-    FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
+    FOR(i,0,n-1){
+        f[i][i+1]=s[i]==s[i+1];
+    }
+    FOR1(l,3,n){
+        for(ll i=0;i+l-1<n;i++){
+            ll j=i+l-1;
+            f[i][j]=(s[i]==s[j])&f[i+1][j-1];
         }
     }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
+    vector<vector<int>> g(n,vector<int>(n,0));
+    FOR(i,0,n){
+        g[i][i]=1;
+    }
+    FOR(i,0,n-1){
+        g[i][i+1]=f[i][i]+f[i+1][i+1]+f[i][i+1];
+    }
+    FOR1(l,3,n){
+        for(ll i=0;i+l-1<n;i++){
+            ll j=i+l-1;
+            g[i][j]=f[i][j]+g[i+1][j]+g[i][j-1]-g[i+1][j-1];
         }
     }
-    ll ans=0,pref=0;
-    FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+        ll l,r;
+        cin>>l>>r;
+        l--;
+        r--;
+        cout<<g[l][r]<<"\n";
     }
-    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
-    while(t--){
+    //cin>>t;
+    FOR(i,0,t){
         solve();
     }
     return 0;

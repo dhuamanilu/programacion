@@ -47,10 +47,21 @@ void solve(){
                 numPrev*=2;
                 diff++;
             }
-            ans+=max(0ll,);
+            ll calc=max(0ll,last-diff);
+            ans+=calc;
+            last=calc;
         }
         else{
-
+            ll numPrev=a[i];
+            ll numAct=a[i+1];
+            ll diff=0;
+            while(numAct<numPrev){
+                numAct*=2;
+                diff++;
+            }
+            ll calc=last+diff;
+            ans+=calc;
+            last=calc;
         }
     }
     cout<<ans<<"\n";

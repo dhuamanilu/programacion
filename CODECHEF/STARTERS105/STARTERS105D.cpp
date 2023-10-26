@@ -26,34 +26,68 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+int n;
+int comp[N];
+vector<int> E[N];
 
+void init() {
+	for(int i = 1; i <= n; i++) {
+		E[i].emplace_back(i);
+		comp[i] = i;
+	}
+}
+
+int get(int x) {
+	return comp[x];
+}
+
+void join(int a, int b) {
+	a = get(a);
+	b = get(b);
+	if(a == b) return;
+	if(E[a].size() > E[b].size()) swap(a, b);
+	while(not E[a].empty()) {
+		comp[E[a].back()] = b;
+		E[b].emplace_back(E[a].back());
+		E[a].pop_back();
+	}
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll m;
+    cin>>n>>m;
+
+    vpll friends;
+    FOR(i,0,m){
+        ll u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        friends.pb(u,v);
     }
-    vll l(n,0),r(n,0);
-    mll L,R;
+    vpll a(n);
     FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
+        cin>>a[i].f;
+        a[i].se=i;
+    }
+    sort(all(a));
+    FOR(i,0,n){
+        ll guardado=a[i].f;
+        a[i].f=i;
+        ll j=i+1;
+        while(j<n && a[j]==guardado){
+            a[j]=i;
+            j++;
         }
+        i=j-1;
     }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
-        }
-    }
-    ll ans=0,pref=0;
+    vll b;
     FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
+        b.pb({a[i].se,a[i].f});
     }
-    cout<<ans<<"\n";
+    sort(all(b));
+
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

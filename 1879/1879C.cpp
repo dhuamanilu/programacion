@@ -40,8 +40,6 @@ void solve(){
     ll n=s.size();
     vll pos1;
     vll pos0;
-    //pos1.pb(-1);
-    //pos0.pb(-1);
     FOR(i,0,n){
         if(s[i]=='1'){
             pos1.pb(i);
@@ -50,79 +48,7 @@ void solve(){
             pos0.pb(i);
         }
     }
-    //pos1.pb(n);
-    //pos0.pb(n);
-    //que empieze en 1
-    ll mov=0;
-    ll ans1=1;
-    if((ll)pos1.size()>=1 && pos1[0]!=0){
-        mov+=pos1[0];
-        ans1*=fact[pos1[0]];
-        ans1%=MOD;
-    }
-    FOR(i,0,(ll)pos1.size()-1){
-        if(pos1[i]+1!=pos1[i+1]){
-            mov+=(pos1[i+1]-pos1[i]-2);
-            ans1*=fact[pos1[i+1]-pos1[i]-1];
-            ans1%=MOD;
-        }
-        else{
-            ll esp=0;
-            while(i+1<pos1.size() && pos1[i]+1==pos1[i+1]){
-                esp++;
-                mov++;
-                i++;
-            }
-            ans1*=fact[esp+1];
-            ans1%=MOD;
-        }
-    }
 
-    //que empieze en 0
-    ll movi=0;
-    ll ans2=1;
-    if((ll) pos0.size()>=1 && pos0[0]!=0){
-        movi+=pos0[0];
-        ans2*=fact[pos0[0]];
-        ans2%=MOD;
-    }
-    FOR(i,0,(ll)pos0.size()-1){
-        if(pos0[i]+1!=pos0[i+1]){
-            movi+=(pos0[i+1]-pos0[i]-2);
-            ans2*=fact[pos0[i+1]-pos0[i]-1];
-            ans2%=MOD;
-        }
-        else{
-            ll esp=0;
-            while(i+1<pos0.size() && pos0[i]+1==pos0[i+1]){
-                esp++;
-                movi++;
-                i++;
-            }
-            ans2*=fact[esp+1];
-            ans2%=MOD;
-        }
-    }
-
-
-    //dbgm(mov,movi);
-    if((ll)pos1.size()==0){
-        mov=n;
-        ans1=fact[n];
-    }
-    if((ll)pos0.size()==0){
-        movi=n;
-        ans2=fact[n];
-    }
-    if(mov==movi){
-        cout<<mov<<" "<<(ans1+ans2)%MOD<<"\n";
-    }
-    if(mov<movi){
-        cout<<mov<<" "<<ans1<<"\n";
-    }
-    else{
-        cout<<movi<<" "<<ans2<<"\n";
-    }
 
 }
 int main(){

@@ -25,33 +25,27 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=10005;
+const int CAP=20005;
+const long long INF=10000000000;
 
 void solve(){
+
     ll n;
     cin>>n;
-    ll a[n];
+    vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll l(n,0),r(n,0);
-    mll L,R;
+    vll d(n+1,INF);
+    d[0]=-INF;
     FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
-        }
+        ll l=lower_bound(all(d),a[i])-d.begin();
+        if(d[l-1]<a[i] && a[i]<d[l]) d[l]=a[i];
     }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
-        }
-    }
-    ll ans=0,pref=0;
-    FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
+    ll ans=1;
+    FOR1(i,1,n){
+        if(d[i]<INF) ans=i;
     }
     cout<<ans<<"\n";
 }
@@ -59,8 +53,8 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
-    while(t--){
+    //cin>>t;
+    FOR(i,0,t){
         solve();
     }
     return 0;

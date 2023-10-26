@@ -25,42 +25,40 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=1005;
+const int CAP=20005;
+const long long INF=10000000000;
+ll dp[N][N];
 void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    string s1,s2;
+    cin>>s1>>s2;
+    s1.insert(s1.begin(),'$');
+    s2.insert(s2.begin(),'$');
+    ll n1=s1.size(),n2=s2.size();
+    FOR1(i,1,n1){
+        dp[i][0]=i;
     }
-    vll l(n,0),r(n,0);
-    mll L,R;
-    FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
+    FOR1(i,1,n2){
+        dp[0][i]=i;
+    }
+    FOR1(i,1,n1){
+        FOR1(j,1,n2){
+            if(s1[i]==s2[j]){
+                dp[i][j]=dp[i-1][j-1];
+            }
+            else{
+                dp[i][j]=1+min(dp[i-1][j],min(dp[i][j-1],dp[i-1][j-1]));
+            }
         }
     }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
-        }
-    }
-    ll ans=0,pref=0;
-    FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
-    }
-    cout<<ans<<"\n";
+    cout<<dp[n1][n2]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
-    while(t--){
+    //cin>>t;
+    FOR(i,0,t){
         solve();
     }
     return 0;

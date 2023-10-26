@@ -25,42 +25,41 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=1005;
+const int CAP=20005;
+const long long INF=10000000000;
 
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f>>a[i].se;
     }
-    vll l(n,0),r(n,0);
-    mll L,R;
+    vector<vll> dp(n,vll(n,INF));
     FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
+        dp[i][i]=0;
+    }
+    FOR1(l,2,n){
+        for(ll i=0;i+l-1<n;i++){
+            ll j=i+l-1;
+            for(ll k=i;k+1<=j;k++){
+                dp[i][j]=min(dp[i][j],dp[i][k]+dp[k+1][j]+
+                             a[i].f*a[k].se*a[j].se);
+            }
         }
     }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
-        }
-    }
-    ll ans=0,pref=0;
-    FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
-    }
-    cout<<ans<<"\n";
+    //dbg(dp);
+    cout<<dp[0][n-1]<<"\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
-    while(t--){
+    //cin>>t;
+    FOR(i,0,t){
         solve();
     }
     return 0;

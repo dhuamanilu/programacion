@@ -30,30 +30,12 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    vll l(n,0),r(n,0);
-    mll L,R;
-    FOR(i,0,n){
-        if(!L.count(a[i])){
-            l[i]=1;
-            L[a[i]]++;
-        }
-    }
-    for(ll i=n-1;i>=0;i--){
-        if(!R.count(a[i])){
-            r[i]=1;
-            R[a[i]]++;
-        }
-    }
-    ll ans=0,pref=0;
-    FOR(i,0,n){
-        pref+=l[i];
-        ans+=r[i]*pref;
-    }
-    cout<<ans<<"\n";
+    ll x=n;
+    ll y=x;
+    if(y%2==1) y--;
+    //assert((x|y)*(x^y)==n);
+    cout<<x<<" "<<y<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
