@@ -26,46 +26,88 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll k){
-    ll s=0,e=k,m=s+(e-s)/2,guarda=0;
-    while(s<=e){
-        m=s+(e-s)/2;
-        ll calc=m*(m+1)/2;
-        if(calc > k){
-            e=m-1;
-        }
-        else{
-            guarda=m;
-            s=m+1;
-        }
+bool isPrefix(string grande,string pequeno){
+    ll mini=min(grande.size(),pequeno.size());
+    FOR(i,0,mini){
+        if(grande[i]!=pequeno[i]) return false;
     }
-    return guarda;
+    return true;
+}
+bool isSuffix(string grande,string pequeno){
+    ll mini=min(grande.size(),pequeno.size());
+    //dbgm(mini);
+    ll it1=grande.size()-1;
+    ll it2=pequeno.size()-1;
+    while(it1>0 && it2>0){
+        if(grande[it1]!=pequeno[it2]) return false;
+        it1--;
+        it2--;
+    }
+    return true;
 }
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll enc=get(k);
-    ll ele=k-(enc*(enc+1)/2)-enc;
-    vll a;
-    FOR(i,0,enc){
-        a.pb(2ll);
+    ll n,m;
+    cin>>n>>m;
+    map<string,ll> dic;
+    FOR(i,0,n){
+        string s;
+        cin>>s;
+        dic[s]++;
     }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
-        a.pb(-1000);
-    }
-    for(auto & e :a){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+    FOR(i,0,m){
+        string s;
+        cin>>s;
+        ll tam=s.size();
+        set<pair<string,string>> contar;
 
+        FOR(j,1,tam){
+            string p1=s.substr(0,j);
+            string p2=s.substr(j);
+            string p3=p1;
+            string p4=p2;
+            p3+=p4.front();
+            //dbgm(p1,p2,p3,p4);
+            for(auto & e : dic){
+                for(auto & e2 : dic){
+                    string s1=e.f;
+                    string s2=e2.f;
+                    /*if(p3=="spo" && p4=="ork" && s1=="spoon"
+                       && s2=="fork"){
+                        dbgm("caso especial ",
+                             isPrefix(s1,p3),isSuffix(s2,p4));
+                    }*/
 
+                    if(p1.size()>=3 && p2.size()>=3 &&
+                       isPrefix(s1,p1) && isSuffix(s2,p2)){
+                        contar.insert(mp(e.f,e2.f));
+                    }
+                    else if(p3.size()>=3 && p4.size()>=3
+                            && isPrefix(s1,p3) && isSuffix(s2,p4)){
+                        contar.insert(mp(e.f,e2.f));
+                    }
+
+                }
+            }
+        }
+        ll cont=contar.size();
+        if(cont>1){
+                cout<<"ambiguous\n";
+        }
+        else if(cont==0){
+            cout<<"none\n";
+        }
+        else{
+            string guarda1=contar.begin()->f,guarda2=
+            contar.begin()->se;
+            cout<<guarda1<<" "<<guarda2<<"\n";
+        }
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -26,46 +26,32 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll k){
-    ll s=0,e=k,m=s+(e-s)/2,guarda=0;
-    while(s<=e){
-        m=s+(e-s)/2;
-        ll calc=m*(m+1)/2;
-        if(calc > k){
-            e=m-1;
-        }
-        else{
-            guarda=m;
-            s=m+1;
-        }
-    }
-    return guarda;
-}
+
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll enc=get(k);
-    ll ele=k-(enc*(enc+1)/2)-enc;
-    vll a;
-    FOR(i,0,enc){
-        a.pb(2ll);
+    string str;
+    getline(cin,str);
+    map<char,ll> m;
+    for(auto & e : str){
+        if(e>='a' && e<='g'){
+            m[e]++;
+        }
     }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
-        a.pb(-1000);
+    char ans='A';
+    ll maxi=0;
+    for(auto & e : m){
+        if(e.se>maxi){
+            maxi=e.se;
+            ans='A'+e.f-'a';
+        }
     }
-    for(auto & e :a){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
-
-
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
     cin>>t;
+    cin.ignore();
     while(t--){
         solve();
     }

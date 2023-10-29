@@ -25,39 +25,43 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-ll get(ll k){
-    ll s=0,e=k,m=s+(e-s)/2,guarda=0;
-    while(s<=e){
-        m=s+(e-s)/2;
-        ll calc=m*(m+1)/2;
-        if(calc > k){
-            e=m-1;
-        }
-        else{
-            guarda=m;
-            s=m+1;
-        }
-    }
-    return guarda;
-}
+const int N=1005;
+const int CAP=20005;
+const long long INF=10000000000;
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll enc=get(k);
-    ll ele=k-(enc*(enc+1)/2)-enc;
-    vll a;
-    FOR(i,0,enc){
-        a.pb(2ll);
+    ll n;
+    while(cin>>n){
+        ll a[n];
+        FOR(i,0,n){
+            cin>>a[i];
+        }
+        vll pref(n,0);
+        pref[0]=a[0];
+        FOR(i,1,n){
+            pref[i]=pref[i-1]+a[i];
+        }
+        vector<vll> dp(n,vll(n,0));
+
+        FOR1(l,2,n){
+            for(ll i=0;i+l-1<n;i++){
+                ll j=i+l-1;
+                dp[i][j]=INF;
+                for(ll k=i;k<=j;k++){
+
+                    ll calc=pref[j]- (i ? pref[i-1] : 0ll) - a[k];
+
+                    dp[i][j]=min(dp[i][j],calc+
+                                 (k ? dp[i][k-1] : 0ll)
+                                 +(k+1<n ? dp[k+1][j] : 0ll));
+
+
+                }
+            }
+        }
+        //dbg(dp);
+        cout<<dp[0][n-1]<<"\n";
     }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
-        a.pb(-1000);
-    }
-    for(auto & e :a){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+
 
 
 }
@@ -65,8 +69,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
-    while(t--){
+    FOR(i,0,t){
         solve();
     }
     return 0;

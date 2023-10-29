@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,38 +28,11 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll k){
-    ll s=0,e=k,m=s+(e-s)/2,guarda=0;
-    while(s<=e){
-        m=s+(e-s)/2;
-        ll calc=m*(m+1)/2;
-        if(calc > k){
-            e=m-1;
-        }
-        else{
-            guarda=m;
-            s=m+1;
-        }
-    }
-    return guarda;
-}
-void solve(){
+
+void solve(ll test){
     ll n,k;
     cin>>n>>k;
-    ll enc=get(k);
-    ll ele=k-(enc*(enc+1)/2)-enc;
-    vll a;
-    FOR(i,0,enc){
-        a.pb(2ll);
-    }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
-        a.pb(-1000);
-    }
-    for(auto & e :a){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+    double prob=1;
 
 
 }
@@ -66,8 +41,8 @@ int main(){
     cin.tie(0);
     int t=1;
     cin>>t;
-    while(t--){
-        solve();
+    FOR(i,0,t){
+        solve(i+1);
     }
     return 0;
 }

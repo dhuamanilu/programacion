@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,39 +28,78 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll k){
-    ll s=0,e=k,m=s+(e-s)/2,guarda=0;
-    while(s<=e){
-        m=s+(e-s)/2;
-        ll calc=m*(m+1)/2;
-        if(calc > k){
-            e=m-1;
+ll dx[]={1,0};
+ll dy[]={0,1};
+ll n,m,k,b,ans=0;
+void dfs(vector<vll> &a,ll cont , ll score, ll i, ll j){
+    if (i == n - 1 && j == m - 1) {
+            if (cont < k) {
+                if (cont < k - 1 || (cont == k - 1 && a[n - 1][m - 1] >= b)) {
+                    score += a[i][j];
+                }
+                ans = max(ans, score);
+            }
+            return;
         }
-        else{
-            guarda=m;
-            s=m+1;
+        FOR(it,0,2){
+            ll newX=i+dx[it],newY=j+dy[it];
+            if(newX>=0 && newX < n && newY>=0 && newY<m){
+                ll newCont=cont;
+                if(a[i][j] < b){
+                    newCont++;
+                }
+                else{
+                    newCont=0ll;
+                }
+                ll newScore=score+a[i][j];
+                if(newCont >= k ) continue;
+                dfs(a,newCont,newScore,newX,newY);
+            }
         }
-    }
-    return guarda;
 }
-void solve(){
-    ll n,k;
-    cin>>n>>k;
-    ll enc=get(k);
-    ll ele=k-(enc*(enc+1)/2)-enc;
-    vll a;
-    FOR(i,0,enc){
-        a.pb(2ll);
+void solve(ll test){
+    ans=0;
+    cin>>n>>m>>k>>b;
+    vector<vll> a(n,vll(m,0));
+    FOR(i,0,n){
+        FOR(j,0,m){
+            cin>>a[i][j];
+        }
     }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
-        a.pb(-1000);
-    }
-    for(auto & e :a){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+    /*function<void(ll, ll, ll, ll)> dfs = [&](ll cont , ll score, ll i, ll j) {
+        if (i == n - 1 && j == m - 1) {
+            if (cont < k) {
+                if (cont < k - 1 || (cont == k - 1 && a[n - 1][m - 1] >= b)) {
+                    score += a[i][j];
+                }
+                ans = max(ans, score);
+            }
+            return;
+        }
+        FOR(it,0,2){
+            ll newX=i+dx[it],newY=j+dy[it];
+            if(newX>=0 && newX < n && newY>=0 && newY<m){
+                ll newCont=cont;
+                if(a[i][j] < b){
+                    newCont++;
+                }
+                else{
+                    newCont=0ll;
+                }
+                ll newScore=score+a[i][j];
+                if(newCont >= k ) continue;
+                dfs(newCont,newScore,newX,newY);
+            }
+        }
 
+    };*/
+    dfs(a,0,0,0,0);
+    if(ans==0){
+        cout<<"Case "<<test<<": "<<"IMPOSSIBLE"<<"\n";
+    }
+    else{
+        cout<<"Case "<<test<<": "<<ans<<"\n";
+    }
 
 }
 int main(){
@@ -66,8 +107,8 @@ int main(){
     cin.tie(0);
     int t=1;
     cin>>t;
-    while(t--){
-        solve();
+    FOR(i,0,t){
+        solve(i+1);
     }
     return 0;
 }
