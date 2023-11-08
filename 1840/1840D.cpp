@@ -34,6 +34,44 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    sort(a,a+n);
+    ll s=0,e=(ll)1e9+5,m=s+(e-s)/2,guarda=0;
+    while(s<=e){
+        //supongamos que el max time sea m
+        m=s+(e-s)/2;
+
+        ll j=0,cont=0;
+        bool ok=true;
+        FOR(i,0,n){
+
+            if(cont >= 3){
+                ok=false;
+                break;
+            }
+            ll semisuma=(a[j]+a[i]+1)/2ll;
+            /*if(m==1ll){
+                dbgm(j,i,cont,semisuma,abs(semisuma-a[j]),abs(semisuma - a[i]));
+            }*/
+            if(abs(semisuma-a[j])<= m && abs(semisuma - a[i])<=m){
+                continue;
+            }
+            else{
+                j=i;
+                cont++;
+            }
+        }
+        //dbgm("try with ",s,e,m,cont);
+        ok&=(cont<3);
+        if(ok){
+            guarda=m;
+            e=m-1;
+        }
+        else{
+            s=m+1;
+        }
+    }
+    cout<<guarda<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

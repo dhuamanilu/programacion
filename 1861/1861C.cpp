@@ -26,33 +26,42 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+void NO(){
+    cout<<"NO\n";
+}
 void solve(){
     string s;
     cin>>s;
-    ll n=s.size(),contmas=0,contmenos=0;
-    bool ok=true;
+    ll n=s.size();
+    ll masLargoOrden=0,empiezaDesorden=(ll)1e9;
+    ll len=0;
     FOR(i,0,n){
-        if(s[i]=='+'){
-            contmas++;
-        }
+
+        if(s[i]=='+') len++;
         else if(s[i]=='-'){
-            contmenos++;
+            len--;
+            if(len<0){
+                NO();
+                return;
+            }
+            masLargoOrden=min(masLargoOrden,len);
+            if(len<empiezaDesorden) empiezaDesorden=(ll)1e9;
         }
+
         else if(s[i]=='1'){
+            masLargoOrden=max(masLargoOrden,len);
 
         }
         else{
-            sorted=-1;
+            if(len<2){
+                NO();
+                return;
+            }
+            empiezaDesorden=min(len,empiezaDesorden);
         }
+        if(masLargoOrden >= empiezaDesorden){NO(); return;}
     }
-    if(ok){
-        cout<<"YES\n";
-    }
-    else{
-        cout<<"NO\n";
-    }
-
+    cout<<"YES\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

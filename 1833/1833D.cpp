@@ -34,23 +34,24 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    if(a[n-1]==n){
-        ll j=n-1;
-        while(j>=0 && a[j]>a[0]){
-            j--;
+    tuple<ll,ll,ll> guarda={0ll,0ll,0ll};
+    ll L=0,R=0;
+    FOR(i,0,n){
+        FOR(j,i,n){
+            ll a1=0,a2=a[j],a3=0    ;
+            if(j+1<n) a1=a[j+1];
+            if(i!=0){
+                a3=a[0];
+            }
+            tuple<ll,ll,ll> aux={a1,a2,a3};
+            if(aux > guarda){
+                L=i;
+                R=j;
+                guarda=aux;
+            }
         }
-        j++;
-        for(ll i=n-1;i>=j;i--){
-            cout<<a[i]<<" ";
-        }
-        FOR(i,0,j){
-            cout<<a[i]<<" ";
-        }
-        cout<<"\n";
     }
-    else if(a[n-1]==0){
-
-    }
+    dbgm(L,R);
 
 }
 int main(){
