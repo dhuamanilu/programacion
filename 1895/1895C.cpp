@@ -24,58 +24,62 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-ll n;
-ll a[MX];
-ll b[MX];
 
 void solve(){
+    ll n;
     cin>>n;
+    string a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
+    vector<vll> cont(6,vll(46,0));
+    ll tot[n];
     FOR(i,0,n){
-        cin>>b[i];
+        ll tam=a[i].size();
+        ll sum=0;
+        FOR(j,0,tam){
+            sum+=a[i][j]-'0';
+        }
+        tot[i]=sum;
+        cont[tam][sum]++;
     }
-    vector<ll> pref(n+1,0);
+    ll ans=0;
     FOR(i,0,n){
-        pref[i+1]=pref[i]+b[i];
+        //iterar sobre la longitud
+        ll tam=a[i].size();
+        ll sum=0;
+        FOR(j,0,(tam+1)/2){
+
+            if(tot[i]-2*sum>0 && tam-2*j>0){
+                ans+=cont[tam-2*j][tot[i]-2*sum];
+                cout<<"a : "<<cont[tam-2*j][tot[i]-2*sum]<<"\n";
+            }
+
+            sum+=a[i][j]-'0';
+        }
+        string auxi=a[i];
+        reverse(all(auxi));
+        sum=0;
+        FOR(j,0,(tam+1)/2){
+            if(tot[i]-2*sum>0 && tam-2*j>0){
+                ans+=cont[tam-2*j][tot[i]-2*sum];
+                cout<<"a : "<<cont[tam-2*j][tot[i]-2*sum]<<"\n";
+            }
+
+            sum+=auxi[j]-'0';
+        }
     }
-    vll suelto(n+1,0);
-    vll cont(n+1,0);
-    FOR(i,0,n){
-        ll index=upper_bound(all(pref),a[i]+pref[i])-pref.begin()-1;
-        cont[i]++;
-        cont[index]--;
-        suelto[index]+=a[i]-(pref[index]-pref[i]);
-    }
-    vll ans(n,0);
-    ll actual=0;
-    FOR(i,0,n){
-        actual+=cont[i];
-        ans[i]=suelto[i]+actual*b[i];
-    }
-    for(auto & e: ans){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
-

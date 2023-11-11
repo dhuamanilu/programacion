@@ -24,42 +24,50 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-ll n;
-ll a[MX];
-ll b[MX];
 
 void solve(){
-    cin>>n;
+    ll n,q;
+    cin>>n>>q;
+    ll a[n];
+    vll cont(2,0);
+    ll sum=0;
     FOR(i,0,n){
         cin>>a[i];
+        sum+=a[i];
+        cont[a[i]%2]++;
     }
-    FOR(i,0,n){
-        cin>>b[i];
+
+    FOR(i,0,q){
+        ll type,add;
+        cin>>type;
+        if(type==0){
+            cin>>add;
+            if(add%2==0){
+                sum+=cont[type]*add;
+            }
+            else{
+                sum+=cont[type]*add;
+                cont[add%2]+=cont[0];
+                cont[0]=0;
+            }
+        }
+        else{
+            cin>>add;
+            if(add%2==0){
+                sum+=cont[type]*add;
+            }
+            else{
+                sum+=cont[type]*add;
+                cont[0]+=cont[1];
+                cont[1]=0;
+
+            }
+        }
+        cout<<sum<<"\n";
     }
-    vector<ll> pref(n+1,0);
-    FOR(i,0,n){
-        pref[i+1]=pref[i]+b[i];
-    }
-    vll suelto(n+1,0);
-    vll cont(n+1,0);
-    FOR(i,0,n){
-        ll index=upper_bound(all(pref),a[i]+pref[i])-pref.begin()-1;
-        cont[i]++;
-        cont[index]--;
-        suelto[index]+=a[i]-(pref[index]-pref[i]);
-    }
-    vll ans(n,0);
-    ll actual=0;
-    FOR(i,0,n){
-        actual+=cont[i];
-        ans[i]=suelto[i]+actual*b[i];
-    }
-    for(auto & e: ans){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);

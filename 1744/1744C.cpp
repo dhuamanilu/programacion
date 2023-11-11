@@ -24,42 +24,31 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-ll n;
-ll a[MX];
-ll b[MX];
 
 void solve(){
-    cin>>n;
+    ll n;
+    char c;
+    cin>>n>>c;
+    string s;
+    cin>>s;
+    vll g;
     FOR(i,0,n){
-        cin>>a[i];
+        if(s[i]=='g'){
+            g.pb(i);
+            g.pb(i+n);
+        }
     }
+    sort(all(g));
+    ll dist=LONG_LONG_MIN;
     FOR(i,0,n){
-        cin>>b[i];
+        if(s[i]==c){
+            auto pos=lower_bound(all(g),i);
+            dist=max(dist,*pos-i);
+        }
     }
-    vector<ll> pref(n+1,0);
-    FOR(i,0,n){
-        pref[i+1]=pref[i]+b[i];
-    }
-    vll suelto(n+1,0);
-    vll cont(n+1,0);
-    FOR(i,0,n){
-        ll index=upper_bound(all(pref),a[i]+pref[i])-pref.begin()-1;
-        cont[i]++;
-        cont[index]--;
-        suelto[index]+=a[i]-(pref[index]-pref[i]);
-    }
-    vll ans(n,0);
-    ll actual=0;
-    FOR(i,0,n){
-        actual+=cont[i];
-        ans[i]=suelto[i]+actual*b[i];
-    }
-    for(auto & e: ans){
-        cout<<e<<" ";
-    }
-    cout<<"\n";
+    cout<<dist<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

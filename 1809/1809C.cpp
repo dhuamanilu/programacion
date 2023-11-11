@@ -41,24 +41,43 @@ ll get(ll k){
     }
     return guarda;
 }
+void revisar(){
+    vll aux={2,2,2,2,2
+,2 ,2 ,2, 2, -13, -1000, -1000, -1000 ,-1000, -1000, -1000 ,-1000};
+    ll n=aux.size();
+    FOR(i,0,n){
+        FOR(j,i,n){
+            ll sum=0;
+            FOR1(k,i,j){
+                sum+=aux[k];
+            }
+            if(sum==0){
+                cout<<"SUMA CERO:"<<i<<" "<<j<<" "<<sum<<"\n";
+            }
+        }
+    }
+}
 void solve(){
     ll n,k;
     cin>>n>>k;
     ll enc=get(k);
+    //dbgm(get(k));
     ll ele=k-(enc*(enc+1)/2)-enc;
     vll a;
     FOR(i,0,enc){
-        a.pb(2ll);
+        a.pb(2);
     }
-    a.pb(ele-1);
-    FOR(i,0,n-enc-1){
+    if(a.size()<n)
+        a.pb(-2*enc-1 + 2*(ele+enc));
+    ll hay=a.size();
+    FOR(i,0,n-hay){
         a.pb(-1000);
     }
     for(auto & e :a){
         cout<<e<<" ";
     }
     cout<<"\n";
-
+    //revisar();
 
 }
 int main(){

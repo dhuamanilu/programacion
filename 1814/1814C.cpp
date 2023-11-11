@@ -24,39 +24,38 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 200005;
+const int MX = 100001;
 const int N=1000+3;
-ll n;
-ll a[MX];
-ll b[MX];
 
 void solve(){
-    cin>>n;
+    ll n,s1,s2;
+    cin>>n>>s1>>s2;
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f;
+        a[i].se=i+1;
     }
+    sort(all(a));
+    reverse(all(a));
+
+    ll sum=0;
+    vll list1,list2;
     FOR(i,0,n){
-        cin>>b[i];
+        ll frec=a[i].f,ind=a[i].se;
+        if(((ll)list1.size()+1ll)*(s1)*frec <
+           ((ll)list2.size()+1ll)*(s2)*frec ){
+            list1.pb(ind);
+        }
+        else{
+            list2.pb(ind);
+        }
     }
-    vector<ll> pref(n+1,0);
-    FOR(i,0,n){
-        pref[i+1]=pref[i]+b[i];
+    cout<<list1.size()<<" ";
+    for(auto & e : list1){
+        cout<<e<<" ";
     }
-    vll suelto(n+1,0);
-    vll cont(n+1,0);
-    FOR(i,0,n){
-        ll index=upper_bound(all(pref),a[i]+pref[i])-pref.begin()-1;
-        cont[i]++;
-        cont[index]--;
-        suelto[index]+=a[i]-(pref[index]-pref[i]);
-    }
-    vll ans(n,0);
-    ll actual=0;
-    FOR(i,0,n){
-        actual+=cont[i];
-        ans[i]=suelto[i]+actual*b[i];
-    }
-    for(auto & e: ans){
+    cout<<"\n"<<list2.size()<<" ";
+    for(auto & e : list2){
         cout<<e<<" ";
     }
     cout<<"\n";
@@ -71,11 +70,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
