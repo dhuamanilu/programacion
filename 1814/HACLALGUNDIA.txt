@@ -1,0 +1,71 @@
+// #pragma GCC optimize("Ofast")
+// #pragma GCC optimize("unroll-loops")
+// #pragma GCC target("avx,avx2,sse2,sse3,ssse3,sse4,lzcnt,popcnt")
+
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+
+#define ll long long
+#define point pair<int, int>
+#define X first
+#define Y second
+#define all(x) (x).begin(), (x).end()
+#define pb push_back
+#define show(x) cerr << (#x) << " = " << x << '\n'
+#define print(x) if (1) {cerr << (#x) << " = "; for (auto it : x) \
+      cerr << it << ' '; cerr << '\n';}
+#define fast_io ios_base::sync_with_stdio(0), cin.tie(0)
+
+const int N = 1 << 19;
+const int S = 1e7 + 64;
+const int INF = 2e9 + 64;
+const ll MAX = 2e18 + 64;
+const int LOG = 21;
+const int MOD = 1e9 + 7; //998244353;
+const int P = 79;
+
+using namespace std;
+
+mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+vector<int> random_permutation(int n, int offset = 0) {
+      vector<int> p(n);
+      iota(all(p), offset);
+
+      shuffle(all(p), rnd);
+      return p;
+}
+
+bool rand_bool() {
+      return rnd() & 1;
+}
+
+int rand_int(int r) {
+      return rnd() % r;
+}
+
+int rand_int(int l, int r) {
+      return l + rand_int(r - l + 1);
+}
+
+vector<point> random_tree(int n) {
+      vector<int> p = random_permutation(n);
+      
+      vector<point> res(n - 1);
+      for (int i = 0; i + 1 < n; ++i) {
+            res[i] = { p[i + 1], p[rand_int(i + 1)] };
+            if (rand_bool())
+                  swap(res[i].X, res[i].Y); 
+      }
+      return res;
+}
+
+signed main() {
+      cout << "1\n";
+      
+      const int n = 300000;
+      cout << n << '\n';
+
+      for (int i = 0; i < n; ++i)
+            cout << (1 << (i / 16000)) << " \n"[i + 1 == n];
+}
