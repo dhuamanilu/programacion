@@ -26,44 +26,22 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(vll &a,ll l,ll r){
-    if(l+1==r) return 0ll;
-    ll m=l+(r-l)/2ll;
-    ll tam=r-l;
-    ll maxil=*max_element(a.begin()+l,a.begin()+m);
-    ll maxir=*max_element(a.begin()+m,a.begin()+r);
-    ll ans=0;
-    if(maxil>maxir){
-        FOR(i,l,l+m){
-            dbgm(i,i+(tam/2ll));
-            assert(i<a.size() && i+(tam/2ll)<a.size());
-            swap(a[i],a[i+(tam/2ll)]);
-        }
-        ans++;
-    }
-    return get(a,l,m)+get(a,m,r)+ans;
-}
-ll get(vll &a){
-    ll go=get(a,0,(ll)a.size());
-    if(is_sorted(all(a))){
-        return go;
-    }
-    else return -1;
-}
+
 void solve(){
-    ll m;
-    cin>>m;
-    vll a(m);
-    FOR(i,0,m){
-        cin>>a[i];
+    ll n;
+    cin>>n;
+    vll a(n);
+    for(auto & e : a){
+        cin>>a;
     }
-    cout<<get(a)<<"\n";
+    //cout<<(s==t ? "Yes\n": "No\n");
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

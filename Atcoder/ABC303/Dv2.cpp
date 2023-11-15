@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -26,44 +28,68 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(vll &a,ll l,ll r){
-    if(l+1==r) return 0ll;
-    ll m=l+(r-l)/2ll;
-    ll tam=r-l;
-    ll maxil=*max_element(a.begin()+l,a.begin()+m);
-    ll maxir=*max_element(a.begin()+m,a.begin()+r);
-    ll ans=0;
-    if(maxil>maxir){
-        FOR(i,l,l+m){
-            dbgm(i,i+(tam/2ll));
-            assert(i<a.size() && i+(tam/2ll)<a.size());
-            swap(a[i],a[i+(tam/2ll)]);
+
+/*void permute(ll l,ll r){
+    if (l == r){
+        cout<<s<<" ";
+    }
+
+    else{
+        for (ll i = l; i <= r; i++){
+            swap(s[l], s[i]);
+            permute(l+1, r);
+            swap(s[l], s[i]);
         }
-        ans++;
     }
-    return get(a,l,m)+get(a,m,r)+ans;
-}
-ll get(vll &a){
-    ll go=get(a,0,(ll)a.size());
-    if(is_sorted(all(a))){
-        return go;
-    }
-    else return -1;
+}*/
+bool isPerfect(ll x){
+    long long sr = sqrtl(x);
+    return (sr * sr == x);
 }
 void solve(){
-    ll m;
-    cin>>m;
-    vll a(m);
-    FOR(i,0,m){
-        cin>>a[i];
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    sort(all(s));
+    vll m(10,0);
+    for(auto & e : s){
+        m[e-'0']++;
     }
-    cout<<get(a)<<"\n";
+    ll ini=sqrtl(stoll(s)+1)-2;
+    //dbg(s);
+    reverse(all(s));
+    //dbg(s);
+    ll fin=sqrtl(stoll(s)+1)+2;
+    ll cont=0;
+    //dbgm(ini,fin);
+    FOR1(i,ini,fin){
+        string aux=to_string(i*i);
+        vll m2(10,0);
+        for(auto & e: aux){
+            m2[e-'0']++;
+        }
+        FOR(k,0,n-(ll)aux.size()){
+            m2[0]++;
+        }
+        bool ok=true;
+        FOR(j,0,10){
+            if(m[j]!=m2[j]){
+                ok=false;
+                break;
+            }
+        }
+        if(ok){
+            cont++;
+        }
+    }
+    cout<<cont<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

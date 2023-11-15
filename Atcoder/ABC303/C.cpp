@@ -25,45 +25,56 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-ll get(vll &a,ll l,ll r){
-    if(l+1==r) return 0ll;
-    ll m=l+(r-l)/2ll;
-    ll tam=r-l;
-    ll maxil=*max_element(a.begin()+l,a.begin()+m);
-    ll maxir=*max_element(a.begin()+m,a.begin()+r);
-    ll ans=0;
-    if(maxil>maxir){
-        FOR(i,l,l+m){
-            dbgm(i,i+(tam/2ll));
-            assert(i<a.size() && i+(tam/2ll)<a.size());
-            swap(a[i],a[i+(tam/2ll)]);
-        }
-        ans++;
+const int N=1000+5;
+void doMove(ll &x, ll &y,char a){
+    if(a=='L'){
+        x--;
     }
-    return get(a,l,m)+get(a,m,r)+ans;
-}
-ll get(vll &a){
-    ll go=get(a,0,(ll)a.size());
-    if(is_sorted(all(a))){
-        return go;
+    else if(a=='U'){
+        y++;
     }
-    else return -1;
+    else if(a=='D'){
+        y--;
+    }
+    else{
+        x++;
+    }
 }
 void solve(){
-    ll m;
-    cin>>m;
-    vll a(m);
+    ll n,m,h,k;
+    cin>>n>>m>>h>>k;
+    string s;
+    cin>>s;
+    vpll a(m);
+    map<pair<ll,ll>,ll> ma;
     FOR(i,0,m){
-        cin>>a[i];
+        cin>>a[i].f>>a[i].se;
+        ma[{a[i].f,a[i].se}]++;
     }
-    cout<<get(a)<<"\n";
+    ll x=0,y=0;
+    FOR(i,0,m){
+        //dbgm(h,x,y,s[i],ma.count(mp(x,y)));
+        if(h<0){
+            cout<<"No\n";
+            return;
+        }
+        else{
+            if(ma.count(mp(x,y)) && h<k)
+                h=k;
+            h--;
+            doMove(x,y,s[i]);
+
+        }
+    }
+    cout<<"Yes\n";
+
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
