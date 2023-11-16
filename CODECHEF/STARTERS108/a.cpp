@@ -1,11 +1,3 @@
-// Problem: C. Jellyfish and Green Apple
-// Contest: Codeforces - Codeforces Round 901 (Div. 2)
-// URL: https://codeforces.com/contest/1875/problem/C
-// Memory Limit: 256 MB
-// Time Limit: 1000 ms
-// 
-// Powered by CP Editor (https://cpeditor.org)
-
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -41,17 +33,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    n%=m;
-    ll gc=__gcd(n,m);
-    ll a=n/gc;
-    ll b=m/gc;
-    if(__builtin_popcountll(b)>1){
-    	cout<<"-1\n";
+    ll n;
+    cin>>n;
+    if(n<5){
+    	cout<<"0 "<<n<<"\n";
     }
     else{
-    	cout<<m*__builtin_popcountll(a)-n<<"\n";
+    	cout<<"1 "<<n-1<<"\n";
     }
 }
 int main(){

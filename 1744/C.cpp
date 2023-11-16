@@ -1,6 +1,6 @@
-// Problem: C. Jellyfish and Green Apple
-// Contest: Codeforces - Codeforces Round 901 (Div. 2)
-// URL: https://codeforces.com/contest/1875/problem/C
+// Problem: C. Colorful Table
+// Contest: Codeforces - CodeTON Round 6 (Div. 1 + Div. 2, Rated, Prizes!)
+// URL: https://codeforces.com/contest/1870/problem/C
 // Memory Limit: 256 MB
 // Time Limit: 1000 ms
 // 
@@ -41,18 +41,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    n%=m;
-    ll gc=__gcd(n,m);
-    ll a=n/gc;
-    ll b=m/gc;
-    if(__builtin_popcountll(b)>1){
-    	cout<<"-1\n";
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+        cin>>a[i];
     }
-    else{
-    	cout<<m*__builtin_popcountll(a)-n<<"\n";
-    }
+    dbgm(a);
 }
 int main(){
     ios_base::sync_with_stdio(0);

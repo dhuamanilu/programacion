@@ -1,11 +1,3 @@
-// Problem: C. Jellyfish and Green Apple
-// Contest: Codeforces - Codeforces Round 901 (Div. 2)
-// URL: https://codeforces.com/contest/1875/problem/C
-// Memory Limit: 256 MB
-// Time Limit: 1000 ms
-// 
-// Powered by CP Editor (https://cpeditor.org)
-
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -41,18 +33,40 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    n%=m;
-    ll gc=__gcd(n,m);
-    ll a=n/gc;
-    ll b=m/gc;
-    if(__builtin_popcountll(b)>1){
-    	cout<<"-1\n";
+    ll n;
+    cin>>n;
+    vector<vll> a(n+1);
+    
+    FOR(i,0,n){
+        ll x;
+        cin>>x; 
+        a[x].pb(i);
     }
-    else{
-    	cout<<m*__builtin_popcountll(a)-n<<"\n";
+    //dbg(a);
+    ll ans=(ll)1e15,distGeneral=(ll)1e15;
+    FOR1(i,1,n){
+    	if(a[i].size()==0) continue;
+    	ll dist=(ll)-1e15;
+    	if(a[i].size()>1){
+	    	FOR(j,0,(ll)a[i].size()-1){
+	    		dist=max(dist,(a[i][j+1]-a[i][j])/2);
+	    	}
+    	}
+    	if(a[i].size()>0){
+    		dist=max(dist,a[i][0]);
+    		dist=max(dist,n-a[i].back()-1);
+    	}
+    		
+    	if(dist<distGeneral){
+    		distGeneral=dist;
+    		ans=i;
+    	}
+    	else if(dist==distGeneral){
+    		ans=min(ans,i);
+    	}
+    	//dbgm(dist,ans);
     }
+    cout<<ans<<" "<<distGeneral<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
