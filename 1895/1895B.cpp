@@ -1,3 +1,11 @@
+// Problem: B. Points and Minimum Distance
+// Contest: Codeforces - Educational Codeforces Round 157 (Rated for Div. 2)
+// URL: https://codeforces.com/contest/1895/problem/B
+// Memory Limit: 512 MB
+// Time Limit: 2000 ms
+// 
+// Powered by CP Editor (https://cpeditor.org)
+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -35,11 +43,25 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
+    vll a(2ll*n);
+    FOR(i,0,2*n){
         cin>>a[i];
     }
-    
+    sort(all(a));
+    vpll puntos;
+    FOR(i,0,n){
+        puntos.pb({a[i],a[i+n]});
+    }
+    ll ans=0;
+    FOR(i,0,n-1){
+    	ans+=abs(puntos[i+1].f-puntos[i].f)
+    	+abs(puntos[i+1].se-puntos[i].se);
+    }
+    cout<<ans<<"\n";
+    for(auto & e : puntos){
+    	cout<<e.f<<" "<<e.se<<"\n";
+    }
+    //dbgm(a);
 }
 int main(){
     ios_base::sync_with_stdio(0);

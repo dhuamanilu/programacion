@@ -33,13 +33,31 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
+    ll n,q;
+    cin>>n>>q;
+    vll a(q);
+    FOR(i,0,q){
         cin>>a[i];
     }
-    
+    FOR(i,0,n-1){
+    	cout<<i+1<<" "<<i+2<<"\n";
+    }
+    vpll dist(n);
+    FOR(i,2,n){
+    	dist[i]=mp(n,n-i);
+    }
+    ll act=n-1,dis=n-1;
+    FOR(i,0,q){
+        if(a[i]==dis){
+        	cout<<"-1 -1 -1\n";
+        }
+        else{
+        	auto aux=dist[a[i]];
+        	cout<<aux.f<<" "<<act<<" "<<aux.se<<"\n";
+        	act=aux.se;
+        	dis=a[i];
+        }
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -39,7 +39,7 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    
+    dbgm(a);
 }
 int main(){
     ios_base::sync_with_stdio(0);

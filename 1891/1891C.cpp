@@ -33,13 +33,28 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
+    /*ll n;
     cin>>n;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    
+    sort(a.rbegin(),a.rend());
+    ll sum=accumulate(all(a),0ll);
+    ll ans=(sum+1)/2;
+    sum/=2;
+    FOR(i,0,n){
+    	if(sum<=0) break;
+    	ans++;
+    	sum-=a[i];
+    }
+    cout<<ans<<"\n";*/
+    int X = 4;
+	int &y = X;
+	X=79;
+	y=45;
+	dbgm(X,y);
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -51,7 +66,6 @@ int main(){
     }
     return 0;
 }
-
 
 
 

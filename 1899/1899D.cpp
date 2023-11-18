@@ -39,7 +39,32 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    
+    mll pot;
+    mll otro;
+    FOR(i,0,n){
+    	ll j=a[i];
+    	ll cont=0;
+    	while(j>1 && j%2==0){
+    		j/=2;
+    		cont++;
+    	}
+    	if(j==1){
+    		pot[a[i]-cont]++;
+    	}
+    	else{
+    		otro[a[i]]++;
+    	}
+    }
+    ll ans=0;
+    for(auto & e : otro){
+    	ll cant=e.se;
+    	ans+=cant*(cant-1)/2;
+    }
+    for(auto & e : pot){
+    	ll cant=e.se;
+    	ans+=cant*(cant-1)/2;
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

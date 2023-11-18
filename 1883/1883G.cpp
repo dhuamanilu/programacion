@@ -28,12 +28,31 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,m;
+    cin>>n>>m;
     ll a[n];
-    FOR(i,0,n){
+    a[0]=1;
+    FOR(i,1,n){
         cin>>a[i];
     }
+    vll b(n);
+    FOR(i,0,n){
+    	cin>>b[i];
+    }
+    sort(a,a+n);
+    sort(b.rbegin(),b.rend());
+    ll ans=0;
+    FOR(i,0,n){
+    	if(a[i]>=b[i]) ans++;
+    }
+    
+    reverse(a,a+n);
+    reverse(all(b));
+    ll ans2=0;
+    FOR(i,0,n){
+    	if(a[i]>=b[i]) ans2++;
+    }
+    cout<<min(ans,ans2)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

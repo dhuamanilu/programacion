@@ -47,28 +47,40 @@ void solve(){
     }
     ll ans=0;
     FOR(i,0,n){
-        //iterar sobre la longitud
-        ll tam=a[i].size();
-        ll sum=0;
-        FOR(j,0,(tam+1)/2){
-
-            if(tot[i]-2*sum>0 && tam-2*j>0){
-                ans+=cont[tam-2*j][tot[i]-2*sum];
-                cout<<"a : "<<cont[tam-2*j][tot[i]-2*sum]<<"\n";
-            }
-
-            sum+=a[i][j]-'0';
+    	ll tam=a[i].size();
+        for(ll lenr=tam%2;lenr<tam+1;lenr+=2){
+        	ll l=tam+lenr;
+        	ll sumL=0;
+        	FOR(j,0,min(tam,l/2)){
+        		sumL+=a[i][j]-'0';
+        	}
+        	ll sumR=0;
+        	FOR(j,l/2,tam){
+        		sumR+=a[i][j]-'0';
+        	}
+        	
+        	if(sumL>=sumR){
+        		ans+=cont[lenr][sumL-sumR];
+        	}
         }
-        string auxi=a[i];
-        reverse(all(auxi));
-        sum=0;
-        FOR(j,0,(tam+1)/2){
-            if(tot[i]-2*sum>0 && tam-2*j>0){
-                ans+=cont[tam-2*j][tot[i]-2*sum];
-                cout<<"a : "<<cont[tam-2*j][tot[i]-2*sum]<<"\n";
-            }
-
-            sum+=auxi[j]-'0';
+    }
+    FOR(i,0,n){
+        ll tam=a[i].size();
+        for(ll lenl=tam%2;lenl<tam;lenl+=2){
+        	ll l=tam+lenl;
+        	ll sumL=0;
+        	//dbg(l);
+        	FOR(j,tam-(l)/2,tam){
+        		sumL+=a[i][j]-'0';
+        	}
+        	ll sumR=0;
+        	FOR(j,0,tam-l/2){
+        		sumR+=a[i][j]-'0';
+        	}
+        	//dbgm(sumL,sumR);
+        	if(sumL>=sumR){
+        		ans+=cont[lenl][sumL-sumR];
+        	}
         }
     }
     cout<<ans<<"\n";
@@ -83,3 +95,11 @@ int main(){
     }
     return 0;
 }
+
+
+
+
+
+
+
+

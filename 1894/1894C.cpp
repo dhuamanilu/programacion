@@ -1,3 +1,11 @@
+// Problem: C. Anonymous Informant
+// Contest: Codeforces - Codeforces Round 908 (Div. 2)
+// URL: https://codeforces.com/contest/1894/problem/C
+// Memory Limit: 512 MB
+// Time Limit: 3000 ms
+// 
+// Powered by CP Editor (https://cpeditor.org)
+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -33,13 +41,27 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,k;
+    cin>>n>>k;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    
+    k=min(k,n);
+    ll start=0;
+    FOR(i,0,k){
+    	ll ind=start+n-1;
+    	if(ind<0) ind+=n;
+    	if(ind>=n) ind-=n;
+    	if(a[ind]>n){
+    		cout<<"NO\n";
+    		return;
+    	}
+    	start-=a[ind];
+    	if(start<0) start+=n;
+    	if(start>=n) start-=n;
+    }
+    cout<<"YES\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

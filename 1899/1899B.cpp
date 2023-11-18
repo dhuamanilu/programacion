@@ -36,10 +36,32 @@ void solve(){
     ll n;
     cin>>n;
     vll a(n);
+    vll pref(n,0);
     FOR(i,0,n){
         cin>>a[i];
+        
     }
-    
+    pref[0]=a[0];
+    FOR(i,1,n){
+    	pref[i]=pref[i-1]+a[i];
+    }
+    ll ans=0;
+    FOR(i,1,n){
+    	if(n%i!=0) continue;
+    	ll maxi=(ll)-1e15,mini=(ll)1e15;
+    	FOR(j,0,n){
+    		if((j+1)%i==0){
+    			maxi=max(maxi,pref[j]-(j>=i ? pref[j-i] : 0ll));
+    			mini=min(mini,pref[j]-(j>=i ? pref[j-i] : 0ll));
+    		}
+    		
+    	}
+    	
+    		//dbgm(i,maxi-mini,ans);
+    	
+    	ans=max(ans,maxi-mini);
+    }
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

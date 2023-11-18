@@ -35,9 +35,11 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
+    if(n%3==0){
+    	cout<<"Second\n";
+    }
+    else{
+    	cout<<"First\n";
     }
     
 }

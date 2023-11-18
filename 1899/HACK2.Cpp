@@ -30,22 +30,38 @@ typedef priority_queue<ll> pq;
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
-
+const int N=200000;
+vector<int> gen_multiples(int x) {
+	int cur = 1, rem = 1;
+	vector<int> res;
+	for (int i = 1; i <= N; i++) {
+		assert(1 <= cur && cur <= 1e9);
+		res.push_back(cur);
+		cur += x;
+		if (cur > 1e9) {
+			++rem;
+			cur = rem;
+		}
+	}
+	return res;
+}
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
+    ll num1=172933ul,t=1;
+    cout<<t<<endl;
+    cout<<N<<endl;
+    auto x=gen_multiples(num1);
+    FOR(i,0,N){
+    	cout<<x[i];
+    	if(i!=N-1) cout<<" ";
     }
+    cout<<endl;
     
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

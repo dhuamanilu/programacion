@@ -36,9 +36,25 @@ void solve(){
     ll n;
     cin>>n;
     vll a(n);
+    ll mini=(ll)1e15;
     FOR(i,0,n){
         cin>>a[i];
+        mini=min(mini,a[i]);
     }
+    ll ind=0;
+    FOR(i,0,n){
+    	if(a[i]==mini){
+    		ind=i;
+    		break;
+    	}
+    }
+    FOR(i,ind,n-1){
+    	if(a[i]>a[i+1]){
+    		cout<<"-1\n";
+    		return;
+    	}
+    }
+    cout<<ind<<"\n";
     
 }
 int main(){

@@ -31,7 +31,18 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+//https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
+ll get(vll &a,ll ini,ll fin){
+	ll max_so_far =(ll)-1e15,max_ending_here=0;
+    for (int i =ini;i<=fin; i++) {
+        max_ending_here=max_ending_here+a[i];
+        if (max_so_far<max_ending_here)
+            max_so_far=max_ending_here;
+        if (max_ending_here<0)
+            max_ending_here=0;
+    }
+    return max_so_far;
+}
 void solve(){
     ll n;
     cin>>n;
@@ -40,6 +51,16 @@ void solve(){
         cin>>a[i];
     }
     
+    ll ans=(ll)-1e15,ant=0,act=0;
+    FOR(i,0,n-1){
+    	if(abs(a[i])%2==abs(a[i+1])%2){
+    		act=i;
+    		ans=max(ans,get(a,ant,act));
+    		ant=i+1;
+    	}	
+    }
+    ans=max(ans,get(a,ant,n-1));
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
