@@ -26,11 +26,36 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll get(vll a,vll b){
+	sort(all(a));
+    sort(all(b));
+	ll n=a.size();
+	ll s=0,e=n,m=s+(e-s)/2;
+	ll guarda=0;
+    while(s<=e){
+    	m=s+(e-s)/2;
+    	//m->cantidad de elementos a borrar
+		bool ok=true;
+    	FOR(i,0,n-m){
+    		if(a[i]>=b[i+m]){
+    			ok=false;
+    			break;
+    		}
+    	}
+    	if(ok){
+    		guarda=m;
+    		e=m-1;
+    	}
+    	else{
+    		s=m+1;
+    	}
+    }
+    return guarda;
+}
 void solve(){
     ll n,m;
     cin>>n>>m;
-    ll a[n];
+    vll a(n);
     a[0]=1;
     FOR(i,1,n){
         cin>>a[i];
@@ -39,20 +64,24 @@ void solve(){
     FOR(i,0,n){
     	cin>>b[i];
     }
-    sort(a,a+n);
-    sort(b.rbegin(),b.rend());
-    ll ans=0;
-    FOR(i,0,n){
-    	if(a[i]>=b[i]) ans++;
+    ll posibleAns=get(a,b);
+    ll st=1,en=m,mid=st+(en-st)/2,punto=0;
+    while(st<=en){
+    	mid=st+(en-st)/2;
+    	a[0]=mid;
+    	//dbgm(a,b,get(a,b));
+    	if(get(a,b)==posibleAns){
+    		punto=m;
+    		st=mid+1;
+    	}
+    	else{
+    		en=mid-1;
+    	}
     }
+    dbgm(punto);
+    cout<<punto*posibleAns+(m-punto)*(
+    posibleAns+1)<<"\n";
     
-    reverse(a,a+n);
-    reverse(all(b));
-    ll ans2=0;
-    FOR(i,0,n){
-    	if(a[i]>=b[i]) ans2++;
-    }
-    cout<<min(ans,ans2)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
