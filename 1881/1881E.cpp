@@ -26,14 +26,25 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll get(vll &dp,ll ind){
+	ll n=(ll)dp.size();
+	if (ind==n) return 0ll;
+	else if(ind>n) return (ll)1e10;
+	else return dp[ind];
+}
 void solve(){
     ll n;
     cin>>n;
-    ll a[n];
+    vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
+    vll dp(n,0);
+    dp[n-1]=1;
+    for(ll i=n-2;i>=0;i--){
+    	dp[i]=min(1+dp[i+1],get(dp,i+a[i]+1));
+    }
+    cout<<dp[0]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -64,21 +64,23 @@ void solve(){
     FOR(i,0,n){
     	cin>>b[i];
     }
+    
     ll posibleAns=get(a,b);
+    //dbgm(a,b,posibleAns);
     ll st=1,en=m,mid=st+(en-st)/2,punto=0;
     while(st<=en){
     	mid=st+(en-st)/2;
     	a[0]=mid;
     	//dbgm(a,b,get(a,b));
     	if(get(a,b)==posibleAns){
-    		punto=m;
+    		punto=mid;
     		st=mid+1;
     	}
     	else{
     		en=mid-1;
     	}
     }
-    dbgm(punto);
+    //dbgm(punto);
     cout<<punto*posibleAns+(m-punto)*(
     posibleAns+1)<<"\n";
     
