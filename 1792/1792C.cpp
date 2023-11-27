@@ -30,10 +30,15 @@ void solve(){
     FOR(i,0,n){
         ll x;
         cin>>x;
-        pos[x]=i+1;
+        pos[x]=i;
     }
-    ll l=0,(r=n+1)/2;
-    //while(pos[]){}
+    ll l=(n+1)/2,r=(n+2)/2;
+    while(l>0 && (l==r || (pos[l]<pos[l+1] && pos[r]>pos[r-1]))){
+    	l--;
+    	r++;
+    }
+    cout<<(n-(r-l-1))/2<<"\n";
+    
 }
 int main(){
     ios_base::sync_with_stdio(0);

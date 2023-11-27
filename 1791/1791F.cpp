@@ -1,6 +1,3 @@
-#pragma GCC target ("avx2")
-#pragma GCC optimization ("O3")
-#pragma GCC optimization ("unroll-loops")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -24,62 +21,105 @@ typedef priority_queue<ll> pq;
 #define n_l '\n'
 #define dbg(...) cout << "[" << #__VA_ARGS__ << "]: "; cout << to_string(__VA_ARGS__) << endl
 template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<typename T> int SIZE(const T &t){ return t.size(); } string to_string(const string s, int x1=0, int x2=1e9){ return '"' + ((x1 < s.size()) ? s.substr(x1, x2-x1+1) : "") + '"'; } string to_string(const char* s) { return to_string((string) s); } string to_string(const bool b) { return (b ? "true" : "false"); } string to_string(const char c){ return string({c}); } template<size_t N> string to_string(const bitset<N> &b, int x1=0, int x2=1e9){ string t = ""; for(int __iii__ = min(x1,SIZE(b)),  __jjj__ = min(x2, SIZE(b)-1); __iii__ <= __jjj__; ++__iii__){ t += b[__iii__] + '0'; } return '"' + t + '"'; } template <typename A, typename... C> string to_string(const A (&v), int x1=0, int x2=1e9, C... coords); int l_v_l_v_l = 0, t_a_b_s = 0; template <typename A, typename B> string to_string(const pair<A, B> &p) { l_v_l_v_l++; string res = "(" + to_string(p.first) + ", " + to_string(p.second) + ")"; l_v_l_v_l--; return res; } template <typename A, typename... C> string to_string(const A (&v), int x1, int x2, C... coords) { int rnk = rank<A>::value; string tab(t_a_b_s, ' '); string res = ""; bool first = true; if(l_v_l_v_l == 0) res += n_l; res += tab + "["; x1 = min(x1, SIZE(v)), x2 = min(x2, SIZE(v)); auto l = begin(v); advance(l, x1); auto r = l; advance(r, (x2-x1) + (x2 < SIZE(v))); for (auto e = l; e != r; e = next(e)) { if (!first) { res += ", "; } first = false; l_v_l_v_l++; if(e != l){ if(rnk > 1) { res += n_l; t_a_b_s = l_v_l_v_l; }; } else{ t_a_b_s = 0; } res += to_string(*e, coords...); l_v_l_v_l--; } res += "]"; if(l_v_l_v_l == 0) res += n_l; return res; } void dbgm(){;} template<typename Heads, typename... Tails> void dbgm(Heads H, Tails... T){ cout << to_string(H) << " | "; dbgm(T...); }
-#define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
+#define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); std::cout<<endl;
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
 ll getSum(ll n){
     ll sum=0;
-    while(n!=0){
+    while(n>0){
         sum+=n%10;
         n/=10;
     }
     return sum;
 }
+ll t[4*MX];
+//build(cont,1,1,n);
+void build(int a[], int v, int tl, int tr) {
+    if (tl == tr) {
+        t[v] = a[tl];
+    } else {
+        int tm = (tl + tr) / 2;
+        build(a, v*2, tl, tm);
+        build(a, v*2+1, tm+1, tr);
+        t[v] = 0;
+    }
+}
+//update(1,1,n,l,r,add);
+void update(int v, int tl, int tr, int l, int r, int add) {
+    if (l > r)
+        return;
+    if (l == tl && r == tr) {
+        t[v] += add;
+    } else {
+        int tm = (tl + tr) / 2;
+        update(v*2, tl, tm, l, min(r, tm), add);
+        update(v*2+1, tm+1, tr, max(l, tm+1), r, add);
+    }
+}
+//get(1,1,n,ind)
+int get(int v, int tl, int tr, int pos) {
+    if (tl == tr)
+        return t[v];
+    int tm = (tl + tr) / 2;
+    if (pos <= tm)
+        return t[v] + get(v*2, tl, tm, pos);
+    else
+        return t[v] + get(v*2+1, tm+1, tr, pos);
+}
 void solve(){
     ll n,q;
     cin>>n>>q;
-    ll a[n];
-    set <ll> s;
-    FOR(i,0,n){
-        cin>>a[i];
-        if(a[i]>9) s.insert(i);
+    int a[n+1];
+    FOR1(i,1,n){
+    	ll x;
+        cin>>x;
+        a[i]=x;
     }
+    /*FOR1(i,1,n){
+    	ll ult=a[i].back();
+        while(ult!=getSum(ult)){
+        	ll sum=getSum(ult);
+        	a[i].pb(sum);
+        	ult=sum;
+        }
+    }*/
+    int cont[n+1];
+    FOR1(i,1,n) cont[i]=0;
+    build(cont,1,1,n);
+    /*if(n==200000 && q==200000 &&
+a[0][0]==337059645)
+    	assert(false);*/
     FOR(i,0,q){
         ll num;
         cin>>num;
         if(num==1){
             ll l,r;
             cin>>l>>r;
-            l--;
-            r--;
-            while(!s.empty()){
-                auto x=s.lower_bound(l);
-                if(x==s.end() || *x > r) break;
-                a[*x]=getSum(a[*x]);
-
-                ll ele=*x;
-                s.erase(x);
-                if(a[ele]>9) s.insert(ele);
-                l=ele+1;
-            }
-
+            /*l--;
+            r--;*/
+            update(1,1,n,l,r,1);
         }
         else{
             ll ind;
             cin>>ind;
-            ind--;
-            cout<<a[ind]<<"\n";
+            //ind--;
+            int en=min(get(1,1,n,ind),3);
+            ll temp=a[ind];
+            FOR1(iter,1,en){
+            	temp=getSum(temp);
+            }
+            cout<<temp<<"\n";
         }
     }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
-    cin>>t;
-    while(t--){
+    int test=1;
+    cin>>test;
+    while(test--){
         solve();
     }
     return 0;

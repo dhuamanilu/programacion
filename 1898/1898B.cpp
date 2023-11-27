@@ -32,7 +32,7 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 ll get(ll desde,ll hacia){
-	return -1+(desde+hacia-1)/hacia;
+	return (desde+hacia-1)/hacia;
 }
 void solve(){
     ll n;
@@ -41,17 +41,12 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    ll act=a[n-1],ans=0;
+    ll act=1,ans=0;
     for(ll i=n-2;i>=0;i--){
-    	dbg(act);
-    	if(a[i]>act){
-    		ans+=get(a[i],act);
-    		act=min(act,a[i]/2);
-    	}
-    	else{
-    		act=min(act,a[i]);
-    	}
-    	
+    	ll cuantas=a[i+1]/act;
+    	act=(a[i]+cuantas-1)/cuantas;
+    	act=max(act,1ll);
+    	ans+=act-1;
     }
     cout<<ans<<"\n";
     
