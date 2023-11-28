@@ -31,24 +31,32 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll desde,ll hacia){
-	return (desde+hacia-1)/hacia;
-}
+
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+	ll a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
-    ll act=1,ans=0;
-    for(ll i=n-2;i>=0;i--){
-    	ll cuantas=a[i+1]/act;
-    	act=(a[i]+cuantas-1)/cuantas;
-    	act=max(act,1ll);
-    	ans+=act-1;
+    bool ok=true;
+    while(ok){
+    	ok=false;
+    	FOR(i,0,n){
+	    	if(i>=1 && i+1<n){
+	    		if(a[i]>a[i-1] && a[i]>a[i+1]){
+	    			ok=true;
+	    			swap(a[i],a[i+1]);
+	    		}
+	    	}
+    	}
     }
-    cout<<ans<<"\n";
+    if(!is_sorted(a,a+n)){
+    	cout<<"NO\n";	
+    }
+    else{
+    	cout<<"YES\n";
+    }
     
 }
 int main(){

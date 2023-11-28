@@ -31,24 +31,49 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll desde,ll hacia){
-	return (desde+hacia-1)/hacia;
-}
+
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,q;
+    cin>>n>>q;
     vll a(n);
+    set<ll> pos1;
+    ll sum=0;
     FOR(i,0,n){
         cin>>a[i];
+        if(a[i]==1) pos1.insert(i);
+        sum+=a[i];
     }
-    ll act=1,ans=0;
-    for(ll i=n-2;i>=0;i--){
-    	ll cuantas=a[i+1]/act;
-    	act=(a[i]+cuantas-1)/cuantas;
-    	act=max(act,1ll);
-    	ans+=act-1;
+    
+    FOR(iter,0,q){
+    	ll kind;
+    	cin>>kind;
+    	if(kind==1){
+    		ll s;
+    		cin>>s;
+    		if(sum%2==s%2 && sum>=s){
+    			cout<<"YES\n";
+    		}
+    		else if(sum%2!=s%2){
+    			
+    		}
+    	}
+    	else{
+    		ll ind,val;
+    		cin>>ind>>val;
+    		ind--;	
+    		if(a[ind]!=val){
+    			if(a[ind]==1){
+    				pos1.erase(ind);
+    			}
+    			else{
+    				pos1.insert(ind);
+    			}
+    			sum-=a[ind];
+    			a[ind]=val;
+    			sum+=a[ind];		
+    		}
+    	}
     }
-    cout<<ans<<"\n";
     
 }
 int main(){

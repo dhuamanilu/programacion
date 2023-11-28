@@ -31,25 +31,46 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(ll desde,ll hacia){
-	return (desde+hacia-1)/hacia;
-}
+
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
+    ll n,x;
+    cin>>n>>x;
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f;
+        a[i].se=i;
     }
-    ll act=1,ans=0;
-    for(ll i=n-2;i>=0;i--){
-    	ll cuantas=a[i+1]/act;
-    	act=(a[i]+cuantas-1)/cuantas;
-    	act=max(act,1ll);
-    	ans+=act-1;
+    vll b(n);
+    FOR(i,0,n){
+        cin>>b[i];
     }
-    cout<<ans<<"\n";
-    
+    sort(all(a));
+    sort(all(b));
+    FOR(i,0,x){
+    	if(a[n-x+i].f <= b[i]){
+    		cout<<"NO\n";
+    		return;
+    	}
+    }
+    FOR(i,0,n-x){
+    	if(a[i].f  > b[x+i]){
+    		cout<<"NO\n";
+    		return;
+    	}
+    }
+    vpll ans;
+    FOR(i,0,n-x){
+    	ans.pb({a[i].se,b[x+i]});
+    }
+    FOR(i,0,x){
+    	ans.pb({a[n-x+i].se,b[i]});
+    }
+    sort(all(ans));
+    cout<<"YES\n";
+    FOR(i,0,n){
+    	cout<<ans[i].se<<" ";
+    }
+    cout<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

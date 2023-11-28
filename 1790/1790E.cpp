@@ -30,30 +30,23 @@ const int N=1000+3;
 void solve(){
     ll x;
     cin>>x;
-    if(x==2){
-        cout<<"1 3\n";
-        return;
-    }
-    ll ans=0;
-    for(ll i=2;i*i<=x;i++){
-        if(x%i==0){
-            ans=x/i;
-            break;
-        }
-    }
-    if(ans==0){
-        cout<<"-1\n";
+    ll a=x/2,b=3*x/2;
+    if((a^b)==x &&(a+b)/2==x){
+    	cout<<a<<" "<<b<<"\n";
     }
     else{
-        ll num1=x-ans,num2=2*x-num1;
-        if((num1^num2)==x){
-            cout<<num1<<" "<<num2<<"\n";
-        }
-        else{
-            cout<<"-1\n";
-        }
-
+    	cout<<"-1\n";
     }
+    /*bool ok=false;
+    //cout<<(1^9)<<"\n";
+    FOR(a,1,x){
+    	ll b=2*x-a;
+    	if((a^b)==x && x==(a+b)/2){
+    		ok=true;
+    		cout<<a<<" "<<b<<"\n";
+    	}
+    }
+    if(!ok) cout<<"-1\n";*/
 }
 int main(){
     ios_base::sync_with_stdio(0);
