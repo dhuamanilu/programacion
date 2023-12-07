@@ -31,17 +31,31 @@ void solve(){
     ll n,m;
     cin>>n>>m;
     ll a[n];
-
+	vll appear(n+m+1,-1);
+	vll count(n+m+1,0);
     FOR(i,0,n){
         cin>>a[i];
-
+		appear[a[i]]=0;
     }
-
     FOR(i,0,m){
         ll p,v;
         cin>>p>>v;
         p--;
-
+        ll val=a[p];
+		count[val]+=(i+1)-appear[val];
+		appear[val]=-1;
+		appear[v]=i;
+    }
+    FOR(i,0,n){
+    	ll val=a[i];
+    	if(appear[val]!=-1){
+    		count[val]+=(i+1)-appear[val];
+    		appear[val]=-1;
+    	}
+    }
+    ll ans=0;
+    FOR(i,0,n+m+1){
+    	
     }
     cout<<ans<<"\n";
 }

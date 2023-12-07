@@ -46,7 +46,7 @@ void solve(){
     ll ans=0;
     vll res;
     while(mini2!=maxi2){
-    	ll dist=(abs(mini2-maxi2));
+    	ll dist=mini2%2;
     	mini2=(mini2+dist)/2;
     	maxi2=(maxi2+dist)/2;
     	if(res.size()<n){

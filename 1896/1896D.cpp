@@ -43,18 +43,29 @@ void solve(){
         if(a[i]==1) pos1.insert(i);
         sum+=a[i];
     }
-    
     FOR(iter,0,q){
     	ll kind;
     	cin>>kind;
     	if(kind==1){
     		ll s;
     		cin>>s;
-    		if(sum%2==s%2 && sum>=s){
-    			cout<<"YES\n";
+    		if(sum%2==s%2){
+    			cout<<(sum>=s ?"YES\n":"NO\n");
     		}
-    		else if(sum%2!=s%2){
+    		else{
+    			bool ok=false;
+    			if((ll)pos1.size()!=0){
+    				ll sum1=sum-2*(*pos1.begin());
+	    			ll sum2=sum-2*(n-*(prev(pos1.end()))-1);
+	    			ll maxi=max(sum1,sum2);
+	    			ok=maxi>=s;
+    			}
+    			else{
+    				cout<<"NO\n";
+    				continue;
+    			}
     			
+    			cout<<(ok ?"YES\n":"NO\n");
     		}
     	}
     	else{

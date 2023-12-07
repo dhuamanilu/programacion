@@ -39,24 +39,16 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll ans;
-    ll sum=0;
-    for(ll i=n-1;i>=0;i--){
-    	sum+=a[i];
-    	if(sum>=0){
-    		ans.pb(sum);
-    		sum=0;
-    	}
+    vll suff(n,0);
+    suff[n-1]=a[n-1];
+    for(ll i=n-2;i>=0;i--){
+    	suff[i]=suff[i+1]+a[i];
     }
-    if(sum<0) ans.pb(sum);
-    reverse(all(ans));
-    ll tam=ans.size();
-    ll res=0;
-    dbg(ans);
-    FOR(i,0,tam){
-    	res+=(i+1)*ans[i];
+    ll ans=suff[0];
+    FOR(i,1,n){
+    	if(suff[i]>=0) ans+=suff[i];
     }
-    cout<<res<<"\n";
+    cout<<ans<<"\n";
     
 }
 int main(){
