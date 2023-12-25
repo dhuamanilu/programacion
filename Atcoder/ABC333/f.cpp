@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -25,47 +27,73 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=1000+5;
+const ll INF=(ll)1e12;
+long long createPalindrome(int input, int b, bool isOdd){
+        int n = input;
+        long long palin = input;
+        if (isOdd)
+            n /= b;
+        while (n > 0){
+            palin = palin * b + (n % b);
+            n /= b;
+        }
+        return palin;
 
-void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    vector<long long> gen(int n){
+        long long number;
+        vector<long long> ans;
+        for (int j = 0; j < 2; j++){
+            int i = 1;
+            while ((number = createPalindrome(i, 10, j % 2)) < n){
+                ans.push_back(number);
+                i++;
+            }
+        }
+        return ans;
+
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
+    long long get(vector<int>& nums,long long ele){
+        long long ans=0;
+        for(int i=0;i<nums.size();i++){
+            ans+=abs(ele-nums[i]); 
+        }
+        return ans;
     }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
+    long long minimumCost(vector<int>& nums) {
+        int n=nums.size();
+        sort(nums.begin(),nums.end());
+        
+        vector<long long> x=gen(1000000009);
+        //sort(x.begin(),x.end());
+        return 0;
+        /*long long mediana=0;
+        if(n%2==0){
+            mediana=(0ll+nums[n/2]+nums[(n/2)-1])/2ll;
+        }
+        else{
+            mediana=nums[n/2];
+        }
+        
+        long long pos=lower_bound(x.begin(),x.end(),mediana)-x.begin();
+        
+        long long ans=get(nums,x[pos]);
+        if(pos>0){
+            ans=min(ans,get(nums,x[pos-1]));
+        }
+        return ans;*/
+        
+        
     }
-    cout<<ans<<"\n";
-}
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
     cin>>t;
+    vector<int> ans(100000,1000000000-1); 
     while(t--){
-        solve();
+        cout<<minimumCost(ans)<<"\n";
     }
     return 0;
 }

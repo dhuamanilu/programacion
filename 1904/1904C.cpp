@@ -26,38 +26,50 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll get(vll &a){
+    ll mini=(ll)4e18,n=a.size();
+    FOR(i,0,n){
+        if(i+1<n)
+            mini=min(mini,a[i+1]-a[i]);
+        if(i>=1)
+            mini=min(mini,a[i]-a[i-1]);
+    }
+    return mini;
+}
+ll get2(vll &a){
+	ll n=a.size(),ans=a[0];
+	FOR(i,0,n){
+		FOR(j,i+1,n){
+			ll val=a[j]-a[i];
+			ll pos=lower_bound(all(a),val)-a.begin();
+			if(pos<n){
+				ans=min(ans,abs(a[pos]-val));
+			}
+			if(pos>0){
+				ans=min(ans,abs(a[pos-1]-val));
+			}
+		}
+	}
+	return ans;
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
+    ll n,k;
+    cin>>n>>k;
     vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
     FOR(i,0,n){
         cin>>a[i];
-		appear[a[i]]=0;
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    sort(all(a));
+    if(k==1){
+        ll x=get(a);
+        cout<<min(x,a[0])<<"\n";
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
+    else if(k==2){
+        cout<<min(get(a),get2(a))<<"\n";
     }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
+    else{
+        cout<<"0\n";
     }
-    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -69,11 +81,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-

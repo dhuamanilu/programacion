@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -25,37 +27,71 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=1000+5;
+const ll INF=(ll)1e12;
+ll min_cost[N];
+ll cost[N];
+ll arr[N][N];
+ll costCar=0;
+ll n,b,c;
+//min_cost[i] denotes min cost to go from city 1 to city i
+ll solve2(ll i){
+    if(min_cost[i]!=INF)
+        return min_cost[i];
+    if(i==1){
+        min_cost[i]=0;
+        return min_cost[i];
+    }
+    else{
+        ll ans=INF;
+        //j=i-1
+        for(int j=i-1;j>=1;j--){
+            ll calc=solve2(j);
+            ans=min(ans,calc+arr[j][i]*costCar);
+        }
+        min_cost[i]=ans;
+        return min_cost[i];
+    }
+}
 
+
+ll solve3(ll i){
+    if(cost[i]!=INF)
+        return cost[i];
+    if(i==n){
+        cost[i]=0;
+        return cost[i];
+    }
+    else{
+        ll ans=INF;
+        //j=i+1
+        for(ll j=i+1;j<=n;j++){
+            ans=min(ans,(arr[i][j]*b+c)+solve3(j));
+        }
+
+        cost[i]=ans;
+        return ans;
+    }
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+    cin>>n>>costCar>>b>>c;
+    FOR1(i,1,n){
+        FOR1(j,1,n){
+            cin>>arr[i][j];
+            min_cost[j]=INF;
+            cost[j]=INF;
+        }
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
-    }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
-    }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
+
+    solve2(n);
+    solve3(1);
+    ll ans=LONG_LONG_MAX;
+    /*dbg(min_cost);
+    dbg(cost);*/
+    FOR1(i,1,n){
+        ll calc=min_cost[i]+cost[i];
+        dbgm(i,min_cost[i],cost[i]);
+        ans=min(ans,calc);
     }
     cout<<ans<<"\n";
 }
@@ -63,7 +99,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

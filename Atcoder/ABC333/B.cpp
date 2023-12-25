@@ -27,45 +27,49 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 
-void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+string solve(string & s, string &t){
+    ll dist=abs(s[0]-s[1]);
+    ll dist2=abs(t[0]-t[1]);
+    
+    if((dist==1 || dist==4)&& (dist2==1 || dist2==4)){
+    	return "Yes\n";
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    else if(dist>1 && dist2>1
+    && dist<4 && dist2<4){
+    	return "Yes\n";
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
+    else{
+    	return "No\n";
     }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
-    }
-    cout<<ans<<"\n";
+}
+void generate(){
+	vector<string> auxi;
+	for(auto i='A';i<='E';i++){
+		for(auto j='A';j<='E';j++){
+			if(i==j) continue;
+			//cout<<i<<j<<"\n";
+			auxi.pb(to_string(i)+to_string(j));
+		}
+	}
+	for(auto & e : auxi){
+		for(auto & e2 : auxi){
+			cout<<"el ans para "<<e<<" "<<
+			e2<<" es "<<solve(e,e2);
+			/*cout<<e<<"\n";
+			cout<<e2<<"\n";*/
+		}
+	}
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
+    //generate();
     while(t--){
-        solve();
+    	string s1,s2;
+    	cin>>s1>>s2;
+        cout<<solve(s1,s2);
     }
     return 0;
 }

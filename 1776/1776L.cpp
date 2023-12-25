@@ -28,42 +28,49 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    ll pos=0,neg=0;
     FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+    	if(s[i]=='+') pos++;
+    	else neg++;
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    ll tot=pos-neg;
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+    	ll x,y;
+    	cin>>x>>y;
+    	if(tot==0){
+    		cout<<"YES\n";
+    		continue;
+    	}
+    	ll num=tot*y,den=y-x;
+    	if(den==0){
+    		cout<<"NO\n";
+    		continue;
+    	}
+    	if(num%den!=0){
+    		cout<<"NO\n";
+    	}
+    	else{
+    		ll div=num/den;
+    		if(div>= -neg && div<=pos){
+    			cout<<"YES\n";
+    		}
+    		else{
+    			cout<<"NO\n";
+    		}
+    	}
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
-    }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
-    }
-    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

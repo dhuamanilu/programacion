@@ -24,46 +24,48 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 300005;
 const int N=1000+3;
 
+vector<ll> G[MX];
+ll get(ll x,ll par,ll cont){
+	for(auto & e : G[x]){
+		if(e!=par){
+			//dbgm(e,x,par,cont);
+			cont+=get(e,x,1);
+		}
+	}
+	return cont;
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+    ll n;
+    cin>>n;
+    FOR(i,0,n-1){
+    	ll u,v;
+    	cin>>u>>v;
+    	G[u].pb(v);
+    	G[v].pb(u);
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    
+    vll tam;
+    for(auto & e : G[1]){
+    	//dbg(get(e,1,1));
+    	tam.pb(get(e,1,1));
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
-    }
-    //dbgm(count,appear);
+    sort(all(tam));
     ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
+    FOR(i,0,(ll)tam.size()-1){
+    	ans+=tam[i];
     }
+    ans++;
+    //if(G[1].size()==1) ans=min(ans,1ll);
     cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

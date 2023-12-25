@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -27,43 +29,67 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 
+/*void permute(ll l,ll r){
+    if (l == r){
+        cout<<s<<" ";
+    }
+
+    else{
+        for (ll i = l; i <= r; i++){
+            swap(s[l], s[i]);
+            permute(l+1, r);
+            swap(s[l], s[i]);
+        }
+    }
+}*/
+bool isPerfect(ll x){
+    long long sr = sqrtl(x);
+    return (sr * sr == x);
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    sort(all(s));
+    vll m(10,0);
+    for(auto & e : s){
+        m[e-'0']++;
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
+    ll ini=sqrtl(stoll(s)+1)-2;
+    //dbg(s);
+    reverse(all(s));
+    //dbg(s);
+    ll fin=sqrtl(stoll(s)+1)+2;
+    ll cont=0;
+    //dbgm(ini,fin);
+    FOR1(i,ini,fin){
+        string aux=to_string(i*i);
+        vll m2(10,0);
+        for(auto & e: aux){
+            m2[e-'0']++;
+        }
+        FOR(k,0,n-(ll)aux.size()){
+            m2[0]++;
+        }
+        bool ok=true;
+        FOR(j,0,10){
+            if(m[j]!=m2[j]){
+                ok=false;
+                break;
+            }
+        }
+        if(ok){
+            cont++;
+        }
     }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
-    }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
-    }
-    cout<<ans<<"\n";
+    cout<<cont<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

@@ -25,45 +25,65 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N=1000+5;
+vector<string> comb;
+void generateCombinationsHelper(const std::vector<ll>& numbers, int k, std::vector<ll>& current, int index) {
+    // Si hemos alcanzado la longitud k, imprimimos la combinación
+    if (index == k) {
+    	string aux="";
+    	for(auto & e : current){
+    		aux+='0'+e;
+    	}
+    	comb.pb(aux);
+        return;
+    }
+    // Recorremos los números y probamos agregar cada uno a la combinación
+    for (int i = 0; i < (ll)numbers.size(); ++i) {
+        current[index] = numbers[i];
+        generateCombinationsHelper(numbers, k, current, index + 1);
+    }
+}
 
+void generateCombinations(const std::vector<ll>& numbers, int k) {
+    std::vector<ll> current(k, 0);
+    generateCombinationsHelper(numbers, k, current, 0);
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    vll a(n);
-	vll appear(n+m+1,-1);
-	vll count(n+m+1,0);
-    FOR(i,0,n){
-        cin>>a[i];
-		appear[a[i]]=0;
+    ll n;
+    cin>>n;
+    vll ans;
+    FOR1(l,1,12){
+    	if(ans.size()>= n )break;
+    	vector<ll> aux={1,2,3};
+    	generateCombinations(aux,l);
+    	//dbg(comb);
+    	for(auto & e : comb){
+    		if(ans.size()>= n )break;
+    		ll ele=stoll(e);
+    		ll guarda=ele;
+    		ll cont=0;
+    		while(ele>0 && cont<3){	
+    			string auxi(to_string(ele).size(),'1');
+    			//dbg(auxi);
+    			ll resta=stoll(auxi);
+    			ele-=resta;
+    			cont++;
+    		}
+    		if(ele==0 && cont==3){
+    			ans.pb(guarda);
+    		}
+    	}
+    	comb.clear();
     }
-    FOR(i,0,m){
-        ll p,v;
-        cin>>p>>v;
-        p--;
-        ll val=a[p];
-		count[val]+=(i+1)-appear[val];
-		a[p]=v;
-		appear[v]=i+1;
-    }
-    //dbg(a);
-    FOR(i,0,n){
-    	ll val=a[i];
-		count[val]+=(m+1)-appear[val];	
-    }
-    //dbgm(count,appear);
-    ll ans=0;
-	FOR(i,1,n+m+1){
-		ll rep=m+1-count[i];
-		ans+=m*(m+1)/2-rep*(rep-1)/2;	
-    }
-    cout<<ans<<"\n";
+    //dbg(ans);
+    cout<<ans[n-1]<<"\n";
+
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
