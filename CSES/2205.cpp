@@ -31,14 +31,58 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+ll dist(ll a,ll b){
+	ll cont=0;
+	FOR(i,0,19){
+		ll act=(1ll<<i);
+		if((act&a)!=(act&b)){
+			cont++;
+		}
+	}
+	return cont;
+	
+}
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+    vll a;
     FOR(i,0,n){
-        cin>>a[i];
+    	
     }
+    /*FOR(i,0,(1ll<<n)){
+        a.pb(i);
+    }
+    do{
+    	bool ok=true;
+    	ll cont=0;
+    	vll aux={0,1,3,2};
+    	FOR(i,0,(ll)a.size()-1){
+    		if(a==aux){
+    			dbgm("especial",cont,dist(a[i],a[i+1]));
+    		}
+    		if(dist(a[i],a[i+1])==1){
+    			cont++;
+    		}
+    	}
+    	if(a==aux){
+    		dbgm("especial",cont);
+    	}
+    	ok&=(cont==(a.size()-1));
+    	if(ok){
+    		if(n==3){
+    			if(a.front()==7
+    			&& a[1]==3){
+    				dbg(a);
+    			}
+    		}
+    		else{
+    			dbg(a);
+    		}
+    		
+    	}
+    }while(next_permutation(all(a)));*/
+    
+    
     
 }
 int main(){

@@ -26,30 +26,21 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 1000005;
 const int N=1000+3;
-ll memo[MX];
-ll ans(ll x,ll cont){
-    if(memo[x]!=-1) return memo[x];
-    if(x<=0){
-        return memo[x]=cont;
-    }
-    ll x2=x;
-    ll res=LONG_LONG_MAX;
-    while(x2>0){
-        ll d=x2%10;
-        if(d!=0)
-             res=min(res,ans(x-d,cont+1));
-        x2/=10;
-    }
-    return memo[x]=res;
-}
+
+
 void solve(){
-    memset(memo,-1,sizeof(memo));
-    /*for(auto & e : memo){
-        if(e!=-1) cout<<"ASDASADS";
-    }*/
     ll n;
     cin>>n;
-    cout<<ans(n,0)<<"\n";
+    vll dp(n+1,(ll)1e12);
+    dp[0]=0;
+    FOR1(i,1,n){
+    	for(auto & e: to_string(i)){
+    		ll d=e-'0';
+    		if(i>=d)
+    			dp[i]=min(dp[i],1+dp[i-d]);
+    	}
+    }
+    cout<<dp[n]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

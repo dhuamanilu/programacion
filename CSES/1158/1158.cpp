@@ -28,35 +28,28 @@ const int MX = 1000005;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    char a[n][n];
-    FOR(i,0,n){
-        string s;
-        cin>>s;
-        FOR(j,0,n){
-            a[i][j]=s[j];
-        }
+    ll n,x;
+    cin>>n>>x;
+    vector<int> h(n+1);
+    FOR1(i,1,n){
+    	cin>>h[i];
     }
-    vector<vll> dp(n,vll(n,0));
-    dp[0][0]=1;
-    FOR(i,0,n){
-        FOR(j,0,n){
-            if(a[i][j]=='*'){
-                dp[i][j]=0;
-                continue;
-            }
-            if(i>=1){
-                dp[i][j]+=dp[i-1][j];
-                dp[i][j]%=MOD;
-            }
-            if(j>=1){
-                dp[i][j]+=dp[i][j-1];
-                dp[i][j]%=MOD;
-            }
-        }
+    vector<int> s(n+1);
+    FOR1(i,1,n){
+    	cin>>s[i];
     }
-    cout<<dp[n-1][n-1]<<"\n";
+    
+    vector<vector<int>> dp(n+1,vector<int>(x+1,0));
+	FOR1(i,1,n){
+		FOR1(j,1,x){
+			dp[i][j]=max(dp[i][j],dp[i-1][j]);
+			if(j>=h[i]){
+				dp[i][j]=max(dp[i][j],s[i]+dp[i-1][j-h[i]]);
+			}		
+		}	
+	}
+    //dbg(dp);
+    cout<<dp[n][x]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

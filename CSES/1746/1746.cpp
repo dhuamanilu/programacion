@@ -36,24 +36,7 @@ void solve(){
     }
     ll ans=1;
     FOR(i,0,n){
-        ll cont=0;
-        if(a[i]==0){
-            ll use;
-            if(i>=1){
-                use=a[i-1];
-                FOR(j,-1,2){
-                    ll diff=i+1<n ? abs(use+j-a[i+1]) : 1;
-                    if(diff<=1){
-                        cont++;
-                    }
-                }
-            }
-            else{
-                cont+=3;
-            }
-            ans*=cont;
-            ans%=MOD;
-        }
+        
     }
     cout<<ans<<"\n";
 }

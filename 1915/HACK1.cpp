@@ -46,7 +46,7 @@ vector<int> gen_multiples(int x) {
 	return res;
 }
 void solve(){
-    ll num1=107897ul,t=1;
+    ll num1=172933ul,t=1;
     cout<<t<<endl;
     cout<<N<<endl;
     auto x=gen_multiples(num1);
@@ -55,7 +55,7 @@ void solve(){
     	if(i!=N-1) cout<<" ";
     }
     cout<<endl;
-
+    
 }
 int main(){
     /*ios_base::sync_with_stdio(0);

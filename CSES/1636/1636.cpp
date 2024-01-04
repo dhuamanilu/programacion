@@ -28,32 +28,28 @@ const int MX = 1000005;
 const int N=1000+3;
 
 void solve(){
-    ll n,x;
+    int n,x;
     cin>>n>>x;
-    ll a[n];
+    int a[n];
     FOR(i,0,n){
         cin>>a[i];
     }
     sort(a,a+n);
-    vector<vll> dp(x+1,vll(n,0));
+    vector<vector<int>> dp(n,vector<int>(x+1,0));
     dp[0][0]=1;
-    FOR1(j,1,x){
-        FOR(i,0,n){
-            if(j-a[i]>=0){
-                FOR(k,i,n){
-                    dp[j-a[i]][k]+=dp[j-a[i]][i];
-                    dp[j-a[i]][k]%=MOD;
-                }
-            }
-        }
-    }
-    dbgm(dp);
-    ll ans=0;
     FOR(i,0,n){
-        ans+=dp[x][i];
-        ans%=MOD;
-    }
-    cout<<ans<<"\n";
+    	FOR1(j,0,x){
+    		if(i>=1){
+    			dp[i][j]+=dp[i-1][j];
+    			dp[i][j]%=MOD;
+    		}
+    		if(j>=a[i]){
+    			dp[i][j]+=dp[i][j-a[i]];
+    			dp[i][j]%=MOD;
+    		}		
+    	}
+    } 
+    cout<<dp[n-1][x]<<"\n";
 
 
 }

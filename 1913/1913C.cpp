@@ -33,11 +33,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
+    ll m;
+    cin>>m;
+    vll cont(30,0);
+    FOR(i,0,m){
+    	ll t;
+    	cin>>t;
+    	if(t==1){
+    		ll v;
+    		cin>>v;
+    		cont[v]++;
+    	}
+    	else{
+    		ll v;
+    		cin>>v;
+    		ll ans=0;
+    		FOR(i,0,30){
+    			ll act=(1ll<<cont[i]);
+    			if((v%act)!=0){
+    				cout<<"NO\n";
+    				continue;
+    			}
+    			
+    		}
+    	}
     }
     
 }
@@ -45,7 +64,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
