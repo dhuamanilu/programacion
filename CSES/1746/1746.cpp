@@ -34,11 +34,8 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    ll ans=1;
-    FOR(i,0,n){
-        
-    }
-    cout<<ans<<"\n";
+    
+    cout<<get()<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

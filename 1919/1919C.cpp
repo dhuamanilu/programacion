@@ -31,63 +31,41 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+const int INF = 1e9;
 
 void solve(){
-    ll m;
-    cin>>m;
-    vll cont(30,0);
-    FOR(i,0,m){
-    	ll t;
-    	cin>>t;
-    	if(t==1){
-    		ll v;
-    		cin>>v;
-    		cont[v]++;
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    
+    ll last1=n,last2=n,ans=0;
+    FOR(i,0,n){
+    	if(last1>last2){
+    		swap(last1,last2);
+    	}
+    	if(a[i]<=last1){
+    		last1=a[i];
+    	}
+    	else if(a[i]>last2){
+    		last1=a[i];
+    		ans++;
     	}
     	else{
-    		ll val;
-    		cin>>val;
-    		vll cont2=cont;
-    		bool ok=false;
-    		FOR(j,0,29){
-    			if(val==0) break;
-    			ll act=(1ll<<j);
-    			if((val%act)!=0){
-    				cout<<"NO\n";
-    				ok=true;
-    				break;
-    			}
-    			ll next=(1ll<<(j+1));
-    			ll take=val%next;
-    			ll cuantas=take/act;
-    			if(cuantas > cont2[j]){
-    				cout<<"NO\n";
-    				ok=true;
-    				break;
-    			}
-    			else{
-    				cont2[j]-=cuantas;
-    				val-=cuantas*act;
-    				cont2[j+1]+=(cont2[j]*act)/(next);
-    			}
-    			
-    		}
-    		if(ok) continue;
-    		if(val==0){
-    			cout<<"YES\n";
-    		}
-    		else{
-    			cout<<"NO\n";
-    		}
+    		last2=a[i];
     	}
     }
+    cout<<ans<<"\n";
+    
     
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         solve();
     }
