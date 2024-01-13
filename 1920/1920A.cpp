@@ -31,33 +31,33 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+  
 void solve(){
-    ll n,k,d;
-    cin>>n>>k>>d;
-    vll a(n);
+    ll n;
+    cin>>n;
+	ll L=-(ll)1e18,R=(ll)1e18;
+	vll avoid;
     FOR(i,0,n){
-        cin>>a[i];
+        ll t,x;
+        cin>>t>>x;
+        if(t==1){
+        	L=max(L,x);
+        }
+        else if(t==2){
+        	R=min(R,x);
+        }
+        else{
+        	auto it=lower_bound(all(avoid),x);
+        	avoid.insert(it,x);
+        }
     }
-    vll v(k);
-    FOR(i,0,k){
-    	cin>>v[i];
-    }
-    //dbgm(a,v);
-    ll score=0;
-    FOR(i,0,min(2*n+1,d)){
-    	ll cont=0;
-    	FOR(j,0,n){
-    		if(a[j]==(j+1)){
-    			cont++;
-    		}
+    ll ans=R-L+1;
+    for(auto &e : avoid){
+    	if(e>=L && e<=R){
+    		ans--;
     	}
-    	score=max(score,cont+(d-1-i)/2);
-    	FOR(j,0,v[i%k]){
-    		a[j]++;
-    	}
-    }
-    cout<<score<<"\n";
+    }  
+    cout<<max(0ll,ans)<<"\n";
     
 }
 int main(){

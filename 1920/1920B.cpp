@@ -33,32 +33,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k,d;
-    cin>>n>>k>>d;
+    ll n,k,x;
+    cin>>n>>k>>x;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll v(k);
+    ll ans=-(ll)1e18;
+    sort(all(a));
+    reverse(all(a));
+    vll pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+    	pref[i]=pref[i-1]+a[i];
+    }
+    ans=max(ans,pref[n-1]-2*(pref[x-1]));
     FOR(i,0,k){
-    	cin>>v[i];
+    	ans=max(ans,pref[n-1]-pref[i]-2*(pref[min(n-1,x+i)]-pref[
+    	min(n-1,i)]));
     }
-    //dbgm(a,v);
-    ll score=0;
-    FOR(i,0,min(2*n+1,d)){
-    	ll cont=0;
-    	FOR(j,0,n){
-    		if(a[j]==(j+1)){
-    			cont++;
-    		}
-    	}
-    	score=max(score,cont+(d-1-i)/2);
-    	FOR(j,0,v[i%k]){
-    		a[j]++;
-    	}
-    }
-    cout<<score<<"\n";
-    
+    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

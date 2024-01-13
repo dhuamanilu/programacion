@@ -33,31 +33,12 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k,d;
-    cin>>n>>k>>d;
+    ll n;
+    cin>>n;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    vll v(k);
-    FOR(i,0,k){
-    	cin>>v[i];
-    }
-    //dbgm(a,v);
-    ll score=0;
-    FOR(i,0,min(2*n+1,d)){
-    	ll cont=0;
-    	FOR(j,0,n){
-    		if(a[j]==(j+1)){
-    			cont++;
-    		}
-    	}
-    	score=max(score,cont+(d-1-i)/2);
-    	FOR(j,0,v[i%k]){
-    		a[j]++;
-    	}
-    }
-    cout<<score<<"\n";
     
 }
 int main(){
