@@ -1,4 +1,4 @@
- #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef long double ld;
@@ -35,19 +35,22 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
+    if((3*n/2)%2==1){
+    	cout<<"NO\n";
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
+    else{
+    	cout<<"YES\n";
+    	ll ans=2;
+    	FOR(i,0,n/2){
+    		cout<<ans<<" ";
+    		ans+=2;
     	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
+    	ans=1;
+    	FOR(i,0,(n/2)-1){
+    		cout<<ans<<" ";
+    		ans+=2;
     	}
+    	cout<<(3*n/2)-1<<"\n";
     }
     
 }

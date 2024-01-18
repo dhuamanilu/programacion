@@ -1,4 +1,4 @@
- #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef long double ld;
@@ -31,24 +31,39 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,k;
+    cin>>n>>k;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    mll m;
+    FOR(i,0,(n/2)){
+    	m[a[i]+a[n-i-1]]++;
     }
+    vpll b(n/2);
+    FOR(i,0,(n/2)){
+    	b[i].f=min(a[i],a[n-i-1]);
+    	b[i].se=max(a[i],a[n-i-1]);
+    }
+    sort(all(b), [](const pair<ll,ll> &a, const pair<ll,ll> &b)
+{ 
+    if(a.f+a.se!=b.f+b.se){
+    	return a.f+a.se<b.f+b.se;
+    } 
+    else{
+    	if(a.f!=b.f){
+    		return a.f<b.f;
+    	}
+    	else return a.se<b.se;
+    }
+});
+    dbg(b);
+    for(auto & suma : m){
+    	
+    }
+    
     
 }
 int main(){
