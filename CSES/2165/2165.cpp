@@ -30,12 +30,12 @@ const int MX = 100001;
 const int N=1000+3;
 void go(ll n,ll ori,ll med,ll des){
 	if(n==1){
-		cout<<ori<<" "<<med<<"\n";
+		cout<<ori<<" "<<des<<"\n";
 		return;
 	}
 	go(n-1,ori,des,med);
 	cout<<ori<<" "<<des<<"\n";
-	go(n-1,med,des,ori);
+	go(n-1,med,ori,des);
 }
 void solve(){
     ll n;
