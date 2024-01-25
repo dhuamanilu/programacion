@@ -31,24 +31,35 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,k;
+    cin>>n>>k;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    mll m;
+    FOR(i,0,(n/2)){
+    	m[a[i]+a[n-i-1]]++;
     }
+    vll pref(2*k+5,0);
+    FOR(i,0,(n/2)){
+    	ll mini=min(a[i],a[n-i-1])+1;
+    	ll maxi=max(a[i],a[n-i-1])+k;
+    	pref[mini]++;
+    	pref[maxi+1]--;
+    }
+    FOR(i,1,2*k+5){
+    	pref[i]+=pref[i-1];
+    }
+    //dbgm(m,pref);
+    ll ans=(ll)1e18;
+    FOR(i,2,2*k+1){
+    	ll no=(m.count(i) ? m[i]: 0ll); 
+    	ans=min(ans,pref[i]-no+2*((n/2)-pref[i]));
+    }
+    cout<<ans<<"\n";
+    
     
 }
 int main(){

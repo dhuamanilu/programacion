@@ -28,47 +28,38 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-const int TAM=8;
+long long binpow(long long a, long long b) {
+    if (b == 0)
+        return 1;
+    long long res = binpow(a, b / 2);
+    if (b%2)
+        return res * res * a;
+    else
+        return res * res;
+}
 void solve(){
-	vector<vector<char>> a(TAM,vector<char>(TAM));
-	FOR(i,0,TAM){
-		FOR(j,0,TAM){
-			cin>>a[i][j];
-		}
-	}  
-	ll ans=0;
-	vll pos(TAM,0);
-	iota(all(pos),0ll);
-	do{
-		bool can=true;
-		FOR(i,0,TAM){
-			if(a[pos[i]][i]=='*'){
-				can=false;
-				break;
-			}
-		}
-		//diagional 
-		vll diag1(2*TAM-1,0);
-		FOR(i,0,TAM){
-			ll ind=i-pos[i]+TAM-1;
-			if(diag1[ind]){
-				can=false;
-				break;
-			}
-			diag1[ind]=1;
-		}
-		//diagonal
-		vll diag2(2*TAM-1,0);
-		FOR(i,0,TAM){
-			if(diag2[i+pos[i]]){
-				can=false;
-				break;
-			}
-			diag2[i+pos[i]]=1;
-		}
-		if(can) ans++;
-	}while(next_permutation(all(pos)));
-	cout<<ans<<"\n";
+    ll q;
+    cin>>q;
+    while(q--){
+    	ll k;
+    	cin>>k;
+    	ll which_size=0;
+    	ll aux=0;
+    	FOR(i,1,18){
+    		aux+=9ll*binpow(10,i-1)*i;
+    		which_size++;
+    		if(aux>=k){
+    			break;
+    		}
+    	}
+    	ll s=binpow(10,which_size),
+    	e=binpow(10,which_size+1)-1,m=s+(e-s)/2;
+    	while(s<=e){
+    		m=s+(e-s)/2;
+    		dbgm(s,e,m);
+    	}
+    	dbg(which_size);
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);

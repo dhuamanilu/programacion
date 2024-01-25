@@ -42,27 +42,28 @@ void solve(){
     FOR(i,0,(n/2)){
     	m[a[i]+a[n-i-1]]++;
     }
-    vpll b(n/2);
+    vll pref(2*k+5,0);
     FOR(i,0,(n/2)){
-    	b[i].f=min(a[i],a[n-i-1]);
-    	b[i].se=max(a[i],a[n-i-1]);
+    	ll mini=min(a[i],a[n-i-1])+1;
+    	ll maxi=max(a[i],a[n-i-1])+k;
+    	pref[mini]++;
+    	pref[maxi+1]--;
     }
-    sort(all(b), [](const pair<ll,ll> &a, const pair<ll,ll> &b)
-{ 
-    if(a.f+a.se!=b.f+b.se){
-    	return a.f+a.se<b.f+b.se;
-    } 
-    else{
-    	if(a.f!=b.f){
-    		return a.f<b.f;
-    	}
-    	else return a.se<b.se;
+    FOR(i,1,2*k+5){
+    	pref[i]+=pref[i-1];
     }
-});
-    dbg(b);
-    for(auto & suma : m){
-    	
+    //dbg(pref);
+    ll ans=(ll)1e18;
+    FOR(i,2,2*k+1){
+    	ll no=(m.count(i) ? m[i]: 0ll); 
+    	//0 cambios ,los no
+    	//tengo que hacer cambios=n/2-no
+    	//1*min(n/2-no,pref[i])+2*(n/2-no
+    	//-pref[i]) 
+    	ans=min(ans,min(n/2-no,pref[i])
+    	+2*max(0ll,n/2-no-pref[i]));
     }
+    cout<<ans<<"\n";
     
     
 }
