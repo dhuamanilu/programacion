@@ -35,20 +35,16 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+    string s;
+    cin>>s;
+    ll cont=0;
     FOR(i,0,n){
-        cin>>a[i];
+    	if(s[i]=='-')cont++;
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
-    }
+    ll ans=n-2*cont;
+    if(ans<0) ans*=-1;
+    cout<<ans<<"\n";
+    
     
 }
 int main(){

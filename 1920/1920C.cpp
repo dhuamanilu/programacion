@@ -30,7 +30,16 @@ typedef priority_queue<ll> pq;
 const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
-const int N=1000+3;
+const int N = 200005;
+vector<vector<int>> divisors(N+1);
+void init(){
+	//https://stackoverflow.com/questions/33062019/finding-all-divisors-of-all-the-numbers-from-1-to-106-efficiently
+	for (int i = 2; i <= N; i++) {
+	  for (int j = i; j <= N; j += i) {
+	    divisors[j].push_back(i);
+	  }
+	}
+}
 
 void solve(){
     ll n;
@@ -39,23 +48,95 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    if(n==1){
+    	cout<<"1\n";
+    	return;
+    }
+    // 1indexed dbg(divisors[24]);
+    ll ans=0;
+    //dbg(divisors[n]);
+    ll diff=*(max_element(all(a)))-*(min_element(all(a)));
+    if(diff==0) ans++;
+    else{
+    	for(auto &  posible: divisors[diff]){
+		
+			bool ok=true;
+			ll modulito=a[0]%posible;
+			for(auto & ahorasi: a){
+				if(ahorasi%posible!=modulito){
+					ok=false;
+					break;
+				}
+			}
+			if(ok){
+				ans++;
+				break;
+			}
+		}
     }
     
+	
+	
+    for(auto & div : divisors[n]){
+    	//dbgm(ans,div);
+    	if(div==n) continue;
+    	mll m;
+    	ll especial=0;
+    	FOR(i,0,n/div){
+    		vll aux;
+    		ll maxi=-(ll)1e18,mini=(ll)1e18;
+    		for(int j=i;j<n;j+=(n/div)){
+    			aux.pb(a[j]);
+    			maxi=max(maxi,a[j]);
+    			mini=min(mini,a[j]);
+    		}
+    		//dbg(aux);
+    		ll find=maxi-mini;
+    		
+    		if(find==0){
+    			especial++;
+    		}
+    		else{
+    			
+    			for(auto & candidato : divisors[find]){
+    				
+    				bool ok=true;
+    				ll modulito=aux[0]%candidato;
+    				for(auto & ahorasi: aux){
+    					if(ahorasi%candidato!=modulito){
+    						ok=false;
+    						break;
+    					}
+    				}
+    				if(ok){
+    					m[candidato]++;
+    				}
+    			}
+    		}
+    	}
+    	//dbg("-------");
+    	bool ya=false;
+    	for(auto & xd: m){
+    		//dbgm(xd,especial,n/div);
+    		if(xd.se+especial==(n/div)){
+    			//dbgm("con este ",xd.f);
+    			ans++;
+    			ya=true;
+    			break;
+    		} 
+    	}
+    	//if(div==1) dbg(m);
+    	if(!ya && especial==(n/div)) ans++;
+    	
+    }
+    cout<<ans+1<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
     cin>>t;
+    init();
     while(t--){
         solve();
     }

@@ -35,21 +35,24 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+    string s;
+    cin>>s;
+    string f;
+    cin>>f;	
+	ll diff=0,cuenta=0,cuenta2=0;
     FOR(i,0,n){
-        cin>>a[i];
+    	if(s[i]!=f[i]){
+    		diff++;
+    		if(s[i]=='1'){
+    			cuenta++;
+    		} 
+    		else{
+    			cuenta2++;
+    		}
+    		
+    	} 
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
-    }
-    
+	cout<<diff-min(cuenta,cuenta2)<<"\n";    
 }
 int main(){
     ios_base::sync_with_stdio(0);

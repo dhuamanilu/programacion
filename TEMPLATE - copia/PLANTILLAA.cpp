@@ -33,21 +33,21 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
+    ll n=4;
+    vpll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+        cin>>a[i].f>>a[i].se;
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    FOR(i,0,n){
+    	auto act=a[i];
+        FOR(j,0,n){
+        	if(i==j) continue;
+        	if(act.se==a[j].se){
+        		ll lado=abs(act.f-a[j].f);
+        		cout<<lado*lado<<"\n";
+        		return;
+        	}
+        }
     }
     
 }

@@ -33,29 +33,19 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
-    }
+	ll n=1;
+	cout<<n<<endl;
+    ll h=121714,w=353890927,xa=77939,ya=989496029,xb
+    =822177,yb=609198341;
+    cout<<h<<" "<<w<<" "<<xa<<" "<<ya<<" "<<xb<<" "<<yb<<endl;
+         
     
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

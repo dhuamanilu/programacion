@@ -31,24 +31,33 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+  
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
+	ll L=-(ll)1e18,R=(ll)1e18;
+	vll avoid;
     FOR(i,0,n){
-        cin>>a[i];
+        ll t,x;
+        cin>>t>>x;
+        if(t==1){
+        	L=max(L,x);
+        }
+        else if(t==2){
+        	R=min(R,x);
+        }
+        else{
+        	auto it=lower_bound(all(avoid),x);
+        	avoid.insert(it,x);
+        }
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
+    ll ans=R-L+1;
+    for(auto &e : avoid){
+    	if(e>=L && e<=R){
+    		ans--;
     	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
-    }
+    }  
+    cout<<max(0ll,ans)<<"\n";
     
 }
 int main(){

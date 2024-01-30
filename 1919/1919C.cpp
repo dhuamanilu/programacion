@@ -31,6 +31,7 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
+const int INF = 1e9;
 
 void solve(){
     ll n;
@@ -39,16 +40,25 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
+    
+    ll last1=n,last2=n,ans=0;
+    FOR(i,0,n){
+    	if(last1>last2){
+    		swap(last1,last2);
     	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
+    	if(a[i]<=last1){
+    		last1=a[i];
+    	}
+    	else if(a[i]>last2){
+    		last1=a[i];
+    		ans++;
+    	}
+    	else{
+    		last2=a[i];
     	}
     }
+    cout<<ans<<"\n";
+    
     
 }
 int main(){

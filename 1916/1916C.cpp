@@ -39,16 +39,14 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    ll sum=0,cont=0;
+    //cout<<sum<<" ";
+    FOR(i,0,n){
+    	sum+=a[i];
+    	if(a[i]%2==1) cont++;
+    	cout<<sum-cont/2<<" ";
     }
+    cout<<"\n";
     
 }
 int main(){

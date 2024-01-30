@@ -33,22 +33,34 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
+    ll n,m;
+    cin>>n>>m;
+    deque<ll> a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
-    	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
-    	}
+    deque<ll> b(m);
+    FOR(i,0,m){
+        cin>>b[i];
     }
+    sort(all(a));
+    sort(all(b));
+    reverse(all(b));
+    ll ans=0;
+	while(!a.empty()){
+		if(abs(a.back()-b.back())>abs(a.front()-b.front())){
+			ans+=abs(a.back()-b.back());
+			a.pop_back();
+			b.pop_back();
+		}
+		else{
+			ans+=abs(a.front()-b.front());
+			a.pop_front();
+			b.pop_front();
+		}
+	}
+	cout<<ans<<"\n";
+    
     
 }
 int main(){

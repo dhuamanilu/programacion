@@ -28,27 +28,20 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+void go(ll n,ll ori,ll med,ll des){
+	if(n==1){
+		cout<<ori<<" "<<des<<"\n";
+		return;
+	}
+	go(n-1,ori,des,med);
+	cout<<ori<<" "<<des<<"\n";
+	go(n-1,med,ori,des);
+}
 void solve(){
     ll n;
     cin>>n;
-    vector<string> ans={"1","0"};
-    ll tam=(1ll<<n);
-    while(ans.size()<tam){
-        vector<string> copia=ans;
-        reverse(all(copia));
-        ans.insert(ans.end(),copia.begin(),copia.end());
-        FOR(i,0,ans.size()/2){
-            ans[i]+="1";
-        }
-        FOR(i,ans.size()/2,ans.size()){
-            ans[i]+="0";
-        }
-    }
-    for(auto&e : ans){
-        cout<<e<<"\n";
-    }
-    //dbg(ans);
+    cout<<(1ll<<n)-1<<"\n";
+    go(n,1,2,3);
 }
 int main(){
     ios_base::sync_with_stdio(0);

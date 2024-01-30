@@ -45,16 +45,39 @@ void solve(){
     		cont[v]++;
     	}
     	else{
-    		ll v;
-    		cin>>v;
-    		ll ans=0;
-    		FOR(i,0,30){
-    			ll act=(1ll<<cont[i]);
-    			if((v%act)!=0){
+    		ll val;
+    		cin>>val;
+    		vll cont2=cont;
+    		bool ok=false;
+    		FOR(j,0,29){
+    			if(val==0) break;
+    			ll act=(1ll<<j);
+    			if((val%act)!=0){
     				cout<<"NO\n";
-    				continue;
+    				ok=true;
+    				break;
+    			}
+    			ll next=(1ll<<(j+1));
+    			ll take=val%next;
+    			ll cuantas=take/act;
+    			if(cuantas > cont2[j]){
+    				cout<<"NO\n";
+    				ok=true;
+    				break;
+    			}
+    			else{
+    				cont2[j]-=cuantas;
+    				val-=cuantas*act;
+    				cont2[j+1]+=(cont2[j]*act)/(next);
     			}
     			
+    		}
+    		if(ok) continue;
+    		if(val==0){
+    			cout<<"YES\n";
+    		}
+    		else{
+    			cout<<"NO\n";
     		}
     	}
     }

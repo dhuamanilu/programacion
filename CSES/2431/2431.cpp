@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -24,22 +26,40 @@ template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<
 #define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 1000005;
+const int MX = 100001;
 const int N=1000+3;
-
+long long binpow(long long a, long long b) {
+    if (b == 0)
+        return 1;
+    long long res = binpow(a, b / 2);
+    if (b%2)
+        return res * res * a;
+    else
+        return res * res;
+}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+    ll q;
+    cin>>q;
+    while(q--){
+    	ll k;
+    	cin>>k;
+    	ll which_size=0;
+    	ll aux=0;
+    	FOR(i,1,18){
+    		aux+=9ll*binpow(10,i-1)*i;
+    		which_size++;
+    		if(aux>=k){
+    			break;
+    		}
+    	}
+    	ll s=binpow(10,which_size),
+    	e=binpow(10,which_size+1)-1,m=s+(e-s)/2;
+    	while(s<=e){
+    		m=s+(e-s)/2;
+    		dbgm(s,e,m);
+    	}
+    	dbg(which_size);
     }
-    vector<vll> dp(n,vll(m+1,0));
-    ll ans=1;
-    FOR(i,0,n){
-        
-    }
-    cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

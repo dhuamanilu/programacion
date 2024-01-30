@@ -28,27 +28,47 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+const int TAM=8;
 void solve(){
-    ll n;
-    cin>>n;
-    vector<string> ans={"1","0"};
-    ll tam=(1ll<<n);
-    while(ans.size()<tam){
-        vector<string> copia=ans;
-        reverse(all(copia));
-        ans.insert(ans.end(),copia.begin(),copia.end());
-        FOR(i,0,ans.size()/2){
-            ans[i]+="1";
-        }
-        FOR(i,ans.size()/2,ans.size()){
-            ans[i]+="0";
-        }
-    }
-    for(auto&e : ans){
-        cout<<e<<"\n";
-    }
-    //dbg(ans);
+	vector<vector<char>> a(TAM,vector<char>(TAM));
+	FOR(i,0,TAM){
+		FOR(j,0,TAM){
+			cin>>a[i][j];
+		}
+	}  
+	ll ans=0;
+	vll pos(TAM,0);
+	iota(all(pos),0ll);
+	do{
+		bool can=true;
+		FOR(i,0,TAM){
+			if(a[pos[i]][i]=='*'){
+				can=false;
+				break;
+			}
+		}
+		//diagional 
+		vll diag1(2*TAM-1,0);
+		FOR(i,0,TAM){
+			ll ind=i-pos[i]+TAM-1;
+			if(diag1[ind]){
+				can=false;
+				break;
+			}
+			diag1[ind]=1;
+		}
+		//diagonal
+		vll diag2(2*TAM-1,0);
+		FOR(i,0,TAM){
+			if(diag2[i+pos[i]]){
+				can=false;
+				break;
+			}
+			diag2[i+pos[i]]=1;
+		}
+		if(can) ans++;
+	}while(next_permutation(all(pos)));
+	cout<<ans<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);

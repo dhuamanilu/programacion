@@ -33,21 +33,83 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,m;
+    cin>>n>>m;
     vll a(n);
     FOR(i,0,n){
         cin>>a[i];
     }
-    for(ll i=2;i<=((ll)1e18)+5;i<<=1){
-    	set<ll> mod;
-    	FOR(j,0,n){
-    		mod.insert(a[j]%i);
+    vll b(m);
+    FOR(i,0,m){
+        cin>>b[i];
+    }
+    sort(all(a));
+    sort(all(b));
+    deque<ll> cola(all(b));
+    //dbg(cola);
+    ll d0=abs(a[0]-cola.back()),d1=abs(a[0]-cola.front());
+    ll d2=abs(a.back()-cola.back()),d3=abs(a.back()-cola.front());
+    ll dist1=max(d0,d1);
+    ll dist2=max(d2,d3);
+    if(d0>=max(d1,max(d2,d3))){
+    	ll ans=d0;
+    	cola.pop_back();
+    	FOR(it,1,n){
+    		if(abs(a[it]-cola.front())>abs(a[it]-cola.back())){
+    			ans+=abs(a[it]-cola.front());
+    			cola.pop_front();
+    		}
+    		else{
+    			ans+=abs(a[it]-cola.back());
+    			cola.pop_back();
+    		}
     	}
-    	if(mod.size()==2){
-    		cout<<i<<"\n";
-    		break;
+    	cout<<ans<<"\n";
+    }
+    else if(d1 >=max(d0,max(d2,d3))){
+    	ll ans=d1;
+    	cola.pop_front();
+    	FOR(it,1,n){
+    		if(abs(a[it]-cola.front())>abs(a[it]-cola.back())){
+    			ans+=abs(a[it]-cola.front());
+    			cola.pop_front();
+    		}
+    		else{
+    			ans+=abs(a[it]-cola.back());
+    			cola.pop_back();
+    		}
     	}
+    	cout<<ans<<"\n";
+    }
+    else if(d2>=max(d0,max(d1,d3))){
+    	ll ans=d2;
+    	cola.pop_back();
+    	FOR(it,0,n-1){
+    		if(abs(a[it]-cola.front())>abs(a[it]-cola.back())){
+    			ans+=abs(a[it]-cola.front());
+    			cola.pop_front();
+    		}
+    		else{
+    			ans+=abs(a[it]-cola.back());
+    			cola.pop_back();
+    		}
+    	}
+    	cout<<ans<<"\n";
+    }
+    else{
+    	ll ans=d3;
+    	cola.pop_front();
+    	FOR(it,0,n-1){
+    		if(abs(a[it]-cola.front())>abs(a[it]-cola.back())){
+    			ans+=abs(a[it]-cola.front());
+    			cola.pop_front();
+    		}
+    		else{
+    			ans+=abs(a[it]-cola.back());
+    			cola.pop_back();
+    		}
+    	}
+    	cout<<ans<<"\n";
     }
     
 }

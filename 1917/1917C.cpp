@@ -43,6 +43,7 @@ void solve(){
     FOR(i,0,k){
     	cin>>v[i];
     }
+    //dbgm(a,v);
     ll score=0;
     FOR(i,0,min(2*n+1,d)){
     	ll cont=0;
