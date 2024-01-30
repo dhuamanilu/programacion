@@ -34,6 +34,7 @@ void solve(){
     FOR(i,0,n){
         cin>>a[i];
     }
+    vector<vll> dp(n,vll(m+1,0));
     ll ans=1;
     FOR(i,0,n){
         
