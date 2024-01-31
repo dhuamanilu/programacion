@@ -29,28 +29,70 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 const int TAM=48;
-const int LEN=8;
+const int LEN=7;
 string s;
-ll onPath[LEN][LEN];
-vll dx={};
-vll dy={};
+ll arr[TAM];
+ll onPath[LEN+2][LEN+2];
+//R,L,U,D
+vll dx={1,-1,0,0};
+vll dy={0,0,-1,	1};
+
 ll tryPath(ll ind,ll f,ll col){
 	if(ind==TAM && (f==7 && col==1)) return 1;
 	else if(ind==TAM) return 0;
-	
-	
+	//opt 3
+	if(onPath[f][col-1] && onPath[f][col+1]
+	&& (!onPath[f-1][col] && !onPath[f+1][col])) return 0;
+	if(onPath[f-1][col] && onPath[f+1][col]
+	&& (!onPath[f][col-1] && !onPath[f][col+1])) return 0;
+	//camino ya determinado
+	ll ret=0;
+	onPath[f][col]=true;
+	if(arr[ind]<4){
+		ll newX=x+dx[arr[ind]];
+		ll newY=y+dy[arr[ind]];
+		if(!onPath[newX][newY]) ret+=tryPath(ind+1,newX,newY);
+	}
+	else{
+		FOR(i,0,4){
+			ll newX=x+dx[arr[ind]];
+			ll newY=y+dy[arr[ind]];
+		}
+	}
 }
 
 
 void solve(){
 	cin>>s;
-	
-	FOR(i,1,LEN){
-		FOR(j,1,LEN){
+	FOR(i,0,TAM){
+		if(s[i]=='R'){
+			arr[i]=0;
+		}
+		else if(s[i]=='L'){
+			arr[i]=1;
+		}
+		else if(s[i]=='U'){
+			arr[i]=2;
+		}
+		else if(s[i]=='D'){
+			arr[i]=3;
+		}
+		else{
+			arr[i]=4;
+		}
+	}
+	FOR(i,0,LEN){
+		onPath[0][i]=1;
+		onPath[8][i]=1;
+		onPath[i][8]=1;
+		onPath[i][0]=1;
+	}
+	FOR(i,1,LEN+1){
+		FOR(j,1,LEN+1){
 			onPath[i][j]=0;
 		}
 	}
-	cout<<tryPath(0,1,1);
+	cout<<tryPath(0,1,1)<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
