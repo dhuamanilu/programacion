@@ -33,68 +33,16 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    vll type(n);
-    FOR(i,0,n){
-    	if(i==0) type[i]=1;
-    	else if(i==n-1) type[i]=-1;
-    	else{
-    		if(abs(a[i]-a[i-1])<abs(a[i]-a[i+1])){
-    			type[i]=-1;
-    		}
-    		else type[i]=1;
-    	}
-    }
-    // suma cant
-    //adelante
-    vll sumita(n);
-    sumita[0]=a[0];
-    vpll pref(n);
-    pref[0]={a[0],1};
-    vpll pref2(n);
-    pref2[0]={0,0};
-    FOR(i,1,n){
-    	sumita[i]=sumita[i-1]+a[i];
-    	auto ant=pref[i-1];
-    	if(type[i]==1){
-    		ant.f+=a[i];
-    		ant.se++;
-    	}
-    	pref[i]=ant;
-    	auto ant2=pref2[i-1];
-    	if(type[i]==-1){
-    		ant2.f+=a[i];
-    		ant2.se++;
-    	}
-    	pref2[i]=ant2;
-    }
-    //dbgm(pref,pref2);
+    ll n,k,m;
+    cin>>n>>k>>m;
+    string s;
+    cin>>s;
+    vll vis(26,0);
+    string ans="";
     
-    ll m;
-    cin>>m;
-    FOR(i,0,m){
-    	ll x,y;
-    	cin>>x>>y;
-    	x--;
-    	y--;
-    	//iaz to der
-    	if(x<=y){
-    		ll calc=(x>=1 ? pref[x-1].f : 0);
-    		ll sum=pref[y].f-calc;
-    		ll ele=pref[y].se-(x>=1 ? pref[x-1].se : 0);
-    		ll actu=(y>=1 ? sumita[y-1] : 0ll)-(x>=1 ? sumita[x-1] : 0ll);
-    		dbgm(x,y,actu,sum,ele);
-    		cout<<actu-sum+ele<<"\n";
-    	}
-    	else{
-    		cout<<"-1\n";
-    	}
-    }
+    
+    
+    
     
     
 }

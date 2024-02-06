@@ -37,64 +37,31 @@ void solve(){
     cin>>n;
     vll a(n);
     FOR(i,0,n){
-        cin>>a[i];
+    	cin>>a[i];
     }
-    vll type(n);
+    ll pt=0;
+    vll cont(26,0);
     FOR(i,0,n){
-    	if(i==0) type[i]=1;
-    	else if(i==n-1) type[i]=-1;
+    	if(a[i]==0){
+    		cout<<(char)('a'+pt);
+    		cont[pt]++;
+    		pt++;
+    		
+    	}
     	else{
-    		if(abs(a[i]-a[i-1])<abs(a[i]-a[i+1])){
-    			type[i]=-1;
+    		FOR(j,0,26){
+    			if(cont[j]==a[i]){
+    				cout<<(char)('a'+j);
+    				cont[j]++;
+    				break;
+    			}
     		}
-    		else type[i]=1;
     	}
     }
-    // suma cant
-    //adelante
-    vll sumita(n);
-    sumita[0]=a[0];
-    vpll pref(n);
-    pref[0]={a[0],1};
-    vpll pref2(n);
-    pref2[0]={0,0};
-    FOR(i,1,n){
-    	sumita[i]=sumita[i-1]+a[i];
-    	auto ant=pref[i-1];
-    	if(type[i]==1){
-    		ant.f+=a[i];
-    		ant.se++;
-    	}
-    	pref[i]=ant;
-    	auto ant2=pref2[i-1];
-    	if(type[i]==-1){
-    		ant2.f+=a[i];
-    		ant2.se++;
-    	}
-    	pref2[i]=ant2;
-    }
-    //dbgm(pref,pref2);
+    cout<<"\n";
     
-    ll m;
-    cin>>m;
-    FOR(i,0,m){
-    	ll x,y;
-    	cin>>x>>y;
-    	x--;
-    	y--;
-    	//iaz to der
-    	if(x<=y){
-    		ll calc=(x>=1 ? pref[x-1].f : 0);
-    		ll sum=pref[y].f-calc;
-    		ll ele=pref[y].se-(x>=1 ? pref[x-1].se : 0);
-    		ll actu=(y>=1 ? sumita[y-1] : 0ll)-(x>=1 ? sumita[x-1] : 0ll);
-    		dbgm(x,y,actu,sum,ele);
-    		cout<<actu-sum+ele<<"\n";
-    	}
-    	else{
-    		cout<<"-1\n";
-    	}
-    }
+    
+    
     
     
 }

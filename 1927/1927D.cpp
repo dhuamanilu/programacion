@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -29,72 +31,83 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MAXN=200005;
 const int N=1000+3;
 
+int lg[MAXN+1];
+
+int f(int a,int b){
+	return min(a,b);
+}
+int f2(int a,int b){
+	return max(a,b);
+}
+int log2_floor(unsigned long long i) {
+    return i ? __builtin_clzll(1) - __builtin_clzll(i) : -1;
+}
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-        cin>>a[i];
-    }
-    vll type(n);
-    FOR(i,0,n){
-    	if(i==0) type[i]=1;
-    	else if(i==n-1) type[i]=-1;
-    	else{
-    		if(abs(a[i]-a[i-1])<abs(a[i]-a[i+1])){
-    			type[i]=-1;
-    		}
-    		else type[i]=1;
-    	}
-    }
-    // suma cant
-    //adelante
-    vll sumita(n);
-    sumita[0]=a[0];
-    vpll pref(n);
-    pref[0]={a[0],1};
-    vpll pref2(n);
-    pref2[0]={0,0};
-    FOR(i,1,n){
-    	sumita[i]=sumita[i-1]+a[i];
-    	auto ant=pref[i-1];
-    	if(type[i]==1){
-    		ant.f+=a[i];
-    		ant.se++;
-    	}
-    	pref[i]=ant;
-    	auto ant2=pref2[i-1];
-    	if(type[i]==-1){
-    		ant2.f+=a[i];
-    		ant2.se++;
-    	}
-    	pref2[i]=ant2;
-    }
-    //dbgm(pref,pref2);
+    vector<int> a(n);
     
-    ll m;
-    cin>>m;
-    FOR(i,0,m){
-    	ll x,y;
-    	cin>>x>>y;
-    	x--;
-    	y--;
-    	//iaz to der
-    	if(x<=y){
-    		ll calc=(x>=1 ? pref[x-1].f : 0);
-    		ll sum=pref[y].f-calc;
-    		ll ele=pref[y].se-(x>=1 ? pref[x-1].se : 0);
-    		ll actu=(y>=1 ? sumita[y-1] : 0ll)-(x>=1 ? sumita[x-1] : 0ll);
-    		dbgm(x,y,actu,sum,ele);
-    		cout<<actu-sum+ele<<"\n";
+    int elmax=INT_MIN;
+    FOR(i,0,n){
+    	cin>>a[i];
+    	elmax=max(elmax,a[i]);
+    }
+    map<int,vector<int>> guarda;
+    FOR(i,0,n){
+    	guarda[a[i]].pb(i);
+    }
+    ll k=log2_floor(n)+1;
+    int stmin[k + 1][n+1];
+	int stmax[k + 1][n+1];
+    std::copy(a.begin(), a.end(), stmin[0]);
+	
+	for (int i = 1; i <= k; i++)
+	    for (int j = 0; j + (1 << i) <= n; j++)
+	        stmin[i][j] = f(stmin[i - 1][j], stmin[i - 1][j + (1 << (i - 1))]);
+	        
+	std::copy(a.begin(), a.end(), stmax[0]);
+	
+	for (int i = 1; i <= k; i++)
+	    for (int j = 0; j + (1 << i) <= n; j++)
+	        stmax[i][j] = f2(stmax[i - 1][j], stmax[i - 1][j + (1 << (i - 1))]);
+    
+
+    int q;
+    cin>>q;
+    //dbg(guarda);
+    FOR(iter,0,q){
+    	int l,r;
+    	cin>>l>>r;
+    	l--;
+    	r--;
+    	/* int i = lg[R - L + 1];
+		int minimum = min(st[i][L], st[i][R - (1 << i) + 1]); */
+    	int i1=lg[r-l+1];
+    	int mini=min(stmin[i1][l], stmin[i1][r - (1ll << i1) + 1]);
+    	int i2=lg[r-l+1];
+    	int maxi=max(stmax[i2][l], stmax[i2][r - (1ll << i2) + 1]);
+    	
+    	if(maxi==mini){
+    		cout<<"-1 -1\n";
     	}
     	else{
-    		cout<<"-1\n";
+    		auto idx=lower_bound(guarda[mini].begin
+    		(),guarda[mini].end(),l);
+    		auto idy=lower_bound(guarda[maxi].begin(),guarda
+    		[maxi].end(),l);
+    		assert(idx!=guarda[mini].end() && idy!=
+    		guarda[maxi].end());
+    		cout<<(*idx)+1<<" "<<(*idy)+1<<"\n";
     	}
     }
+    cout<<"\n";
+    
+    
+    
+    
     
     
 }
@@ -102,6 +115,9 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
+    lg[1] = 0;
+	for (int i = 2; i <= MAXN; i++)
+    	lg[i] = lg[i/2] + 1;
     cin>>t;
     while(t--){
         solve();
