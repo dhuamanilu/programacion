@@ -36,25 +36,23 @@ void solve(){
     ll n,k;
     cin>>n>>k;
     vll a(n,0);
-    iota(all(a),1);
-    //dbg(a);
-    do{
-    	vll sums;
-    	FOR(i,0,n-k+1){
-    		ll aux=0;
-    		FOR(j,i,i+k){
-    			aux+=a[j];
+    ll low=1,high=n;
+    FOR(i,0,k){
+    	if((i%2)==0){
+    		for(ll j=i;j<n;j+=k){
+    			a[j]=low++;
+    		} 
+    	}
+    	else{
+    		for(ll j=i;j<n;j+=k){
+    			a[j]=high--;
     		}
-    		sums.pb(aux);
     	}
-    	//dbg(sums);
-    	ll maxi=*max_element(all(sums));
-    	ll mini=*min_element(all(sums));
-    	if(maxi-mini<=1){
-    		for(auto & e : a)cout<<e<<" ";
-    		cout<<"\n";
-    	}
-    }while(next_permutation(all(a)));
+    }
+    for(auto &e : a){
+    	cout<<e<<" ";
+    }
+    cout<<"\n";
     
     
     
