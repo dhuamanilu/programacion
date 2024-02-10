@@ -36,6 +36,12 @@ void go(ll row,ll col){
 		vector<vll> enColumna(N,vll(N,0));
 		FOR1(i,1,n){
 			FOR1(j,1,n){
+				enFila[i][a[i][j]]++;
+				enColumna[i][a[j][i]]++;
+			}
+		}
+		FOR1(i,1,n*n){
+			FOR1(j,1,n*n){
 				
 			}
 		}
