@@ -34,17 +34,63 @@ void go(ll row,ll col){
 	if(row==n*n+1 && col==1){
 		vector<vll> enFila(N,vll(N,0));
 		vector<vll> enColumna(N,vll(N,0));
+		bool ok=true;
 		FOR1(i,1,n){
 			FOR1(j,1,n){
 				enFila[i][a[i][j]]++;
 				enColumna[i][a[j][i]]++;
 			}
 		}
-		FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
+		FOR1(i,1,n){
+			FOR1(j,1,9){
+				if(enFila[i][j]!=1){
+					ok=false;
+					break;
+				}
+				if(enColumna[i][j]!=1){
+					ok=false;
+					break;
+				}
+			}
+		}
+		for(ll i=1;i<=n*n;i+=n){
+			for(ll j=1;j<=n*n;j+=n){
+				vll numeros(10,0);
+				FOR(k,0,3){
+					FOR(it,0,3){
+						ll newX=i+k,newY=j+it;
+						numeros[a[newX][newY]]++;
+					}
+				}
+				FOR1(iter,1,9){
+					if(numeros[i]!=1){
+						ok=false;
+						break;
+					}
+				}
 				
 			}
 		}
+		if(ok){
+			FOR1(i,1,n*n){
+		    	FOR1(j,1,n*n){
+		    		cout<<a[i][j]<<" ";
+		    	}
+		    	cout<<"\n";
+		    }
+		    return;
+		}
+		
+	}
+	if(a[row][col]==0){
+		//proaR TODAS LAS POSIBILIDADES
+		//skipeando las que no son posuibles
+		FOR1(it,1,9){
+			
+		}
+	}
+	else{
+		
 	}
 }
 void solve(){
@@ -56,12 +102,7 @@ void solve(){
     	}
     }
     go(1,1);
-    FOR1(i,1,n*n){
-    	FOR1(j,1,n*n){
-    		cout<<a[i][j]<<" ";
-    	}
-    	cout<<"\n";
-    }
+    
     
     
     
