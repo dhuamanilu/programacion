@@ -70,7 +70,7 @@ void go(ll row,ll col){
 					}
 				}
 				FOR1(iter,1,9){
-					if(numeros[i]!=1){
+					if(numeros[iter]!=1){
 						ok=false;
 						break;
 					}
@@ -85,7 +85,7 @@ void go(ll row,ll col){
 		    	}
 		    	cout<<"\n";
 		    }
-		    return;
+		    exit(0);
 		}
 		
 	}
@@ -96,17 +96,19 @@ void go(ll row,ll col){
 			if(!enFila[row][i] && 
 			!enColumna[col][i]){
 				//row,col+1
-				dbgm("pr",row,col,i);
+				//dbgm("pro",row,col,i);
 				a[row][col]=i;
 				enFila[row][i]++;
 				enColumna[col][i]++;
-				if(row+1<=n*n){
+				//dbgm(row+1,n*n);
+				if(col+1<=n*n){
 					go(row,col+1);
 				}
 				else{
+					//dbgm("hola",row+1,1);
 					go(row+1,1);
 				}
-				dbgm("dhac",row,col,i);
+				//dbgm("dhac",row,col,i);
 				enFila[row][i]--;
 				enColumna[col][i]--;
 				a[row][col]=0;
@@ -114,7 +116,7 @@ void go(ll row,ll col){
 		}
 	}
 	else{
-		dbgm("ES",row,col,a[row][col]);
+		//dbgm("ES",row,col,a[row][col]);
 		/*enFila[row][a[row][col]]++;
 		enColumna[col][a[row][col]]++;*/
 		if(col+1<=n*n){
