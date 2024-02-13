@@ -27,125 +27,90 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int N=12;
-ll a[N][N];
-ll n;
-vector<vll> enFila(N,vll(N,0));
-vector<vll> enColumna(N,vll(N,0));
-void go(ll row,ll col){
-	/*for(auto & fila :a ){
-			for(auto & columna : fila){
-				cout<<columna<<" ";
-			}
-			cout<<"\n";
-	}*/
-	if(row==n*n+1 && col==1){
-		
-		bool ok=true;
-		/*FOR1(i,1,n){
-			FOR1(j,1,n){
-				enFila[i][a[i][j]]++;
-				enColumna[i][a[j][i]]++;
-			}
-		}*/
-		FOR1(i,1,n){
-			FOR1(j,1,9){
-				if(enFila[i][j]!=1){
-					ok=false;
-					break;
-				}
-				if(enColumna[i][j]!=1){
-					ok=false;
-					break;
-				}
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				vll numeros(10,0);
-				FOR(k,0,3){
-					FOR(it,0,3){
-						ll newX=i+k,newY=j+it;
-						numeros[a[newX][newY]]++;
-					}
-				}
-				FOR1(iter,1,9){
-					if(numeros[i]!=1){
-						ok=false;
-						break;
-					}
-				}
-				
-			}
-		}
-		if(ok){
-			FOR1(i,1,n*n){
-		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
-		    	}
-		    	cout<<"\n";
-		    }
-		    return;
-		}
-		
-	}
-	if(a[row][col]==0){
-		//proaR TODAS LAS POSIBILIDADES
-		//skipeando las que no son posuibles
-		FOR1(i,1,9){
-			if(!enFila[row][i] && 
-			!enColumna[col][i]){
-				//row,col+1
-				dbgm("pr",row,col,i);
-				a[row][col]=i;
-				enFila[row][i]++;
-				enColumna[col][i]++;
-				if(row+1<=n*n){
-					go(row,col+1);
-				}
-				else{
-					go(row+1,1);
-				}
-				dbgm("dhac",row,col,i);
-				enFila[row][i]--;
-				enColumna[col][i]--;
-				a[row][col]=0;
-			}
-		}
-	}
-	else{
-		dbgm("ES",row,col,a[row][col]);
-		/*enFila[row][a[row][col]]++;
-		enColumna[col][a[row][col]]++;*/
-		if(col+1<=n*n){
-			go(row,col+1);
-		}
-		else{
-			go(row+1,1);
-		}
-	}
+int val(char c){
+    if (c >= '0' && c <= '9')
+        return (int)c - '0';
+    else
+        return (int)c - 'A' + 10;
 }
-void solve(){   
-    cin>>n;
-    FOR1(i,1,n*n){
-    	FOR1(j,1,n*n){
-    		cin>>a[i][j];
-    	}
+int toDeci(string str, int base)
+{
+    // Stores the length
+    // of the string
+    int len = str.size();
+ 
+    // Initialize power of base
+    int power = 1;
+ 
+    // Initialize result
+    int num = 0;
+ 
+    // Decimal equivalent is str[len-1]*1
+    // + str[len-2]*base + str[len-3]*(base^2) + ...
+    for (int i = len - 1; i >= 0; i--) {
+ 
+        // A digit in input number must
+        // be less than number's base
+        if (val(str[i]) >= base) {
+            printf("Invalid Number");
+            return -1;
+        }
+ 
+        // Update num
+        num += val(str[i]) * power;
+ 
+        // Update power
+        power = power * base;
     }
-    FOR1(i,1,n*n){
-		FOR1(j,1,n*n){
-			enFila[i][a[i][j]]++;
-			enColumna[i][a[j][i]]++;
-		}
-	}
-	/*FOR1(i,1,n*n){
-		FOR1(j,1,n*n){
-			cout<<enColumna[i][j]<<" ";
-		}
-		cout<<"\n";
-	}*/
-    //dbgm(enFila,enColumna);
-    go(1,1);    
+ 
+    return num;
+}
+char reVal(int num){
+    if (num >= 0 && num <= 9)
+        return (char)(num + '0');
+    else
+        return (char)(num - 10 + 'A');
+}
+string fromDeci(int base, int inputNum){
+    string res = "";
+    while (inputNum > 0) {
+        res += reVal(inputNum % base);
+        inputNum /= base;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+string convertBase(string s, int a, int b){
+    int num = toDeci(s, a);
+    return fromDeci(b, num);
+}
+void solve(){
+    string s,m;
+    cin>>s>>m;
+    
+    FOR(i,0,s.size()){
+    	string s2=s;
+    	if(s[i]=='1'){
+    		s2[i]='0';
+    	}
+    	else s2[i]='1';
+    	string conv1=convertBase(s2,2,10);
+    	string enbase3=convertBase(conv1,10,3);
+    	if(enbase3.size()==m.size()){
+    		ll cont=0;
+    		FOR(j,0,enbase3.size()){
+    			if(enbase3[j]!=m[j]){
+    				cont++;
+    			}
+    		}
+    		if(cont==1){
+    			cout<<conv1<<"\n";
+    			return;
+    		}
+    	}
+    	
+    }
+    
 }
 int main(){
     ios_base::sync_with_stdio(0);

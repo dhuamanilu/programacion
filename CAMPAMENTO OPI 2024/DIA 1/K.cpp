@@ -27,125 +27,102 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int N=12;
-ll a[N][N];
-ll n;
-vector<vll> enFila(N,vll(N,0));
-vector<vll> enColumna(N,vll(N,0));
-void go(ll row,ll col){
-	/*for(auto & fila :a ){
-			for(auto & columna : fila){
-				cout<<columna<<" ";
-			}
-			cout<<"\n";
-	}*/
-	if(row==n*n+1 && col==1){
-		
-		bool ok=true;
-		/*FOR1(i,1,n){
-			FOR1(j,1,n){
-				enFila[i][a[i][j]]++;
-				enColumna[i][a[j][i]]++;
-			}
-		}*/
-		FOR1(i,1,n){
-			FOR1(j,1,9){
-				if(enFila[i][j]!=1){
-					ok=false;
-					break;
-				}
-				if(enColumna[i][j]!=1){
-					ok=false;
-					break;
-				}
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				vll numeros(10,0);
-				FOR(k,0,3){
-					FOR(it,0,3){
-						ll newX=i+k,newY=j+it;
-						numeros[a[newX][newY]]++;
-					}
-				}
-				FOR1(iter,1,9){
-					if(numeros[i]!=1){
-						ok=false;
-						break;
-					}
-				}
-				
-			}
-		}
-		if(ok){
-			FOR1(i,1,n*n){
-		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
-		    	}
-		    	cout<<"\n";
-		    }
-		    return;
-		}
-		
-	}
-	if(a[row][col]==0){
-		//proaR TODAS LAS POSIBILIDADES
-		//skipeando las que no son posuibles
-		FOR1(i,1,9){
-			if(!enFila[row][i] && 
-			!enColumna[col][i]){
-				//row,col+1
-				dbgm("pr",row,col,i);
-				a[row][col]=i;
-				enFila[row][i]++;
-				enColumna[col][i]++;
-				if(row+1<=n*n){
-					go(row,col+1);
-				}
-				else{
-					go(row+1,1);
-				}
-				dbgm("dhac",row,col,i);
-				enFila[row][i]--;
-				enColumna[col][i]--;
-				a[row][col]=0;
-			}
-		}
-	}
-	else{
-		dbgm("ES",row,col,a[row][col]);
-		/*enFila[row][a[row][col]]++;
-		enColumna[col][a[row][col]]++;*/
-		if(col+1<=n*n){
-			go(row,col+1);
-		}
-		else{
-			go(row+1,1);
+const int MAXN=50+5;
+char a[MAXN][MAXN];
+ll n,m;
+ll color[MAXN][MAXN];
+bool vis[MAXN][MAXN];
+vll dx={1,-1,0,0};
+vll dy={0,0,1,-1};
+bool isValid(ll x,ll y){
+	return (x>=0 && x<n && y>=0 && y<m);
+}
+void dfs(ll i,ll j,ll col){
+	vis[i][j]=true;
+	color[i][j]=col;
+	FOR(it,0,4){
+		ll newX=i+dx[it],newY=j+dy[it];
+		if(isValid(newX,newY)){
+			if(a[newX][newY]=='X' && !vis[newX][newY])
+				dfs(newX,newY,col);
 		}
 	}
 }
-void solve(){   
-    cin>>n;
-    FOR1(i,1,n*n){
-    	FOR1(j,1,n*n){
-    		cin>>a[i][j];
-    	}
-    }
-    FOR1(i,1,n*n){
-		FOR1(j,1,n*n){
-			enFila[i][a[i][j]]++;
-			enColumna[i][a[j][i]]++;
+ll get(ll row,ll col){
+	vector<vector<bool>> visi(55,vector<bool>(55,false));
+	vector<vll> dis(n,vll(m,0));
+	dis[row][col]=0;
+	queue<pair<ll,ll>> cola;
+	visi[row][col]=true;
+	cola.push(mp(row,col));
+	ll cont=0;
+	while(!cola.empty()){
+		cont++;
+		auto act=cola.front();
+		ll x=act.f,y=act.se;
+		cola.pop();
+		FOR(iter,0,4){
+			ll newX=x+dx[iter],newY=y+dy[iter];
+			if(isValid(newX,newY)){
+				//if(color[newX][newY]==1){
+				//	dis[newX][newY]=0;
+				//}
+				//else{
+					if(!visi[newX][newY]){
+						visi[newX][newY]=true;
+						dis[newX][newY]=dis[x][y]+1;
+						cola.push(mp(newX,newY));
+					}
+				//}
+			}
 		}
 	}
-	/*FOR1(i,1,n*n){
-		FOR1(j,1,n*n){
-			cout<<enColumna[i][j]<<" ";
+	ll ans=(ll)1e18;
+	FOR(i,0,n){
+		FOR(j,0,m){
+			/*if(row==2 && col==4){
+				dbgm(dis[i][j]);
+			}*/
+			if(color[i][j]==2){
+				ans=min(ans,dis[i][j]);
+			}
 		}
-		cout<<"\n";
-	}*/
-    //dbgm(enFila,enColumna);
-    go(1,1);    
+	}
+	return ans;
+}
+void solve(){
+    cin>>n>>m;
+    FOR(i,0,n){
+    	string s;
+    	cin>>s;
+    	FOR(j,0,m){
+    		a[i][j]=s[j];
+    		color[i][j]=-1;
+    		vis[i][j]=false;
+    	}
+    }
+    ll col=1;
+    FOR(i,0,n){
+    	FOR(j,0,m){
+    		if(!vis[i][j] && a[i][j]=='X'){
+    			dfs(i,j,col);
+    			col++;
+    		}
+    	}
+    }
+    //dbgm("colo 2 4",color[2][4]);
+    ll ans=(ll)1e18;
+    FOR(i,0,n){
+    	FOR(j,0,m){
+    		//limpiar el vis
+    		if(color[i][j]==1){
+    			auto mejora=get(i,j);
+    			//dbgm(i,j,mejora);
+    			ans=min(ans,mejora);
+    		}
+    	}
+    }
+    cout<<ans-1<<"\n";     
 }
 int main(){
     ios_base::sync_with_stdio(0);
