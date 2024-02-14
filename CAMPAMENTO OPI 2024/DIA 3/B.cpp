@@ -27,165 +27,74 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int N=12;
-ll a[N][N];
-ll n;
-bool okG=false;
-vector<vll> enFila(N,vll(N,0));
-vector<vll> enColumna(N,vll(N,0));
-map<pair<ll,ll>,vector<ll>> enCuadrado;
-pair<ll,ll> get_cuadrado(ll row,ll col){
-	for(ll i=1;i<=n*n;i+=n){
-		for(ll j=1;j<=n*n;j+=n){
-			ll xx=i+n-1,yy=j+n-1;
-			if(row>=i && row<=xx && col>=j && col<=yy)
-				return mp(i,j);				
-		}
-	}
-}
-void go(ll row,ll col){
-	if(okG) return;
-	//dbgm("toca",row,col);
-	if(row==n*n+1 && col==1){	
-		bool ok=true;
-		FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				if(enFila[i][j]!=1){
-					ok=false;
-					break;
-				}
-				if(enColumna[i][j]!=1){
-					ok=false;
-					break;
-				}
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				vll numeros(n*n+1,0);
-				FOR(k,0,n){
-					FOR(it,0,n){
-						ll newX=i+k,newY=j+it;
-						numeros[a[newX][newY]]++;
-					}
-				}
-				FOR1(iter,1,n*n){
-					if(numeros[iter]!=1){
-						ok=false;
-						break;
-					}
-				}
-				
-			}
-		}
-		if(ok){
-			FOR1(i,1,n*n){
-		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
-		    	}
-		    	cout<<"\n";
-		    }
-		    okG=true;
-		    return;
-		}
-	}
-	if(a[row][col]==0){
-		pair<ll,ll> cua=get_cuadrado(row,col);
-		/*if(row==2 && col==1){
-			dbgm("21",enCuadrado[cua]);
-		}*/
-		
-		FOR1(i,1,n*n){
-			auto it=find(all(enCuadrado[cua]),i);
-			//dbgm(row,col,cua);
-			if(!enFila[row][i] && 
-			!enColumna[col][i]
-			&& it==
-			enCuadrado[cua].end()){
-				//dbgm("prob",row,col,i);
-				a[row][col]=i;
-				enFila[row][i]++;
-				enColumna[col][i]++;
-				enCuadrado[cua].pb(i);
-				if(col+1<=n*n){
-					go(row,col+1);
-				}
-				else{
-					go(row+1,1);
-				}
-				enFila[row][i]--;
-				enColumna[col][i]--;
-				auto porsiacaso=find(all(enCuadrado[cua]),i);
-				enCuadrado[cua].erase(porsiacaso);
-				//dbgm("des",row,col,i);
-				a[row][col]=0;
-			}
-		}
-	}
-	else{
-		if(col+1<=n*n){
-			go(row,col+1);
-		}
-		else{
-			go(row+1,1);
-		}
-	}
-}
-void solve(){  
-	ll foo=0; 
-    while(cin >> n){
-    	//dbg(n);
-    	okG=false;
-    	if(foo)cout<<"\n";
-    	foo=1;
-    	FOR1(i,1,n*n){
-	    	FOR1(j,1,n*n){
-	    		cin>>a[i][j];
-	    	}
-	    }
-	    enCuadrado.clear();
-	    //dbg(a);
-	    FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				enFila[i][j]=0;
-				enColumna[i][j]=0;
-			}
-		}
-		
-	    FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				enFila[i][a[i][j]]++;
-				enColumna[i][a[j][i]]++;
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				FOR(k,0,n){
-					FOR(it,0,n){
-						
-						ll newX=i+k,newY=j+it;
-						if(a[newX][newY]==0) continue;
-						auto cua=mp(i,j);
-						enCuadrado[cua].pb(a[newX][newY]);
-					}
-				}
-			}
-		}
-		//dbg(enCuadrado);
-	    go(1,1); 
-	    if(!okG){
-	    	cout<<"NO SOLUTION\n";
-	    }
-	    char x=getchar();
-	    //dbg(x);
+
+const int MOD=1000000000+7;
+void solve(){
+    ll n;
+    cin>>n;
+    vector<vll> a;
+    FOR(i,0,n-1){
+    	vll b;
+    	FOR(j,0,n){
+    		ll x;
+    		cin>>x;
+    		b.pb(x);
+    	}
+    	a.pb(b);
     }
-       
+    vector<vll> cont()
+    FOR(i,0,n){
+		vll cont(n+2,0);
+		FOR(j,0,n-1){
+			cont[a[j][i]]++;
+		}
+		bool ok=true;
+		FOR1(it,1,n){
+			if(cont[it]!=1){
+				ok=false;
+				break;
+			}
+		}
+		if(ok) cantLocal++;
+	}
+    ll cant=0;
+    do{
+		ll cantLocal=0;
+		
+		cant=max(cant,cantLocal);   	
+    }while(next_permutation(all(c)));
+    //dbg(cant);
+    ll cuantos=0;
+    iota(all(c),1);
+    do{
+		ll cantLocal=0;
+		FOR(i,0,n){
+			vll cont(n+2,0);
+			FOR(j,0,n-1){
+				cont[a[j][i]]++;
+			}
+			cont[c[i]]++;
+			bool ok=true;
+			FOR1(it,1,n){
+				if(cont[it]!=1){
+					ok=false;
+					break;
+				}
+			}
+			if(ok) cantLocal++;
+		}
+		if(cantLocal==cant){
+			cuantos++;
+			cuantos%=MOD;
+		}   	
+    }while(next_permutation(all(c)));
+    cout<<cant<<" "<<cuantos<<"\n";
+    
 }
 int main(){
-    /*ios_base::sync_with_stdio(0);
-    cin.tie(0);*/
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
         solve();
     }
