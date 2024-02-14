@@ -27,117 +27,117 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int N=12;
-ll a[N][N];
-ll n;
-bool okG=false;
-vector<vll> enFila(N,vll(N,0));
-vector<vll> enColumna(N,vll(N,0));
-void go(ll row,ll col){
-	if(okG) return;
-	if(row==n*n+1 && col==1){	
-		bool ok=true;
-		FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				if(enFila[i][j]!=1){
-					ok=false;
-					break;
-				}
-				if(enColumna[i][j]!=1){
-					ok=false;
-					break;
-				}
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				vll numeros(n*n+1,0);
-				FOR(k,0,n){
-					FOR(it,0,n){
-						ll newX=i+k,newY=j+it;
-						numeros[a[newX][newY]]++;
-					}
-				}
-				FOR1(iter,1,n*n){
-					if(numeros[iter]!=1){
-						ok=false;
-						break;
-					}
-				}
-				
-			}
-		}
-		if(ok){
-			FOR1(i,1,n*n){
-		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
-		    	}
-		    	cout<<"\n";
-		    }
-		    okG=true;
-		    return;
+ll cont=0;
+ll calc1(ll m){
+	ll a=m*(m+1)/2;
+	return a*a-9;
+}
+ll get1(ll &pos){
+	ll guarda=-1;
+	for(ll m=2079;m>=3;m--){
+		ll r=calc1(m);
+		ll l=r+1-m*m*m;
+		if(pos>= l && pos<=r){
+			guarda=m;
+			//pos-=l;
+			break;
 		}
 	}
-	if(a[row][col]==0){
-		FOR1(i,1,n*n){
-			if(!enFila[row][i] && 
-			!enColumna[col][i]){
-				a[row][col]=i;
-				enFila[row][i]++;
-				enColumna[col][i]++;
-				if(col+1<=n*n){
-					go(row,col+1);
-				}
-				else{
-					go(row+1,1);
-				}
-				enFila[row][i]--;
-				enColumna[col][i]--;
-				a[row][col]=0;
-			}
+	return guarda;
+}
+ll calc2(ll n,ll a){
+	return a*n*n;
+}
+ll get2(ll &pos,ll n){
+	pos-=calc1(n-1);
+	ll guarda=-1;
+	for(ll a=n;a>=1;a--){
+		ll r=calc2(n,a);
+		ll l=r+1-n*n;
+		//dbgm(pos,l,r);
+		if(pos>=l && pos<=r){
+			guarda=a;
+			break;
 		}
+	}
+	return guarda;
+}
+ll calc3(ll n,ll b){
+	return b*n;
+}
+ll get3(ll &pos,ll n,ll a){
+	pos-=calc2(n,a-1);
+	//dbg(pos);
+	ll guarda=-1;
+	for(ll b=n;b>=1;b--){
+		ll r=calc3(b,n);
+		ll l=r+1-n;
+		//dbgm(pos,l,r,b);
+		if(pos>=l && pos<=r){
+			guarda=b;
+			//pos-=l;
+			break;
+		}
+	}
+	return guarda;
+}
+ll get4(ll &pos,ll n,ll a,ll b){
+	pos-=calc3(n,b-1);
+	return pos;
+}
+ll LL,RR,len;
+long long binpow(long long a, long long b) {
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+void go(ll a,ll b,ll c,ll n){
+	if(cont==len) return;
+	cont++;
+	//como comparo :v
+	char comp=(binpow(a,n)+binpow(b,n) >
+	binpow(c,n) ? '>' : '<');
+	
+	cout<<a<<"^"<<n<<"+"<<b<<"^"<<n<<comp
+	<<c<<"^"<<n<<"\n";
+	if(c+1<=n){
+		go(a,b,c+1,n);
 	}
 	else{
-		if(col+1<=n*n){
-			go(row,col+1);
+		if(b+1<=n){
+			go(a,b+1,1,n);
 		}
 		else{
-			go(row+1,1);
+			if(a+1<=n){
+				go(a+1,1,1,n);
+			}
+			else{
+				go(1,1,1,n+1);
+			}
 		}
 	}
 }
-void solve(){  
-	ll foo=0; 
-    while(cin >> n){
-    	//dbg(n);
-    	okG=false;
-    	if(foo)cout<<"\n";
-    	foo=1;
-    	FOR1(i,1,n*n){
-	    	FOR1(j,1,n*n){
-	    		cin>>a[i][j];
-	    	}
-	    }
-	    //dbg(a);
-	    FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				enFila[i][a[i][j]]++;
-				enColumna[i][a[j][i]]++;
-			}
-		}
-	    go(1,1); 
-	    if(!okG){
-	    	cout<<"NO SOLUTION\n";
-	    }
-	    getchar();
-    }
-       
+void solve(){
+    cin>>LL>>RR;
+    len=RR-LL+1;
+    //n o maxi
+    ll n=get1(LL);
+    ll a=get2(LL,n);
+    ll b=get3(LL,n,a);
+    ll c=get4(LL,n,a,b);
+    //dbgm(a,b,c,n);
+    go(a,b,c,n);
+    
 }
 int main(){
-    /*ios_base::sync_with_stdio(0);
-    cin.tie(0);*/
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
         solve();
     }

@@ -27,115 +27,17 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int N=12;
-ll a[N][N];
-ll n;
-bool okG=false;
-vector<vll> enFila(N,vll(N,0));
-vector<vll> enColumna(N,vll(N,0));
-void go(ll row,ll col){
-	if(okG) return;
-	if(row==n*n+1 && col==1){	
-		bool ok=true;
-		FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				if(enFila[i][j]!=1){
-					ok=false;
-					break;
-				}
-				if(enColumna[i][j]!=1){
-					ok=false;
-					break;
-				}
-			}
-		}
-		for(ll i=1;i<=n*n;i+=n){
-			for(ll j=1;j<=n*n;j+=n){
-				vll numeros(n*n+1,0);
-				FOR(k,0,n){
-					FOR(it,0,n){
-						ll newX=i+k,newY=j+it;
-						numeros[a[newX][newY]]++;
-					}
-				}
-				FOR1(iter,1,n*n){
-					if(numeros[iter]!=1){
-						ok=false;
-						break;
-					}
-				}
-				
-			}
-		}
-		if(ok){
-			FOR1(i,1,n*n){
-		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
-		    	}
-		    	cout<<"\n";
-		    }
-		    okG=true;
-		    return;
-		}
-	}
-	if(a[row][col]==0){
-		FOR1(i,1,n*n){
-			if(!enFila[row][i] && 
-			!enColumna[col][i]){
-				a[row][col]=i;
-				enFila[row][i]++;
-				enColumna[col][i]++;
-				if(col+1<=n*n){
-					go(row,col+1);
-				}
-				else{
-					go(row+1,1);
-				}
-				enFila[row][i]--;
-				enColumna[col][i]--;
-				a[row][col]=0;
-			}
-		}
-	}
-	else{
-		if(col+1<=n*n){
-			go(row,col+1);
-		}
-		else{
-			go(row+1,1);
-		}
-	}
-}
-void solve(){  
-	ll foo=0; 
-    while(cin >> n){
-    	//dbg(n);
-    	okG=false;
-    	if(foo)cout<<"\n";
-    	foo=1;
-    	FOR1(i,1,n*n){
-	    	FOR1(j,1,n*n){
-	    		cin>>a[i][j];
-	    	}
-	    }
-	    //dbg(a);
-	    FOR1(i,1,n*n){
-			FOR1(j,1,n*n){
-				enFila[i][a[i][j]]++;
-				enColumna[i][a[j][i]]++;
-			}
-		}
-	    go(1,1); 
-	    if(!okG){
-	    	cout<<"NO SOLUTION\n";
-	    }
-	    getchar();
-    }
-       
+const int MAXN=50+5;
+
+void solve(){
+    ll n;
+    cin>>n;
+    cout<<n*((n-1)/2)-((n%3==0) ? 2*n/3 : 0ll)<<"\n";
+    
 }
 int main(){
-    /*ios_base::sync_with_stdio(0);
-    cin.tie(0);*/
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
     //cin>>t;
     while(t--){
