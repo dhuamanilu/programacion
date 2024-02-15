@@ -39,14 +39,14 @@ pair<ll,ll> get_cuadrado(ll row,ll col){
 		for(ll j=1;j<=n*n;j+=n){
 			ll xx=i+n-1,yy=j+n-1;
 			if(row>=i && row<=xx && col>=j && col<=yy)
-				return mp(i,j);				
+				return mp(i,j);
 		}
 	}
 }
 void go(ll row,ll col){
 	if(okG) return;
 	//dbgm("toca",row,col);
-	if(row==n*n+1 && col==1){	
+	if(row==n*n+1 && col==1){
 		bool ok=true;
 		FOR1(i,1,n*n){
 			FOR1(j,1,n*n){
@@ -75,13 +75,17 @@ void go(ll row,ll col){
 						break;
 					}
 				}
-				
+
 			}
 		}
 		if(ok){
 			FOR1(i,1,n*n){
 		    	FOR1(j,1,n*n){
-		    		cout<<a[i][j]<<" ";
+		    		
+		    		cout<<a[i][j];
+		    		if(j!=(n*n)){
+		    			cout<<" ";
+		    		}
 		    	}
 		    	cout<<"\n";
 		    }
@@ -94,11 +98,11 @@ void go(ll row,ll col){
 		/*if(row==2 && col==1){
 			dbgm("21",enCuadrado[cua]);
 		}*/
-		
+
 		FOR1(i,1,n*n){
 			auto it=find(all(enCuadrado[cua]),i);
 			//dbgm(row,col,cua);
-			if(!enFila[row][i] && 
+			if(!enFila[row][i] &&
 			!enColumna[col][i]
 			&& it==
 			enCuadrado[cua].end()){
@@ -131,8 +135,8 @@ void go(ll row,ll col){
 		}
 	}
 }
-void solve(){  
-	ll foo=0; 
+void solve(){
+	ll foo=0;
     while(cin >> n){
     	//dbg(n);
     	okG=false;
@@ -151,7 +155,7 @@ void solve(){
 				enColumna[i][j]=0;
 			}
 		}
-		
+
 	    FOR1(i,1,n*n){
 			FOR1(j,1,n*n){
 				enFila[i][a[i][j]]++;
@@ -162,7 +166,7 @@ void solve(){
 			for(ll j=1;j<=n*n;j+=n){
 				FOR(k,0,n){
 					FOR(it,0,n){
-						
+
 						ll newX=i+k,newY=j+it;
 						if(a[newX][newY]==0) continue;
 						auto cua=mp(i,j);
@@ -172,14 +176,14 @@ void solve(){
 			}
 		}
 		//dbg(enCuadrado);
-	    go(1,1); 
+	    go(1,1);
 	    if(!okG){
 	    	cout<<"NO SOLUTION\n";
 	    }
 	    char x=getchar();
 	    //dbg(x);
     }
-       
+
 }
 int main(){
     /*ios_base::sync_with_stdio(0);
