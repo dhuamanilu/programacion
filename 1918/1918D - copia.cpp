@@ -37,13 +37,8 @@ void solve(){
     cin>>n;
     vll a(n);
     FOR(i,0,n){
-    	cin>>a[i];
+        cin>>a[i];
     }
-    
-    
-    
-    
-    
     
 }
 int main(){
