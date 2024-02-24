@@ -29,17 +29,62 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-vll primes={2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
-void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    for(auto & e : primes)ans*=e;
-    dbg(ans);
-    
-    
+vll prime(MX,0);
+vll k(MX,0);
+void precalc(){
+    FOR(i,1,MX){
+    	k[i] = i;
+    }
+        
+    FOR(i,2,MX) {
+        if (prime[i]==0){
+        	for (ll j = i; j <MX; j += i) {
+	            prime[j] = 1;
+	            ll squ=i*i;
+	            while (k[j]%squ==0){
+	            	k[j]/=squ;
+	            }       
+        	}
+        }
+        
+    }
+}
+/*bool isSquare(ll i){
+	ll raiz=sqrtl(i);
+	return raiz*raiz==i;
+}
+ll solve2(vll &a){
+	ll n=a.size();
+	ll ans=0;
+	FOR(i,0,n){
+		FOR(j,i+1,n){
+			if(isSquare(a[i]*a[j])) ans++;
+		}
+	}
+	return ans;
+}*/
+ll solve(vll &a){
+    ll n=a.size();
+   	mll m;
+   	ll ans=0,zeros=0;
+   	FOR(i,0,n){
+   		if(a[i]==0){
+   			ans+=n-1-zeros;
+   			zeros++;
+   		}
+   		else{
+   			m[k[a[i]]]++;
+   		}
+   		
+   	}
+   	
+   	for(auto & e : m){
+   		ans+=(e.se*(e.se-1))/2;
+   		
+   	}
+    return ans;
     
     
     
@@ -49,8 +94,22 @@ int main(){
     cin.tie(0);
     int t=1;
     //cin>>t;
+    precalc();
     while(t--){
-        solve();
+    	ll n;
+	    cin>>n;
+		vll a(n);
+		FOR(i,0,n){
+			cin>>a[i];
+		}
+		ll ans1=solve(a);
+		cout<<ans1<<"\n";
+		/*ll ans2=solve2(a);
+		dbgm(ans1,ans2);
+		if(ans1!=ans2){
+			
+			assert(false);
+		}*/
     }
     return 0;
 }

@@ -31,18 +31,39 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-vll primes={2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
+ll get(ll m,ll x,ll y){
+	ll deX=m/x;
+	ll deY=m/y;
+	assert(x<=9223372036854775807/y);
+	ll LCM=(x*y)/__gcd(x,y);
+    ll diLCM=m/LCM;
+	ll diXoY = deX + deY - diLCM;
+	ll diXnotY = diXoY - deY;
+	return diXnotY;
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    for(auto & e : primes)ans*=e;
-    dbg(ans);
-    
-    
-    
-    
-    
+    ll x,y,k;
+    cin>>x>>y>>k;
+    ll s=0,e=(ll)4*(ll)1e18,m=s+(e-s)/2,guarda=-1;
+    /*ll calc=get(500000002500000000
+,x,y)+get(500000002500000000
+,y,x);
+ll calc2=get(500000002561137078,x,y)+get(500000002561137078,y,x);
+dbgm(calc2);
+dbgm(calc);*/
+    while(s<=e){
+    	m=s+(e-s)/2;
+    	ll act=get(m,x,y)+get(m,y,x);
+    	//dbgm(s,e,m,act);
+    	if(act>=k){
+    		guarda=m;
+    		e=m-1;
+    	}
+    	else{
+    		s=m+1;
+    	}
+    }
+    cout<<guarda<<"\n";   
 }
 int main(){
     ios_base::sync_with_stdio(0);

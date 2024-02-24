@@ -31,13 +31,23 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-vll primes={2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
+
 void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    for(auto & e : primes)ans*=e;
-    dbg(ans);
+    ll n,q;
+    cin>>n>>q;
+    string s;
+    cin>>s;
+    FOR(it,0,q){
+    	ll type,l,r;
+    	cin>>type>>l>>r;
+    	if(type==1){
+    		
+    	}
+    	else{
+    		
+    	}
+    }
+    
     
     
     

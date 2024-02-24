@@ -31,13 +31,28 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-vll primes={2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
+
 void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    for(auto & e : primes)ans*=e;
-    dbg(ans);
+    string s;
+    cin>>s;
+    ll n=s.size();
+    map<char,ll> m;
+    for(auto & e : s)m[e]++;
+    ll maxi=0;
+    char act;
+    for(auto & e : m){
+    	if(e.se>maxi){
+    		maxi=e.se;
+    		act=e.f;
+    	}
+    }
+    FOR(i,0,n){
+    	if(s[i]!=act){
+    		cout<<i+1<<"\n";
+    		return;
+    	}
+    }
+    
     
     
     

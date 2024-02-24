@@ -27,28 +27,164 @@ typedef priority_queue<ll> pq;
 	#define dbg(...)
 	#define dbgm(...)
 #endif
-const int MOD = 1000000007;
-const char nl = '\n';
-const int MX = 100001;
-const int N=1000+3;
-vll primes={2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
+const int BASE = 1000000000;
+
+struct bigint {
+  vector<int> v;
+
+  int size() const {
+    return v.size();
+  }
+
+  int operator[](int x) const {
+    if (x >= (int)v.size()) return 0;
+    return v[x];
+  }
+};
+
+bigint operator+(const bigint& a, const bigint& b) {
+  bigint res;
+  int c = 0;
+  for (int i = 0; i < a.size() || i < b.size() || c; i++) {
+    c += a[i] + b[i];
+    res.v.push_back(c % BASE);
+    c /= BASE;
+  }
+  return res;
+}
+
+bigint operator*(const bigint& a, int b) {
+  bigint res;
+  ll c = 0;
+  for (int i = 0; i < a.size()  || c; i++) {
+    c += a[i] * 1LL * b;
+    res.v.push_back(c % BASE);
+    c /= BASE;
+  }
+  return res;
+}
+
+bool operator<(const bigint& a, const bigint& b) {
+  for (int i = max(a.size(), b.size()) - 1; i >= 0; i--) {
+    if (a[i] != b[i]) {
+      return a[i] < b[i];
+    }
+  }
+  return false;
+}
+ll cont=0;
+ll calc1(ll m){
+	ll a=m*(m+1)/2;
+	return a*a-9;
+}
+ll get1(ll &pos){
+	ll guarda=-1;
+	for(ll m=2079;m>=3;m--){
+		ll r=calc1(m);
+		ll l=r+1-m*m*m;
+		if(pos>= l && pos<=r){
+			guarda=m;
+			//pos-=l;
+			break;
+		}
+	}
+	return guarda;
+}
+ll calc2(ll n,ll a){
+	return a*n*n;
+}
+ll get2(ll &pos,ll n){
+	pos-=calc1(n-1);
+	ll guarda=-1;
+	for(ll a=n;a>=1;a--){
+		ll r=calc2(n,a);
+		ll l=r+1-n*n;
+		//dbgm(pos,l,r);
+		if(pos>=l && pos<=r){
+			guarda=a;
+			break;
+		}
+	}
+	return guarda;
+}
+ll calc3(ll n,ll b){
+	return b*n;
+}
+ll get3(ll &pos,ll n,ll a){
+	pos-=calc2(n,a-1);
+	//dbg(pos);
+	ll guarda=-1;
+	for(ll b=n;b>=1;b--){
+		ll r=calc3(b,n);
+		ll l=r+1-n;
+		//dbgm(pos,l,r,b);
+		if(pos>=l && pos<=r){
+			guarda=b;
+			//pos-=l;
+			break;
+		}
+	}
+	return guarda;
+}
+ll get4(ll &pos,ll n,ll a,ll b){
+	pos-=calc3(n,b-1);
+	return pos;
+}
+ll LL,RR,len;
+bigint binpow(ll a,ll b) {
+    if (b == 0){
+    	bigint aux;
+    	aux.v.pb(1);
+    	return aux;
+    }
+    bigint res = binpow(a, b / 2);
+    if (b%2)
+        return res * res * a;
+    else
+        return res * res;
+}
+void go(ll a,ll b,ll c,ll n){
+	if(cont==len) return;
+	cont++;
+	//como comparo :v
+	bigint pri=binpow(a,n),seg=binpow(b,n),
+	ter=binpow(c,n);
+	char comp=(pri + seg > ter ? '>':'<');	
+	cout<<a<<"^"<<n<<"+"<<b<<"^"<<n<<comp
+	<<c<<"^"<<n<<"\n";
+	if(c+1<=n){
+		go(a,b,c+1,n);
+	}
+	else{
+		if(b+1<=n){
+			go(a,b+1,1,n);
+		}
+		else{
+			if(a+1<=n){
+				go(a+1,1,1,n);
+			}
+			else{
+				go(1,1,1,n+1);
+			}
+		}
+	}
+}
 void solve(){
-    ll n;
-    cin>>n;
-    ll ans=1;
-    for(auto & e : primes)ans*=e;
-    dbg(ans);
-    
-    
-    
-    
+    cin>>LL>>RR;
+    len=RR-LL+1;
+    //n o maxi
+    ll n=get1(LL);
+    ll a=get2(LL,n);
+    ll b=get3(LL,n,a);
+    ll c=get4(LL,n,a,b);
+    //dbgm(a,b,c,n);
+    go(a,b,c,n);
     
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
         solve();
     }
