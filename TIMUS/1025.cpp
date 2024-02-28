@@ -31,55 +31,27 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
+
 void solve(){
-    ll a,b,l;
-    cin>>a>>b>>l;
-    ll ans=0;
-    set <ll> k;
-    FOR1(i,0,21){
-    	ll pri=binpow(a,i);
-    	if(pri>l) break;
-    	FOR1(j,0,21){
-    		ll seg=binpow(b,j);
-    		if(seg>l) break;
-    		if((l%(pri*seg))==0){
-    			k.insert(l/(pri*seg));
-    		} 
-    		//dbgm(l,pri,seg,ans);
-    	}
+    ll n;
+    cin>>n;
+    if(n>=0){
+    	cout<<n*(n+1)/2<<"\n";
     }
-	cout<<k.size()<<"\n";
-    
-    
-    
-    
-    
+    else{
+    	ll n2=abs(n);
+    	ll sum1=n2*(n2+1)/2;
+    	cout<<-1*(sum1-1)<<"\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
 
