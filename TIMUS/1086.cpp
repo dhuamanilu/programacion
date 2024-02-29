@@ -29,29 +29,35 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MAX = 200005;
 const int N=1000+3;
-
+vll prime(MAX+5,1);
+vll primos;
+void precalc(){
+	for(ll i=2;i<MAX;i++){
+		if(prime[i]){
+			for(ll j=2*i;j<MAX;j+=i){
+				prime[j]=false;
+			}
+		}	
+	}
+	FOR1(i,2,MAX){
+		if(prime[i]) primos.pb(i);
+	}
+	assert(primos.size()>=15000);
+	
+}
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n)
-    {
-    	cin>>a[i];
-    }
-	sort(all(a));
-	ll ans=0;
-	FOR(i,0,(n+1)/2){
-		ans+=(a[i]+1)/2;
-	}
-	cout<<ans<<"\n";
+    cout<<primos[n-1]<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
-    //cin>>t;
+    precalc();
+	int t=1;
+    cin>>t; 
     while(t--){
         solve();
     }

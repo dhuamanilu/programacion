@@ -35,17 +35,24 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n)
-    {
-    	cin>>a[i];
+    string s;
+    cin>>s;
+    ll k=s.size();
+    if(n%k!=0){
+    	ll ans=1;
+    	for(ll i=0;i<n;i+=k){
+    		ans*=(n-i);
+    	}
+    	cout<<ans<<"\n";
+    	
     }
-	sort(all(a));
-	ll ans=0;
-	FOR(i,0,(n+1)/2){
-		ans+=(a[i]+1)/2;
-	}
-	cout<<ans<<"\n";
+    else{
+    	ll ans=1;
+    	for(ll i=0;i<n;i+=k){
+    		ans*=(n-i);
+    	}
+    	cout<<ans<<"\n";
+    }
 }
 int main(){
     ios_base::sync_with_stdio(0);
