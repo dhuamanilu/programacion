@@ -33,25 +33,20 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll x,losses,init;
-    cin>>x>>losses>>init;
-    if(init<=losses){
-    	cout<<"NO\n";
-    }
-    else{
-    	if(x-losses>=1){
-    		cout<<"YES\n";
-    	}
-    	else{
+    ll k,x,a;
+    cin>>k>>x>>a;
+    ll sum=0;
+    FOR1(i,1,x+1){
+    	ll act=(sum/(k-1))+1;
+    	//dbgm(act,sum);
+    	sum+=act;
+    	if(a<sum){
     		cout<<"NO\n";
+    		return;
     	}
+    	
     }
-    
-    
-    
-    
-    
-    
+    cout<<"YES\n";   
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -63,11 +58,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-

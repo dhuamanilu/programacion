@@ -31,48 +31,58 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll zeros(string &a){
-	ll cont=0,n=a.size();
-	for(ll i=n-1;i>=0;i--){
-		if(a[i]=='0'){
-			cont++;
-		}
-		else break;
-	}
-	return cont;
-}
-bool comp(string &a,string& b){
-	if(zeros(a)!=zeros(b)){
-    	return zeros(a)>zeros(b);
-    }
-    else{
-    	return a>b;
-    }
-}
 
 void solve(){
-    ll n,m;
-    cin>>n>>m;
+    ll n;
+    cin>>n;
     vector<string> a(n);
+    vector<vll> ma;
     FOR(i,0,n){
     	cin>>a[i];
+    	ll m=a[i].size();
+    	vll hist(2,0);
+    	FOR(j,0,m){
+    		hist[a[i][j]-'0']++;
+    	}
+    	ma.pb(hist);
     }
-    sort(a.begin(),a.end(),comp);
     ll ans=0;
+    ll ind1=-1;
+    ll cant=(ll)1e18;
     FOR(i,0,n){
-    	if(i%2==1){
-    		ans+=a[i].size();
+    	if(ma[i][1]<cant){
+    		cant=ma[i][1];
+    		ind1=i;
     	}
-    	else{
-    		ans+=a[i].size()-zeros(a[i]);
+    	else if(ma[i][1]==cant){
+    		if(ma[i][0] > ma[ind1][0]){
+    			cant=ma[i][1];
+    			ind1=i;
+    		}
     	}
     }
-    if(ans>m){
-    	cout<<"Sasha\n";
+    ans+=ma[ind1][1];
+    ll ind2=-1;
+    cant=(ll)1e18;
+    FOR(i,0,n){
+    	if(i==ind1) continue;
+    	if(ma[i][0]<cant){
+    		cant=ma[i][0];
+    		ind2=i;
+    	}
+    	else if(ma[i][0]==cant){
+    		if(ma[i][1] > ma[ind2][1]){
+    			cant=ma[i][0];
+    			ind2=i;
+    		}
+    	}
     }
-    else{
-    	cout<<"Anna\n";
+    ans+=ma[ind2][0];
+    FOR(i,0,n){
+    	if(i==ind1 || i==ind2) continue;
+    	ans+=min(ma[i][0],ma[i][1]);
     }
+    cout<<ans<<"\n";
     
     
     
@@ -82,7 +92,7 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
