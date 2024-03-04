@@ -31,39 +31,56 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
+ll ask(ll a,ll b){
+    cout<<"? "<<a<<" "<<b<<endl;
+    cout.flush();
+    ll val;
+    cin>>val;
+    return val;
 }
 void solve(){
-    ll a,b,l;
-    cin>>a>>b>>l;
-    ll ans=0;
-    FOR1(i,0,21){
-    	ll pri=binpow(a,i);
-    	if(pri>l) break;
-    	FOR1(j,0,21){
-    		ll seg=binpow(b,j);
-    		if(seg>l) break;
-    		if((l%(pri*seg))==0){
-    			ans++;
-    			
-    		} 
-    		//dbgm(l,pri,seg,ans);
+    ll n,m;
+    cin>>n>>m;
+    ll d=ask(1,1);
+    if(d==0){
+        cout<<"! 1 1"<<endl;
+        cout.flush();
+        return;
+    }
+    ll i=min(n,d+1);
+    ll j=1+max(0ll,d-n+1);
+    //dbgm(i,j);
+    ll d2=ask(i,j);
+    ll XX=i-d2/2;
+    ll YY=j+d2/2;
+    
+    ll newJ=i;
+    ll newI=j;                                                                                                                                       
+    ll newD=ask(newI,newJ);
+    ll posX=newI-newD/2;
+    ll posY=newJ+newD/2;
+    
+    if(d2%2==0 && newD%2==1){
+    	cout<<"! "<<XX<<" "<<YY<<endl;
+    	cout.flush();
+    }
+    else if(d2%2==1 && newD%2==0){
+    	cout<<"! "<<posX<<" "<<posY<<endl;
+    	cout.flush();
+    }
+    else{
+    	ll ult=ask(XX,YY);
+    	if(ult==0){
+    		cout<<"! "<<XX<<" "<<YY<<endl;
+    		cout.flush();
+    	}
+    	else{
+    		cout<<"! "<<posX<<" "<<posY<<endl;
+    		cout.flush();
     	}
     }
-	if(a!=b){
-		cout<<ans<<"\n";
-	}
-	else{
-		cout<<((1+sqrtl(1+8*ans))/2) - 1<<"\n";
-	}
+    
+    
     
     
     
@@ -71,8 +88,6 @@ void solve(){
     
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
     int t=1;
     cin>>t;
     while(t--){
