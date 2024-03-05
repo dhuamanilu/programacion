@@ -32,149 +32,48 @@ const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
 
-
-vll solve2(vll a){
-	ll n=a.size();
-	vll b(n);
-	iota(all(b),0ll);
-	//dbgm(b);
-	vll res;
-	vll mejor(n,0);
-	do{
-		vll act(n,0);
-		act[0]=a[b[0]];
-		FOR(i,1,n){
-			act[i]=act[i-1]|a[b[i]];
+void solve(){
+	ll q;
+	cin>>q;
+	vector<vll> cont(2,vll(26,0));
+	cont[0][0]++;
+	cont[1][0]++;
+	FOR(it,0,q){
+		ll type;
+		cin>>type;
+		ll k;
+		string x;
+		cin>>k>>x;
+		vll aux(26,0);
+		FOR(i,0,x.size()){
+			aux[x[i]-'a']++;
 		}
-		bool ok=false;
-		FOR(i,0,n){
-			if(act[i]>mejor[i]){
-				ok=true;
+		FOR(i,0,26){
+			cont[type-1][i]+=aux[i]*k;
+		}
+		bool ok=true;
+		for(ll i=25;i>=0;i--){
+			//determinar si puedo hacer s<t
+			if(
+			cont[1][i]>0 && 
+			cont[0][i]==0){
+				cout<<"YES\n";
+				ok=false;
 				break;
 			}
 		}
 		if(ok){
-			mejor=act;
-			res=b;
+			cout<<"NO\n";
 		}
-	}while(next_permutation(all(b)));
-	return res;
-}
-vll solve(vll &a){
-	ll n=a.size();
-	/*retornaremos los indices finales de mi 
-	arreglo que maximiza el pref or*/
-    vector<vll> tiene(32);
-    FOR(it,0,n){
-        for(ll i=31;i>=0;i--){
-    		ll act=1ll<<i;
-    		ll x=a[it];
-    		if((act&x)){
-    			tiene[i].pb(it);
-    		}
-    		
-    	}
-    }
-    //dbg(tiene);
-    FOR(it,0,32){
-    	//dbgm("befire",tiene[i]);
-    	ll start=it;
-    	sort(all(tiene[it]),
-    	[&](ll pri,ll seg){
-    	for(ll i=start;i>=0;i--){
-    		ll x=a[pri],y=a[seg];
-    		ll act=1ll<<i;
-    		if((act&x) && !(act&y)){
-    			return true;
-    		}
-    		else if(!(act&x) && (act&y)){
-    			return false;
-    		}
-    	}
-    	return false;
-    	});
-    	//dbgm("afeter:",tiene[i]);
-    }
-    ll pref=0;
-    vll inds;
-    vll vis(n,0);
-    for(ll i=31;i>=0;i--){
-    	ll act=1ll<<i;
-    	
-    	if(!(pref&act) && tiene[i].size()){
-    		ll j=0;
-    		while(vis[tiene[i][j]] && j<tiene[i].size()){
-    			j++;
-    		}
-    		vis[tiene[i][j]]=true;
-    		inds.pb(tiene[i][j]);
-    		pref|=a[tiene[i][j]];
-    	}
-    }
-    FOR(i,0,n){
-    	if(!vis[i]){
-    		vis[i]=true;
-    		inds.pb(i);
-    	}
-    }
-    return inds;
-    /*FOR(i,0,n){
-    	cout<<a[inds[i]]<<" ";
-    }
-    cout<<"\n";*/
+	}
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    srand(time(0)); 
-
     int t=1;
     cin>>t;
     while(t--){
-    	ll n;
-		cin>>n;
-		vll a(n);
-		FOR(i,0,n){
-			cin>>a[i];
-		}
-    	auto ans=solve(a);
-    	for(auto & e : ans){
-    		cout<<a[e]<<" ";
-    	}
-    	cout<<"\n";
-        /*ll tam=rand()%9+1;
-        vll a(tam);
-		FOR(i,0,tam){
-			a[i]=rand()%100+1;
-		}
-		//dbg(a);
-    	auto ans1=solve(a);
-    	auto ans2=solve2(a);
-    	
-    	
-    	//dbgm(ans1,ans2);
-    	ll pref1=a[ans1[0]];
-    	ll pref2=a[ans2[0]];
-    	FOR(i,1,tam){
-    		if(pref2>pref1){
-    			dbgm("xd",ans2,ans1,a,pref2,pref1);
-    			assert(false);
-    		}
-    		pref1|=a[ans1[i]];
-    		pref2|=a[ans2[i]];
-    	}
-    	if(pref2>pref1){
-			dbgm("xd",ans2,ans1,a,pref2,pref1);
-			assert(false);
-		}*/
+    	solve();
     }
     return 0;
 }
-
-
-
-
-
-
-
-
