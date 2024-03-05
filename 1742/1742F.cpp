@@ -1,3 +1,5 @@
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -51,20 +53,28 @@ void solve(){
 		FOR(i,0,26){
 			cont[type-1][i]+=aux[i]*k;
 		}
-		bool ok=true;
+		bool ok=false;
 		for(ll i=25;i>=0;i--){
-			//determinar si puedo hacer s<t
-			if(
-			cont[1][i]>0 && 
-			cont[0][i]==0){
-				cout<<"YES\n";
-				ok=false;
-				break;
+			//iniciar con <letra,cont>
+			if(cont[1][i]>0){
+				FOR(j,0,i+1){
+					if(cont[1][i] > 
+					cont[0][j]){
+						ok=true;
+						break;
+					}
+				}
+				if(ok){
+					cout<<"YES\n";
+					break;
+				}
 			}
 		}
-		if(ok){
+		if(!ok){
 			cout<<"NO\n";
 		}
+		
+		
 	}
 }
 int main(){
