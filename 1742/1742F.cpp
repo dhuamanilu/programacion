@@ -40,6 +40,8 @@ void solve(){
 	vector<vll> cont(2,vll(26,0));
 	cont[0][0]++;
 	cont[1][0]++;
+	bool tiene=false;
+	bool tiene2=false;
 	FOR(it,0,q){
 		ll type;
 		cin>>type;
@@ -53,27 +55,36 @@ void solve(){
 		FOR(i,0,26){
 			cont[type-1][i]+=aux[i]*k;
 		}
-		bool ok=false;
-		for(ll i=25;i>=0;i--){
-			//iniciar con <letra,cont>
-			if(cont[1][i]>0){
-				FOR(j,0,i+1){
-					if(cont[1][i] > 
-					cont[0][j]){
-						ok=true;
-						break;
-					}
-				}
-				if(ok){
-					cout<<"YES\n";
+		if(type==1 && !tiene2){
+			FOR(i,1,26){
+				if(cont[0][i]>0){
+					tiene2=true;
 					break;
 				}
 			}
 		}
-		if(!ok){
-			cout<<"NO\n";
+		if(type==2 && !tiene){
+			FOR(i,1,26){
+				if(cont[1][i]>0){
+					tiene=true;
+					break;
+				}
+			}
 		}
-		
+		if(tiene){
+			cout<<"YES\n";
+		}
+		else{
+			if(tiene2){
+				cout<<"NO\n";
+			}
+			else if(cont[0][0] >= cont[1][0]){
+				cout<<"NO\n";
+			}
+			else{
+				cout<<"YES\n";
+			}
+		}
 		
 	}
 }
