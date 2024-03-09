@@ -33,51 +33,25 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll get(vpll &a,ll n,ll ind,ll l){
-	vpll b;
-	b.pb(a[ind]);
-	ll acum=a[ind].se;
-	vll vis(n,0);
-	vis[ind]=true;
-	while(acum<=l){
-		ll mini=(ll)1e12,ind=-1;
-		FOR(i,0,n){
-			if(vis[i]) continue;
-			ll pri=a[i].f,seg=a[i].se;		
-			if(seg+abs(b.back().f -pri) < mini){
-				mini=seg+abs(b.back().f -pri);
-				ind=i;
-			}
-			
-		}
-		if(ind==-1){
-			break;
-		}
-		if(acum+mini <= l){
-			acum+=mini;
-			b.pb(a[ind]);
-			vis[ind]=true;
-		}
-		else{
-			break;
-		}
-		
-	}
-	//dbg(b);
-    return b.size();
-}
+
 void solve(){
     ll n,l;
     cin>>n>>l;
-    vpll a(n);
+    vpll arr(n);
     FOR(i,0,n){
-    	cin>>a[i].se>>a[i].f;
+    	cin>>arr[i].f>>arr[i].se;
     }
-	sort(all(a));
+	sort(all(arr),[](pair<ll,ll> a,pair<ll,ll> b){
+		return a.se < b.se;
+	});
 	ll ans=0;
 	FOR(i,0,n){
-		if(a[i].se <=l ){
-			ans=max(ans,get(a,n,i,l));
+		FOR(j,i,n){
+			multiset<ll> ms;
+			ll bi=arr[i].se,bj=arr[j].se;
+			ll sumB=bj-bi;
+			ll sum=(i==j ? arr[i].f : arr[i].f+arr[j].f);
+			
 		}
 	}
 	cout<<ans<<"\n";

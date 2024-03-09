@@ -29,7 +29,7 @@ void solve(){
         cin>>a[i];
         cont[a[i]]++;
     }
-    if((2*cont[2]+cont[1])%2==0){
+    if(){
     	cout<<"YES\n";
     }
     else cout<<"NO\n";
