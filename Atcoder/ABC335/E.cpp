@@ -31,19 +31,49 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll ask(ll a,ll b){
-    cout<<"? "<<a<<" "<<b<<endl;
-    cout.flush();
-    ll val;
-    cin>>val;
-    return val;
-}
+
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll d=ask(1,1);
-    
-    
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+    	cin>>a[i];
+    }
+    mll m;
+    FOR(i,0,n){
+    	m[a[i]]=i;
+    }
+    ll q;
+    cin>>q;
+    mll changes;
+    ll tam=n;
+    FOR(it,0,q){
+    	ll type;
+    	cin>>type;
+    	if(type==1){
+    		ll x,y;
+    		cin>>x>>y;
+    		
+    		m[y]=m[x]+1;
+    		//de aca al final cambia
+    		changes[m[x]+2]++;
+    		changes[tam+1]--;
+    		tam++;
+    	}
+    	else{
+    		ll x;
+    		cin>>x;
+    		tam--;
+    		m[x]=-1;
+    	}
+    }
+    vll final(tam,0);
+    for(auto & e : changes){
+    	final[e.f]+=e.se;
+    }
+    ll aux=0;
+    vll final2(tam,0);
+    FOR(i,0,)
     
     
     
@@ -52,8 +82,10 @@ void solve(){
     
 }
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

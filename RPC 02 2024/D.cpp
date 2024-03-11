@@ -31,20 +31,33 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll ask(ll a,ll b){
-    cout<<"? "<<a<<" "<<b<<endl;
-    cout.flush();
-    ll val;
-    cin>>val;
-    return val;
-}
+
 void solve(){
     ll n,m;
     cin>>n>>m;
-    ll d=ask(1,1);
-    
-    
-    
+    vector<string> a(n);
+    vector<vector<ll>> votos(m,vll(26,0));
+    FOR(i,0,n){
+    	cin>>a[i];
+    }
+    string ans="";
+    FOR(i,0,m){
+    	FOR(j,0,n){
+    		votos[i][a[j][i]-'a']++;
+    	}
+    	ll maxi=0;
+    	ll save=0;
+    	FOR(k,0,26){
+    		if(votos[i][k]>maxi){
+    			maxi=votos[i][k];
+    			save=k;
+    		}
+    	}
+    	string f(1,'a'+save);
+    	//dbgm(f);
+    	ans+=f;
+    }
+    cout<<ans<<"\n";
     
     
     
@@ -52,8 +65,10 @@ void solve(){
     
 }
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

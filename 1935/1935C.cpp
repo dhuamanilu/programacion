@@ -45,13 +45,20 @@ void solve(){
 		return a.se < b.se;
 	});
 	ll ans=0;
+	
 	FOR(i,0,n){
+		multiset<ll> ms;
+		ll acum=0;
 		FOR(j,i,n){
-			multiset<ll> ms;
-			ll bi=arr[i].se,bj=arr[j].se;
-			ll sumB=bj-bi;
-			ll sum=(i==j ? arr[i].f : arr[i].f+arr[j].f);
-			
+			ms.insert(arr[j].f);
+			acum+=arr[j].f;
+			ll sumB=arr[j].se-arr[i].se;
+			while(ms.size()>0 && sumB+acum>l){
+				auto x=prev(ms.end());
+				acum-=*x;
+				ms.erase(x);
+			}
+			ans=max(ans,(ll)ms.size());
 		}
 	}
 	cout<<ans<<"\n";

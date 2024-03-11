@@ -31,29 +31,36 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll ask(ll a,ll b){
-    cout<<"? "<<a<<" "<<b<<endl;
-    cout.flush();
-    ll val;
-    cin>>val;
-    return val;
-}
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll d=ask(1,1);
-    
-    
-    
-    
-    
+    ll n,m,k;
+    cin>>n>>m>>k;
+    vll a(n);
+    ll sum=0;
+    FOR(i,0,n){
+    	cin>>a[i];
+    	sum+=a[i];
+    }    
+    sort(all(a));
+    reverse(all(a));
+    ll acum=0;
+    FOR(i,0,m){
+    	acum+=a[i];
+    }
+    //dbg(acum);
+    FOR(i,m,min(n,m+k)){
+    	acum+=a[i];
+    }
+    double ans=100.0*(double)acum/(double)sum;
+    cout<<setprecision(9)<<ans<<"\n";
     
     
     
 }
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }

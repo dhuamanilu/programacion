@@ -29,33 +29,62 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-ll ask(ll a,ll b){
-    cout<<"? "<<a<<" "<<b<<endl;
-    cout.flush();
-    ll val;
-    cin>>val;
-    return val;
-}
+
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll d=ask(1,1);
-    
-    
-    
-    
-    
+    ll n;
+	cin>>n;
+	vll a(n);
+	FOR(i,0,n){
+		cin>>a[i];
+	}
+	ll m;
+	cin>>m;
+	vll b(m);
+	FOR(i,0,m){
+		cin>>b[i];
+	}
+	ll l;
+	cin>>l;
+	vll c(l);
+	FOR(i,0,l){
+		cin>>c[i];
+	}
+	mll sumTwo;
+	FOR(i,0,m){
+		FOR(j,0,l){
+			sumTwo[b[i]+c[j]]++;
+		}
+	}
+	ll q;
+	cin>>q;
+	FOR(it,0,q){
+		ll x;
+		cin>>x;
+		bool ok=false;
+		FOR(i,0,n){
+			if(sumTwo.count(x-a[i])){
+				cout<<"Yes\n";
+				ok=true;
+				break;
+			}
+		}
+		if(!ok){
+			cout<<"No\n";
+		}
+		
+	}
     
     
     
 }
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    cin>>t;
     while(t--){
-        solve();
+		solve();
     }
     return 0;
 }
