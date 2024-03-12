@@ -31,29 +31,77 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll ask(ll a,ll b){
-    cout<<"? "<<a<<" "<<b<<endl;
-    cout.flush();
-    ll val;
-    cin>>val;
-    return val;
-}
+const long long BIG=(ll)1e13;
 void solve(){
-    ll n,m;
-    cin>>n>>m;
-    ll d=ask(1,1);
+    string t;
+    cin>>t;
+    ll n=t.size();
+    ll m;
+    cin>>m;
+    vector<vector<string>> a;
+    FOR(i,0,m){
+    	ll x;
+    	cin>>x;
+    	vector<string> aux;
+    	FOR(j,0,x){
+    		string s;
+    		cin>>s;
+    		aux.pb(s);
+    	}
+    	a.pb(aux);
+    }
+    vector<vll> dp(m,vll(n,BIG));
+    FOR(i,0,a[0].size()){
+    	auto res = std::mismatch(all(a[0][i]), t.begin());
+
+		if (res.first == a[0][i].end())
+		{
+		  // foo is a prefix of foobar.
+		  dp[0][(ll)a[0][i].size()-1]=1;
+		}
+    }
     
-    
-    
-    
-    
-    
-    
-    
+    FOR(i,1,m){
+    	FOR(j,0,a[i].size()){
+    		//str a[i][j] es el actual
+    		ll tam=a[i][j].size();
+    		auto res2 = std::mismatch(all(a[i][j]), t.begin());
+
+		if (res2.first == a[i][j].end())
+		{
+		  dp[i][tam-1]=1;
+		}
+    		
+    		
+    		FOR(k,0,i){
+    			FOR(l,0,n){
+    				
+    				if(l+tam >= n) continue;
+    				if(dp[k][l]<BIG){
+    					auto res = std::mismatch(a[i][j].begin(),a[i][j].end(), t.begin()+l+1);
+						if (res.first == a[i][j].end())
+						{
+						  dp[i][l+tam]=min(dp[i][l+tam],
+						  dp[k][l]+1);
+						}
+    				}
+    			}
+    		}
+    	}
+    }
+    ll ans=BIG;
+    FOR(i,0,m){
+    	ans=min(ans,dp[i][n-1]);
+    }
+    if(ans==BIG) ans=-1;
+    cout<<ans<<"\n";
+       
 }
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
