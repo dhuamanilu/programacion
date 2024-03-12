@@ -33,13 +33,47 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,m,k;
+    cin>>n>>m>>k;
     vll a(n);
     FOR(i,0,n){
     	cin>>a[i];
     }
-    
+    vll d(m);
+    FOR(i,0,m){
+    	cin>>d[i];
+    }
+    vll f(k);
+    FOR(i,0,k){
+    	cin>>f[i];
+    }
+    sort(all(d));
+    sort(all(f));
+    ll pri=-1,seg=-1;
+    vll inds;
+    ll maxi=-(ll)1e15;
+    FOR(i,1,n){
+    	ll diff=a[i]-a[i-1];
+    	if(diff>maxi){
+    		inds.clear();
+    		maxi=diff;
+    		inds.pb(i);
+    	}
+    	else if(maxi==diff){
+    		inds.pb(i);
+    	}
+    }
+    if(inds.size()>1){
+    	cout<<maxi<<"\n";
+    }
+    else{
+    	FOR(i,0,m){
+    		if(maxi<d[i]) continue;
+    		ll need=maxi-d[i];
+    		auto x=upper_bound(all(f),need);
+    	}
+    	dbg(maxi);
+    }
     
     
     
