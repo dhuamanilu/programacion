@@ -33,18 +33,78 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
+    ll n,m,k;
+    cin>>n>>m>>k;
     vll a(n);
     FOR(i,0,n){
     	cin>>a[i];
     }
-    
-    
-    
-    
-    
-    
+    vll d(m);
+    FOR(i,0,m){
+    	cin>>d[i];
+    }
+    vll f(k);
+    FOR(i,0,k){
+    	cin>>f[i];
+    }
+    sort(all(d));
+    sort(all(f));
+    ll pri=-1,seg=-1;
+    vll inds;
+    ll maxi=-(ll)1e15;
+    FOR(i,1,n){
+    	ll diff=a[i]-a[i-1];
+    	if(diff>maxi){
+    	    pri=a[i-1];
+    	    seg=a[i];
+    		inds.clear();
+    		maxi=diff;
+    		inds.pb(i);
+    	}
+    	else if(maxi==diff){
+    		inds.pb(i);
+    	}
+    }
+    if(inds.size()>1){
+    	cout<<maxi<<"\n";
+    }
+    else{
+        maxi=(pri+seg)/2ll;
+        ll loc=(ll)1e15;
+        ll to=0;
+    	FOR(i,0,m){
+    		if(maxi<d[i]) continue;
+    		ll need=maxi-d[i];
+    		ll x=upper_bound(all(f),need)-f.begin();
+    		
+    		for(ll j=max(0ll,(x-5));j<min(k,x+5);j++){
+    		    ll act=d[i]+f[j];
+    		    ll dist=max(abs(pri-act),abs(act-seg));
+    		    if(dist<loc){
+    		    	loc=dist;
+    		    	to=act;
+    		    }
+    		}
+    		
+    		
+    	}
+    	ll ans2=0;
+		FOR(i,1,a.size()){
+			ans2=max(ans2,a[i]-a[i-1]);
+		}
+    	a.pb(to);
+		sort(all(a));
+		ll ans=0;
+		FOR(i,1,a.size()){
+			ans=max(ans,a[i]-a[i-1]);
+		}
+		/*1
+			5 4 4
+			1 2 3 4 20
+			2 4 1 3
+			2 2 2 2 */ 
+		cout<<min(ans,ans2)<<"\n";	
+    }  
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -56,11 +116,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
