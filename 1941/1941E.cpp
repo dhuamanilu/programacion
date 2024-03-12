@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -33,32 +31,60 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
-void solve(){
-    ll n,l;
-    cin>>n>>l;
-    vpll arr(n);
-    FOR(i,0,n){
-    	cin>>arr[i].f>>arr[i].se;
-    }
-	sort(all(arr),[](pair<ll,ll> a,pair<ll,ll> b){
-		return a.se < b.se;
-	});
-	ll ans=0;
-	FOR(i,0,n){
-		FOR(j,i,n){
-			multiset<ll> ms;
-			ll bi=arr[i].se,bj=arr[j].se;
-			ll sumB=bj-bi;
-			ll sum=(i==j ? arr[i].f : arr[i].f+arr[j].f);
-			FOR1(it,i,j){
-				ms.insert(a[it]);
-			}
-			
-			
-		}
+struct Tree {
+	typedef long long T;
+	static constexpr T unit = (ll)1e13;
+	T f(T a, T b) { return min(a, b); } // (any associative fn)
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
 	}
-	cout<<ans<<"\n";
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
+void solve(){
+    ll n,m,k,d;
+    cin>>n>>m>>k>>d;
+    vector<vll> a(n,vll(m,0));
+    FOR(i,0,n){
+    	FOR(j,0,m){
+    		cin>>a[i][j];
+    	}
+    }
+    vll costos(n);
+    FOR(i,0,n){
+    	vll dp(m,0);
+    	dp[0]=1;
+    	Tree st(m);
+    	st.update(0,1);
+    	FOR(j,1,m){
+    		//dp[j]=a[i][j]+1 + min(dp[k]) k=j-1 ... j-(d+1)
+    		ll calc=st.query(j-(d+1),j);
+    		dp[j]=a[i][j]+1+calc;
+    		st.update(j,dp[j]);
+    	}
+    	costos[i]=dp[m-1];
+    }
+    //dbg(costos);
+    ll sum=0;
+    FOR(i,0,k){
+    	sum+=costos[i];
+    }
+    ll ans=sum;
+    FOR(i,k,n){
+    	sum+=costos[i];
+    	sum-=costos[i-k];
+		ans=min(ans,sum);
+    }
+    cout<<ans<<"\n";
     
     
     

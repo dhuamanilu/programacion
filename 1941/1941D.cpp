@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -35,30 +33,68 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,l;
-    cin>>n>>l;
-    vpll arr(n);
-    FOR(i,0,n){
-    	cin>>arr[i].f>>arr[i].se;
+    ll n,m,x;
+    cin>>n>>m>>x;
+    vector<pair<ll,char>> a(m);
+    FOR(i,0,m){
+    	cin>>a[i].f>>a[i].se;
     }
-	sort(all(arr),[](pair<ll,ll> a,pair<ll,ll> b){
-		return a.se < b.se;
-	});
-	ll ans=0;
-	FOR(i,0,n){
-		FOR(j,i,n){
-			multiset<ll> ms;
-			ll bi=arr[i].se,bj=arr[j].se;
-			ll sumB=bj-bi;
-			ll sum=(i==j ? arr[i].f : arr[i].f+arr[j].f);
-			FOR1(it,i,j){
-				ms.insert(a[it]);
-			}
-			
-			
-		}
-	}
-	cout<<ans<<"\n";
+    vector<vector<bool>> dp(m+1,vector<bool>(n+1,0));
+    dp[0][x]=true;
+    FOR1(i,1,m){
+    	ll dis=a[i-1].f;
+    	char dire=a[i-1].se;
+    	FOR1(j,1,n){
+    		
+    		//clockwise
+    		
+    		if(dire=='0'){
+    			if(j>dis && dp[i-1][j-dis]){
+    				dp[i][j]=true;
+    			}
+    			if(n+j-dis<=n && n+j>dis && dp[i-1][n+j-dis]){
+    				dp[i][j]=true;
+    			}
+    		}
+    		else if(dire=='1'){
+    			if(j+dis<=n && dp[i-1][j+dis]){
+    				dp[i][j]=true;
+    			}	
+    			else if(j+dis>n && dp[i-1][j+dis-n]){
+    				dp[i][j]=true;
+    			}
+    		}
+    		else{
+    			if(dp[i-1][j]){
+    				ll ind=j+dis;
+    				if(ind>n) ind-=n;
+    				if(ind<0) ind+=n;
+    				dp[i][ind]=true;
+    				
+    				
+    				ll ind2=j+n-dis;
+    				if(ind2>n) ind2-=n;
+    				if(ind2<0) ind2+=n;
+    				dp[i][ind2]=true;
+    			}
+    		}
+    	}
+    }
+    vll ans;
+    FOR1(i,1,n){
+    	if(dp[m][i]){
+    		ans.pb(i);
+    	}
+    }
+    /*for(auto & e  :dp){
+    	dbg(e);
+    }
+    dbg("----------");*/
+    cout<<(ll)ans.size()<<"\n";
+    for(auto & e:ans){
+    	cout<<e<<" ";
+    }
+    cout<<"\n";
     
     
     

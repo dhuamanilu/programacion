@@ -1,5 +1,3 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -35,30 +33,30 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,l;
-    cin>>n>>l;
-    vpll arr(n);
+    ll n;
+    cin>>n;
+    vll a(n);
     FOR(i,0,n){
-    	cin>>arr[i].f>>arr[i].se;
+    	cin>>a[i];
     }
-	sort(all(arr),[](pair<ll,ll> a,pair<ll,ll> b){
-		return a.se < b.se;
-	});
-	ll ans=0;
-	FOR(i,0,n){
-		FOR(j,i,n){
-			multiset<ll> ms;
-			ll bi=arr[i].se,bj=arr[j].se;
-			ll sumB=bj-bi;
-			ll sum=(i==j ? arr[i].f : arr[i].f+arr[j].f);
-			FOR1(it,i,j){
-				ms.insert(a[it]);
-			}
-			
-			
-		}
-	}
-	cout<<ans<<"\n";
+    FOR(i,1,n-1){
+    	ll mini=min(a[i-1],a[i+1]);
+    	if(a[i] < 2*mini){
+    		cout<<"NO\n";
+    		return;
+    	}
+    	a[i]-=2*mini;
+    	a[i-1]-=mini;
+    	a[i+1]-=mini;
+    	
+    }
+    FOR(i,0,n){
+    	if(a[i]!=0){
+    		cout<<"NO\n";
+    		return;
+    	}
+    }
+    cout<<"YES\n";
     
     
     
