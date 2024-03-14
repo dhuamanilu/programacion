@@ -39,7 +39,47 @@ void solve(){
     FOR(i,0,n){
     	cin>>a[i];
     }
+    vll pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+    	pref[i]=pref[i-1]+a[i];
+    }
+    ll q;
+    cin>>q;
+    FOR(it,0,q){
+    	ll l,u;
+    	cin>>l>>u;
+    	l--;
+    	ll s=l,e=n-1,m=s+(e-s)/2;
+    	ll ind=l;
+    	if(a[l] > u ){
+    		cout<<l+1<<" ";
+    		continue;
+    	}
+    	ll izq=(l>=1 ? pref[l-1] : 0ll);
+    	while(s<=e){
+    		m=s+(e-s)/2;
+    		ll calc=pref[m]-izq;
+    		if(calc<=u){
+    			ind=m;
+    			s=m+1;
+    		}
+    		else e=m-1;
+    	}
+    	//dbg(ind);
+    	ll maxi=0,ans=0;
+    	for(ll i=max(0ll,ind-3);i<min(n,ind+3);i++){
+    		ll acum=pref[i]-izq;
+    		ll tot=(2*u+1-acum)*acum/2;
+    		if(tot>maxi){
+    			maxi=tot;
+    			ans=i;
+    		}
+    	}
+    	cout<<ans+1<<" ";
+    }
     
+    cout<<"\n";
     
     
     

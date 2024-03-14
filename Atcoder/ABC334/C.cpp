@@ -33,48 +33,13 @@ const int MX = 200005;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-	cin>>n;
-	vll a(n);
-	FOR(i,0,n){
+    ll n,k;
+	cin>>n>>k;
+	vll a(k);
+	FOR(i,0,k){
 		cin>>a[i];
 	}
-	ll m;
-	cin>>m;
-	vll b(m);
-	FOR(i,0,m){
-		cin>>b[i];
-	}
-	ll l;
-	cin>>l;
-	vll c(l);
-	FOR(i,0,l){
-		cin>>c[i];
-	}
-	mll sumTwo;
-	FOR(i,0,m){
-		FOR(j,0,l){
-			sumTwo[b[i]+c[j]]++;
-		}
-	}
-	ll q;
-	cin>>q;
-	FOR(it,0,q){
-		ll x;
-		cin>>x;
-		bool ok=false;
-		FOR(i,0,n){
-			if(sumTwo.count(x-a[i])){
-				cout<<"Yes\n";
-				ok=true;
-				break;
-			}
-		}
-		if(!ok){
-			cout<<"No\n";
-		}
-		
-	}
+	ll ans=0;
     
     
     
