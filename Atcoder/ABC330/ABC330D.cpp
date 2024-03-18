@@ -31,49 +31,28 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-ll solve2(ll D){
-	ll ans=(ll)1e18;
-	ll raiz=sqrtl(D)+10;
-	FOR1(i,0,raiz){
-		FOR1(j,0,raiz){
-			ll calc=abs(i*i+j*j-D);
-			ans=min(ans,calc);
-		}
-	}
-	return ans;
-}
-ll solve(ll D){
-    ll ans=(ll)1e18;
-    FOR1(i,0,2000000){
-    	ll x=i*i;
-    	ll need=D-x;
-    	if(need>=0){
-    		ll raiz=sqrtl(need);
-    		ans=min(ans,need-raiz*raiz);
-    		ll calc2=abs(need-(raiz+1)*(raiz+1));
-    		ans=min(ans,calc2);
-    		
-    	}	
+
+void solve(){
+    ll n;
+    cin>>n;
+    vector<vll> a(n,vll(n,0));
+    FOR(i,0,n){
+    	string s;
+    	cin>>s;
+    	FOR(j,0,n){
+    		if(s[j]=='o'){
+    			a[i][j]=1;
+    		}
+    	}
     }
-    return ans;   
+    
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
     while(t--){
-        /*FOR(i,0,1000000){
-        	
-        	auto x=solve(i);
-        	auto y=solve2(i);
-        	if(x!=y){
-        		dbgm("bad",x,y,i);
-        		assert(false);
-        	}
-        }*/
-        ll D;
-        cin>>D;
-        cout<<solve(D)<<"\n";
+        solve();
     }
     return 0;
 }
