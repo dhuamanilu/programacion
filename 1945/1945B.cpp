@@ -33,18 +33,9 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-    	cin>>a[i];
-    }
-    
-    
-    
-    
-    
-    
+    ll a,b,m;
+    cin>>a>>b>>m;
+    cout<<((a+m)/a) + ((b+m)/b)<<"\n";   
 }
 int main(){
     ios_base::sync_with_stdio(0);

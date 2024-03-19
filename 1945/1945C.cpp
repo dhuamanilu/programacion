@@ -35,10 +35,33 @@ const int N=1000+3;
 void solve(){
     ll n;
     cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-    	cin>>a[i];
+    string s;
+    cin>>s;
+    vll suf(n,0);
+    vll pref(n,0);
+    pref[0]=(s[0]=='0');
+    FOR(i,1,n){
+    	pref[i]=pref[i-1]+(s[i]=='0');
     }
+    suf[n-1]=s[n-1]-'0';
+    for(ll i=n-2;i>=0;i--){
+    	suf[i]=suf[i+1]+(s[i]-'0');
+    }
+    //dbg(suf);
+    ll ind=0;
+    double ans=100000000000000;
+    FOR(i,0,n+1){
+    	ll pre=(i>=1 ? pref[i-1] :0ll);
+    	ll su=(i<n ? suf[i] : 0ll);
+    	if( pre>=(i+1)/2 && su>=(n-i+1)/2){
+    		double calc=abs(((double)(n)/(double)2.0) - i);
+    		if(calc<ans){
+    			ans=calc;
+    			ind=i;
+    		}
+    	}
+    }
+    cout<<ind<<"\n";
     
     
     

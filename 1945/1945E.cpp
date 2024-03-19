@@ -33,12 +33,40 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
+    ll n,x;
+    cin>>n>>x;
+    vll a(n+1);
+    vll pos(n+1);
+    FOR1(i,1,n){
     	cin>>a[i];
+    	pos[a[i]]=i;
     }
+    vll needA,needB;
+    mll good;
+    ll l=1,r=n+1,m=(r+l)/2;
+    while(r-l!=1){
+    	m=(r+l)/2;
+    	//izq
+    	if(m<pos[x]){
+    		if(a[m]<=x){
+    			good[m]++;
+    		} 
+    		else{
+    			needA.pb(m);
+    		}
+    		l=m;
+    	}
+    	else if(m>=pos[x]){
+    		if(a[m]>=x){
+    			good[m]++;
+    		}
+    		else{
+    			needB.pb(m);
+    		}
+    		r=m;
+    	}
+    }
+    dbgm(needA,needB);
     
     
     

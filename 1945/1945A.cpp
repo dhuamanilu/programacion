@@ -33,11 +33,26 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
-    FOR(i,0,n){
-    	cin>>a[i];
+    ll a,b,c;
+    cin>>a>>b>>c;
+    if(b%3==0){
+    	cout<<a+b/3 + (c+2)/3<<"\n";
+    }
+    else if(b%3==1){
+    	if(c>=2){
+    		cout<<a+b/3 + 1 + (c)/3<<"\n";
+    	}
+    	else{
+    		cout<<"-1\n";
+    	}
+    }
+    else{
+    	if(c>=1){
+    		cout<<a+b/3 + 1 + (c+1)/3<<"\n";
+    	}
+    	else{
+    		cout<<"-1\n";
+    	}
     }
     
     

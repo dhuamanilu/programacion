@@ -33,18 +33,41 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n;
-    cin>>n;
-    vll a(n);
+    ll n,m;
+    cin>>n>>m;
+    vpll a(n);
     FOR(i,0,n){
-    	cin>>a[i];
+    	cin>>a[i].f;
     }
-    
-    
-    
-    
-    
-    
+    FOR(i,0,n){
+    	cin>>a[i].se;
+    }
+    vll pref(n,0);
+    pref[0]=a[0].se;
+    FOR(i,1,n){
+    	pref[i]=pref[i-1]+a[i].se;
+    }
+   	ll ans=0;
+   	for(ll i=n-1;i>=m;i--){
+   		if(a[i].f>=a[i].se){
+   			ans+=a[i].se;
+   		}
+   		else{
+   			ans+=a[i].f;
+   		}
+   	}
+   	ll mini=(ll)1e18;
+   	FOR(i,0,m){
+   		if(i==m-1){
+   			mini=min(mini,a[i].f);
+   		}
+   		else{
+   			ll act=(ll)a[i].f + pref[m-1]
+   			- (pref[i]);
+   			mini=min(mini,act);
+   		}
+   	}
+   	cout<<ans+mini<<"\n";
 }
 int main(){
     ios_base::sync_with_stdio(0);
@@ -56,11 +79,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
