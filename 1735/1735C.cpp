@@ -31,15 +31,68 @@ const int MOD = 1000000007;
 const char nl = '\n';
 const int MX = 100001;
 const int N=1000+3;
-
+struct UF {
+	vector<int> e;
+	UF(int n) : e(n, -1) {}
+	bool sameSet(int a, int b) { return find(a) == find(b); }
+	int size(int x) { return -e[find(x)]; }
+	int find(int x) { return e[x] < 0 ? x : e[x] = find(e[x]); }
+	bool join(int a, int b) {
+		a = find(a), b = find(b);
+		if (a == b) return false;
+		if (e[a] > e[b]) swap(a, b);
+		e[a] += e[b]; e[b] = a;
+		return true;
+	}
+};
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-   	FOR(i,0,30){
-   		ll act=1ll<<i;
-   		ll cuatnos=((n/act)+1)/2;
-   		
-   	}
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    UF dsu(26);
+    string ans="";
+    
+    FOR(i,0,n){
+    	ll act=s[i]-'a';
+    	FOR(j,0,26){
+    		if(!dsu.sameSet(j,act)){
+    			string aux(1,'a'+j);
+    			dsu.join(j,act);
+    			ans+=aux;
+    			break;
+    		}
+    	}
+    	
+    	/*FOR(j,0,26){
+    		if(conec.count(mp(j,act)) || conec.count(mp(act,j)) ) continue;
+    		//dbg(j);
+    		//suponemos que vamos a hacer
+    		//dirigido de j hacia act
+    		bool ok=true;
+    		FOR(k,0,26){
+    			if(k==j) continue;
+    			if(conec.count(mp(j,k))){
+    				ok=false;
+    				break;
+    			}
+    		}
+    		FOR(k,0,26){
+    			if(k==act) continue;
+    			if(conec.count(mp(k,act))){
+    				ok=false;
+    				break;
+    			}
+    		}
+    		if(ok){
+    			conec.insert(mp(j,act));
+    			string aux(1,'a'+j);
+    			ans+=aux;
+    			break;
+    		}
+    	}	*/
+    }
+    cout<<ans<<"\n";
     
     
     

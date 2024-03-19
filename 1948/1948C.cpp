@@ -33,14 +33,33 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-   	FOR(i,0,30){
-   		ll act=1ll<<i;
-   		ll cuatnos=((n/act)+1)/2;
-   		
-   	}
-    
+    ll n;
+    cin>>n;
+    vector<string> a(2);
+    FOR(i,0,2){
+    	cin>>a[i];
+    }
+    vector<vector<vll>> dp(n,vector<vll>(2,vll(2,0)));
+    dp[0][0][1]=1;
+    dp[0][1][0]=1;
+    FOR(i,1,n){
+    	FOR(j,0,2){
+    		//llegar caminando
+    		if(dp[i-1][j][1] || (dp[i][j^1][1])){
+    			dp[i][j][0]=1;
+    		}
+    		//empujado
+    		if(dp[i-1][j][0]){
+    			dp[i][j][1]=1;
+    		}	
+    	}
+    }
+    if(dp[n-1][1][0] || dp[n-1][1][1]){
+    	cout<<"YES\n";
+    }
+    else{
+    	cout<<"NO\n";
+    }
     
     
     

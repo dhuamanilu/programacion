@@ -21,12 +21,19 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,d;
-    cin>>n>>d;
-    ll a[n];
+    ll n;
+    cin>>n;
+    vll a(n);
+    vll cont(2,0);
     FOR(i,0,n){
         cin>>a[i];
+        cont[a[i]%2]++;
     }
+    if(cont[0]>0 && cont[1]==0){
+    	cout<<"Alice\n";   
+    }
+    else if(cont[0]>0 && cont[1]>0 && ())
+    
 }
 int main(){
     ios_base::sync_with_stdio(0);

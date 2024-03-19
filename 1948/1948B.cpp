@@ -33,14 +33,49 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-   	FOR(i,0,30){
-   		ll act=1ll<<i;
-   		ll cuatnos=((n/act)+1)/2;
-   		
-   	}
+    ll n;
+    cin>>n;
+    vll a(n);
     
+    ll maxi=0;
+    FOR(i,0,n){
+    	cin>>a[i];
+    	maxi=max(maxi,a[i]);
+    }
+    vector<vector<vector<ll>>> dp(n,vector<vll>(maxi+1,vll(2,0)));
+    dp[0][a[0]][0]=1;
+    string pri=to_string(a[0]);
+    if(pri[0]<=pri[1]){
+    	dp[0][pri[1]-'0'][1]=1;
+    }
+    FOR(i,1,n){
+    	string act=to_string(a[i]);
+    	ll encero=act[0]-'0';
+    	ll seg=act[1]-'0';
+		FOR(j,0,maxi+1){
+			if(a[i]>=j && (dp[i-1][j][0] ||
+			dp[i-1][j][1])
+			){
+				dp[i][a[i]][0]=1;
+			}
+			if(encero<=seg && encero>=j && (dp[i-1][j][0] ||
+			dp[i-1][j][1])){
+				dp[i][seg][1]=1;
+			}
+		}
+		
+    }
+    FOR1(i,0,maxi){
+    	if(dp[n-1][i][0] || dp[n-1][i][1]){
+    		//dbgm(i,dp[n-1][i][0]);
+    		cout<<"YES\n";
+    		return;
+    	}
+    }
+    cout<<"NO\n";
+    /* 1
+    3
+18 19 9*/
     
     
     

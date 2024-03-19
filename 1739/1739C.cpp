@@ -86,6 +86,7 @@ unsigned long long nCrModPFermat(unsigned long long n,
             * modInverse(fac[n - r], p) % p)
            % p;
 }
+
 void solve(){
     ll n;
     cin>>n;
@@ -94,19 +95,11 @@ void solve(){
     ll ans=0;
     //ans=nCrModPFermat(n-1,(n/2)-1,MOD);
     ll j=1;
-    for(ll i=1;i<=n;i+=3){
-    	ans+=nCrModPFermat(n-i,(n/2)-j,MOD);
-    	j+=2;
-    	dbgm(ans);
+    for(ll i=1;i<=n;i+=n){
+    	ans+=nCrModPFermat(n-i,(n/2)-1,MOD);
     	ans%=MOD;
-    }
-    
-    cout<<ans<<" 0 1\n";
-    
-    
-    
-    
-    
+    }    
+    cout<<ans<<" 0 1\n";  
 }
 int main(){
     ios_base::sync_with_stdio(0);

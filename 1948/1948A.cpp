@@ -33,13 +33,24 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-   	FOR(i,0,30){
-   		ll act=1ll<<i;
-   		ll cuatnos=((n/act)+1)/2;
-   		
-   	}
+    ll n;
+    cin>>n;
+	if(n%2==1){
+		cout<<"NO\n";
+	}
+	else{
+		cout<<"YES\n";
+		ll cont=0;
+		FOR(i,0,n/2){
+			string s(2,'A'+cont);
+			cout<<s;
+			cont++;
+			cont%=26;
+		}
+		cout<<"\n";
+		
+	}
+    
     
     
     

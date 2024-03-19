@@ -33,13 +33,13 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-   	FOR(i,0,30){
-   		ll act=1ll<<i;
-   		ll cuatnos=((n/act)+1)/2;
-   		
-   	}
+    ll n;
+    cin>>n;
+    vll a(n);
+    FOR(i,0,n){
+    	cin>>a[i];
+    }
+    
     
     
     
