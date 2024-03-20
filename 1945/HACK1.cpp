@@ -33,34 +33,12 @@ const int MX = 100001;
 const int N=1000+3;
 
 void solve(){
-    ll n,x;
-    cin>>n>>x;
-    vll a(n+1);
-    vll pos(n+1);
-    FOR1(i,1,n){
-    	cin>>a[i];
-    	pos[a[i]]=i;
+    ll t=10000;
+    cout<<t<<endl;
+    const long long x=1000000000000000000;
+    FOR(i,0,t){
+    	cout<<x<<" "<<x<<" "<<x<<endl;
     }
-    vll needA,needB;
-    mll good;
-    ll l=1,r=n+1,m=(r+l)/2;
-    while(r-l!=1){
-    	m=(r+l)/2;
-    	if(a[m]<=x){	
-			l=m;
-    	}
-    	else {
-    		r=m;
-    	}
-    }
-    if(a[l]==x){
-    	cout<<"0\n";
-    }
-    else{
-    	cout<<1<<"\n";
-    	cout<<x<<" "<<a[l]<<"\n";
-    }
-    
     
     
     
@@ -68,10 +46,10 @@ void solve(){
     
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         solve();
     }
