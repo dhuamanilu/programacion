@@ -50,47 +50,42 @@ void solve(){
     cin>>n;
     string s;
     cin>>s;
-    UF dsu(26);
-    string ans="";
     
+    vll from(26,-1);
+    vll to(26,-1);
+    auto check = [&](){
+    	UF dsu(26);
+    	ll cycle=0,len=0;
+    	FOR(i,0,26){
+    		ll j=to[i];
+    		if(j==-1) continue;
+    		if(!dsu.join(i,j)){
+    			cycle++;
+    		}
+    		len++;
+    	}
+    	return (cycle==0 || (cycle==1 && 
+    	len==26));
+    };
     FOR(i,0,n){
     	ll act=s[i]-'a';
+    	if(to[act]!=-1) continue;
     	FOR(j,0,26){
-    		if(!dsu.sameSet(j,act)){
-    			string aux(1,'a'+j);
-    			dsu.join(j,act);
-    			ans+=aux;
+    		if(from[j]!=-1) continue;
+    		to[act]=j;
+    		from[j]=act;
+    		if(check()){
+    			//dsu.join(act,j);
     			break;
     		}
+    		to[act]=-1;
+    		from[j]=-1;
     	}
-    	
-    	/*FOR(j,0,26){
-    		if(conec.count(mp(j,act)) || conec.count(mp(act,j)) ) continue;
-    		//dbg(j);
-    		//suponemos que vamos a hacer
-    		//dirigido de j hacia act
-    		bool ok=true;
-    		FOR(k,0,26){
-    			if(k==j) continue;
-    			if(conec.count(mp(j,k))){
-    				ok=false;
-    				break;
-    			}
-    		}
-    		FOR(k,0,26){
-    			if(k==act) continue;
-    			if(conec.count(mp(k,act))){
-    				ok=false;
-    				break;
-    			}
-    		}
-    		if(ok){
-    			conec.insert(mp(j,act));
-    			string aux(1,'a'+j);
-    			ans+=aux;
-    			break;
-    		}
-    	}	*/
+    }
+    string ans="";
+    FOR(i,0,n){
+    	string aux(1,'a'+to[s[i]-'a']);
+    	ans+=aux;
     }
     cout<<ans<<"\n";
     
