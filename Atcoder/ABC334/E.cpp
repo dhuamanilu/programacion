@@ -29,44 +29,104 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
-const int N=1000+3;
-void solve2(){
-	vll nums;
-	FOR1(a,1,500){
-		FOR(b,a+1,500){
-			nums.pb(b*b- a*a);
+const int MAXN = 200005;
+const int N=1000+5;
+vector<vector<bool>> vis(N,vector<bool>(N,false));
+vll dx={1,-1,0,0};
+vll dy={0,0,1,-1};
+ll h,w;
+vector<vll> id(N,vector<ll>(N));
+vector<vll> a(N,vll(N));
+bool isValid(ll x,ll y){
+	return x>=0 && x<h && y>=0 && y<w;
+}
+void dfs(ll x,ll y,ll identi){
+	vis[x][y]=true;
+	id[x][y]=identi;
+	FOR(i,0,4){
+		ll newX=x+dx[i],newY=y+dy[i];
+		if(isValid(newX,newY)){
+			if(!vis[newX][newY]
+			&& a[newX][newY]){
+				dfs(newX,newY,identi);
+			}
 		}
 	}
-	sort(all(nums));
-	dbg(nums);
+}
+long long calculate(long long p, 
+                    long long q) 
+{ 
+    long long mod = 998244353, expo; 
+    expo = mod - 2; 
+ 
+    // Loop to find the value 
+    // until the expo is not zero 
+    while (expo) { 
+ 
+        // Multiply p with q 
+        // if expo is odd 
+        if (expo & 1) { 
+            p = (p * q) % mod; 
+        } 
+        q = (q * q) % mod; 
+ 
+        // Reduce the value of 
+        // expo by 2 
+        expo >>= 1; 
+    } 
+    return p; 
 }
 void solve(){
-    ll n;
-    cin>>n;
-    //solve2();
-    ll s=3,e=(ll)1e15,m=s+(e-s)/2;
-    while(s<=e){
-    	
-    	m=s+(e-s)/2;
-    	
-    	ll resta=(m>=4 ? 1: 0ll);
-    	ll calc=1 + (m-2)/4 ;
-    	if(m%4==2) calc--;
-    	//dbgm(s,e,m,c	alc,resta);
-    	if(m-1-resta-calc==n){
-    		cout<<m<<"\n";
-    		break;
-    	}
-    	else if(m-1-resta-calc>n){
-    		e=m-1;
-    	}
-    	else{
-    		s=m+1;
-    	} 
-    }
-    
-    
+	cin>>h>>w;
+	FOR(i,0,h){
+		string s;
+		cin>>s;
+		FOR(j,0,w){
+			a[i][j]=(s[j]=='#');
+		}
+	}
+	//dbg(a);
+	ll act=1;
+	FOR(i,0,h){
+		FOR(j,0,w){
+			if(!vis[i][j] && a[i][j]){
+				dfs(i,j,act);
+				act++;
+			}
+		}
+	}
+	vll cont(4,0);
+	ll ans=0;
+	/*FOR(i,0,h){
+		FOR(j,0,w){
+			cout<<id[i][j]<<" ";
+		}
+		cout<<"\n";
+	}*/
+	ll den=0;
+	FOR(i,0,h){
+		FOR(j,0,w){
+			if(a[i][j]) continue;
+			den++;
+			set<ll> cant;
+			FOR(k,0,4){
+				ll newX=i+dx[k]
+				,newY=j+dy[k];
+				if(isValid(newX,newY)){
+					//dbgm(newX,newY,id[newX][newY]);
+					if(a[newX][newY]){		
+						cant.insert(id[newX][newY]);
+					} 
+				}
+			}
+			//dbgm(i,j,cant.size());
+			ans+=act-(ll)cant.size();
+		}
+		
+	}
+	
+	//cout<<ans<<" "<<den<<"\n";
+    cout<<calculate(ans,den)<<"\n";
     
     
 }
@@ -74,9 +134,8 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     int t=1;
-    //cin>>t;
     while(t--){
-        solve();
+		solve();
     }
     return 0;
 }

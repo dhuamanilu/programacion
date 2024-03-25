@@ -29,42 +29,56 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MX = 200005;
 const int N=1000+3;
-void solve2(){
-	vll nums;
-	FOR1(a,1,500){
-		FOR(b,a+1,500){
-			nums.pb(b*b- a*a);
-		}
-	}
-	sort(all(nums));
-	dbg(nums);
-}
+
 void solve(){
     ll n;
     cin>>n;
-    //solve2();
-    ll s=3,e=(ll)1e15,m=s+(e-s)/2;
-    while(s<=e){
-    	
-    	m=s+(e-s)/2;
-    	
-    	ll resta=(m>=4 ? 1: 0ll);
-    	ll calc=1 + (m-2)/4 ;
-    	if(m%4==2) calc--;
-    	//dbgm(s,e,m,c	alc,resta);
-    	if(m-1-resta-calc==n){
-    		cout<<m<<"\n";
-    		break;
+    vector<vll> a(n,vll(n,0));
+    vll prefFila(n,0);
+    vll prefCol(n,0);
+    ll tot=0;
+    FOR(i,0,n){
+    	string s;
+    	cin>>s;
+    	ll cont=0;
+    	FOR(j,0,n){
+    		if(s[j]=='o'){
+    			a[i][j]=1;
+    			cont++;
+    			tot++;
+    		}
     	}
-    	else if(m-1-resta-calc>n){
-    		e=m-1;
-    	}
-    	else{
-    		s=m+1;
-    	} 
+    	prefFila[i]=cont;
     }
+    //dbg(a);
+    FOR(i,0,n){
+    	ll cont=0;
+    	FOR(j,0,n){
+    		cont+=a[j][i];
+    	}
+    	prefCol[i]=cont;
+    }
+    ll ans=0;
+    FOR(i,0,n){
+    	FOR(j,0,n-1){
+    		if(a[i][j] && a[i][j+1]){
+    			ll calc=prefCol[j]+prefCol[j+1];
+    			ans+=2+tot-prefFila[i]-calc;
+    		}
+    	}
+    }
+    FOR(i,0,n-1){
+    	FOR(j,0,n){
+    		if(a[i][j] && a[i+1][j]){
+    			ll calc=prefFila[i] +prefFila[i+1] ;
+    			ans+=2+tot-prefCol[j]-calc;
+    		}
+    	}
+    }
+    cout<<ans<<"\n";
+    
     
     
     
