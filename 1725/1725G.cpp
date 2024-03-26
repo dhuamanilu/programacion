@@ -45,28 +45,17 @@ void solve(){
     ll n;
     cin>>n;
     //solve2();
-    ll s=3,e=(ll)1e15,m=s+(e-s)/2;
-    while(s<=e){
-    	
-    	m=s+(e-s)/2;
-    	
-    	ll resta=(m>=4 ? 1: 0ll);
-    	ll calc=1 + (m-2)/4 ;
-    	if(m%4==2) calc--;
-    	//dbgm(s,e,m,c	alc,resta);
-    	if(m-1-resta-calc==n){
-    		cout<<m<<"\n";
-    		break;
-    	}
-    	else if(m-1-resta-calc>n){
-    		e=m-1;
-    	}
-    	else{
-    		s=m+1;
-    	} 
+    //3 5 7 8 9 11 12 13 15 16 17 19 20 21 23 24 
+    if(n==1){
+    	cout<<"3\n";
     }
-    
-    
+    else if(n==2){
+    	cout<<"5\n";
+    }
+    else{
+    	n-=2;
+    	cout<<(4*n+17)/3<<"\n";
+    }
     
     
 }
