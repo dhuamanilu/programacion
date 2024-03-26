@@ -57,7 +57,24 @@ void solve(){
     	}
     }
     if(corner){
-    	cout<<"desc\n";
+    	ll Col=0,Fila=0;
+    	FOR(i,0,tam){
+    		FOR(j,i+1,tam){
+    			if(a[i].se==a[j].se){
+    				Col=(a[i].se);
+    			}
+    			if(a[i].f==a[j].f){
+    				Fila=(a[i].f);
+    			}
+    		}
+    	}
+    	if(target.se==Col || target.f==Fila){
+    		cout<<"YES\n";
+    	}
+    	else{
+    		cout<<"NO\n";
+    	}
+    	
     }
     else{
     	ll parCol=0,parFila=0;
