@@ -1,7 +1,7 @@
 //? #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
-//#undef _GLIBCXX_DEBUG //? for Stress Testing
+#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
@@ -149,7 +149,10 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
 struct Tree {
 	typedef ll T;
 	static constexpr T unit = 0;
@@ -169,40 +172,96 @@ struct Tree {
 		return f(ra, rb);
 	}
 };
-void solve() {
-	ll n,q;
-	cin>>n>>q;
-    Tree fila(n+1);
-    Tree columna(n+1);
+vs solve2(ll n,vector<pair<ll,vector<pl>>> & querys ){
+    set<pl> torres;
+    ll q=querys.size();
+    vs ans;
     FOR(i,0,q){
-        ll type;
-        cin>>type;
+        ll type=querys[i].f;
         if(type==1){
-            ll x,y;
-            cin>>x>>y;
-            fila.update(x,1);
-            columna.update(y,1);
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            torres.insert(mp(x,y));
         }
         else if(type==2){
-            ll x,y;
-            cin>>x>>y;
-            fila.update(x,0);
-            columna.update(y,0);
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            safeErase(torres,mp(x,y));
         }
         else{
-            ll x1,y1,x2,y2;
-            cin>>x1>>y1>>x2>>y2;
-            ll sumFila=fila.query(x1,x2+1);
-            ll sumCol=columna.query(y1,y2+1);
-            ll lenF=x2-x1+1,lenC=y2-y1+1;
-            if(sumFila==lenF || sumCol==lenC){
-                cout<<"Yes\n";
+            ll x1=querys[i].s[0].f,y1=querys[i].s[0].s,x2=querys[i].s[1].f,y2=querys[i].s[1].s;
+            vl fila(n+1,0),columna(n+1,0);
+            for(auto & e: torres){
+                fila[e.f]++;
+                columna[e.s]++;
+            }
+            ll lenF=0,lenC=0;
+            FOR(i,x1,x2+1){
+                if(fila[i]) lenF++;
+            }
+            FOR(i,y1,y2+1){
+                if(columna[i]) lenC++;
+            }
+            if(abs(x2-x1)+1==lenF || abs(y2-y1)+1==lenC){
+                ans.pb("Yes\n");
             }
             else{
-                cout<<"No\n";
+                ans.pb("No\n");
             }
         }
     }
+
+    return ans;
+}
+vs solve(ll n,vector<pair<ll,vector<pl>>> & querys ) {
+    Tree fila(n+1);
+    Tree columna(n+1);
+    Tree canFila(n+1);
+    Tree canColumna(n+1);
+    ll q=querys.size();
+    vs ans;
+    FOR(i,0,q){
+        ll type=querys[i].f;
+        if(type==1){
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            fila.update(x,fila.query(x,x+1)+1);
+            columna.update(y,columna.query(y,y+1)+1);
+            canFila.update(x,1);
+            canColumna.update(y,1);
+        }
+        else if(type==2){
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            ll ccF=fila.query(x,x+1);
+            if(ccF>1){
+                fila.update(x,ccF-1);
+            }
+            else{
+                fila.update(x,ccF-1);
+                canFila.update(x,0);
+            }
+            ll ccC=columna.query(y,y+1);
+            if(ccC>1){
+                columna.update(y,ccC-1);
+            }
+            else{
+                columna.update(y,ccC-1);
+                canColumna.update(y,0);
+            }
+            
+        }
+        else{
+            ll x1=querys[i].s[0].f,y1=querys[i].s[0].s,x2=querys[i].s[1].f,y2=querys[i].s[1].s;
+            ll sumFila=canFila.query(x1,x2+1);
+            ll sumCol=canColumna.query(y1,y2+1);
+            ll lenF=x2-x1+1,lenC=y2-y1+1;
+            if(sumFila==lenF || sumCol==lenC){
+                ans.pb("Yes\n");
+            }
+            else{
+                ans.pb("No\n");
+            }
+        }
+    }
+
+    return ans;
 	
 }
 
@@ -211,14 +270,117 @@ int main() {
 
     int t = 1;
     //cin >> t;
+    while(false){
+        ll tam=rng_ll(4,20);
+        ll cant=rng_ll(1,8);
+        vector<pair<ll,vector<pl>>> querys(cant);
+        vpl actualXD;
+        each(e,querys){
+            pair<ll,vector<pl>> act;
+
+            act.f=rng_ll(1,3);
+            if(act.f==2 && actualXD.size()==0){
+                act.f++;
+            }
+            if(act.f==1){
+                vector<pl> seg;
+                pl par1;
+                while(true){
+                    par1.f=rng_ll(1,tam);
+                    par1.s=rng_ll(1,tam);
+                    auto it=find(all(actualXD),par1);
+                    if(it==actualXD.end()){
+                        break;
+                    }
+                }
+                
+                seg.pb(par1);
+                actualXD.pb(mp(par1.f,par1.s));
+                act.s=seg;
+            }
+            else if(act.f==2){
+                vector<pl> seg;
+                pl par1;
+                ll ind=rng_ll(0,(ll)actualXD.size()-1);
+                par1.f=actualXD[ind].f;
+                par1.s=actualXD[ind].s;
+                actualXD.erase(actualXD.begin() + ind);
+                seg.pb(par1);
+                act.s=seg;
+            }
+            else{
+                vector<pl> seg;
+                pl par1;
+                par1.f=rng_ll(1,tam);
+                par1.s=rng_ll(1,tam);
+                seg.pb(par1);
+
+                pl par2;
+                par2.f=rng_ll(par1.f,tam);
+                par2.s=rng_ll(par1.s,tam);
+                seg.pb(par2);
+
+                act.s=seg;
+            }
+            e=act;
+        }
+        dbg(tam,querys);
+        auto ans1=solve(tam,querys);
+        auto ans2=solve2(tam,querys);
+        if(ans1!=ans2){
+            dbg(ans1,ans2,"xd");
+            assert(false);
+        }
+        else{
+            dbg("ok");
+        }
+    }
 
     for(int idx = 0; idx < t; idx++) {
-        //RAYA;
-        //RAYA;
-        solve();
+        RAYA;
+        RAYA;
+        ll n,q;
+	    cin>>n>>q;
+        vector<pair<ll,vector<pl>>> querys(q);
+        each(e,querys){
+            pair<ll,vector<pl>> act;
+            cin>>act.f;
+            if(act.f==1){
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+                seg.pb(par1);
+                act.s=seg;
+            }
+            else if(act.f==2){
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+                seg.pb(par1);
+                act.s=seg;
+            }
+            else{
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+
+                seg.pb(par1);
+                pl par2;
+                cin>>par2.f>>par2.s;
+                seg.pb(par2);
+                act.s=seg;
+            }
+            e=act;
+        }
+        auto ans1=solve(n,querys);
+        //auto ans2=solve2(n,querys);
+        //dbg(ans1);
+        for(auto & e : ans1)cout<<e;
+        //dbg(ans2);
+        //for(auto & e : ans2)cout<<e;
     }
-    //RAYA;
-    //RAYA;
+    RAYA;
+    RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

@@ -150,13 +150,45 @@ long long binpow(long long a, long long b) {
 }
 //? /Custom Helpers
 
-
+struct Tree {
+	typedef ll T;
+	static constexpr T unit = 0;
+	T f(T a, T b) { return a+b; } // (any associative fn)
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
+	}
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
 void solve() {
 	ll n;
 	cin>>n;
 	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+    Tree st(n+1);
+	each(e,a){
+        cin>>e;
+        st.update(e,st.query(e,e+1)+1);
+    } 
+    //dbg(st.s);
+	ll ans=0;
+    each(e,a){
+        st.update(e,st.query(e,e+1)-1);
+        ll cuantos=st.query(1,e+1);
+        //dbg(cuantos);
+        ans+=cuantos; 
+    }
+    cout<<ans<<"\n";
+
+
 }
 
 int main() {

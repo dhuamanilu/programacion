@@ -154,9 +154,27 @@ long long binpow(long long a, long long b) {
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	FOR(i,0,2*n){
+        if(i%4>1){
+            FOR(j,0,2*n){
+                        if(j%4>1){
+                            cout<<"#";
+                        }
+                        else cout<<".";
+                    }
+                    cout<<"\n";
+        }
+        else{
+            FOR(j,0,2*n){
+            if(j%4>1){
+                cout<<".";
+            }
+            else cout<<"#";
+        }
+        cout<<"\n";
+        }
+        
+    }
 }
 
 int main() {
@@ -166,12 +184,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

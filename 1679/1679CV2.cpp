@@ -1,7 +1,7 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
-//#undef _GLIBCXX_DEBUG //? for Stress Testing
+#pragma GCC optimize ("Ofast")
+#pragma GCC target ("avx,avx2")
+#pragma GCC optimize ("trapv")
+#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
@@ -148,27 +148,105 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
 
+vs solve(ll n,vector<pair<ll,vector<pl>>> & querys ) {
+    ll q=querys.size();
+    set<ll> freeRow,freeCol;
+    vl fila(n+1,0),columna(n+1,0);
+    FOR(i,1,n+1){
+        freeRow.insert(i);
+        freeCol.insert(i);
+    }
+    vs ans;
+    FOR(i,0,q){
+        ll type=querys[i].f;
+        if(type==1){
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            fila[x]++;
+            columna[y]++;
+            if(fila[x]==1)
+                safeErase(freeRow,x);
+            if(columna[y]==1)
+                safeErase(freeCol,y);
+        }
+        else if(type==2){
+            ll x=querys[i].s[0].f,y=querys[i].s[0].s;
+            fila[x]--;
+            columna[y]--;
+            if(fila[x]==0){
+                freeRow.insert(x);
+            }
+            if(columna[y]==0){
+                freeCol.insert(y);
+            }
+            
+        }
+        else{
+            ll x1=querys[i].s[0].f,y1=querys[i].s[0].s,x2=querys[i].s[1].f,y2=querys[i].s[1].s;
+            auto firstRowFree=freeRow.lower_bound(x1);
+            auto firstColFree=freeCol.lower_bound(y1);
+            if(firstRowFree==freeRow.end() || firstColFree==freeCol.end()){
+                ans.pb("Yes\n");    
+            }
+            else if(*firstRowFree > x2 || *firstColFree > y2 ){
+                ans.pb("Yes\n");
+            }
+            else{
+                ans.pb("No\n");
+            }
+            
+        }
+    }
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+    return ans;
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll n,q;
+	    cin>>n>>q;
+        vector<pair<ll,vector<pl>>> querys(q);
+        each(e,querys){
+            pair<ll,vector<pl>> act;
+            cin>>act.f;
+            if(act.f==1){
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+                seg.pb(par1);
+                act.s=seg;
+            }
+            else if(act.f==2){
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+                seg.pb(par1);
+                act.s=seg;
+            }
+            else{
+                vector<pl> seg;
+                pl par1;
+                cin>>par1.f>>par1.s;
+
+                seg.pb(par1);
+                pl par2;
+                cin>>par2.f>>par2.s;
+                seg.pb(par2);
+                act.s=seg;
+            }
+            e=act;
+        }
+        auto ans1=solve(n,querys);
+        for(auto & e : ans1)cout<<e;
+
     }
     RAYA;
     RAYA;

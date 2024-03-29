@@ -166,12 +166,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

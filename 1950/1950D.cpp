@@ -149,29 +149,50 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-
+vl guarda;
+void gen(str num){
+    if(num.size()>5) return;
+    guarda.pb(stoll(num));
+    gen(num+"1");
+    gen(num+"0");
+}
+bool check(ll n){
+    if(n==1) return true;
+    FOR(i,0,guarda.size()){
+        if(n==guarda[i]){
+            return true;
+        }
+    }
+    FOR(i,1,guarda.size()){
+        if(n%guarda[i]==0){
+            return check(n/guarda[i]);
+        }
+    }
+    return false;
+}
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	if(check(n)){
+        cout<<"YES\n";
+    }
+    else cout<<"NO\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+    gen("1");
+    sor(guarda);
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

@@ -152,11 +152,17 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll a,b,c;
+	cin>>a>>b>>c;
+	if(a<b && b<c){
+        cout<<"STAIR\n";
+    }
+    else if(a<b && b>c){
+        cout<<"PEAK\n";
+    }
+    else{
+        cout<<"NONE\n";
+    }
 }
 
 int main() {
@@ -166,12 +172,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

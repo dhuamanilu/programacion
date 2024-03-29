@@ -150,13 +150,87 @@ long long binpow(long long a, long long b) {
 }
 //? /Custom Helpers
 
-
+vl getDivisors(ll n) { 
+    vl guarda;
+    // Note that this loop runs till square root 
+    for (ll i=1; i*i<=n; i++) { 
+        if (n%i == 0) { 
+            if (n/i == i) 
+                guarda.pb(i);
+            else{
+                guarda.pb(i);
+                guarda.pb(n/i);
+            }
+        } 
+    } 
+    return guarda;
+} 
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	string s;
+    cin>>s;
+    auto div=getDivisors(n);
+    sor(div);
+    vector<vector<array<ll,26>>> m;
+    for(auto & divisor : div){
+        vector<array<ll,26>> hola;
+        FOR(i,0,divisor){
+            array<ll,26> aux;
+            aux.fill(0ll);
+            aux[s[i]-'a']++;
+            for(ll j=i+divisor;j<n;j+=divisor){
+                aux[s[j]-'a']++;
+            }
+            
+            hola.pb(aux);
+        }  
+        m.pb(hola);
+    }
+
+    map<ll,ll> porsi;
+    for(auto & e : s){
+        porsi[e-'a']++;
+    }
+    for(auto & e : porsi){
+        if(e.s==n || e.s==n-1){
+            cout<<"1\n";
+            return;
+        }
+    }
+    FOR(i,1,div.size()){
+        ll divisor=div[i];
+        bool ok=true;
+        ll diffLocal=0;
+        FOR(j,0,m[i].size()){
+            ll act=s[j]-'a';
+            ll debe=(n/divisor);
+            
+            bool okLocal=false;
+            FOR(k,0,26){
+                if(m[i][j][k]==debe ){
+                    okLocal=true;
+                    break;
+                }
+            }
+            if(!okLocal){
+                FOR(k,0,26){
+                    if(m[i][j][k]+1==debe ){
+                        okLocal=true;
+                        diffLocal++;
+                        break;
+                    }
+                }
+            }
+            okLocal&=(diffLocal<=1);
+            ok&=okLocal;
+        }
+        if(ok){
+            cout<<divisor<<"\n";
+            return;
+        }
+
+    }
 }
 
 int main() {
@@ -166,12 +240,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);

@@ -152,11 +152,24 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	str s;
+    cin>>s;
+    ll hora=stoll(s.substr(0,2));
+    if(hora==0){
+        cout<<12<<s.substr(2)<<" AM\n";
+    }
+    else if(hora>12){
+        if(hora-12<10){
+            cout<<"0";
+        }
+        cout<<hora-12<<s.substr(2)<<" PM\n";
+    }
+    else if(hora<12){
+        cout<<s<<" AM\n";
+    }
+    else{
+        cout<<s<<" PM\n";
+    }
 }
 
 int main() {
@@ -166,12 +179,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
+        //RAYA;
+        //RAYA;
         solve();
     }
-    RAYA;
-    RAYA;
+    //RAYA;
+    //RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);
