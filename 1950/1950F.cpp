@@ -154,18 +154,20 @@ long long binpow(long long a, long long b) {
 void solve() {
 	ll a,b,c;
 	cin>>a>>b>>c;
-    ll lvl=1,pot=(1ll<<lvl);
-    while(pot-1 < a){
-        pot*=2;
-        lvl++;
-    }
-    ll sera=(1ll<<lvl)-1-a + 2*(a-(1ll<<(lvl-1))+1);
-    if(sera!=c){
+    //ll sera=(1ll<<lvl)-1-a + 2*(a-(1ll<<(lvl-1))+1);
+    if(a+1!=c){
         cout<<"-1\n";
     }
     else{
-        cout<<lvl+cdiv(b,c)<<"\n";
+        ll lvl=0;
+        while((1ll<<lvl)-1 < a){
+            lvl++;
+        }
+        b-=min(b,(1ll<<lvl)-1-a);
+        cout<<lvl+(b+c-1)/c<<"\n";
     }
+    
+    
 	
 }
 
@@ -176,12 +178,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        //RAYA;
-        //RAYA;
+        RAYA;
+        RAYA;
         solve();
     }
-    //RAYA;
-    //RAYA;
+    RAYA;
+    RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);
