@@ -154,9 +154,65 @@ long long binpow(long long a, long long b) {
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	map<string,ll> genre,writer;
+    ll idG=1,idW=1;
+    vpl a(n);
+    FOR(i,0,n){
+        string g,w;
+        cin>>g>>w;
+        if(genre.count(g)){
+            a[i].f=genre[g];
+        }
+        else{
+            genre[g]=idG;
+            a[i].f=idG;
+            idG++;
+        }
+        if(writer.count(w)){
+            a[i].s=writer[w];
+        }
+        else{
+            writer[w]=idW;
+            a[i].s=idW;
+            idW++;
+        }
+    }
+    vector<vl> adj(n+1,vl(n+1,0));
+    FOR(i,0,n){
+        FOR(j,i+1,n){
+            if(a[i].f==a[j].f || a[i].s==a[j].s){
+                adj[i][j]=1;
+                adj[j][i]=1;
+            }
+        }
+    }
+    vector<vl> dp(1ll<<n,vl(n,0));
+
+    FOR(i,0,n){
+        dp[1ll<<i][i]=1;
+    }
+    FOR(i,0,(1ll<<n)){
+        FOR(k,0,n){
+            if(i&(1ll<<k)){
+                FOR(it,0,n){
+                    if(it==k) continue;
+                    if(i&(1ll<<it) && adj[k][it] && dp[i^(1ll<<k)][it]){
+                        dp[i][k]=true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    ll ans=0;
+    FOR(i,0,(1ll<<n)){
+        FOR(k,0,n){
+            if(dp[i][k]){
+                ckmax(ans,(ll)__builtin_popcountll(i));
+            }
+        }
+    }
+    cout<<n-ans<<"\n";
 }
 
 int main() {
@@ -166,12 +222,12 @@ int main() {
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
-        //RAYA;
-        //RAYA;
+        RAYA;
+        RAYA;
         solve();
     }
-    //RAYA;
-    //RAYA;
+    RAYA;
+    RAYA;
 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);
