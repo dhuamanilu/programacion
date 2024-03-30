@@ -32,38 +32,50 @@ const char nl = '\n';
 const int MAXN = 100005;
 const int N=1000+3;
 vll G[MAXN];
-vll guarda(MAXN);
-ll dfs(ll act,ll par){
-	if(G[act].size()==1){
-		guarda[act]=1;
-		return 1ll;
+ll dev;
+ll num;
+ll check(ll act,ll par,ll x){
+	ll cuantos=0;
+	if(num>=x){
+		num=0;
+		dev++;
 	}
-	ll cant=0;
-	for(auto & e : G[act]){
+	for(auto & e :G[act]){
 		if(e!=par){
-			cant+=dfs(e,act);
+			cuantos+=check(e,act,x);
 		}
 	}
-	guarda[act]=cant+1;
-	return cant+1;
+	num+=cuantos;
+	return cuantos;
 }
 void solve(){
     ll n,k;
     cin>>n>>k;
-    vll a(n);
-    FOR1(i,1,n){
-    	G[i].clear();
-    	guarda[i]=0;
-    }
-    vpll edges;
+	FOR(i,0,n+1){
+		G[i].clear();
+	}
     FOR(i,0,n-1){
     	ll u,v;
     	cin>>u>>v;
-    	edges.pb({min(u,v),max(u,v)});
     	G[u].pb(v);
     	G[v].pb(u);
     }
-    dfs(1,-1);
+	num=0;
+	dev=0;
+    ll s=1,e=n,m=s+(e-s)/2;
+	ll ans=0;
+	while(s<=e){
+		m=s+(e-s)/2;
+		check(1,-1,m);
+		if(dev>=k+1){
+			ans=m;
+			s=m+1;
+		}
+		else{
+			e=m-1;
+		}
+	}
+	cout<<ans<<"\n";
     
     
     
