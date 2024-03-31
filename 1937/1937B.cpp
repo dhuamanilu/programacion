@@ -153,29 +153,19 @@ long long binpow(long long a, long long b) {
 
 void solve() {
 	ll n;
-    cin>>n;
-    string s;
-    cin>>s;
-    ll sum=0;
-    vl dig;
-    for(auto & e : s)sum+=e-'0';
+	cin>>n;
+	vs a(2);
+	each(e,a) cin>>e;
+    str b="";
+	str c=a[1];
+    map<str,ll> m;
     FOR(i,0,n){
-        dig.pb(sum);
-        sum-=s[n-i-1]-'0';
+        string act(1,a[0][i]);
+        b+=act;
+        m[b+c]++;
+
     }
-    //dbg(dig);
-    FOR(i,0,n-1){
-        if(dig[i]>9){
-            dig[i+1]+=(dig[i]/10);
-            dig[i]%=10;
-        } 
-    }
-    while(dig.size()>0 && dig.back()==0) dig.pop_back();
-    reverse(all(dig));
-    for(auto & e : dig){
-        cout<<e;
-    }
-    cout<<"\n";
+    dbg(b,c);
 }
 
 int main() {
@@ -199,8 +189,6 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
 
 
 
