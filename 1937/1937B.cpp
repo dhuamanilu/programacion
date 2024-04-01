@@ -156,16 +156,32 @@ void solve() {
 	cin>>n;
 	vs a(2);
 	each(e,a) cin>>e;
-    str b="";
-	str c=a[1];
-    map<str,ll> m;
-    FOR(i,0,n){
-        string act(1,a[0][i]);
-        b+=act;
-        m[b+c]++;
+    str b(1,a[0][0]);
+    ll cont=0;
+    for(ll i=0,j=0;i<2 && j<n;){
+        if(j+1<2){
+            auto abajo=a[i][j+1];
+        }
+        
+        if(i+1>=n){
+            b+=abajo;
+        }
+        else{
+            auto derecha=a[0][i+1];
+            if(abajo==derecha){
+                cont++;
+                b+=derecha;
+            }
+            else if(abajo<derecha){
+                b+=abajo;
+            }
+        }
+        
+        
+        
 
     }
-    dbg(b,c);
+    
 }
 
 int main() {

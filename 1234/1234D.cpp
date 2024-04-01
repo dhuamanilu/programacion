@@ -152,51 +152,55 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	vl pref1(n,0);
-	vl type(n,0);
-	type[n-1]=1;
-	FOR(i,1,n-1){
-		if(abs(a[i]-a[i-1])<abs(a[i]-a[i+1])){
-			type[i]=1;
-		}
-	}
-	
-	pref1[0]=0;
-	FOR(i,1,n){
-		pref1[i]=pref1[i-1]+(type[i-1]==0 ? 1 : abs(a[i]-a[i-1]) );
-	}
-	vl pref2(n,0);
-	for(ll i=n-2;i>=0;i--){
-		pref2[i]=pref2[i+1] + (type[i+1]==1 ? 1 : abs(a[i]-a[i+1]));
-	}
+	string s;
+    cin>>s;
+    ll n=s.size();
+    vector<set<ll>> idx(26);
+    FOR(i,0,n){
+        auto e=s[i];
+        idx[e-'a'].insert(i);
+    }
+    ll q;
+    cin>>q;
+    FOR(it,0,q){
+        ll type;
+        cin>>type;
+        if(type==1){
+            ll pos;
+            char c;
+            cin>>pos>>c;
+            pos--;
+            auto act=s[pos];
+            safeErase(idx[act-'a'],pos);
+            s[pos]=c;
+            idx[c-'a'].insert(pos);
 
-	ll m;
-	cin>>m;
-	FOR(it,0,m){
-		ll x,y;
-		cin>>x>>y;
-		x--;
-		y--;
-		if(x<y){
-			cout<<pref1[y]-pref1[x]<<"\n";
-			RAYA;
-		}
-		else{
-			cout<<pref2[y]-pref2[x]<<"\n";
-			RAYA;
-		}
-	}
+        }
+        else{
+            ll l,r;
+            cin>>l>>r;
+            l--;
+            r--;
+            ll ans=0;
+            FOR(j,0,26){
+                auto x = idx[j].lower_bound(l);
+                if(x==idx[j].end()){
+                    continue;
+                }
+                if(*x<=r){
+                    ans++;
+                }
+            }
+            cout<<ans<<"\n";
+        }
+    }
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
@@ -213,15 +217,6 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-
-
 
 
 
