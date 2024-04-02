@@ -176,12 +176,14 @@ void solve() {
             ll grande=(ll)1e9;
             ll izq=-grande,der=grande;
             for(ll j=idx-1;j>=0;j--){
+                if(a[j]>b[idx]) break;
                 if(a[j]==b[idx]){
                     izq=j;
                     break;
                 }
             }
             FOR(j,idx+1,n){
+                if(a[j]>b[idx]) break;
                 if(a[j]==b[idx]){
                     der=j;
                     break;
