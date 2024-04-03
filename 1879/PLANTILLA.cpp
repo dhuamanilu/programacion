@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 998244353;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -149,46 +149,14 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-const int N=200000+5;
-vl fact(N,0);
-void precalc(){
-    fact[0]=1;
-    fact[1]=1;
-    FOR(i,2,N){
-        fact[i]=fact[i-1]*i;
-        fact[i]%=MOD;
-    }
-}
+
+
 void solve() {
-	str s;
-    cin>>s;
-    ll n=s.size();
-	ll ans1=0,ans2=0;
-    FOR(i,0,n){
-        ll j=i+1;
-        while(j<n && s[i]==s[j]){
-            j++;
-        }
-        ll len=j-i+1;
-        //i=algo de j
-        ans1+=fact[len];
-        ans1%=MOD;
-    }
-    ll idx=0;
-    char act=s[0];
-    while(idx<n && s[act]==s[idx]){
-        idx++;
-    }
-    FOR(i,idx,n){
-        ll j=i+1;
-        while(j<n && s[i]==s[j]){
-            j++;
-        }
-        ll len=j-i+1;
-        //i=algo de j
-        ans2+=fact[len];
-        ans2%=MOD;
-    }
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
