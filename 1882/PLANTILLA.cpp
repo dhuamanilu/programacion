@@ -153,47 +153,10 @@ long long binpow(long long a, long long b) {
 
 void solve() {
 	ll n;
-    cin>>n;
-    vl masks(n,0);
-    vector<vl> a;
-    FOR(i,0,n){
-        ll tam;
-        vl aux;
-        ll act=0;
-        cin>>tam;
-        FOR(j,0,tam){
-            ll ele;
-            cin>>ele;
-            aux.pb(ele);
-            act|=(1ll<<(ele));
-        }
-        a.pb(aux);
-        masks[i]=act;
-    }
-    ll tot=0;
-    FOR(i,0,n){
-        tot|=masks[i];
-    }
-    ll ans=0;
-    FOR(i,1,51){
-        if(!(tot&(1ll<<i))) continue;
-        vl aux(n,0);
-        FOR(j,0,n){
-            ll has=masks[j]&(1ll<<i);
-            if(!has){
-                aux[j]++;
-            }
-        }
-        ll contar=0;
-        FOR(j,0,n){
-            if(aux[j]>0){
-                contar|=masks[j];
-            }
-        }
-        ans=max(ans,(ll)__builtin_popcountll(contar));
-    }
-    cout<<ans<<"\n";
-
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
@@ -217,3 +180,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

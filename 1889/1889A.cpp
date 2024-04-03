@@ -153,47 +153,44 @@ long long binpow(long long a, long long b) {
 
 void solve() {
 	ll n;
-    cin>>n;
-    vl masks(n,0);
-    vector<vl> a;
-    FOR(i,0,n){
-        ll tam;
-        vl aux;
-        ll act=0;
-        cin>>tam;
-        FOR(j,0,tam){
-            ll ele;
-            cin>>ele;
-            aux.pb(ele);
-            act|=(1ll<<(ele));
-        }
-        a.pb(aux);
-        masks[i]=act;
+	cin>>n;
+    string s;
+    cin>>s;
+	vl cont(2,0);
+    each(e,s)cont[e-'0']++;
+    if(n%2==1 || cont[0]!=cont[1]){
+        cout<<"-1\n";
+        return;
     }
-    ll tot=0;
-    FOR(i,0,n){
-        tot|=masks[i];
-    }
-    ll ans=0;
-    FOR(i,1,51){
-        if(!(tot&(1ll<<i))) continue;
-        vl aux(n,0);
-        FOR(j,0,n){
-            ll has=masks[j]&(1ll<<i);
-            if(!has){
-                aux[j]++;
-            }
+    ll i=0,j=s.size()-1;
+    vl idx;
+    while(i<s.size() && i<j && j>=0){
+        if(s[i]!=s[j]){
+            i++;
+            j--;
+            continue;
         }
-        ll contar=0;
-        FOR(j,0,n){
-            if(aux[j]>0){
-                contar|=masks[j];
-            }
+        else if(s[i]=='0'){
+            idx.pb(j+1);
+            char a1='0',a2='1';
+            s.insert(s.begin()+j+1,a1);
+            s.insert(s.begin()+j+2,a2);
+            j+=2;
         }
-        ans=max(ans,(ll)__builtin_popcountll(contar));
+        else{
+            idx.pb(i);
+            char a1='0',a2='1';
+            s.insert(s.begin()+i,a1);
+            s.insert(s.begin()+i+1,a2);
+            j+=2;
+        }
     }
-    cout<<ans<<"\n";
-
+    assert(idx.size()<=300);
+    cout<<idx.size()<<"\n";
+    each(e,idx){
+        cout<<e<<" ";
+    }
+    cout<<"\n";
 }
 
 int main() {
@@ -217,3 +214,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+
