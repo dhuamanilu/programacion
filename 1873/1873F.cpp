@@ -152,12 +152,48 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
+	ll n,k;
+	cin>>n>>k;
 	vl a(n);
 	each(e,a) cin>>e;
-	dbg(a);
+	vl h(n);
+    each(e,h)cin>>e;
+    vector<vl> inds;
+    FOR(i,0,n-1){
+        if(h[i]%h[i+1]==0){
+            vl idx;
+            ll j=i;
+            while(j+1<n && h[j]>=h[j+1]
+            && (h[j]%h[j+1]==0)){
+                idx.pb(j);
+                j++;
+            }
+            idx.pb(j);
+            inds.pb(idx);
+            i=j;
+        }
+        else{
+            vl idx;
+            idx.pb(i);
+            inds.pb(idx);
+        }
+    }
+    dbg(inds);
+    ll ans=0;
+    each(vec,inds){
+        ll act=0;
+        ll pt=0,tam=vec.size();
+        ll loc=0;
+        while(pt<tam && act+vec[pt]<k){
+            loc++;
+            act+=vec[pt++];
+        }
+        FOR(i,pt,vec.back()){
+            
+        }
+    }
 }
+
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
