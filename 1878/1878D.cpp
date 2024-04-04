@@ -1,4 +1,4 @@
-//? #pragma GCC optimize ("Ofast")
+#pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 998244353;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -149,47 +149,141 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-const int N=200000+5;
-vl fact(N,0);
-void precalc(){
-    fact[0]=1;
-    fact[1]=1;
-    FOR(i,2,N){
-        fact[i]=fact[i-1]*i;
-        fact[i]%=MOD;
+struct node {
+    node *L, *R;
+    int W, S;
+    char V;
+    bool F;
+    node(char x) {
+        L = R = 0;
+        W = rand();
+        S = 1;
+        V = x;
+        F = 0;
+    }
+};
+
+int size(node *treap) {
+    return (treap == 0 ? 0 : treap->S);
+}
+
+void push(node *treap) {
+    if (treap && treap->F) {
+        treap->F = 0;
+        swap(treap->L, treap->R);
+        if (treap->L) treap->L->F ^= 1;
+        if (treap->R) treap->R->F ^= 1;
+    }
+}
+
+void split(node *treap, node *&left, node *&right, int k) {
+    if (treap == 0)
+        left = right = 0;
+    else {
+        push(treap);
+        if (size(treap->L) < k) {
+            split(treap->R, treap->R, right, k - size(treap->L) - 1);
+            left = treap;
+        }
+        else {
+            split(treap->L, left, treap->L, k);
+            right = treap;
+        }
+        treap->S = size(treap->L) + size(treap->R) + 1;
+    }
+}
+
+void merge(node *&treap, node *left, node *right) {
+    if (left == 0) treap = right;
+    else if (right == 0) treap = left;
+    else {
+        push(left);
+        push(right);
+        if (left->W < right->W) {
+            merge(left->R, left->R, right);
+            treap = left;
+        }
+        else {
+            merge(right->L, left, right->L);
+            treap = right;
+        }
+        treap->S = size(treap->L) + size(treap->R) + 1;
+    }
+}
+
+void print(node *treap) {
+    if (treap == NULL) return;
+    push(treap);
+    print(treap->L);
+    cout << treap->V;
+    print(treap->R);
+}
+ll get(vpl& a, ll target){
+    ll n=a.size();
+    ll s=0,e=n-1,m=s+(e-s)/2;
+    while(s<=e){
+        m=s+(e-s)/2;
+        ll l,r;
+        tie(l,r)=a[m];
+        if(target>= l && target<=r){
+            return m;
+        }
+        else if(target<l){
+            e=m-1;
+            
+        }
+        else{
+            s=m+1;
+        }
     }
 }
 void solve() {
-	str s;
+	ll n,k;
+	cin>>n>>k;
+    node *treap = 0;
+
+    str s;
     cin>>s;
-    ll n=s.size();
-	ll ans=1,cont=0,num=0;
-    dbg(s);
-    FOR(i,0,n){
-        ll j=i+1;
-        while(j<n && s[i]==s[j]){
-            j++;
-        }
-        if(j!=i+1){
-            num++;
-        }
-        
-        ll len=j-i;
-        cont+=max(0ll,len-1);
-        ans*=fact[len];
-        i=j-1;
+    for (auto &i: s) {
+        merge(treap, treap, new node(i));
     }
-    ans*=fact[num];
-    ans%=MOD;
-    cout<<cont<<" "<<ans<<"\n";
+    vpl a(k);
+    each(e,a){
+        cin>>e.f;
+    }
+    each(e,a){
+        cin>>e.s;
+    }
+    ll q;
+    cin>>q;
+    FOR(i,0,q){
+        ll x;
+        cin>>x;
+        ll pos=get(a,x);
+        auto it=a[pos];
+        ll l=(it).f,r=(it).s;
+        ll izq=min(x,l+r-x);
+        ll der=max(x,l+r-x);
+        dbg(x,l,r,izq,der);
+        node *A, *B, *C;
+        split(treap, A, B, izq - 1);
+        split(B, B, C, der - izq + 1);
+        B->F ^= 1;
+        merge(treap, A, B);
+        merge(treap, treap, C);
+
+    }
+    print(treap);
+    cout<<"\n";
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    precalc();  
+
     int t = 1;
     cin >> t;
-    
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
