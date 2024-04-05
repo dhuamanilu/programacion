@@ -157,7 +157,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 ll solve2(ll n,ll k,vl &a,vl &h){
     ll ans=0;
     //falta los de len 1
-    each(e,h){
+    each(e,a){
         if(e<=k)ckmax(ans,1ll);
     }
     vl pref(n,0);
@@ -165,20 +165,22 @@ ll solve2(ll n,ll k,vl &a,vl &h){
     FOR(i,1,n){
         pref[i]=pref[i-1]+a[i];
     }
+    //dbg(a);
     FOR(i,0,n){
         FOR(j,i+1,n){
             bool ok=true;
             // el subarreglo de i a j 
             FOR(k,i,j){
-                if(a[k]%a[k+1]!=0){
+                if((h[k]%h[k+1])!=0){
                     ok=false;
                     break;
                 }
             }
+            //dbg(i,j,ok);
             if(ok){
-                // izq i der j
-                FOR(it1,i,j){
-                    FOR(it2,it1+1,j){
+                // izq i der j+1
+                FOR(it1,i,j+1){
+                    FOR(it2,it1+1,j+1){
                         ll sum=pref[it2]-(it1>=1 ? pref[it1-1] : 0ll);
                         ll len=it2-it1+1;
                         if(sum<=k){
@@ -219,29 +221,28 @@ ll solve(ll n,ll k,vl &a,vl &h) {
         if(e<=k) ckmax(ans,1ll);
     }
     each(vec,inds){
-
-        ll act=0;
-        ll pt=0,tam=vec.size();
-        ll loc=0;
-        while(pt<tam && act+a[vec[pt]]<=k){
-            loc++;
-            act+=a[vec[pt++]];
-        }
-        ckmax(ans,loc);
+        ll act=a[vec[0]];
+        ll tam=vec.size();
+        ll loc=1;
         ll j=vec[0];
-        FOR(i,pt,tam){
-            //dbg(act,loc);
+        FOR(i,1,tam){
+            if(act<=k){
+                ckmax(ans,loc);
+            }
+            while(j<i &&  act + a[vec[i]]>k){
+                act-=a[vec[j++]];
+                loc--;
+            }
+            if(act<0){
+                act=0ll;
+                loc=0;
+            }
+            act+=a[vec[i]];
+            loc++;
+            
+        }
+        if(act<=k){
             ckmax(ans,loc);
-            if(act+a[vec[i]]<=k){
-                act+=a[vec[i]];
-                loc++;
-            }
-            else{
-                while(j < tam &&  act>k){
-                    act-=a[vec[j++]];
-                    loc--;
-                }
-            }
         }
     }
     return ans;
