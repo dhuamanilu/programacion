@@ -224,8 +224,9 @@ ll solve(ll n,ll k,vl &a,vl &h) {
         ll act=a[vec[0]];
         ll tam=vec.size();
         ll loc=1;
-        ll j=vec[0];
+        ll j=0;
         FOR(i,1,tam){
+            //dbg(act,j,vec[i]);
             if(act<=k){
                 ckmax(ans,loc);
             }
@@ -252,7 +253,7 @@ ll solve(ll n,ll k,vl &a,vl &h) {
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    while(true){
+    while(false){
         ll n=rng_ll(1,10);
         ll k=rng_ll(1,1000);
         vl a(n);
@@ -283,7 +284,10 @@ int main() {
         each(e,a) cin>>e;
         vl h(n);
         each(e,h)cin>>e;
-        solve(n,k,a,h);
+        ll mine=solve(n,k,a,h);
+        cout<<mine<<"\n";
+        /*ll brute=solve2(n,k,a,h);
+        dbg(mine,brute);*/
     }
     RAYA;
     RAYA;

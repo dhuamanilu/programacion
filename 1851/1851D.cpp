@@ -149,73 +149,74 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-struct Tree {
-	typedef long long T;
-	static constexpr T unit = 0;
-	T f(T a, T b) { return a+b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
+
 
 void solve() {
-	vs a(2);
-    each(e,a)cin>>e;
-    ll n=a[0].size();
-    Tree st(n);
-    FOR(i,0,n){
-        if(a[0][i]==a[1][i]){
-            st.update(i,1);
-        }
+	ll n;
+	cin>>n;
+	vl a(n-1);
+	each(e,a) cin>>e;
+	vl cont(n+1,0);
+    vl sobra;
+    if(a[0]<=n){
+        cont[a[0]]++;
     }
-    
-    ll t,q;
-    cin>>t,q;
-    vector<vl> unlock(q+1);
-    ll len=n;
-    FOR(it,1,q+1){
-        ll type;
-        cin>>type;
-        if(type==1){
-            ll pos;
-            cin>>pos;
-            pos--;
-            ll time=it+1+t;
-            if(time<=q){
-                unlock[time].pb(pos);
-            }
-            st.update(pos,0);
-            len--;
-        }
-        else if(type==2){
-            ll from;
-            cin>>from;
-            from--;
-            vl pos(2);
-            cin>>pos[0];
-            pos[0]--;
-            ll to;
-            cin>>to;
-            to--;
-            cin>>pos[1];
-            pos[1]--;
-            swap(a[from][pos[0]],a[to][pos[1]]);
-            
-
+    else{
+        sobra.pb(a[0]);
+    }
+    FOR(i,0,n-2){
+        ll e=a[i+1]-a[i];
+        if(e<=n){
+            cont[e]++;
         }
         else{
-
+            sobra.pb(e);
+        }
+    }
+    if(sobra.size()>1){
+        cout<<"NO\n";
+    }
+    else if(sobra.size()==0){
+        vl completar;
+        //dbg(cont);
+        FOR(i,1,n+1){
+            //dbg(i,cont[i]);
+            if(cont[i]==0) completar.pb(i);
+            else if(cont[i]==1){
+                continue;
+            } 
+            else if (cont[i]==2){
+                //dbg("hola",i);
+                sobra.push_back(i);
+            }
+            else{
+                cout<<"NO\n";
+                return;
+            }
+        }
+        //dbg(sobra,completar);
+        if(sobra.size()==1 && completar.size()==2 &&
+        (completar[0]+completar[1])==sobra[0]){
+            cout<<"YES\n";
+        }
+        else if(completar.size()==1){
+            cout<<"YES\n";
+        }
+        else{
+            cout<<"NO\n";
+        }
+    }
+    else{
+        vl completar;
+        FOR(i,1,n+1){
+            if(cont[i]==0) completar.pb(i);
+        }
+        if(completar.size()==2 &&
+        (completar[0]+completar[1])==sobra[0]){
+            cout<<"YES\n";
+        }
+        else{
+            cout<<"NO\n";
         }
     }
 }

@@ -148,88 +148,70 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-struct Tree {
-	typedef long long T;
-	static constexpr T unit = 0;
-	T f(T a, T b) { return a+b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
 
-void solve() {
-	vs a(2);
-    each(e,a)cin>>e;
-    ll n=a[0].size();
-    Tree st(n);
-    FOR(i,0,n){
-        if(a[0][i]==a[1][i]){
-            st.update(i,1);
-        }
+ll solve(ll n,ll k,vl &a,vl &h) {
+    ll ans=0;
+    each(e,a){
+        if(e<=k) ckmax(ans,1ll);
     }
-    
-    ll t,q;
-    cin>>t,q;
-    vector<vl> unlock(q+1);
-    ll len=n;
-    FOR(it,1,q+1){
-        ll type;
-        cin>>type;
-        if(type==1){
-            ll pos;
-            cin>>pos;
-            pos--;
-            ll time=it+1+t;
-            if(time<=q){
-                unlock[time].pb(pos);
-            }
-            st.update(pos,0);
-            len--;
+    FOR(i,0,n-1){
+        ll j=i;
+        while(j+1<n && h[j]%h[j+1]==0){
+            j++;
         }
-        else if(type==2){
-            ll from;
-            cin>>from;
-            from--;
-            vl pos(2);
-            cin>>pos[0];
-            pos[0]--;
-            ll to;
-            cin>>to;
-            to--;
-            cin>>pos[1];
-            pos[1]--;
-            swap(a[from][pos[0]],a[to][pos[1]]);
-            
-
+        if(i==j){
+            continue;
         }
         else{
 
+            ll st=i,fin=j;
+            
+            //dbg(st,fin);
+            i=j;
+            ll sum=a[st];
+            ll len=1;
+            FOR(iter,st+1,fin+1){
+                //dbg(iter,sum);
+                if(sum<=k){
+                    ckmax(ans,len);
+                }
+                while(st<iter && sum+ a[iter]>k){
+                    sum-=a[st++];
+                    len--;
+                }
+                if(sum<0){
+                    sum=0;
+                    len=0;
+                }
+                len++;
+                sum+=a[iter];
+            }
+            if(sum<=k){
+                ckmax(ans,len);
+            }
+
         }
     }
+
+    return ans;
 }
+
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
     int t = 1;
     cin >> t;
-
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll n,k;
+        cin>>n>>k;
+        vl a(n);
+        each(e,a) cin>>e;
+        vl h(n);
+        each(e,h)cin>>e;
+        ll mine=solve(n,k,a,h);
+        cout<<mine<<"\n";
     }
     RAYA;
     RAYA;
