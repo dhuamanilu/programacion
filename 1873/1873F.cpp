@@ -149,15 +149,50 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
+//? /Custom Helpers
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+ll solve2(ll n,ll k,vl &a,vl &h){
+    ll ans=0;
+    //falta los de len 1
+    each(e,h){
+        if(e<=k)ckmax(ans,1ll);
+    }
+    vl pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+        pref[i]=pref[i-1]+a[i];
+    }
+    FOR(i,0,n){
+        FOR(j,i+1,n){
+            bool ok=true;
+            // el subarreglo de i a j 
+            FOR(k,i,j){
+                if(a[k]%a[k+1]!=0){
+                    ok=false;
+                    break;
+                }
+            }
+            if(ok){
+                // izq i der j
+                FOR(it1,i,j){
+                    FOR(it2,it1+1,j){
+                        ll sum=pref[it2]-(it1>=1 ? pref[it1-1] : 0ll);
+                        ll len=it2-it1+1;
+                        if(sum<=k){
+                            ckmax(ans,len);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return ans;
+}
 
-
-void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	vl h(n);
-    each(e,h)cin>>e;
+ll solve(ll n,ll k,vl &a,vl &h) {
     vector<vl> inds;
     FOR(i,0,n-1){
         if(h[i]%h[i+1]==0){
@@ -178,33 +213,76 @@ void solve() {
             inds.pb(idx);
         }
     }
-    dbg(inds);
+    //dbg(inds);
     ll ans=0;
+    each(e,a){
+        if(e<=k) ckmax(ans,1ll);
+    }
     each(vec,inds){
+
         ll act=0;
         ll pt=0,tam=vec.size();
         ll loc=0;
-        while(pt<tam && act+vec[pt]<k){
+        while(pt<tam && act+a[vec[pt]]<=k){
             loc++;
-            act+=vec[pt++];
+            act+=a[vec[pt++]];
         }
-        FOR(i,pt,vec.back()){
-            
+        ckmax(ans,loc);
+        ll j=vec[0];
+        FOR(i,pt,tam){
+            //dbg(act,loc);
+            ckmax(ans,loc);
+            if(act+a[vec[i]]<=k){
+                act+=a[vec[i]];
+                loc++;
+            }
+            else{
+                while(j < tam &&  act>k){
+                    act-=a[vec[j++]];
+                    loc--;
+                }
+            }
         }
     }
+    return ans;
+    
 }
 
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+    while(true){
+        ll n=rng_ll(1,10);
+        ll k=rng_ll(1,1000);
+        vl a(n);
+        each(e,a){
+            e=rng_ll(1,100);
+        }
+        vl h(n);
+        each(e,h){
+            e=rng_ll(1,100);
+        }
+        auto x1=solve(n,k,a,h);
+        auto x2=solve2(n,k,a,h);
+        if(x1!=x2){
+            dbg("xd",x1,x2,n,k,a,h);
+            assert(false);
+        }
+        else dbg("ok");
+    }
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll n,k;
+        cin>>n>>k;
+        vl a(n);
+        each(e,a) cin>>e;
+        vl h(n);
+        each(e,h)cin>>e;
+        solve(n,k,a,h);
     }
     RAYA;
     RAYA;
