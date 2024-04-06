@@ -181,17 +181,25 @@ void solve() {
     }
     
     ll t,q;
-    cin>>t,q;
+    cin>>t>>q;
+    //dbg(a,t,q);
     vector<vl> unlock(q+1);
     ll len=n;
     FOR(it,1,q+1){
+        //dbg(a);
+        each(e,unlock[it]){
+            len++;
+            if(a[0][e]==a[1][e]){
+                st.update(e,1);
+            }
+        }
         ll type;
         cin>>type;
         if(type==1){
             ll pos;
             cin>>pos;
             pos--;
-            ll time=it+1+t;
+            ll time=it+t;
             if(time<=q){
                 unlock[time].pb(pos);
             }
@@ -211,11 +219,18 @@ void solve() {
             cin>>pos[1];
             pos[1]--;
             swap(a[from][pos[0]],a[to][pos[1]]);
-            
+            st.update(pos[0],a[from][pos[0]]==a[from^1][pos[0]]);
+            st.update(pos[1],a[to][pos[1]]==a[to^1][pos[1]]);
 
         }
         else{
-
+            ll sum=st.query(0,n);
+            if(sum==len){
+                cout<<"YES\n";
+            }
+            else{
+                cout<<"NO\n";
+            }
         }
     }
 }
