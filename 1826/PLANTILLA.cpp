@@ -149,49 +149,19 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-const int N=1000000;
-vector<vi> divisors(N+5);
-void precalc(){
-    for (int i = 2; i <= N; i++) {
-        for (int j = i; j <= N; j += i) {
-            divisors[j].push_back(i);
-        }
-    }
-}
+
+
 void solve() {
-	ll n,m;
-	cin>>n>>m;
-	if(n==1 || m==1){
-        cout<<"YES\n";
-    }
-    else{
-        if(n<m){
-            cout<<"NO\n";
-        }
-        else if(n%m==0){
-            cout<<"NO\n";
-        }
-        else{
-            auto divisor=lower_bound(all(divisors[n]),m);
-            if(divisor!=divisors[n].begin()){
-                divisor--;
-            }
-            ll num=*divisor;
-            if(num>1 && num<m){  
-                cout<<"NO\n";
-            }
-            else{
-                cout<<"YES\n";
-            }
-            
-            
-        }
-    }
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    precalc();
+
     int t = 1;
     cin >> t;
 
