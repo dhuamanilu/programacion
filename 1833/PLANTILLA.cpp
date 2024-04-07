@@ -149,62 +149,14 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-const int N=200000+5;
-vl id(N,0);
-vl vis(N,0);
-vector<vl> G(N);
-bool detect(ll ele,ll par){
-    vis[ele]=true;
-    for(auto & e: G[ele]){
-        if(!vis[e])return detect(e,ele);
-        else if(e!=par)return true;
-    } 
-    return false;
-}
-void dfs(ll ele,ll iden){
-    vis[ele]=true;
-    id[ele]=iden;
-    for(auto & e: G[ele]){
-        if(!vis[e])dfs(e,iden);
-    } 
-}
+
+
 void solve() {
 	ll n;
 	cin>>n;
-    FOR(i,1,n+1){
-        id[i]=-1;
-        vis[i]=0;
-        G[i].clear();
-    }
-	FOR(i,1,n+1){
-        ll x;
-        cin>>x;
-        ll y=i;
-        G[x].pb(y);
-        G[y].pb(x);
-    }
-    //FOR(i,1,n+1) dbg(i,G[i]);
-    //minimo 1 + nro de ciclos
-    //maximo nro de componentes conexas
-    ll iden=1;
-    FOR(i,1,n+1){
-        if(!vis[i]){
-            //dbg(i,iden);
-            dfs(i,iden);
-            iden++;
-        }
-    }
-    iden--;
-    FOR(i,1,n+1) vis[i]=0;
-    map<ll,ll> cycle;
-    FOR(i,1,n+1){
-        if(!vis[i]){
-            if(detect(i,-1)) cycle[id[i]]++;
-        }
-    }
-    ll num=cycle.size();
-    if(num<iden) num++;
-    cout<<num<<" "<<iden<<"\n";
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
