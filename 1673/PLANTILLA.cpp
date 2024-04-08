@@ -150,19 +150,18 @@ long long binpow(long long a, long long b) {
 }
 //? /Custom Helpers
 
-void precalc(){
 
-}
 void solve() {
 	ll n;
 	cin>>n;
 	vl a(n);
-	
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    precalc();
+
     int t = 1;
     cin >> t;
 
