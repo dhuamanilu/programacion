@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+7;
+const int MOD = 1000000000+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -149,9 +149,26 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
+const int N=40000+5;
+const int M=500;
+vl palindromes;
+vector<vl> dp(N,vl(M,0));
+void gen(str s){
+    if(s.size()>4){
+        return;
+    }
+    if(s.size()>0){
+        palindromes.pb(stoll(s));
+    }
+    
+    FOR(i,1,10){
+        str aux=s+to_string(i);
+        gen(aux);
+    }
+}
 void precalc(){
-
+    gen("");
+    dbg(palindromes);
 }
 void solve() {
 	ll n;
