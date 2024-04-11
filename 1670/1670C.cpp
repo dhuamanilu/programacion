@@ -158,15 +158,29 @@ void solve() {
 	each(e,a) cin>>e;
 	vl b(n);
     each(e,b) cin>>e;
+
+    vector<vl> pos(n+1);
+    FOR(i,0,n){
+        ll e=a[i];
+        ll e2=b[i];
+        pos[e].pb(i);
+        pos[e2].pb(i);
+    }
     vl d(n);
     each(e,d) cin>>e;
     ll ans=1;
-    vector<vpl> vis(n,vpl(2,mp(0ll,0ll)));
+    vector<vl> vis(n,vl(2,0));
     FOR(i,0,n){
         
         if(d[i]==0){
             ans*=2;
             ans%=MOD;
+
+
+
+        }
+        else{
+
         }
 
     }
