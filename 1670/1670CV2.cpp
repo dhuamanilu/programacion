@@ -183,29 +183,28 @@ void solve() {
     vl d(n);
     each(e,d) cin>>e;
     ll ans=1;
-    vector<vl> vis(n,vl(2,0));
+    UF DSU(n+1);
     FOR(i,0,n){
         if(d[i]==0){
         }
         else{
             
             ll fAct=i,colAct=(a[i]==d[i] ? 0 : 1);
+            ll act;
+            if(colAct==0) act=a[fAct];
+            else act=b[fAct];
             //dbg("seg",ans,fAct,colAct);
-            while(!vis[fAct][colAct] && !vis[fAct][colAct^1]){
-                vis[fAct][colAct]=1;
-
-                colAct^=1;
-                fAct=pos[colAct][d[fAct]];
+            while(true){
+                fAct=pos[colAct^1][d[fAct]];
                 //dbg("hola ???",fAct,colAct,a[fAct],b[fAct]);
                 if(colAct==0){
                     d[fAct]=b[fAct];
                 }
                 else{
                     d[fAct]=a[fAct];
-                }
-                colAct^=1;
-                //dbg(d[fAct]);
-                
+                }   
+                if(!DSU.join(act,d[fAct])) break;
+                act=d[fAct];
             }
         }
 
@@ -216,27 +215,25 @@ void solve() {
                 ans*=2;
                 ans%=MOD;
             }
-            
-            
-            ll fAct=i,colAct=0;
-            d[fAct]=a[fAct];
-            //dbg("pri",ans,fAct,colAct);
-            while(!vis[fAct][colAct]){
-                vis[fAct][colAct]=1;
-                colAct^=1;
-                fAct=pos[colAct][d[fAct]];
-                
+            ll fAct=i,colAct=(a[i]==d[i] ? 0 : 1);
+            ll act;
+            if(colAct==0) act=a[fAct];
+            else act=b[fAct];
+            //dbg("seg",ans,fAct,colAct);
+            while(true){
+                fAct=pos[colAct^1][d[fAct]];
+                //dbg("hola ???",fAct,colAct,a[fAct],b[fAct]);
                 if(colAct==0){
-                    //dbg("hola 1",fAct,colAct,b[fAct]);
                     d[fAct]=b[fAct];
                 }
                 else{
-                    //dbg("hola 2",fAct,colAct,a[fAct]);
                     d[fAct]=a[fAct];
-                }
-                colAct^=1;
-
+                }   
+                if(!DSU.join(act,d[fAct])) break;
+                act=d[fAct];
             }
+            
+            
         }
 
     }
