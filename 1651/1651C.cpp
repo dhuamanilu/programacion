@@ -148,16 +148,49 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
 
-
+ll get(vl &a, ll val){
+    ll pos=-1;
+    ll mini=(ll)1e18;
+    FOR(i,0,(ll)a.size()){
+        if(abs(a[i]-val)<mini){
+            mini=abs(a[i]-val);
+            pos=i;
+        }
+    }
+    return pos;
+}
 void solve() {
 	ll n;
 	cin>>n;
 	vl a(n);
 	each(e,a) cin>>e;
 	vl b(n);
-	each(e,b) cin>>e;
+    each(e,b) cin>>e;
+    vl cands1={0,get(b,a[0]),n-1};
+    vl cands2={0,get(b,a[n-1]),n-1};
+    ll ans=(ll)1e18;
+    each(e,cands1){
+        each(e2,cands2){
+            ll act=abs(a[0]-b[e])+abs(a[n-1]-b[e2]);
+            if(e!=0 && e2!=0){
+                ll falta=get(a,b[0]);
+                act+=abs(a[falta]-b[0]);
+            }
+            if(e!=n-1 && e2!=n-1){
+                ll falta=get(a,b[n-1]);
+                act+=abs(a[falta]-b[n-1]);
+            }
+            ckmin(ans,act);
+        }
+    }
+    cout<<ans<<"\n";
+    /*
+    1 
+    3
+1 2 1
+4 3 4
+    */
     
 }
 
