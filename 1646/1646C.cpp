@@ -148,121 +148,41 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-void update(vi  &Tree, int idx, int s,
-            int e, int pos, int X)
-{
-    // If current node is a
-    // leaf nodes
-    if (s == e) {
- 
-        // Update Tree[idx]
-        Tree[idx] += X;
+//? /Custom Helpers
+
+vl fact;
+const int tam=15;
+void init(){
+    ll act=1;
+    FOR(i,1,tam+1){
+        act*=i;
+        fact.pb(act);
     }
- 
-    else {
- 
-        // Divide segment tree into left
-        // and right subtree
-        int m = (s + e) / 2;
- 
-        // Check if pos lies in left subtree
-        if (pos <= m) {
- 
-            // Search pos in left subtree
-            update(Tree, 2 * idx, s, m, pos, X);
-        }
-        else {
- 
-            // Search pos in right subtree
-            update(Tree, 2 * idx + 1, m + 1, e,
-                   pos, X);
-        }
- 
-        // Update Tree[idx]
-        Tree[idx]
-            = Tree[2 * idx] + Tree[2 * idx + 1];
-    }
-}
- 
-// Function to find the sum from
-// elements in the range [0, X]
-ll sum(vi &Tree, int idx, int s,
-        int e, int ql, int qr)
-{
-    // Check if range[ql, qr] equals
-    // to range [s, e]
-    if (ql == s && qr == e)
-        return Tree[idx];
- 
-    if (ql > qr)
-        return 0;
- 
-    // Divide segment tree into
-    // left subtree and
-    // right subtree
-    int m = (s + e) / 2;
- 
-    // Return sum of elements in the range[ql, qr]
-    return sum(Tree, 2 * idx, s, m, ql, min(m, qr))
-           + sum(Tree, 2 * idx + 1, m + 1, e,
-                 max(ql, m + 1), qr);
-}
- 
-// Function to find Xth element
-// in the array
-ll getElement(vi & Tree, int X, int N){
-    // Print element at index x
-    return sum(Tree, 1, 0, N - 1, 0, X);
-}
- 
-// Function to update array elements
-// in the range [L, R]
-void range_Update(vi &Tree, int L,
-                  int R, int X, int N)
-{
- 
-    // Update arr[l] += X
-    update(Tree, 1, 0, N - 1, L, X);
- 
-    // Update arr[R + 1] += X
-    if (R + 1 < N)
-        update(Tree, 1, 0, N - 1, R + 1, -X);
-}
-bool check(ll k,str & s){
-    ll n=s.size();
-    vi tree(4*n+5,0);
-    FOR(i,0,n){
-        ll cant=getElement(tree,i,n);
-        if((s[i]=='0' && cant%2==0)
-        || (s[i]=='1' && cant%2==1)){
-            if(i+k-1<n){
-                range_Update(tree,i,i+k-1,1,n);
-            }
-            else{
-                return false;
-            }
-            
-        }
-    }
-    return true;
 }
 void solve() {
 	ll n;
 	cin>>n;
-	str s;
-	cin>>s;
-    for(ll i=n;i>=0;i--){
-        if(check(i,s)){
-            cout<<i<<"\n";
-            return;
-        } 
+    ll ans=(ll)1e18;
+	FOR(i,0,(1ll<<tam)){
+        ll act=0;
+        ll cant=0;
+        FOR(j,0,tam){
+            if(i&(1ll<<j)){
+                act+=fact[j];
+                cant++;
+            }
+        }
+        if(act<=n){
+            cant+=__builtin_popcountll(n-act);
+            ckmin(ans,cant);
+        }
     }
-    
+    cout<<ans<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+    init();
     int t = 1;
     cin >> t;
 
