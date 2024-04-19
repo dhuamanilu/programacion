@@ -141,12 +141,9 @@ inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
 long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
-        if (b & 1){
+        if (b & 1)
             res = res * a;
-            res%=MOD;
-        }    
         a = a * a;
-        a%=MOD;
         b >>= 1;
     }
     return res;
@@ -155,16 +152,11 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n,m;
-	cin>>n>>m;
-    ll ans=0;
-	FOR(i,0,m){
-        ll l,r,x;
-        cin>>l>>r>>x;
-        ans|=x;
-    }
-    ll pot=binpow(2,n-1);
-    cout<<(ans*pot)%MOD<<"\n";
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
@@ -188,3 +180,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+
