@@ -149,14 +149,18 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
+map<ll,double> calc;
+double get(ll n,ll a,ll x ,ll y){
+    if(n==0) return 0;
+    if(calc.count(n)) return calc[n];
+    
+   
 
-
+}
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll n,a,x,y;
+	cin>>n>>a>>x>>y;
+	cout<<setprecision(8)<<get(n,a,x,y)<<"\n";
 }
 
 int main() {

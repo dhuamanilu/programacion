@@ -152,11 +152,20 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll n,q;
+	cin>>n>>q;
+    vl a(n,1);
+	FOR(i,0,q){
+        ll t;
+        cin>>t;
+        t--;
+        a[t]^=1;
+    }
+    ll ans=0;
+    FOR(i,0,n){
+        if(a[i]==1)ans++;
+    } 
+    cout<<ans<<"\n";
 }
 
 int main() {

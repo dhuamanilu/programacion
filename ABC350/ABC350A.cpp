@@ -152,11 +152,16 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	str s;
+    cin>>s;
+    str a=s.substr(3);
+    ll num=stoll(a);
+    if(num==316 || num>349 || num==0){
+        cout<<"No\n";
+    }
+    else{
+        cout<<"Yes\n";
+    }
 }
 
 int main() {

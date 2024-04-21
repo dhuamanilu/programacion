@@ -149,14 +149,41 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-
+const int N=200000+5;
+vector<vl> G(N);
+vl vis(N,0);
+ll ans=0;
+ll dfs(ll x){
+    ans++;
+    vis[x]=true;
+    ll res=G[x].size();
+    for(auto & e : G[x]){
+        if(!vis[e]){
+            res+=dfs(e);
+        }
+    }
+    return res;
+}
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll n,m;
+	cin>>n>>m;
+	FOR(i,0,m){
+        ll a,b;
+        cin>>a>>b;
+        G[a].pb(b);
+        G[b].pb(a);
+    }
+    ll res=0;
+    FOR(i,1,n+1){
+        if(!vis[i]){
+            ans=0;
+            ll num=dfs(i);
+            //dbg(i,ans,num);
+            res+=(ans)*(ans-1)/2 - num/2;
+            //dbg(res);
+        }
+    }
+    cout<<res<<"\n";
 }
 
 int main() {

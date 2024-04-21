@@ -154,9 +154,30 @@ long long binpow(long long a, long long b) {
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+    vl a(n+1,0);
+	vl pos(n+1,0);
+	FOR(i,1,n+1){
+        cin>>a[i];
+        pos[a[i]]=i;
+    }
+    vpl op;
+    FOR(i,1,n+1){
+        //dbg(a,pos);
+        if(pos[i]!=i){
+            op.pb({i,pos[i]});
+            ll act=a[i];
+            swap(a[i],a[pos[i]]);
+            pos[act]=pos[i];
+            pos[i]=i;   
+            
+        }
+    }
+    assert(op.size()<=n-1);
+    cout<<(ll)op.size()<<"\n";
+    each(e,op){
+        cout<<e.f<<" "<<e.s<<"\n";
+    }
+
 }
 
 int main() {
