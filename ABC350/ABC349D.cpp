@@ -152,9 +152,7 @@ long long binpow(long long a, long long b) {
 
 ll get(ll x){
   ll pot=1;
-  //dbg(x%pot);
-  while(x>=pot && pot<=LLONG_MAX/2 && (x%(pot*2))==0){
-    //dbg("multiplcando pot *2",pot*2,LLONG_MAX/pot);
+  while(x>=pot && (x%(pot*2))==0){
     pot*=2;
   }
   return pot;
@@ -166,19 +164,23 @@ void solve() {
   ll pot;
   if(l!=0)pot=get(l);
   else pot=get(r);
+  while(pot>1 && pot*(1+(l/pot))>r){
+        //dbg("decrementando tenc",tenc);
+        pot/=2;
+  }
   pl x={l,pot*(1+(l/pot))};
   a.pb(x);
   while(a.back().s!=r){
-    dbg(a);
+    //dbg(a);
     ll act=a.back().s;
     ll tenc=get(act);
-    dbg(act,tenc);
+    //dbg(act,tenc);
     while(tenc>1 && tenc*(1+(act/tenc))>r){
-        dbg("decrementando tenc",tenc);
+        //dbg("decrementando tenc",tenc);
         tenc/=2;
     }
     pl xx={act,tenc*(1+(act/tenc))};
-    dbg(a,act,tenc,xx);
+    //dbg(a,act,tenc,xx);
     a.pb(xx);
   }
   cout<<a.size()<<"\n";
