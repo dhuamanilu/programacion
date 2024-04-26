@@ -149,42 +149,41 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-ll get(ll x){
-  ll pot=1;
-  while(x>=pot && (x%(pot*2))==0){
-    pot*=2;
-  }
-  return pot;
+const int N=200000+5;
+vector<vl> G(N);
+vl vis(N,0);
+ll ans=0;
+ll dfs(ll x){
+    ans++;
+    vis[x]=true;
+    ll res=G[x].size();
+    for(auto & e : G[x]){
+        if(!vis[e]){
+            res+=dfs(e);
+        }
+    }
+    return res;
 }
 void solve() {
-  ll l,r;
-  cin>>l>>r;
-  vpl a;
-  ll pot;
-  if(l!=0)pot=get(l);
-  else pot=get(r);
-  while(pot>1 && pot*(1+(l/pot))>r){
-        //dbg("decrementando tenc",tenc);
-        pot/=2;
-  }
-  pl x={l,pot*(1+(l/pot))};
-  a.pb(x);
-  while(a.back().s!=r){
-    //dbg(a);
-    ll act=a.back().s;
-    ll tenc=get(act);
-    //dbg(act,tenc);
-    while(tenc>1 && tenc*(1+(act/tenc))>r){
-        //dbg("decrementando tenc",tenc);
-        tenc/=2;
+	ll n,m;
+	cin>>n>>m;
+	FOR(i,0,m){
+        ll a,b;
+        cin>>a>>b;
+        G[a].pb(b);
+        G[b].pb(a);
     }
-    pl xx={act,tenc*(1+(act/tenc))};
-    //dbg(a,act,tenc,xx);
-    a.pb(xx);
-  }
-  cout<<a.size()<<"\n";
-  each(e,a)cout<<e.f<<" "<<e.s<<"\n";
+    ll res=0;
+    FOR(i,1,n+1){
+        if(!vis[i]){
+            ans=0;
+            ll num=dfs(i);
+            //dbg(i,ans,num);
+            res+=(ans)*(ans-1)/2 - num/2;
+            //dbg(res);
+        }
+    }
+    cout<<res<<"\n";
 }
 
 int main() {
@@ -208,3 +207,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+
