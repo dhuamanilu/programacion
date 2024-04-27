@@ -1,7 +1,7 @@
 //? #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
-#undef _GLIBCXX_DEBUG //? for Stress Testing
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
@@ -148,134 +148,68 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-const ll tam=3;
+//? /Custom Helpers
+ll h,w;
+const int tam=1005;
 vector<vl> a(tam,vl(tam,0));
-map<vector<vl>,bool> memo;
-bool get(vector<vl> b,ll turno){
-    if(memo.count(b)) return memo[b];
-    // 1 lo cogio takashi 2 aokiji :V
-    dbg("dgbb",b);
-    FOR(i,0,tam){
-        map<ll,ll> m;
-        bool ok=true;
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                ok=false;
-                break;
-            }
-            m[b[i][j]]++;
-        }
-        if(ok && m.size()==1){
-            if(m.begin()->f==1){
-                memo[b]=true;
-                return true;
-            } 
-            else{
-                memo[b]=false;
-                return false;
-            } 
-        }  
-    }
-    FOR(i,0,tam){
-        map<ll,ll> m;
-        bool ok=true;
-        FOR(j,0,tam){
-            if(b[j][i]==0){
-                ok=false;
-                break;
-            }
-            m[b[j][i]]++;
-        }
-        if(ok && m.size()==1){
-            if(m.begin()->f==1){
-                memo[b]=true;
-                return true;
-            } 
-            else{
-                memo[b]=false;
-                return false;
-            } 
-        }  
-    }
-    if(b[0][0] == b[1][1] && b[1][1]==b[2][2] && b[0][0]!=0){
-        if(b[0][0]==1){
-            memo[b]=true;
-            return true;
-        } 
-        else{
-            memo[b]=false;
-            return false;
-        } 
-    }
-    if(b[0][2] == b[1][1] && b[1][1]==b[2][0] && b[0][2]!=0){
-        if(b[0][2]==1){
-            memo[b]=true;
-            return true;
-        } 
-        else{
-            memo[b]=false;
-            return false;
-        } 
-    }
-    // todos ya cogidos :V
-    bool term=true;
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                term=false;
-                break;
-            }
+vector<vl> vis(tam,vl(tam,0));
+vl dx={1,-1,0,0};
+vl dy={0,0,1,-1};
+bool isValid(ll x,ll y){
+    return x>=0 && x<h && y>=0 && y<w;
+}
+bool has(ll x,ll y){
+    FOR(i,0,4){
+        ll newX=x+dx[i],newY=y+dy[i];
+        if(isValid(newX,newY)){
+            if(a[newX][newY]==1) return true;
         }
     }
-    if(term){
-        ll score1=0,score2=0;
-        FOR(i,0,tam){
-            FOR(j,0,tam){
-                if(b[i][j]==1) score1+=a[i][j];
-                else score2+=a[i][j];
-            }
-        }
-        memo[b]=score1 > score2;
-        return score1 > score2;
-    }
-    //por fin estado no terminal xd
-    bool can=false;
-    //enumerar todos los trableros de 1 operacion
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                vector<vl> c=b;
-                if(turno==0){
-                    c[i][j]=1;
-                    can|=get(c,turno^1);
-                }
-                else{
-                    c[i][j]=2;
-                    can|=get(c,turno^1);
-                }
-                
-            }
+    return false;
+}
+vpl desh;
+ll dfs(ll x,ll y){
+    
+    vis[x][y]=1;
+    if(has(x,y)){
+        desh.pb(mp(x,y));
+        return 1ll;
+    } 
+    ll cant=1;
+    FOR(i,0,4){
+        ll newX=x+dx[i],newY=y+dy[i];
+        if(isValid(newX,newY)){
+            if(!vis[newX][newY]) cant+=dfs(newX,newY);
         }
     }
-    memo[b]=can;
-    return can;
+    return  cant;
 
 }
-void solve(){
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            cin>>a[i][j];
+void solve() {
+	cin>>h>>w;
+    FOR(i,0,h){
+        str s;
+        cin>>s;
+        FOR(j,0,w){
+            a[i][j]=(s[j]=='#');
         }
     }
-    vector<vl> b(tam,vl(tam,0));
-    bool win=get(b,0);
-    if(win){
-        cout<<"Takahashi\n";
+    ll ans=0;
+    FOR(i,0,h){
+        FOR(j,0,w){
+            if(!vis[i][j] && a[i][j]==0){
+                ll act=dfs(i,j);
+                dbg(act);
+                ckmax(ans,act);
+                for(auto &e : desh)vis[e.f][e.s]=0;
+                desh.clear();
+            }
+        }
     }
-    else{
-        cout<<"Aoki\n";
-    }
+    cout<<ans<<"\n";
+
 }
+
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 

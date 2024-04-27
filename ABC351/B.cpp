@@ -1,7 +1,7 @@
 //? #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
-#undef _GLIBCXX_DEBUG //? for Stress Testing
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
@@ -148,134 +148,28 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-const ll tam=3;
-vector<vl> a(tam,vl(tam,0));
-map<vector<vl>,bool> memo;
-bool get(vector<vl> b,ll turno){
-    if(memo.count(b)) return memo[b];
-    // 1 lo cogio takashi 2 aokiji :V
-    dbg("dgbb",b);
-    FOR(i,0,tam){
-        map<ll,ll> m;
-        bool ok=true;
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                ok=false;
-                break;
-            }
-            m[b[i][j]]++;
-        }
-        if(ok && m.size()==1){
-            if(m.begin()->f==1){
-                memo[b]=true;
-                return true;
-            } 
-            else{
-                memo[b]=false;
-                return false;
-            } 
-        }  
-    }
-    FOR(i,0,tam){
-        map<ll,ll> m;
-        bool ok=true;
-        FOR(j,0,tam){
-            if(b[j][i]==0){
-                ok=false;
-                break;
-            }
-            m[b[j][i]]++;
-        }
-        if(ok && m.size()==1){
-            if(m.begin()->f==1){
-                memo[b]=true;
-                return true;
-            } 
-            else{
-                memo[b]=false;
-                return false;
-            } 
-        }  
-    }
-    if(b[0][0] == b[1][1] && b[1][1]==b[2][2] && b[0][0]!=0){
-        if(b[0][0]==1){
-            memo[b]=true;
-            return true;
-        } 
-        else{
-            memo[b]=false;
-            return false;
-        } 
-    }
-    if(b[0][2] == b[1][1] && b[1][1]==b[2][0] && b[0][2]!=0){
-        if(b[0][2]==1){
-            memo[b]=true;
-            return true;
-        } 
-        else{
-            memo[b]=false;
-            return false;
-        } 
-    }
-    // todos ya cogidos :V
-    bool term=true;
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                term=false;
-                break;
-            }
-        }
-    }
-    if(term){
-        ll score1=0,score2=0;
-        FOR(i,0,tam){
-            FOR(j,0,tam){
-                if(b[i][j]==1) score1+=a[i][j];
-                else score2+=a[i][j];
-            }
-        }
-        memo[b]=score1 > score2;
-        return score1 > score2;
-    }
-    //por fin estado no terminal xd
-    bool can=false;
-    //enumerar todos los trableros de 1 operacion
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            if(b[i][j]==0){
-                vector<vl> c=b;
-                if(turno==0){
-                    c[i][j]=1;
-                    can|=get(c,turno^1);
-                }
-                else{
-                    c[i][j]=2;
-                    can|=get(c,turno^1);
-                }
-                
-            }
-        }
-    }
-    memo[b]=can;
-    return can;
+//? /Custom Helpers
 
-}
-void solve(){
-    FOR(i,0,tam){
-        FOR(j,0,tam){
-            cin>>a[i][j];
+
+void solve() {
+	ll n;
+	cin>>n;
+	vector<string> a(n);
+    vector<string> b(n);
+    each(e,a)cin>>e;
+	each(e,b) cin>>e;
+	FOR(i,0,n){
+        if(a[i]!=b[i]){
+            FOR(j,0,n){
+                if(a[i][j]!=b[i][j]){
+                    cout<<i+1<<" "<<j+1<<"\n";
+                    return;
+                }
+            }
         }
     }
-    vector<vl> b(tam,vl(tam,0));
-    bool win=get(b,0);
-    if(win){
-        cout<<"Takahashi\n";
-    }
-    else{
-        cout<<"Aoki\n";
-    }
 }
+
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
