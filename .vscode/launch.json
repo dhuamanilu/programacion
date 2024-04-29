@@ -60,8 +60,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/programacion_competitiva/programacion/ABC349",
-      "program": "d:/programacion_competitiva/programacion/ABC349/build/Debug/outDebug",
+      "cwd": "d:/programacion_competitiva/programacion/ABC351",
+      "program": "d:/programacion_competitiva/programacion/ABC351/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

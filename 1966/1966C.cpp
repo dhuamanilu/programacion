@@ -156,48 +156,36 @@ void solve() {
 	cin>>n;
 	map<ll,ll> m;
     vl a(n);
-    ll mini=(ll)1e18;
     FOR(i,0,n){
         cin>>a[i];
         m[a[i]]++;
-        ckmin(mini,a[i]);
+
     }
-    if(mini>=2){
-        cout<<"Alice\n";
-    }
-    else{
-        //minimo=1 (1 2 6 7 8 9)
-        ll tam=m.size();
-        if(tam==1){
-            cout<<"Alice\n";
+    ll tam=m.size();
+    ll mex=1;
+    map<ll,ll> vis;
+    FOR(i,0,n){
+        vis[a[i]]++;
+        while(mex<=n && vis.count(mex)){
+            mex++;
         }
-        else if(tam==2){
+    }
+    if(mex==tam+1){
+        if(tam%2==0){
             cout<<"Bob\n";
         }
         else{
-            //el primero que obtenga la libertad
-            if(tam%2==1){
-                cout<<"Bob\n";
-            }
-            else cout<<"Alice\n";
-            /*bool sec=true;
-            FOR(i,1,tam+1){
-                if(!m.count(i)){
-                    sec=false;
-                    break;
-                }
-            }
-            if(sec){
-                if(tam%2==1){
-                    cout<<"Alice\n";
-                }
-                else cout<<"Bob\n";
-            }
-            else{
-                cout<<"Alice\n";
-            }*/
-        }
+            cout<<"Alice\n";
+        }    
     }
+    else{
+        if(mex%2==1){
+            cout<<"Alice\n";
+        }
+        else{
+            cout<<"Bob\n";
+        }
+    } 
 }
 
 int main() {
