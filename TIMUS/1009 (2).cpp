@@ -4,7 +4,7 @@ typedef long long ll;
 typedef long double ld;
 typedef pair<int, int> pi;
 typedef vector<int> vi;
-typedef vector<ll> vl;
+typedef vector<ll> vll;
 typedef map <ll,ll> mll;
 typedef vector <pair<ll,ll>> vpll;
 typedef priority_queue<ll> pq;
@@ -29,42 +29,33 @@ typedef priority_queue<ll> pq;
 #endif
 const int MOD = 1000000007;
 const char nl = '\n';
-const int MX = 100001;
+const int MAX = 100005;
 const int N=1000+3;
+vll a(MAX,0);
+void precalc(){
+	a[1]=1;
+	FOR(i,1,MAX){
+		if(2*i<MAX) a[2*i]=a[i];
+		if(2*i+1<MAX) a[2*i+1]=a[i]+a[i+1];
+	}
+}
 
 void solve(){
-    ll n,k;
-    cin>>n>>k;
-    vector<vl> dp(n+1,vl(k,0));
-    //cantidad de numeros de i digitos validos en base k
-    //tal que el ultimo digito fue j
-    FOR(j,1,k){
-        dp[1][j]=1;
+    ll n;
+    //dbg(a);
+    while(true){
+    	cin>>n;
+    	if(n==0) break;
+    	cout<<*(max_element(a.begin(),a.begin()+n+1))<<"\n";
     }
-    FOR(i,2,n+1){
-        ll sum=0;
-        ll delcero=dp[i-1][0];
-        FOR(j,0,k){
-            sum+=dp[i-1][j];
-        }
-        dp[i][0]+=sum-delcero;
-        FOR(j,1,k){
-            dp[i][j]+=sum;
-        }
-    }
-    ll ans=0;
-    FOR(j,0,k){
-        ans+=dp[n][j];
-    }
-    cout<<ans<<"\n";
-
-    //la respuesta sera sum dp[n][j]j de 0 a k-1
+    
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    int t=1;
-    //cin>>t;
+	int t=1;
+	precalc();
+    //cin>>t; 
     while(t--){
         solve();
     }
