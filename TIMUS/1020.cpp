@@ -152,13 +152,22 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n,k,d;
-	cin>>n>>k>>d;
-	/*dp i j 
-    cantidad de caminos de 
-    longitud i con suma de pesos
-    j 
-    */
+	ll n;
+    double r;
+	cin>>n>>r;
+	vpd a(n);
+	each(e,a){
+        cin>>e.f;
+        cin>>e.s;
+    } 
+	double dist=0;
+    FOR(i,0,n){
+        double d=abs(a[(i+1)%n].f-a[i%n].f)*abs(a[(i+1)%n].f-a[i%n].f) +
+         abs(a[(i+1)%n].s-a[i%n].s)*abs(a[(i+1)%n].s-a[i%n].s);
+        dist+=sqrt(d);
+    }
+    dbg(dist);
+    cout<<dist+2*3.14159*r<<"\n";
 }
 
 int main() {

@@ -152,20 +152,18 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-	ll n,k,d;
-	cin>>n>>k>>d;
-	/*dp i j 
-    cantidad de caminos de 
-    longitud i con suma de pesos
-    j 
-    */
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
