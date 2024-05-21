@@ -148,74 +148,32 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-map<ll,pl> m;
-vl a(3005);
-vl vis(3005,false);
-ll n;
-void reconstruct(ll act,ll idxAct){
-    if(idxAct==-1) return;
-    pl actu={-1,-1};
-    pl idxActu={-1,-1};
-    for(ll i=idxAct-1;i>=0;i--){
-        if(vis[i]) continue;
-        if(a[i] > act) {
-            vis[i]=true;
-            actu.s=a[i];
-            idxActu.s=i;
-            break;
+
+pl P(int x, int y)
+{
+    if (x > 0 && y > 0)
+    {
+        for (int i = 0; i < x + y; i++)
+        {
+            y = x * x + y;
+            x = x * x + y;
+            y = sqrt(x + y / abs(y) * -abs(y));
+            for (int j = 0; j < 2 * y; j++)
+                x -= y;
         }
     }
-    for(ll i=idxAct-1;i>=0;i--){
-        if(vis[i]) continue;
-        if(a[i] < act) {
-            vis[i]=true;
-            actu.f=a[i];
-            idxActu.f=i;
-            break;
-        }
-    }
-    m[act]=actu;
-    reconstruct(actu.f,idxActu.f);
-    reconstruct(actu.s,idxActu.s);
-}
-vl ans;
-void construct (ll act){
-    dbg("estoy en el nodo",act);
-    bool hasRightChild=m[act].s != -1;
-    if(hasRightChild && m[m[act].s].f ==-1 && m[m[act].s].s ==-1 ){
-        dbg("nodo derecho hoja lo pb",m[act].s);
-        ans.pb(m[act].s);
-    }
-    else if(hasRightChild){
-        //if(m[act].s==-1) exit(0);
-        dbg("nodo derecho recursivo",m[act].s);
-        construct(m[act].s);
-    }
-    bool hasLeftChild=m[act].f != -1;
-    if(hasLeftChild && m[m[act].f].f ==-1 && m[m[act].f].s ==-1 ){
-        dbg("nodo izquierdo hoja lo pb",m[act].f);
-        ans.pb(m[act].f);
-    }
-    else if(hasLeftChild){
-        dbg("nodo izqierdo recursivo",m[act].f);
-        construct(m[act].f);
-    }
-    dbg("Pusheando raiz",act);
-    ans.pb(act);
+    return {x,y};
 }
 void solve() {
-	cin>>n;
-    FOR(i,0,n){
-        cin>>a[i];
+	FOR(i,-10,10){
+        FOR(j,-10,10){
+            cout<<i<<" "<<j<<"\n";
+            auto x=P(i,j);
+            cout<<x.f<<" "<<x.s<<"\n";
+        }
     }
-    ll root=a[n-1];
-    reconstruct(root,n-1);
-    dbg(m);
-    // drecha izquierda raiz
-    construct(root);
-    dbg(ans);
-    each(e,ans)cout<<e<<"\n";
+    /*ll x,y;
+    cin>>x>>y;*/
 }
 
 int main() {
