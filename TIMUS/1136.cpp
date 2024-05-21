@@ -149,20 +149,70 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-
-void solve() {
-	ll n;
-	cin>>n;
-	vector<vl> a(n,vl(n,0));
-	each(e,a){
-        each(e2,e)cin>>e2;
-    }
-	FOR(i,0,n){
-        FOR(j,0,n){
-            
+map<ll,pl> m;
+vl a(3005);
+vl vis(3005,false);
+ll n;
+void reconstruct(ll act,ll idxAct){
+    if(idxAct==-1) return;
+    pl actu={-1,-1};
+    pl idxActu={-1,-1};
+    for(ll i=idxAct-1;i>=0;i--){
+        if(vis[i]) continue;
+        if(a[i] > act) {
+            vis[i]=true;
+            actu.s=a[i];
+            idxActu.s=i;
+            break;
         }
     }
+    for(ll i=idxAct-1;i>=0;i--){
+        if(vis[i]) continue;
+        if(a[i] < act) {
+            vis[i]=true;
+            actu.f=a[i];
+            idxActu.f=i;
+            break;
+        }
+    }
+    m[act]=actu;
+    reconstruct(actu.f,idxActu.f);
+    reconstruct(actu.s,idxActu.s);
+}
+vl ans;
+void construct (ll act){
+    dbg("estoy en el nodo",act);
+    if(m[m[act].s].f ==-1 && m[m[act].s].s ==-1 ){
+        dbg("nodo derecho hoja lo pb",m[act].s);
+        ans.pb(m[act].s);
+    }
+    else{
+        if(m[act].s==-1) exit(0);
+        dbg("nodo derecho recursivo",m[act].s);
+        construct(m[act].s);
+    }
+    if(m[m[act].f].f ==-1 && m[m[act].f].s ==-1 ){
+        dbg("nodo izquierdo hoja lo pb",m[act].f);
+        ans.pb(m[act].f);
+    }
+    else{
+        dbg("nodo izqierdo recursivo",m[act].f);
+        construct(m[act].f);
+    }
+    dbg("Pusheando raiz",act);
+    ans.pb(act);
+}
+void solve() {
+	cin>>n;
+    FOR(i,0,n){
+        cin>>a[i];
+    }
+    ll root=a[n-1];
+    reconstruct(root,n-1);
+    dbg(m);
+    // drecha izquierda raiz
+    construct(root);
+    //dbg(ans);
 }
 
 int main() {
