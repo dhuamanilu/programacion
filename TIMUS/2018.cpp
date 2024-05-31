@@ -154,9 +154,9 @@ void solve() {
     cin>>n>>a>>b;
     vi dpa(n+1,0);
     vi dpb(n+1,0);
-    dpa[1]=1;
-    dpb[1]=1;
-    FOR(i,2,n+1){
+    dpa[0]=1;
+    dpb[0]=1;
+    FOR(i,1,n+1){
         for(int j=1;j<=a && i>=j;j++){
             dpa[i]+=dpb[i-j];
             dpa[i]%=MOD;
@@ -166,7 +166,7 @@ void solve() {
             dpb[i]%=MOD;
         }
     }
-    dbg(dpa[n],dpb[n]);
+    dbg(dpa,dpb);
     cout<<(dpa[n]+dpb[n])%MOD<<"\n";
     
    
