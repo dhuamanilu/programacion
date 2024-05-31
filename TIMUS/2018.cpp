@@ -152,68 +152,24 @@ long long binpow(long long a, long long b) {
 void solve() {
 	ll n,a,b;
     cin>>n>>a>>b;
-    //n*a 
-    //cuantas canciones se pueden hacer de longitud
-    //i+1 tal que tenemos j consecutivos de la cancion 1
-    vector<vi> dp1(n,vi(a+1,0));
-    /*FOR(i,0,n){
-        dp1[i][0]=1;
-    }*/
-    dp1[0][0]=1;
-    FOR(i,0,n){
-        //elegir 2 "breakear la racha .V" 
-        /*FOR(j,0,i){
-            if(i>=1){
-                //puedo escoger cualquiera de longitud i-1
-                dp1[i][0]+=dp1[i-1][j];
-                dp1[i][0]%=MOD;
-            }
-        }*/
-        FOR(j,1,a+1){
-            //elegir 1 seguir con la racha
-            if(i>=1){
-                dp1[i][j]+=dp1[i-1][j-1];
-                dp1[i][j]%=MOD;
-            }
+    vi dpa(n+1,0);
+    vi dpb(n+1,0);
+    dpa[1]=1;
+    dpb[1]=1;
+    FOR(i,2,n+1){
+        for(int j=1;j<=a && i>=j;j++){
+            dpa[i]+=dpb[i-j];
+            dpa[i]%=MOD;
+        }
+        for(int j=1;j<=b && i>=j;j++){
+            dpb[i]+=dpa[i-j];
+            dpb[i]%=MOD;
         }
     }
+    dbg(dpa[n],dpb[n]);
+    cout<<(dpa[n]+dpb[n])%MOD<<"\n";
     
-    
-    //cuantas canciones se pueden hacer de longitud
-    //i tal que tenemos j consecutivos de la cancion 2
-    vector<vi> dp2(n,vi(b+1,0));
-    /*FOR(i,0,n){
-        dp2[i][0]=1;
-    }*/
-    dp2[0][0]=1;
-    FOR(i,0,n){
-        //elegir 1 "breakear la racha .V" 
-        /*FOR(j,0,i){
-            if(i>=1){
-                dp2[i][0]+=dp2[i-1][j];
-                dp2[i][0]%=MOD;
-            }
-        }*/
-        FOR(j,1,b+1){
-            //elegir 2 seguir con la racha
-            if(i>=1){
-                dp2[i][j]+=dp2[i-1][j-1];
-                dp2[i][j]%=MOD;
-            }
-        }
-    }
-    int ans=0;
-    FOR(i,0,a+1){
-        ans+=dp1[n-1][i];
-        ans%=MOD;
-    }
-    FOR(i,0,b+1){
-        ans+=dp2[n-1][i];
-        ans%=MOD;
-    }
-    each(e,dp1)dbg(e);
-    each(e,dp2)dbg(e);
-    cout<<ans<<"\n";
+   
 }
 
 int main() {
