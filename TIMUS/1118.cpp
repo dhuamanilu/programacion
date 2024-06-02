@@ -148,32 +148,114 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve2(ll a,ll b){
+    double trivial=(double)1e9;
+    ll ans=b;
+    for(ll i=b;i>=a;i--){
+        dbg(i);
+        double sum=0;
+        for(int j=2;j*j<=i;j++){
+            if(i%j==0){
+                if(i/j==j){
+                    sum+=j;
+                }
+                else sum+=j+(i/j);
+            }
+        }
+        if(sum==0){
+            return i;
+        }
+        double ratio=(sum+1)/(1.0*i);
+        //dbg(sum,i,ratio);
+        if(ratio < trivial){
+            trivial=ratio;
+            ans=i;
+        }
+    }
+    return ans;
+    //cout<<ans<<"\n";
 }
 
+vl primes;
+const int N=1000000;
+vector<bool> prime(N+5,true);
+void gen(){
+    
+    for(int i=2;i<=N;i++){
+        if(prime[i]){
+            for(ll j=2*i;j<=N;j+=i){
+                prime[j]=false;
+            }
+        }
+    }
+    for(int i=1;i<=N;i++){
+        if(prime[i])primes.pb(i);
+    }
+}
+ll solve(ll a,ll b) {
+	/*ll a=1,b=999958;
+    999983 999979 999961 999959 999953
+    cin>>a>>b;*/
+    if(a==1) return 1;
+    auto x=upper_bound(all(primes),b);
+    ll val=*(prev(x));
+    if(val>=a){
+        return val;
+    }
+    
+    double trivial=(double)1e9;
+    ll ans=b;
+    for(ll i=b;i>=a;i--){
+        double sum=0;
+        for(int j=2;j*j<=i;j++){
+            if(i%j==0){
+                if(i/j==j){
+                    sum+=j;
+                }
+                else sum+=j+(i/j);
+            }
+        }
+        double ratio=(sum+1)/(1.0*i);
+        //dbg(sum,i,ratio);
+        if(ratio < trivial){
+            trivial=ratio;
+            ans=i;
+        }
+    }
+    return ans;
+    
+   
+}
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+    gen();
     int t = 1;
-    cin >> t;
-
+    //cin >> t;
+    while(0){
+        //ll a=rng_ll(1,1000000);
+        ll a=999984;
+        //ll b=rng_ll(a,1000000);
+        ll b=1000000;
+        auto x1=solve(a,b);
+        auto x2=solve2(a,b);
+        if(x1!=x2){
+            dbg("xd",x1,x2);
+            assert(false);
+        }
+        else dbg("ok");
+    }
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll a,b;
+        cin>>a>>b;
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;

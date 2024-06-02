@@ -148,7 +148,6 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
@@ -156,20 +155,50 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve() {
+	//len sum last
+    const int lenMax=11;
+    const int sumMax=82;
+    const int lastMax=10;
+    ll dp[lenMax][sumMax][lastMax];
+    FOR(i,0,lenMax){
+        FOR(j,0,sumMax){
+            FOR(k,0,lastMax){
+                dp[i][j][k]=0;
+            }
+        }
+    }
+    ll s;
+    cin>>s;
+    FOR(j,0,sumMax){
+        FOR(k,0,lastMax){
+            dp[0][j][k]=1;
+        }
+    }
+    FOR(i,1,lenMax){
+        FOR(j,1,sumMax){
+            FOR(k,0,lastMax){
+                if(j>=k){
+                    dp[i][j][k]+=dp[i-1][j-k][k];
+                }      
+            }
+        }
+    }
+    ll ans=0;
+    FOR(i,1,lenMax){
+        FOR(k,0,lastMax){
+            ans+=dp[i][s][k];
+        }
+    }
+    cout<<ans<<"\n";
+   
 }
-
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+    
     int t = 1;
-    cin >> t;
-
+    //cin >> t;
+    
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
