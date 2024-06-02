@@ -159,47 +159,29 @@ void solve() {
 	//len sum last
     const int lenMax=10;
     const int sumMax=82;
-    const int lastMax=10;
-    ll dp[lenMax][sumMax][lastMax];
+    ll dp[lenMax][sumMax];
     FOR(i,0,lenMax){
         FOR(j,0,sumMax){
-            FOR(k,0,lastMax){
-                dp[i][j][k]=0;
-            }
+            dp[i][j]=0;   
         }
     }
     ll s;
     cin>>s;
+    
     FOR(j,1,10){
-        dp[1][j][j]=1;  
+        dp[1][j]=1;  
     }
     //dp de 2 1 0 es 1
-    FOR(i,1,lenMax){
-        FOR(j,1,sumMax){
-            ll ini=0;
-            if(i==1) ini=1;
-            FOR(k,ini,lastMax){
-                FOR(l,0,lastMax){
-                    if(j>=k){
-                        dp[i][j][k]+=dp[i-1][j-k][l];
-                        /*if(i==2 && j==1 && k==0)
-                        dbg(dp[i-1][j-k][l],dp[i][j][k]);*/
-                    }       
-                }
-                /*if(j>=k){
-                    dp[i][j][k]+=dp[i-1][j-k][k];
-                }*/    
-            }
-        }
+    FOR(i,2,lenMax){ 
+        FOR(j,0,sumMax){
+            FOR(k,0,10){
+                if(j>=k) dp[i][j]+=dp[i-1][j-k];
+            }         
+        }     
     }
     ll ans=0;
     FOR(i,1,lenMax){
-        ll ini=0;
-        if(i==1) ini=1;
-        FOR(k,ini,lastMax){
-            //dbg(i,s,k,dp[i][s][k]);
-            ans+=dp[i][s][k];
-        }
+        ans+=dp[i][s];
     }
     if(s==1) ans++; 
     cout<<ans<<"\n";
