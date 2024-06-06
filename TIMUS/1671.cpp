@@ -151,34 +151,70 @@ long long binpow(long long a, long long b) {
 const int N=100000+5;
 vector<vector<ll>> G(N);
 vector<ll> vis(N,0);
-void dfs(ll ele){
+vl ids(N,-1);
+void dfs(ll ele,ll id){
     vis[ele]=true;
+    ids[ele]=id;
     for(auto & e : G[ele]){
-        if(!vis[e]) dfs(e);
+        if(!vis[e]) dfs(e,id);
     }
 }
 void solve() {
 	ll n,m;
     cin>>n>>m;
+    vpl edges;
     FOR(i,0,m){
         ll u,v;
         cin>>u>>v;
+        u--;
+        v--;
+        edges.pb(mp(u,v));
+    }
+    ll q;
+    cin>>q;
+    vl orderErase;
+    map<ll,ll> borradas;
+    FOR(i,0,q){
+        ll x;
+        cin>>x;
+        x--;
+        orderErase.pb(x);
+        borradas[x]++;
+    }
+    FOR(i,0,m){
+        if(borradas.count(i)) continue;
+        ll u=edges[i].f;
+        ll v=edges[i].s;
         G[u].pb(v);
         G[v].pb(u);
     }
     ll cont=0;
-    FOR(i,1,n+1){
+    ll id=1;
+    FOR(i,0,n){
         if(!vis[i]){
             cont++;
-            dfs(i);
+            dfs(i,id);
+            id++;
         }
     }
-    dbg(cont);
-    ll q;
-    cin>>q;
-    FOR(i,0,q){
-        
+    vl ans;
+    ans.pb(cont);
+    for(int i=q-2;i>=0;i--){
+        ll act=orderErase[i];
+        ll u=edges[act].f;
+        ll v=edges[act].s;
+        if(ids[u]!=ids[v]){
+            if(ans.back()==1)ans.pb(ans.back());
+            else ans.pb(ans.back()-1);
+        }
+        else{
+            ans.pb(ans.back());
+        }
     }
+    reverse(all(ans));
+    each(e,ans)cout<<e<<" ";
+    //dbg(cont);
+    
     
     
    
