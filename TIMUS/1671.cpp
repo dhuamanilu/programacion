@@ -159,6 +159,20 @@ void dfs(ll ele,ll id){
         if(!vis[e]) dfs(e,id);
     }
 }
+struct UF {
+	vi e;
+	UF(int n) : e(n, -1) {}
+	bool sameSet(int a, int b) { return find(a) == find(b); }
+	int size(int x) { return -e[find(x)]; }
+	int find(int x) { return e[x] < 0 ? x : e[x] = find(e[x]); }
+	bool join(int a, int b) {
+		a = find(a), b = find(b);
+		if (a == b) return false;
+		if (e[a] > e[b]) swap(a, b);
+		e[a] += e[b]; e[b] = a;
+		return true;
+	}
+};
 void solve() {
 	ll n,m;
     cin>>n>>m;
@@ -197,23 +211,23 @@ void solve() {
             id++;
         }
     }
-    vl ans;
-    ans.pb(cont);
-    for(int i=q-2;i>=0;i--){
+    vl ans; 
+    UF dsu(n+1); 
+    for(int i=q-1;i>=0;i--){
+        ans.pb(cont);
         ll act=orderErase[i];
         ll u=edges[act].f;
         ll v=edges[act].s;
-        if(ids[u]!=ids[v]){
-            if(ans.back()==1)ans.pb(ans.back());
-            else ans.pb(ans.back()-1);
+        if(ids[u]==ids[v]){
+            dsu.join(u,v);
         }
-        else{
-            ans.pb(ans.back());
+        if(!dsu.sameSet(u,v)){
+            cont--;
         }
+        dsu.join(u,v);
     }
     reverse(all(ans));
     each(e,ans)cout<<e<<" ";
-    //dbg(cont);
     
     
     
