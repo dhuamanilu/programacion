@@ -218,13 +218,14 @@ void solve() {
         ll act=orderErase[i];
         ll u=edges[act].f;
         ll v=edges[act].s;
-        if(ids[u]==ids[v]){
+        /*if(ids[u]==ids[v]){
             dsu.join(u,v);
-        }
-        if(!dsu.sameSet(u,v)){
+        }*/
+        if(!dsu.sameSet(ids[u],ids[v])){
             cont--;
+            dsu.join(ids[u],ids[v]);
         }
-        dsu.join(u,v);
+        
     }
     reverse(all(ans));
     each(e,ans)cout<<e<<" ";
