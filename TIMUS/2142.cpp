@@ -150,32 +150,30 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
-	ll gold,limit,commision;
-    cin>>gold>>limit>>commision;
-    if(gold<=limit){
-        cout<<"0\n";
-        return;
-    }
-    ll s=0,e=(ll)1e9,m=s+(e-s)/2,guarda=-1;
-    while(s<=e){
-        m=s+(e-s)/2;
-        double percen=(double)(100-commision)/100.0;
-        double amount=((double)gold)*pow(percen,m);
-        //dbg(percen,amount,limit);
-        if(amount-limit>EPS){
-            guarda=m;
-            s=m+1;
+	ll a,b,c,x,y,z;
+    cin>>a>>b>>c>>x>>y>>z;
+    bool ok=true;
+    ll rem=0;
+    if(a<x){
+        if(c>=x-a){
+            c-=(x-a);
         }
-        else{
-            e=m-1;
+        else ok=false;
+    }else rem+=a-x;
+    if(b<y){
+        if(c>=y-b){
+            c-=(y-b);
         }
+        else ok=false;
     }
-    assert(guarda!=-1);
-    cout<<guarda+1<<"\n";
-    
-    
-    
-   
+    else rem+=b-y;
+    ok&=((c+rem)>=z);
+    if(ok){
+        cout<<"It is a kind of magic\n";
+    }
+    else{
+        cout<<"There are no miracles in life\n";
+    }  
 }
 
 int main() {

@@ -1,57 +1,33 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
-      "name": "C/C++: g++.exe Compilar y depurar el archivo activo",
+      "name": "Run make command",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+      "program": "${workspaceFolder}/bin/${input:fileName}.out",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
+      "preLaunchTask": "Run make command",
+      "miDebuggerPath": "/usr/bin/gdb",
       "setupCommands": [
         {
-          "description": "Habilitar la impresión con sangría para gdb",
+          "description": "Enable pretty-printing for gdb",
           "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Establecer tipo de desensamblado en Intel",
-          "text": "-gdb-set disassembly-flavor intel",
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "C/C++: g++.exe compilar archivo activo"
-    },
-    {
-      "name": "C/C++: cpp.exe Compilar y depurar el archivo activo",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
-      "setupCommands": [
-        {
-          "description": "Habilitar la impresión con sangría para gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Establecer tipo de desensamblado en Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
-      ],
-      "preLaunchTask": "C/C++: cpp.exe compilar archivo activo"
+      "logging": {
+        "trace": true,
+        "traceResponse": true,
+        "engineLogging": true,
+        "programOutput": true,
+        "exceptions": true
+      }
     },
     {
       "name": "C/C++ Runner: Debug Session",
@@ -60,8 +36,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/programacion_competitiva/programacion/ABC351",
-      "program": "d:/programacion_competitiva/programacion/ABC351/build/Debug/outDebug",
+      "cwd": "d:/programacion_competitiva/programacion",
+      "program": "d:/programacion_competitiva/programacion/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
@@ -71,6 +47,14 @@
           "ignoreFailures": true
         }
       ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "fileName",
+      "type": "promptString",
+      "description": "Ingrese el nombre del archivo",
+      "default": "NOMBREDELARCHIVO"
     }
   ]
 }
