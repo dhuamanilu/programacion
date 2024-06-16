@@ -149,29 +149,15 @@ long long binpow(long long a, long long b) {
     return res;
 }
 
+
 void solve() {
-	ll n;
-    cin>>n;
-    const int len=9;
-    const int summ=73;
-    vector<vl> dp(len,vl(summ,0));
-    FOR(i,0,10){
-        dp[1][i]=1;
-    }
-    FOR(i,2,len){
-        FOR(j,0,(i*9)+1){
-            FOR(k,0,10){
-                if(j>=k){
-                    dp[i][j]+=dp[i-1][j-k];
-                }
-            }
-        }
-    }
-    ll ans=0;
-    FOR(j,0,summ){
-        ans+=(dp[n/2][j]*dp[n/2][j]);
-    }
-    cout<<ans<<"\n";
+    double k1,k2,k3;
+    cin>>k1>>k2>>k3;
+    double target=1000*k1*k2*k3/(algo);
+    /*const int N=100000+5;
+    FOR(i,0,N){
+
+    }*/
 }
 
 int main() {
@@ -179,7 +165,7 @@ int main() {
 
     int t = 1;
     //cin >> t;
-
+    
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;

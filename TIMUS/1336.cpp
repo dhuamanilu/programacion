@@ -149,29 +149,51 @@ long long binpow(long long a, long long b) {
     return res;
 }
 
-void solve() {
-	ll n;
-    cin>>n;
-    const int len=9;
-    const int summ=73;
-    vector<vl> dp(len,vl(summ,0));
-    FOR(i,0,10){
-        dp[1][i]=1;
+vpl get_factors(ll x){
+    vpl ans;
+    ll x2=x;
+    for(ll i=2;i*i<=x;i++){
+        if(x2%i==0){
+            ll cont=0;
+            while(x2%i==0){
+                cont++;
+                x2/=i;
+            }
+            if(cont>0){
+                ans.pb({i,cont});
+            }
+        }
     }
-    FOR(i,2,len){
-        FOR(j,0,(i*9)+1){
-            FOR(k,0,10){
-                if(j>=k){
-                    dp[i][j]+=dp[i-1][j-k];
+    if(x2>1){
+        ans.pb({x2,1});
+    }
+    return ans;
+}
+void solve() {
+    ll n;
+    cin>>n;
+    map<ll,pair<ll,ll>> m;
+    FOR(i,0,50){
+        FOR(j,0,50){
+            ll calc=2*i-3*j;
+            if(calc>=0){
+                if(!m.count(calc)){
+                    m[calc]=mp(i,j);
                 }
             }
         }
     }
-    ll ans=0;
-    FOR(j,0,summ){
-        ans+=(dp[n/2][j]*dp[n/2][j]);
+    FOR(i,0,30){
+        assert(m.count(i));
     }
-    cout<<ans<<"\n";
+    vpl factores=get_factors(n);
+    vl ans(2,1);
+    for(auto & e :factores){
+        auto expo=m[e.s];
+        ans[0]*=binpow(e.f,expo.f);
+        ans[1]*=binpow(e.f,expo.s);
+    }
+    cout<<ans[0]<<"\n"<<ans[1]<<"\n";
 }
 
 int main() {
@@ -179,7 +201,7 @@ int main() {
 
     int t = 1;
     //cin >> t;
-
+    
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;

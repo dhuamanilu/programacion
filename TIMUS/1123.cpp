@@ -148,30 +148,134 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-
-void solve() {
-	ll n;
-    cin>>n;
-    const int len=9;
-    const int summ=73;
-    vector<vl> dp(len,vl(summ,0));
-    FOR(i,0,10){
-        dp[1][i]=1;
+bool isPalindrome(str s){
+    ll n=s.size();
+    ll i=0,j=n-1;
+    bool ok=true;
+    while(i<j){
+        if(s[i]!=s[j]){
+            ok=false;
+            break;
+        }
+        i++;
+        j--;
     }
-    FOR(i,2,len){
-        FOR(j,0,(i*9)+1){
-            FOR(k,0,10){
-                if(j>=k){
-                    dp[i][j]+=dp[i-1][j-k];
+    return ok;
+}
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+str brute(str s){
+    while(true){
+        //dbg(s);
+        ll n=s.size();
+        if(isPalindrome(s)){
+            return s;
+        }
+        else{
+            ll idx=n-1;
+            while(idx>=0 && s[idx]-'0'==9){
+                idx--;
+            }
+            if(idx==-1 && s[0]=='9'){
+                //puro 99999
+                str nuevo="1";
+                FOR(i,0,n){
+                    nuevo+='0';
                 }
+                s=nuevo;
+            }
+            else if(idx>=0 && s[idx]-'0'<9){
+                s[idx]=s[idx]+1;
+                FOR(j,idx+1,n){
+                    s[j]='0';
+                }
+            }
+            else if(idx==n-1){
+                s[idx]=s[idx]+1;
             }
         }
     }
-    ll ans=0;
-    FOR(j,0,summ){
-        ans+=(dp[n/2][j]*dp[n/2][j]);
+}
+str solve(str s) {
+    if(isPalindrome(s)) return s;
+    ll n=s.size();
+    ll i=0,j=n-1;
+    bool retrocedio=false;
+    while(i<j){
+        if(j-i<=1) break;
+        if(s[j]>s[i]) retrocedio=true;
+        else if(s[j]<s[i]) retrocedio=false;
+        s[j]=s[i];
+        i++;
+        j--;
     }
-    cout<<ans<<"\n";
+    //dbg(retrocedio);
+    if(i==j){
+        if(!retrocedio){
+            //do nothing
+        }
+        else{
+            ll ptrI=i,ptrD=j;
+            while(ptrI>=0 && ptrD<n && s[ptrI]==s[ptrD] && s[ptrI]=='9'){
+                ptrI--;
+                ptrD++;
+            }
+            if(ptrI==ptrD){
+                s[ptrI]=s[ptrI]+1;
+            }
+            else{
+                FOR(k,ptrI+1,ptrD){
+                    s[k]='0';
+                }
+                s[ptrI]=s[ptrI]+1;
+                s[ptrD]=s[ptrD]+1;
+            }
+        }
+        
+    }
+    else{
+        if(!retrocedio){
+            ll ptrI=i,ptrD=j;
+            if(s[ptrI] == s[ptrD]){
+                //do nothing
+            }
+            else if(s[ptrI] < s[ptrD]){
+                //dbg("hola s ptr i es menor igual que s ptr en d");
+                char poner=s[ptrI]+1;
+                s[ptrI]=poner;
+                s[ptrD]=poner;
+            }
+            else{
+                s[ptrD]=s[ptrI];
+            }
+        }
+        else{
+            ll ptrI=i,ptrD=j;
+            while(ptrI>=0 && ptrD<n && s[ptrI]==s[ptrD] && s[ptrI]=='9'){
+                ptrI--;
+                ptrD++;
+            }
+            if(ptrI == i && ptrD == j){
+                if(s[ptrI] <= s[ptrD]){
+                    //dbg("hola s ptr i es menor igual que s ptr en d");
+                    char poner=s[ptrI]+1;
+                    s[ptrI]=poner;
+                    s[ptrD]=poner;
+                }
+                else{
+                    s[ptrD]=s[ptrI];
+                }
+            }
+            else{
+                FOR(k,ptrI+1,ptrD){
+                    s[k]='0';
+                }
+                s[ptrI]=s[ptrI]+1;
+                s[ptrD]=s[ptrD]+1;
+            } 
+        }  
+    }
+    return s;
 }
 
 int main() {
@@ -179,11 +283,24 @@ int main() {
 
     int t = 1;
     //cin >> t;
-
+    while(0){
+        ll n=rng_ll(1,10000000);
+        str p=to_string(n);
+        str ans1=brute(p);
+        str ans2=solve(p);
+        if(ans1!=ans2){
+            dbg("xd",p,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
+    }
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        str s;
+        cin>>s;
+        cout<<solve(s)<<"\n";
+        //dbg(brute(s),solve(s));
     }
     RAYA;
     RAYA;
