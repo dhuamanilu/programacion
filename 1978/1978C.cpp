@@ -155,37 +155,55 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-const int N=55;
-vector<vector<pair<int,int>>> G(N); 
+
 void solve() {
-	ll n,m;
-	cin>>n>>m;
-	ll x0,y0;
-	cin>>x0>>y0;
-	vector<vl> a(n,vl(m));
-	FOR(i,0,n){
-		FOR(j,0,m){
-			cin>>a[i][j];
-		}
+	ll n,k;
+	cin>>n>>k;
+	if(k%2==1){
+		cout<<"NO\n";
 	}
-	vl values={8,4,2,1};
-	FOR(i,0,n){
-		FOR(j,0,m){
-			FOR(k,0,4){
-				if(a[i][j]&values[k]){
-					
-				}
+	else{
+		ll ans=0;
+		FOR(i,0,n){
+			if(n-2*i-1<0)break;
+			ans+=n-2*i-1;
+		}
+		ans*=2;
+		if(k>ans){
+			cout<<"NO\n";
+		}
+		else{
+			cout<<"YES\n";
+			vl b(n,0);
+			iota(all(b),1ll);
+			ll act=2*(n-1);
+			ll idx=0;
+			while(k>=act && k>0){
+				k-=act;
+				//dbg(k,idx,n-idx-1);
+				swap(b[idx],b[n-idx-1]);
+				idx++;
+				act-=4;
 			}
+			if(k>0){
+				
+				swap(b[idx],b[idx+k/2]);
+				//dbg(k,act,idx);
+			}
+			each(e,b){
+				cout<<e<<" ";
+			}
+			cout<<"\n";
 		}
+		
 	}
-	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

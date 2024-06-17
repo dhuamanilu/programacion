@@ -155,37 +155,52 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-const int N=55;
-vector<vector<pair<int,int>>> G(N); 
+
 void solve() {
-	ll n,m;
-	cin>>n>>m;
-	ll x0,y0;
-	cin>>x0>>y0;
-	vector<vl> a(n,vl(m));
-	FOR(i,0,n){
-		FOR(j,0,m){
-			cin>>a[i][j];
-		}
+	ll n,c;
+	cin>>n>>c;
+	vl a(n);
+	each(e,a) cin>>e;
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+a[i];
 	}
-	vl values={8,4,2,1};
+	ll maxi=*(max_element(all(a)));
+	vl b;
+	ll hasta=0;
 	FOR(i,0,n){
-		FOR(j,0,m){
-			FOR(k,0,4){
-				if(a[i][j]&values[k]){
-					
+		if(i==0){
+			if(a[i]+ c >=maxi)b.pb(0);
+			else{
+				b.pb(1);
+			}
+		}
+		else{
+			if(a[i] >= maxi && a[i]>a[0]+ c && a[i]>hasta){
+				b.pb(0);
+			}
+			else{
+				ll acu=pref[i-1];
+				if(a[i]+c+acu >= maxi && a[i]+c+acu>=hasta){
+					b.pb(i);
+				}
+				else{
+					b.pb(i+1);
 				}
 			}
 		}
+		ckmax(hasta,a[i]);
 	}
-	
+	each(e,b)cout<<e<<" ";
+	cout<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
