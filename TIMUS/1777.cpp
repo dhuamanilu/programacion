@@ -151,12 +151,9 @@ long long binpow(long long a, long long b) {
 
 
 void solve() {
-    double k1,k2,k3;
-    cin>>k1>>k2>>k3;
-    double num=1000.0*k1*k2*k3;
-    double deno=(double)1.0*k1*k2 + (double)1.0*k2*k3 + 1.0*k1*k3;
-    dbg(num,deno,num/deno);
-    cout<<round((num/deno))<<"\n";
+    ll x1,x2,x3;
+    cin>>x1>>x2>>x3;
+    
     
 }
 

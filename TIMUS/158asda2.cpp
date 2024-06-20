@@ -91,7 +91,7 @@ const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
+
 
 
 ll cdiv(ll a, ll b) {
@@ -149,15 +149,42 @@ long long binpow(long long a, long long b) {
     return res;
 }
 
-
 void solve() {
-    double k1,k2,k3;
-    cin>>k1>>k2>>k3;
-    double num=1000.0*k1*k2*k3;
-    double deno=(double)1.0*k1*k2 + (double)1.0*k2*k3 + 1.0*k1*k3;
-    dbg(num,deno,num/deno);
-    cout<<round((num/deno))<<"\n";
-    
+	str s;
+    str a="sandro";
+    cin>>s;
+    ll n=s.size();
+    ll ans=(ll)1e18;
+    FOR(i,0,n){
+        if(i+6<=n){
+            str act=s.substr(i,6);
+            ll cont=0;
+            FOR(j,0,6){
+                if(j==0){
+                    if(act[j]>='A' && act[j]<='Z'){
+
+                    }
+                    else{
+                        cont++;
+                    }
+                    if(tolower(act[j])!=a[j]) cont++;
+                }
+                else{
+                    if(act[j]>='a' && act[j]<='z'){
+
+                    }
+                    else{
+                        cont++;
+                    }
+                    if(tolower(act[j])!=a[j]) cont++;
+                }
+            }
+            ckmin(ans,cont);
+            
+        }
+    }
+    cout<<ans*5<<"\n";
+
 }
 
 int main() {
@@ -165,7 +192,7 @@ int main() {
 
     int t = 1;
     //cin >> t;
-    
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
