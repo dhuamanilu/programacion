@@ -152,36 +152,63 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+const int N = 1005;
 
-ll solve(ll x1,ll x2,ll x3) {
-    multiset<ll> a;
-    a.insert(x1);
-    a.insert(x2);
-    a.insert(x3);
-    ll cont=0;
-    while(true){
-        
-        vl b;
-        for(auto &e : a)b.pb(e);
-        ll mini=(ll)1e18;
-        ll n=b.size();
-        bool ok=true;
-        for(auto & e : b){
-            if(a.count(e)>=2){
-                ok=false;
-                break;
-            }
+int A[N];
+
+int Q(int l, int r)
+{
+    if (l >= r)
+        return 0;
+
+    int m;
+    int c = 0;
+    int x = A[l];
+    int i = l - 1;
+    int j = r + 1;
+    while (true)
+    {
+        do
+        {
+            --j;
+            ++c;
         }
-        if(!ok) break;
-        cont++;
-        FOR(i,0,n-1){
-            ckmin(mini,b[i+1]-b[i]);
+        while (A[j] > x);
+
+        do
+        {
+            ++i;
+            ++c;
         }
-        a.insert(mini);
-        
+        while (A[i] < x);
+
+        if (i < j)
+        {
+            int t = A[i];
+            A[i] = A[j];
+            A[j] = t;
+        }
+        else
+        {
+            m = j;
+            break;
+        }
     }
-    return cont+1;
+
+    return c + Q(l, m) + Q(m + 1, r);
+}
+void solve() {
+    ll n;
+    cin>>n;
+    FOR(i,0,n){
+        cout<<i+1<<" ";
+    }
+    cout<<"\n";
+    /*FOR(i,0,n){
+        cout<<A[i]<<" ";
+    } 
     
+    dbg(Q(0,n-1));*/
 }
 
 int main() {
@@ -189,19 +216,10 @@ int main() {
 
     int t = 1;
     //cin >> t;
-    while(0){
-        ll x=rng_ll(1,1000000000000);
-        ll y=rng_ll(1,1000000000000);
-        ll z=rng_ll(1,1000000000000);
-        if(solve(x,y,z)<=100) dbg("ok");
-        else {dbg("xd",x,y,z);assert(false);}
-    }
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll x1,x2,x3;
-        cin>>x1>>x2>>x3;
-        cout<<solve(x1,x2,x3)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;

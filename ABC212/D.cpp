@@ -91,7 +91,7 @@ const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
+
 
 
 ll cdiv(ll a, ll b) {
@@ -148,40 +148,123 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
+//? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
-ll solve(ll x1,ll x2,ll x3) {
-    multiset<ll> a;
-    a.insert(x1);
-    a.insert(x2);
-    a.insert(x3);
-    ll cont=0;
-    while(true){
-        
-        vl b;
-        for(auto &e : a)b.pb(e);
-        ll mini=(ll)1e18;
-        ll n=b.size();
-        bool ok=true;
-        for(auto & e : b){
-            if(a.count(e)>=2){
-                ok=false;
-                break;
-            }
-        }
-        if(!ok) break;
-        cont++;
-        FOR(i,0,n-1){
-            ckmin(mini,b[i+1]-b[i]);
-        }
-        a.insert(mini);
-        
+//? /Generator
+void update(vl & Tree, int idx, int s,
+            int e, int pos, int X)
+{
+    // If current node is a
+    // leaf nodes
+    if (s == e) {
+ 
+        // Update Tree[idx]
+        Tree[idx] += X;
     }
-    return cont+1;
-    
+ 
+    else {
+ 
+        // Divide segment tree into left
+        // and right subtree
+        int m = (s + e) / 2;
+ 
+        // Check if pos lies in left subtree
+        if (pos <= m) {
+ 
+            // Search pos in left subtree
+            update(Tree, 2 * idx, s, m, pos, X);
+        }
+        else {
+ 
+            // Search pos in right subtree
+            update(Tree, 2 * idx + 1, m + 1, e,
+                   pos, X);
+        }
+ 
+        // Update Tree[idx]
+        Tree[idx]
+            = Tree[2 * idx] + Tree[2 * idx + 1];
+    }
+}
+ 
+// Function to find the sum from
+// elements in the range [0, X]
+ll sum( vl &Tree, int idx, int s,
+        int e, int ql, int qr)
+{
+    // Check if range[ql, qr] equals
+    // to range [s, e]
+    if (ql == s && qr == e)
+        return Tree[idx];
+ 
+    if (ql > qr)
+        return 0;
+ 
+    // Divide segment tree into
+    // left subtree and
+    // right subtree
+    int m = (s + e) / 2;
+ 
+    // Return sum of elements in the range[ql, qr]
+    return sum(Tree, 2 * idx, s, m, ql, min(m, qr))
+           + sum(Tree, 2 * idx + 1, m + 1, e,
+                 max(ql, m + 1), qr);
+}
+ 
+// Function to find Xth element
+// in the array
+ll getElement(vl &Tree, int X, int N)
+{
+	return sum(Tree, 1, 0, N - 1, 0, X);
+    /*// Print element at index x
+    cout << "Element at " << X << " is "
+         <<  << endl;*/
+}
+ 
+// Function to update array elements
+// in the range [L, R]
+void range_Update(vl &Tree, int L,
+                  int R, int X, int N)
+{
+ 
+    // Update arr[l] += X
+    update(Tree, 1, 0, N - 1, L, X);
+ 
+    // Update arr[R + 1] += X
+    if (R + 1 < N)
+        update(Tree, 1, 0, N - 1, R + 1, -X);
+}
+void solve() {
+	ll q;
+	cin>>q;
+	multiset<ll> x;
+	ll sum=0;
+	FOR(i,0,q){
+		ll type;
+		cin>>type;
+		if(type==1){
+			ll a;
+			cin>>a;
+			x.insert(a-sum);
+		}
+		else if(type==2){
+			ll a;
+			cin>>a;
+			sum+=a;
+		}
+		else{
+			auto aa=x.begin();
+			auto bb=*aa;
+			x.erase(aa);
+			cout<<bb+sum<<"\n";
+		}
+	}
+
+	
 }
 
 int main() {
@@ -189,19 +272,11 @@ int main() {
 
     int t = 1;
     //cin >> t;
-    while(0){
-        ll x=rng_ll(1,1000000000000);
-        ll y=rng_ll(1,1000000000000);
-        ll z=rng_ll(1,1000000000000);
-        if(solve(x,y,z)<=100) dbg("ok");
-        else {dbg("xd",x,y,z);assert(false);}
-    }
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll x1,x2,x3;
-        cin>>x1>>x2>>x3;
-        cout<<solve(x1,x2,x3)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;

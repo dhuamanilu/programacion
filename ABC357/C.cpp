@@ -91,7 +91,7 @@ const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
+
 
 
 ll cdiv(ll a, ll b) {
@@ -148,40 +148,86 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
+//? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
-ll solve(ll x1,ll x2,ll x3) {
-    multiset<ll> a;
-    a.insert(x1);
-    a.insert(x2);
-    a.insert(x3);
-    ll cont=0;
-    while(true){
-        
-        vl b;
-        for(auto &e : a)b.pb(e);
-        ll mini=(ll)1e18;
-        ll n=b.size();
-        bool ok=true;
-        for(auto & e : b){
-            if(a.count(e)>=2){
-                ok=false;
-                break;
-            }
-        }
-        if(!ok) break;
-        cont++;
-        FOR(i,0,n-1){
-            ckmin(mini,b[i+1]-b[i]);
-        }
-        a.insert(mini);
-        
-    }
-    return cont+1;
-    
+//? /Generator
+const int N=735;
+ll a[N][N];
+void marcar(ll x1,ll y1,ll x2,ll y2){
+	FOR(i,x1,y1+1){
+		FOR(j,x1,y1+1){
+			a[i][j]=1;
+		}
+	}
+}
+void init (ll x1,ll y1,ll tam){
+	if(tam==1) return;
+	ll ax=tam/3;
+	
+	marcar(x1+tam/3,y1+tam/3,x1+tam/3+(tam/3) - 1,y1+tam/3+(tam/3) - 1);
+	ll guarda1=x1;
+	while(true){
+		while(true){
+			//if(x1== ax && y1== fx) continue;
+			dbg("inicializando :",x1,y1,tam/3);
+			init(x1,y1,tam/3);
+			if(x1+ax<tam){
+				x1+=ax;
+			}
+			else break;
+		}
+		guarda1+=ax;
+		if(y1+ax<tam)y1+=tam;
+		else break;
+		x1=guarda1;
+	}
+}
+void solve() {
+	ll n;
+	cin>>n;
+	ll grande=binpow(3,n);
+	FOR(i,0,grande+1){
+		FOR(j,0,grande+1){
+			a[i][j]=0;
+		}
+	}
+	init(0,0,grande);
+	/*vector<pair<pl,pl>> b;
+	ll mul=1;
+	ll cont=1;
+	while(cont<=n){
+		
+		b.pb(mp(mp(mul,mul),mp(mul+mul-1,mul+mul-1)));
+		mul*=3;
+		cont++;
+	}
+	//dbg(mul);
+	vector<vl> a(mul,vl(mul,0));
+	FOR(i,0,mul){
+		FOR(j,0,mul){
+			if(i%3==1 && j%3==1) a[i][j]=1;
+			
+			
+			for(auto &e : b){
+				auto ini=e.f;
+				auto fin=e.s;
+				if(i>=ini.f && i<= fin.f && j>=ini.s && j<=fin.s) {a[i][j]=1;break;}
+			}
+		}
+	}*/
+	FOR(i,0,grande){
+		FOR(j,0,grande){
+			if(a[i][j]){
+				cout<<".";
+			}
+			else cout<<"#";
+		}
+		cout<<"\n";
+	}
 }
 
 int main() {
@@ -189,19 +235,11 @@ int main() {
 
     int t = 1;
     //cin >> t;
-    while(0){
-        ll x=rng_ll(1,1000000000000);
-        ll y=rng_ll(1,1000000000000);
-        ll z=rng_ll(1,1000000000000);
-        if(solve(x,y,z)<=100) dbg("ok");
-        else {dbg("xd",x,y,z);assert(false);}
-    }
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll x1,x2,x3;
-        cin>>x1>>x2>>x3;
-        cout<<solve(x1,x2,x3)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;
