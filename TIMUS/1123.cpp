@@ -84,70 +84,8 @@ using vpd = V<pd>;
 #define R0F(i,a) ROF(i,0,a)
 #define rep(a) F0R(_,a)
 #define each(a,x) for (auto& a: x)
+ 
 
-
-
-const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
-const db PI = acos((db)-1);
-mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
-
-
-ll cdiv(ll a, ll b) {
-	return a / b + ((a ^ b) > 0 && a % b);
-}  // divide a by b rounded up
-ll fdiv(ll a, ll b) {
-	return a / b - ((a ^ b) < 0 && a % b);
-}  // divide a by b rounded down
-
-tcT> bool ckmin(T& a, const T& b) {
-	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
-tcT> bool ckmax(T& a, const T& b) {
-	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
-
-tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
-	sort(all(v));
-	v.erase(unique(all(v)), end(v));
-}
-tcTU > void safeErase(T &t, const U &u) {
-	auto it = t.find(u);
-	assert(it != end(t));
-	t.erase(it);
-}
-
-
-
-inline namespace FileIO {
-void setIn(str s) { freopen(s.c_str(), "r", stdin); }
-void setOut(str s) { freopen(s.c_str(), "w", stdout); }
-void setIO(str s = "") {
-	cin.tie(0)->sync_with_stdio(0);  // unsync C / C++ I/O streams
-	//? cout << fixed << setprecision(12);
-    //? cerr << fixed << setprecision(12);
-	cin.exceptions(cin.failbit);
-	// throws exception when do smth illegal
-	// ex. try to read letter into int
-	if (sz(s)) setIn(s + ".in"), setOut(s + ".out");  // for old USACO
-}
-}  // namespace FileIO
-
-
-
-//? Custom Helpers
-template <typename T>
-inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
-
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
 bool isPalindrome(str s){
     ll n=s.size();
     ll i=0,j=n-1;
@@ -164,36 +102,30 @@ bool isPalindrome(str s){
 }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-str brute(str s){
-    while(true){
-        //dbg(s);
+str resolverRefactorizado(str s){
+    while(!isPalindrome(s)){
         ll n=s.size();
-        if(isPalindrome(s)){
-            return s;
+        ll idx=n-1;
+        while(idx>=0 && s[idx]-'0'==9){
+            idx--;
         }
-        else{
-            ll idx=n-1;
-            while(idx>=0 && s[idx]-'0'==9){
-                idx--;
+        if(idx==-1 && s[0]=='9'){
+            //puro 99999
+            str nuevo="1";
+            FOR(i,0,n){
+                nuevo+='0';
             }
-            if(idx==-1 && s[0]=='9'){
-                //puro 99999
-                str nuevo="1";
-                FOR(i,0,n){
-                    nuevo+='0';
-                }
-                s=nuevo;
-            }
-            else if(idx>=0 && s[idx]-'0'<9){
-                s[idx]=s[idx]+1;
-                FOR(j,idx+1,n){
-                    s[j]='0';
-                }
-            }
-            else if(idx==n-1){
-                s[idx]=s[idx]+1;
+            s=nuevo;
+        }
+        else if(idx>=0 && s[idx]-'0'<9){
+            s[idx]=s[idx]+1;
+            FOR(j,idx+1,n){
+                s[j]='0';
             }
         }
+        else if(idx==n-1){
+            s[idx]=s[idx]+1;
+        } 
     }
 }
 str solve(str s) {
@@ -209,10 +141,9 @@ str solve(str s) {
         i++;
         j--;
     }
-    //dbg(retrocedio);
     if(i==j){
         if(!retrocedio){
-            //do nothing
+            //no hacer nada
         }
         else{
             ll ptrI=i,ptrD=j;
@@ -237,10 +168,9 @@ str solve(str s) {
         if(!retrocedio){
             ll ptrI=i,ptrD=j;
             if(s[ptrI] == s[ptrD]){
-                //do nothing
+                //no hacer nada
             }
             else if(s[ptrI] < s[ptrD]){
-                //dbg("hola s ptr i es menor igual que s ptr en d");
                 char poner=s[ptrI]+1;
                 s[ptrI]=poner;
                 s[ptrD]=poner;
@@ -257,7 +187,6 @@ str solve(str s) {
             }
             if(ptrI == i && ptrD == j){
                 if(s[ptrI] <= s[ptrD]){
-                    //dbg("hola s ptr i es menor igual que s ptr en d");
                     char poner=s[ptrI]+1;
                     s[ptrI]=poner;
                     s[ptrD]=poner;
@@ -286,7 +215,7 @@ int main() {
     while(0){
         ll n=rng_ll(1,10000000);
         str p=to_string(n);
-        str ans1=brute(p);
+        str ans1=resolverRefactorizado(p);
         str ans2=solve(p);
         if(ans1!=ans2){
             dbg("xd",p,ans1,ans2);
