@@ -128,5 +128,6 @@
     "typeinfo": "cpp",
     "valarray": "cpp",
     "1873fv2cpp": "c"
-  }
+  },
+  "cmake.sourceDirectory": "D:/programacion_competitiva/programacion/2"
 }

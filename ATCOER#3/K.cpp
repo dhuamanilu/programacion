@@ -159,16 +159,39 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 void solve() {
 	ll n;
 	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	vpl a(n);
+	set<ll> guarda;
+	map<ll,set<ll>> fila;
+	each(e,a) {
+		cin>>e.f;
+		cin>>e.s;
+		guarda.insert(e.f);
+		fila[e.f].insert(e.s);
+	}
+	ll tam=guarda.size();
+	ll ans=0;
+	sort(all(a));
+	//dbg(guarda);
+	each(e,guarda){
+		each(another,guarda){
+			if(another <= e ) continue;
+			//dbg("entre al bucle",e,another);
+			ll cont=0;
+			each(e2,fila[e]){
+				if(fila[another].count(e2)) cont++;
+			}
+			ans+=(cont*(cont-1))/2;
+		}
+	}
+	cout<<ans<<"\n";
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

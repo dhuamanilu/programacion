@@ -157,11 +157,38 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll l,q;
+	cin>>l>>q;
+	set<ll> a;
+	FOR(i,0,q){
+		ll type;
+		cin>>type;
+		if(type==1){
+			ll x;
+			cin>>x;
+			a.insert(x);
+		}
+		else{
+			ll x;
+			cin>>x;
+			auto v1=a.lower_bound(x);
+			ll ini=0,fin=0;
+			if(v1==a.end()){
+				fin=l;
+			}
+			else{
+				fin=*v1;
+			}
+			if(v1!=a.begin()){
+				ini=*(prev(v1));
+			}
+			else{
+				ini=0;
+			}
+			cout<<fin-ini<<"\n";
+		}
+
+	}
 }
 
 int main() {

@@ -157,18 +157,31 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll n,x,y;
+	cin>>n>>x>>y;
+	vpl a(n);
+	each(e,a) {cin>>e.f;cin>>e.s;}
+	const int gra=(int)1e8;
+	vector<vl> dp(1005,vl(1005,gra));
+	dp[0][0]=0;
+	each(e,a){
+		FOR(i,0,1005){
+			FOR(j,0,1005){
+				if(i>=e.f && j>=e.s){
+					ckmin(dp[i][j],dp[i-e.f][j-e.s]+1);
+				}
+			}
+		}
+	}
+	each(e,dp)dbg(e);
+	cout<<dp[x][y]<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
