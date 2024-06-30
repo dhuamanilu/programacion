@@ -173,7 +173,8 @@ void solve() {
 			}
 		}
 	}
-	each(e,dp)dbg(e);
+	ll ans=gra;
+	
 	cout<<dp[x][y]<<"\n";
 }
 

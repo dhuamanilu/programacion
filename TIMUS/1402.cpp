@@ -156,48 +156,16 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-bool isValid(ll x,ll y,ll n){
-	return x>=0 && x<n && y>=0 && y<n;
-}
-void upd(vl &val,ll pos,vl &dx,vl &dy,ll x,ll y,ll tab){
-	ll n=dx.size();
-	FOR(i,0,n){
-		ll newX=x+dx[i];
-		ll newY=y+dy[i];
-		if(isValid(newX,newY,tab)){
-			val[pos]++;
-		}
-	}
-}
 void solve() {
 	ll n;
 	cin>>n;
-	ll x,y;
-	cin>>x>>y;
-	x--;
-	y--;
-	vl val(5,0);
-	//king
-	vl dx={1,-1,0,0,1,1,-1,-1};
-	vl dy={0,0,1,-1,1,-1,1,-1};
-	upd(val,0,dx,dy,x,y,n);
-	//knight
-	vl cx={2,2,1,-1,-2,-2,-1,1};
-	vl cy={1,-1,-2,-2,-1,1,2,2};
-	upd(val,1,cx,cy,x,y,n);
-	x++;
-	y++;
-	ll v1=x+y,v2=x-y;
-	val[2]+=min(n,v1-1)-max(1ll,v1-n);
-	val[2]+=min(n,n+v2)-max(1ll,v2+1);
-	//roo
-	val[3]=2*(n-1);
-	//queen
-	val[4]=val[3]+val[2];
-	vs pieces={"King","Knight","Bishop","Rook","Queen"};
-	FOR(i,0,5){
-		cout<<pieces[i]<<": "<<val[i]<<"\n";
+	db ans=0;
+	db act=n*(n-1);
+	FOR(i,2,n+1){
+		ans+=act;
+		act*=(n-i);
 	}
+	cout<<fixed <<setprecision(0)<<ans<<"\n";
 }
 
 int main() {
