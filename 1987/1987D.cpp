@@ -155,46 +155,75 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-ll get(vpl a,ll change){
-	if(change){
-		each(e,a){
-			swap(e.f,e.s);
-		}
-	}
-	sor(a);
-	ll ans=0;
-	ll n=a.size();
-	ll ant=0;
-	ll hace2=0;
-	FOR(i,1,n){
-		hace2=ans;
-		ans+=i*(a[i].f-a[i-1].f)+ant;
-		ant=ans-hace2;
-	}
-	return ans;
-}
+
 void solve() {
 	ll n;
 	cin>>n;
-	vpl a(n);
+	vl a(n);
+	multiset<ll> b;
+	map<ll,ll> frec;
 	each(e,a){
-		cin>>e.f;
-		cin>>e.s;
-	}	
-	ll ans=0;
-	FOR(i,0,2){
-		dbg(i,get(a,i));
-		ans+=get(a,i);
+		cin>>e;
+		b.insert(e);
+		frec[e]++;
+	} 
+	ll cont=0,turno=0,ele=-1;
+	while(!b.empty()){
+		dbg(b);
+		//alice
+		if(!turno){
+			turno^=1;
+			auto aborrar=b.end();
+			for(auto it=b.begin();it!=b.end();it++){
+				if(*it > ele){
+					aborrar=it;
+					break;
+				}
+			}
+			if(aborrar!=b.end()){
+				
+				cont++;
+				ele=*aborrar;
+				dbg("alice++",ele);
+				b.erase((*aborrar));
+			}
+			else{
+				break;
+			}
+			
+
+			
+		}
+		else{
+			turno^=1;
+			ll act=(ll)1e18,elem=-1;
+			each(e,b){
+				if(e<=ele) continue;
+				ll cuantos=frec[e];
+				if( cuantos <= act){
+					act=cuantos;
+					elem=e;
+				}
+			}
+			if(elem==-1){
+				break;
+			}
+			else{
+				dbg("bob",elem);
+				b.erase(b.find(elem));
+			}
+			
+		}
 	}
-	ll calc=(2*ans)/(n*(n-1));
-	cout<<calc<<"\n";
+	cout<<cont<<"\n";
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

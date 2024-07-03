@@ -155,46 +155,69 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-ll get(vpl a,ll change){
-	if(change){
-		each(e,a){
-			swap(e.f,e.s);
-		}
-	}
-	sor(a);
-	ll ans=0;
-	ll n=a.size();
-	ll ant=0;
-	ll hace2=0;
-	FOR(i,1,n){
-		hace2=ans;
-		ans+=i*(a[i].f-a[i-1].f)+ant;
-		ant=ans-hace2;
-	}
-	return ans;
-}
+
 void solve() {
 	ll n;
 	cin>>n;
-	vpl a(n);
+	vl a(n);
+	map<ll,ll> b;
 	each(e,a){
-		cin>>e.f;
-		cin>>e.s;
-	}	
-	ll ans=0;
-	FOR(i,0,2){
-		dbg(i,get(a,i));
-		ans+=get(a,i);
+		cin>>e;
+		b[e]++;
 	}
-	ll calc=(2*ans)/(n*(n-1));
-	cout<<calc<<"\n";
+	vl c;
+	each(e,b){
+		c.pb(e.s);
+	}
+	dbg(c);
+	ll tam=c.size();
+	ll turno=1;
+	ll idxA=0;
+	ll res=0;
+	ll esperar=0;
+	while(true){
+		
+		//alice
+		if(turno){
+			turno^=1;
+			while(idxA<tam && c[idxA]==0){
+				idxA++;
+			}
+			if(idxA==tam){
+				break;
+			}
+			else{
+				res++;
+				idxA++;
+			}
+		}
+		else{
+			//bob
+			turno^=1;
+			if(esperar>0){
+				esperar--;
+			}
+			else{
+				FOR(i,idxA,tam){
+					if(c[i]<=i-idxA){
+						c[i]=0;
+						esperar=i-idxA-1;
+						break;
+					}
+				}
+			}
+			
+		}
+	}
+	cout<<res<<"\n";
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

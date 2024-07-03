@@ -173,28 +173,23 @@ ll get(vpl a,ll change){
 	}
 	return ans;
 }
+vl a;
+void gen(){
+	a={
+		2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941, 11213, 19937, 21701, 23209, 44497, 86243, 110503, 132049, 216091, 756839, 859433, 1257787, 1398269, 2976221, 3021377, 6972593
+	};
+}
 void solve() {
 	ll n;
 	cin>>n;
-	vpl a(n);
-	each(e,a){
-		cin>>e.f;
-		cin>>e.s;
-	}	
-	ll ans=0;
-	FOR(i,0,2){
-		dbg(i,get(a,i));
-		ans+=get(a,i);
-	}
-	ll calc=(2*ans)/(n*(n-1));
-	cout<<calc<<"\n";
+	cout<<a[n-1]<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+	gen();
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

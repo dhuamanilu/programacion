@@ -173,26 +173,33 @@ ll get(vpl a,ll change){
 	}
 	return ans;
 }
+
 void solve() {
-	ll n;
-	cin>>n;
-	vpl a(n);
+	ll n,m;
+	cin>>n>>m;
+	vl a(m);
+	each(e,a)cin>>e;
+	double ans=0;
+	ll cont=0;
 	each(e,a){
-		cin>>e.f;
-		cin>>e.s;
-	}	
-	ll ans=0;
-	FOR(i,0,2){
-		dbg(i,get(a,i));
-		ans+=get(a,i);
+		auto act=(double)(1.0*e)/3;
+		dbg(ans,act);
+		ans+=act;
+		cont++;
+		if(ans>n) break;
+		
 	}
-	ll calc=(2*ans)/(n*(n-1));
-	cout<<calc<<"\n";
+	if(ans<=n){
+		cout<<"Team.GOV!\n";
+	}
+	else{
+		cout<<"Free after "<<cont<<" times.\n";
+	}
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
     int t = 1;
     //cin >> t;
 
