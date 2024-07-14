@@ -159,18 +159,52 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 void solve() {
 	ll n;
 	cin>>n;
-	vpl a(n);
-	each(e,a){ cin>>e.f;cin>>e.s;}
+	vector<pair<pl,ll>> a(n);
+	FOR(i,0,n){
+		pair<pl,ll> e;
+		cin>>e.f.f;cin>>e.f.s;
+		e.s=i;
+		a[i]=e;
+	}
 	pl ans;
 	ans.f=0;
 	ans.s=0;
 	each(e,a){
-		ans.f+=e.f;
-		ans.s+=e.s;
+		ans.f+=e.f.f;
+		ans.s+=e.f.s;
 	}
 	if(ans.f<=0 && 0<=ans.s){
 		cout<<"Yes\n";
-		vl res;
+		sor(a);
+		ll i=0,j=n-1;
+		vl res(n);
+		
+		ll sum=a[j].f.f;
+		res[a[j].s]=sum;
+		j--;
+		while(i<j){
+			while(i<j && sum>=0){
+				res[a[i].s]=a[i].f.f;
+				sum+=a[i].f.f;
+				i++;
+			}
+			while(i<j && sum<0){
+				res[a[j].s]=a[j].f.s;
+				sum-=a[j].f.s;
+				j--;
+			}
+		}
+		ll last=-sum;
+		assert(i==j);
+		dbg(a[i].f.f,last,a[i].f.s);
+		assert(a[i].f.f<=last && last<=a[i].f.s);
+		dbg(a,sum,i,j,a[i]);
+		res[a[i].s]=last;
+		each(e,res)cout<<e<<" ";
+		cout<<"\n";
+		
+		
+		/*vl res;
 		ll sumi=0;
 		FOR(i,0,n-1){
 			if(a[i].f<= 0 && 0<=a[i].s) res.pb(0);
@@ -183,7 +217,7 @@ void solve() {
 		assert(ulti>= a[n-1].f && ulti<=a[n-1].s);
 		res.pb(ulti);
 		each(e,res)cout<<e<<" ";
-		cout<<"\n";
+		cout<<"\n";*/
 	}
 	else{
 		cout<<"No\n";

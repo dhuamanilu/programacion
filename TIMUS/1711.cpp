@@ -149,24 +149,29 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
 void solve() {
-	ll n,m;
-	cin>>n>>m;
-    ll tam=n+m+1;
-	vl a(tam);
-	each(e,a) cin>>e;
-	vl b(tam);
-	each(e,b) cin>>e;
-    
+	ll n;
+	cin>>n;
+	vpl a(n);
+	each(e,a){
+		cin>>e.f;
+		cin>>e.s;
+	}	
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
