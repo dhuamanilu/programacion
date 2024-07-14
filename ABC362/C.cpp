@@ -174,8 +174,9 @@ void solve() {
 		ll sumi=0;
 		FOR(i,0,n-1){
 			if(a[i].f<= 0 && 0<=a[i].s) res.pb(0);
-			
-				
+			else if(a[i].f< 0 && a[i].s<0 ) res.pb(a[i].s);
+			else if(a[i].f> 0 && a[i].s>0 ) res.pb(a[i].f);
+			sumi+=res.back();
 		}
 		ll ulti=-sumi;
 		dbg(ulti,a[n-1].f,a[n-1].s);
