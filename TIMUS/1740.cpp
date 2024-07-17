@@ -155,39 +155,14 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-ll get(vpl a,ll change){
-	if(change){
-		each(e,a){
-			swap(e.f,e.s);
-		}
-	}
-	sor(a);
-	ll ans=0;
-	ll n=a.size();
-	ll ant=0;
-	ll hace2=0;
-	FOR(i,1,n){
-		hace2=ans;
-		ans+=i*(a[i].f-a[i-1].f)+ant;
-		ant=ans-hace2;
-	}
-	return ans;
-}
+
+
 void solve() {
-	ll n;
-	cin>>n;
-	vpl a(n);
-	each(e,a){
-		cin>>e.f;
-		cin>>e.s;
-	}	
-	ll ans=0;
-	FOR(i,0,2){
-		dbg(i,get(a,i));
-		ans+=get(a,i);
-	}
-	ll calc=(2*ans)/(n*(n-1));
-	cout<<calc<<"\n";
+	ll l,k,h;
+	cin>>l>>k>>h;
+	ll cant=l/k;
+	cout<<fixed<<setprecision(6)<<(double)cant*h<<" "<<(double)(cant +(l%k!=0))*h<<"/n";
+	
 }
 
 int main() {
