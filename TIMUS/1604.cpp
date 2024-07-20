@@ -148,121 +148,36 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-vl primes;
-bool isPrime(ll x){
-    if(x<=1) return false;
-    for(int i=2;i*i<=x;i++){
-        if(x%i==0){
-            return false;
-        }
-    }
-    return true;
-}
-void init(){
-    FOR(i,100,1000){
-        if(isPrime(i))primes.pb(i);
-    }
-}
-vl primes2;
-void init2(){
-    FOR(i,1000,10000){
-        str act=to_string(i);
-        str s1=act.substr(0,3);
-        str s2=act.substr(1,3);
-        if(isPrime(stoll(s1)) && isPrime(stoll(s2))){
-            primes2.pb(i);
-        }
-    }
-}
-bool esta(ll x){
-    auto sea=lower_bound(all(primes),x);
-    if(sea==primes.end()) return false;
-    else if(*sea==x) return true;
-    else return false;
-}
+
 void solve() {
-    /*init2();
-    dbg(primes2);
-    ll contador=0;
-    for(auto & e : primes2){
-        str actu=to_string(e);
-        //dbg(actu);
-        if(actu[2]=='1' && actu[3]=='9'){
-            dbg(actu);
-            contador++;
-        }
+    ll k;
+    cin>>k;
+    vl a(k);
+    each(e,a)cin>>e;
+    vpl b;
+    FOR(i,0,k){
+        b.pb({a[i],i});
     }
-    dbg(contador);*/
-    ll n;
-    cin>>n;
-    ll dp[n+1][10][10];
-    FOR(i,0,n+1){
-        FOR(j,0,10){
-            FOR(k,0,10){
-                dp[i][j][k]=0;
+    sort(all(b));
+    vl c;
+    each(e,b){
+        c.pb(e.s);
+    }
+    ll acu=0;
+    FOR(i,0,k){
+        FOR(j,0,b[i].f-acu){
+            FOR(l,i,k){
+                cout<<c[l]+1<<" ";
             }
         }
+        acu=b[i].f;
     }
-    //dbg("pri size",primes.size());
-    for(auto & e : primes){
-        str num=to_string(e);
-        dp[3][num[1]-'0'][num[2]-'0']++;
-    }
-    /*FOR(it1,0,n+1){
-        FOR(it2,0,10){
-            FOR(it3,0,10){
-                cout<<dp[it1][it2][it3]<<" ";
-            }
-            cout<<"\n";
-        }
-        cout<<"\n";
-    }*/
-    FOR(i,4,n+1){
-        FOR(j,0,10){
-            FOR(k,0,10){
-                FOR(l,0,10){
-                    ll nuevo=100*j+10*k+l;
-                    if(nuevo>=100 && nuevo<=999 && esta(nuevo)){
-                        /*if(i==4 && k==1 && l==9){
-                            dbg(i,j,k,l,dp[i-1][j][k]);
-                        }*/
-                        dp[i][k][l]+=dp[i-1][j][k];
-                        dp[i][k][l]%=MOD;
-                    }    
-                }
-            }
-        }
-    }
-
-    /*FOR(it1,0,n+1){
-        FOR(it2,0,10){
-            FOR(it3,0,10){
-                cout<<dp[it1][it2][it3]<<" ";
-            }
-            cout<<"\n";
-        }
-        cout<<"\n";
-    }*/
-    ll ans=0;
-
-    
-    FOR(j,0,10){
-        FOR(k,0,10){
-            ans+=dp[n][j][k];
-            ans%=MOD;
-        }
-    }
-    
-    
-    cout<<ans<<"\n";
+    cout<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
     int t = 1;
-    //cin >> t;
-    init();
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
