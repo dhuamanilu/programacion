@@ -161,15 +161,12 @@ void solve() {
 	cin>>n>>m;
 	vl a(n);
 	each(e,a)cin>>e;
+	vl cuantas(n);
+	each(e,cuantas)cin>>e;
 	ll ans=-(ll)1e18;
-	each(e,a){
-		if(e<=m){
-			ckmax(ans,e);
-		}
-	}
 	map<ll,ll> frec;
-	each(e,a){
-		frec[e]++;
+	FOR(i,0,n){
+		frec[a[i]]+=cuantas[i];
 	}
 	vpl res;
 	each(e,frec){
@@ -179,23 +176,48 @@ void solve() {
 	FOR(i,0,(ll)res.size()){
 		//primero considerar x separado
 		ll cantCan1=m/res[i].f;
-		ckmax(ans,min(cantCan1 , res[i].s));
+		ckmax(ans,res[i].f* min(cantCan1 , res[i].s));
 	}
+	auto get=[](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
+		ll cant=min(pri.s,coins/pri.f);
+	
+		ll restoDinero=coins-cant*pri.f;
+		
+		ll cant2=min(seg.s,restoDinero/seg.f);
+
+		return cant*pri.f + cant2*seg.f;
+	};
+
+	
+	auto getMax=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
+		ll op1=get(coins,pri,seg);
+		ll op2=get(coins,seg,pri);
+		//dbg(op1,op2);
+		return max(op1,op2);
+	};
+
+	auto get2=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
+		ll cant=min(min(pri.s,seg.s),coins/(pri.f + seg.f));
+		pri.s-=cant;
+		seg.s-=cant;
+		//dbg("en get2",pri,seg);
+		return cant*(pri.f + seg.f) + getMax(coins -  (cant*(pri.f + seg.f)),pri,seg);
+	};
 	FOR(i,0,(ll)res.size()-1){
-		//juntos
 		if(abs(res[i].f  - res[i+1].f) <=1){
-			ll cant=m/(res[i].f);
-			ll newm=m;
-			
-			newm-=res[i].f * min(cant,res[i].s);
-			dbg(newm);
-			if(newm>0){
-				ll cant2=newm/(res[i+1].f);
-				
-				newm-=res[i+1].f * min(cant2,res[i+1].s);
-				//dbg(newm);
-				ckmax(ans,m-newm);
-			}
+
+			//APLICAR UN brute force inteligente
+			//dbg(res[i],res[i+1],i,"rel 1",ans);
+			ckmax(ans,getMax(m,res[i],res[i+1]));
+			//dbg(res[i],res[i+1],i,"rel 2",ans);
+			ckmax(ans,get2(m,res[i],res[i+1]));
+
+			/*FOR(j,0,min(res[i].s,m/res[i].f)+1){
+				ll dinero1=j*res[i].f;
+				ll cant2=min(res[i+1].s,(m-dinero1)/(res[i+1].f));
+				//dbg(i,j,j*res[i].f ,cant2 , res[i+1].f );
+				ckmax(ans,dinero1 + cant2 * res[i+1].f);
+			}*/
 		}
 		
 	}
