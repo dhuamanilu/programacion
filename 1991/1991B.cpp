@@ -157,61 +157,34 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 void solve() {
-	ll n,m;
-	cin>>n>>m;
+	ll n;
+	cin>>n;
+	vl b(n-1);
+	each(e,b) cin>>e;
 	vl a(n);
-	each(e,a)cin>>e;
-	vl cuantas(n);
-	each(e,cuantas)cin>>e;
-	ll ans=-(ll)1e18;
-	map<ll,ll> frec;
-	FOR(i,0,n){
-		frec[a[i]]+=cuantas[i];
+	a[0]=b[0];
+	FOR(i,1,n-1){
+		a[i]=b[i-1]|b[i];
 	}
-	vpl res;
-	each(e,frec){
-		res.pb(e);
-	}
-	
-	FOR(i,0,(ll)res.size()){
-		//primero considerar x separado
-		ll cantCan1=m/res[i].f;
-		ckmax(ans,res[i].f* min(cantCan1 , res[i].s));
-	}
-	auto get=[](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll cant=min(pri.s,coins/pri.f);
-	
-		ll restoDinero=coins-cant*pri.f;
-		
-		ll cant2=min(seg.s,restoDinero/seg.f);
-
-		return cant*pri.f + cant2*seg.f;
-	};
-
-	
-	auto getMax=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll op1=get(coins,pri,seg);
-		ll op2=get(coins,seg,pri);
-		//dbg(op1,op2);
-		return max(op1,op2);
-	};
-
-	auto get2=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll cant=min(min(pri.s,seg.s),coins/(pri.f + seg.f));
-		pri.s-=cant;
-		seg.s-=cant;
-		
-		//dbg("en get2",pri,seg);
-		return cant*(pri.f +seg.f) + getMax(coins -  (cant*(pri.f + seg.f)),pri,seg);
-	};
-	FOR(i,0,(ll)res.size()-1){
-		if(abs(res[i].f  - res[i+1].f) <=1){
-			ckmax(ans,getMax(m,res[i],res[i+1]));
-			ckmax(ans,get2(m,res[i],res[i+1]));
+	a[n-1]=b[n-2];
+	dbg(a);
+	bool isGood=true;
+	FOR(i,0,n-1){
+		if(b[i]!=(a[i]&a[i+1])){
+			//dbg(i,b[i],a[i],a[i+1],a[i]&a[i+1]);
+			isGood=false;
+			break;
 		}
-		
 	}
-	cout<<ans<<"\n";
+	if(!isGood){
+		cout<<"-1\n";
+		return;
+	}
+	each(e,a){
+		cout<<e<<" ";
+	}
+	cout<<"\n";
+
 }
 
 int main() {

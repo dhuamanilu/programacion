@@ -156,74 +156,91 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n,m;
-	cin>>n>>m;
-	vl a(n);
-	each(e,a)cin>>e;
-	vl cuantas(n);
-	each(e,cuantas)cin>>e;
-	ll ans=-(ll)1e18;
-	map<ll,ll> frec;
-	FOR(i,0,n){
-		frec[a[i]]+=cuantas[i];
-	}
-	vpl res;
-	each(e,frec){
-		res.pb(e);
-	}
-	
-	FOR(i,0,(ll)res.size()){
-		//primero considerar x separado
-		ll cantCan1=m/res[i].f;
-		ckmax(ans,res[i].f* min(cantCan1 , res[i].s));
-	}
-	auto get=[](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll cant=min(pri.s,coins/pri.f);
-	
-		ll restoDinero=coins-cant*pri.f;
-		
-		ll cant2=min(seg.s,restoDinero/seg.f);
-
-		return cant*pri.f + cant2*seg.f;
-	};
-
-	
-	auto getMax=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll op1=get(coins,pri,seg);
-		ll op2=get(coins,seg,pri);
-		//dbg(op1,op2);
-		return max(op1,op2);
-	};
-
-	auto get2=[&](ll coins, pair<ll,ll> pri, pair<ll,ll> seg){
-		ll cant=min(min(pri.s,seg.s),coins/(pri.f + seg.f));
-		pri.s-=cant;
-		seg.s-=cant;
-		
-		//dbg("en get2",pri,seg);
-		return cant*(pri.f +seg.f) + getMax(coins -  (cant*(pri.f + seg.f)),pri,seg);
-	};
-	FOR(i,0,(ll)res.size()-1){
-		if(abs(res[i].f  - res[i+1].f) <=1){
-			ckmax(ans,getMax(m,res[i],res[i+1]));
-			ckmax(ans,get2(m,res[i],res[i+1]));
+vl solve(vl &a) {
+	ll n=a.size();
+	vl b;
+	while(b.size()<40){
+		ll cand=0;
+		sort(all(a));
+		/*vl pref(n,0);
+		pref[0]=a[0];
+		FOR(i,1,n){
+			pref[i]=pref[i-1]+a[i];
 		}
-		
+		auto query = [&](ll l,ll r){
+			return pref[r]-(l>=1 ? pref[l-1] : 0ll);
+		};
+		//dbg(a);
+		ll act=(ll)1e18,guarda=0;
+		FOR(i,0,n){
+			ll sum=(i+1)*a[i] - ( query(0,i)) + query(i+1,n-1) - ((n-(i+1))*a[i]);
+			//dbg(sum);
+			if(sum<act){
+				act=sum;
+				guarda=a[i];
+			}
+		}*/
+		ll guarda=(a[0]+a[n-1])/2;
+		if(guarda==0) break;
+		b.pb(guarda);
+		FOR(i,0,n){
+			a[i]=abs(a[i]-guarda);
+		}
 	}
-	cout<<ans<<"\n";
+	//dbg("todo deberia de swer 0",a);
+	return b;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+	while(0){
+		ll n=rng_ll(1,200);
+		vl arr(n);
+		each(e,arr)e=rng_ll(1,10000);
+		vl arr2=arr;
+		auto x=solve(arr);
+		if(x.size()>40){
+			dbg("xd",x,arr);
+			assert(false);
+		}
+		else{
+			/*each(e,arr){
+				if(e!=0){
+					dbg("xd2 ",arr2);
+					assert(false);
+				}
+			}*/
+			dbg("ok");
+		} 
+	}
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto x=solve(a);
+		bool ok=true;
+		FOR(i,0,n){
+			if(a[i]!=0){
+				ok=false;
+				break;
+			}
+		}
+		//dbg(a,b);
+		if(!ok){
+			cout<<"-1\n";
+		}
+		else{
+			assert(x.size()<=40);
+			cout<<x.size()<<"\n";
+			each(e,x)cout<<e<<" ";
+			cout<<"\n";
+		}
     }
     RAYA;
     RAYA;
