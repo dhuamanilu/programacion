@@ -154,61 +154,37 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-ll solve(str &s) {
-	ll n=s.size();
-	//dp de i j significa la miaxima cantidad de juegos que puedo ganar siguiendo las re
-	//glas y que la jugada actual es j 0 Rock 1 Scisors 2 Paper
-	vector<vl> dp(n,vl(3,0));
-	if(s[0]=='R'){
-		dp[0][2]=1;
+void solve() {
+	ll n;
+	cin>>n;
+	str s;
+	cin>>s;
+	ll tam=4*n;
+	map<char,ll> m;
+	FOR(i,0,tam){
+		if(s[i]!='?'){
+			m[s[i]]++;
+		}	
 	}
-	else if(s[0]=='S'){
-		dp[0][0]=1;
+	ll ans=0;
+	each(e,m){
+		ans+=min(n,e.s);
 	}
-	else{
-		dp[0][1]=1;
-	}
-	
-	FOR(i,1,n){
-
-		if(s[i]=='S'){
-			//rock
-			dp[i][0]=max(dp[i-1][1],dp[i-1][2]) + (s[i]=='S');
-			//sci
-			dp[i][1]=max(dp[i-1][0],dp[i-1][2]) + (s[i]=='P');
-		}
-		else if(s[i]=='R'){
-			//rock
-			dp[i][0]=max(dp[i-1][1],dp[i-1][2]) + (s[i]=='S');
-			//paper
-			dp[i][2]=max(dp[i-1][0],dp[i-1][1]) + (s[i]=='R');
-		}
-		else{
-			//sci
-			dp[i][1]=max(dp[i-1][0],dp[i-1][2]) + (s[i]=='P');
-			//paper
-			dp[i][2]=max(dp[i-1][0],dp[i-1][1]) + (s[i]=='R');
-		}
-		
-		
-	}
-	return *max_element(all(dp[n-1]));
+	cout<<ans<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str s;
-		cin>>s;
-		cout<<solve(s)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;
