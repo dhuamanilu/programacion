@@ -8,16 +8,16 @@ using namespace std;
 #include "../debugICPC.h"
 #define chk(...) if (!(__VA_ARGS__)) cerr << "\033[41m" << "Line(" << __LINE__ << ") -> function(" \
 	 << __FUNCTION__  << ") -> CHK FAILED: (" << #__VA_ARGS__ << ")" << "\033[0m" << "\n", exit(0);
-
+ 
 #define MACRO(code) do {code} while (false)
 #define RAYA MACRO(cerr << "\033[101m" << "================================" << "\033[0m" << endl;)
 #else
 #define dbg(...)
-
+ 
 #define chk(...)
 #define RAYA
 #endif
-
+ 
 const auto beg_time = std::chrono::high_resolution_clock::now();
 // https://stackoverflow.com/questions/47980498/accurate-c-c-clock-on-a-multi-core-processor-with-auto-overclock?noredirect=1&lq=1
 double time_elapsed() {
@@ -25,7 +25,7 @@ double time_elapsed() {
 	                                beg_time)
 	    .count();
 }
-
+ 
 // building blocks
 using ll  = long long;
 using db  = long double; // or double, if TL is tight
@@ -45,7 +45,7 @@ using pd = pair<db, db>;
 #define mp make_pair
 #define f first
 #define s second
-
+ 
 #define tcT template <class T
 #define tcTU tcT, class U
 //! ^ lol this makes everything look weird but I'll try it
@@ -59,7 +59,7 @@ using vs = V<str>;
 using vpi = V<pi>;
 using vpl = V<pl>;
 using vpd = V<pd>;
-
+ 
 // vectors
 // oops size(x), rbegin(x), rend(x) need C++17
 #define sz(x) int((x).size())
@@ -74,9 +74,9 @@ using vpd = V<pd>;
 #define ft front()
 #define bk back()
 #define ts to_string
-
-
-
+ 
+ 
+ 
 // loops
 #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
 #define F0R(i,a) FOR(i,0,a)
@@ -84,28 +84,28 @@ using vpd = V<pd>;
 #define R0F(i,a) ROF(i,0,a)
 #define rep(a) F0R(_,a)
 #define each(a,x) for (auto& a: x)
-
-
-
+ 
+ 
+ 
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-
-
-
+ 
+ 
+ 
 ll cdiv(ll a, ll b) {
 	return a / b + ((a ^ b) > 0 && a % b);
 }  // divide a by b rounded up
 ll fdiv(ll a, ll b) {
 	return a / b - ((a ^ b) < 0 && a % b);
 }  // divide a by b rounded down
-
+ 
 tcT> bool ckmin(T& a, const T& b) {
 	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
-
+ 
 tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
 	sort(all(v));
 	v.erase(unique(all(v)), end(v));
@@ -115,9 +115,9 @@ tcTU > void safeErase(T &t, const U &u) {
 	assert(it != end(t));
 	t.erase(it);
 }
-
-
-
+ 
+ 
+ 
 inline namespace FileIO {
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -131,13 +131,13 @@ void setIO(str s = "") {
 	if (sz(s)) setIn(s + ".in"), setOut(s + ".out");  // for old USACO
 }
 }  // namespace FileIO
-
-
-
+ 
+ 
+ 
 //? Custom Helpers
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
-
+ 
 long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
@@ -149,25 +149,82 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-
+const int N=200000+5;
+vl cantP(N);
+vl cantT(N);
+ll n,m;
+ll getIdx(ll s,ll e){
+    ll mi=s+(e-s)/2;
+    ll guarda=-1;
+    while(s<=e){
+        mi=s+(e-s)/2;
+        ll newCantP=cantP[mi];
+        ll newCantT=cantT[mi];
+        if(newCantP == n || newCantT == m){
+            guarda=mi;
+            e=mi-1;
+        }
+        else{
+            s=mi+1;
+        }
+    }
+    return guarda;
+}
 void solve() {
-	ll n,m;
 	cin>>n>>m;
     ll tam=n+m+1;
 	vl a(tam);
 	each(e,a) cin>>e;
 	vl b(tam);
 	each(e,b) cin>>e;
-    
-}
 
+    vl prefMax(tam,0);
+    prefMax[0]=max(a[0],b[0]);
+    FOR(i,1,tam){
+        prefMax[i]=prefMax[i-1]+max(a[i],b[i]);
+    }
+    FOR(i,0,tam){
+        cantP[i]=0;
+        cantT[i]=0;
+    }
+    FOR(i,1,tam){
+        cantP[i]=cantP[i-1];
+        cantT[i]=cantT[i-1];
+        if(a[i]>b[i]){
+            cantP[i]++;
+        }
+        else{
+            cantT[i]++;
+        }
+    }
+    vl prefA(tam,0);
+    vl prefB(tam,0);
+    prefA[0]=a[0];
+    prefB[0]=b[0];
+    FOR(i,1,tam){
+        prefA[i]=prefA[i-1]+a[i];
+        prefB[i]=prefB[i-1]+b[i];
+    }
+    FOR(i,0,tam){
+        ll s=0,e=i-1,mi=s+(e-s)/2,guarda=-1;
+        ll idx1=getIdx(s,e);
+        if(idx1==-1){
+            ll idx2=getIdx(i+1,tam-1);
+        }
+        else{
+            cout<<prefMax[]
+        }
+        
+    }
+    cout<<"\n";
+}
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+ 
     int t = 1;
     cin >> t;
-
+ 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
@@ -175,7 +232,7 @@ int main() {
     }
     RAYA;
     RAYA;
-
+ 
     #ifdef LOCAL
         cerr << fixed << setprecision(5);
         cerr << "\033[42m++++++++++++++++++++\033[0m\n";

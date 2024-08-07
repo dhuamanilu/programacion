@@ -87,11 +87,11 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+9;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
+
 
 
 ll cdiv(ll a, ll b) {
@@ -148,41 +148,44 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
-    }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
-    }
-    cout<<"\n";
+	str s,t;
+	cin>>s>>t;
+	ll tam1=s.size();
+	ll tam2=t.size();
+	ll j=0;
+	FOR(i,0,tam1){
+		if(j==tam2)break;
+		if(s[i]==t[j]){
+			j++;
+		}
+		if(s[i]=='?'){
+			s[i]=t[j];
+			j++;
+		}
+	}
+	if(j==tam2){
+		cout<<"YES\n";
+		each(e,s)if(e=='?') e='a';
+		cout<<s<<"\n";
+	}
+	else cout<<"NO\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
+    cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;

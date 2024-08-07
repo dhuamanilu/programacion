@@ -150,34 +150,27 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
+    ll n1,c1;
+    cin>>n1>>c1;
+    ll n2,t,c2;
+    cin>>n2>>t>>c2;
+    ll n3;
+    cin>>n3;
     ll k;
     cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
+    ll minutos=0;
     FOR(i,0,k){
-        b.insert({a[i],i+1});
+        str s;
+        cin>>s;
+        if(s[0]=='0' && s[1]=='0' && s[3]=='0' && s[4]<='6') continue;
+        minutos+=(s[0]-'0')*10 + (s[1]-'0') + (ll)(s[3]>'0' || s[4]>'0');
     }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
-    }
-    cout<<"\n";
+    ll basic=n1+c1*minutos;
+    ll combined=n2+max(0ll,minutos - t)*c2;
+    ll unlimited=n3;
+    cout<<"Basic:     "<<basic<<"\n";
+    cout<<"Combined:  "<<combined<<"\n";
+    cout<<"Unlimited: "<<unlimited<<"\n";
 }
 
 int main() {

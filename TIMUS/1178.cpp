@@ -148,36 +148,29 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-
+struct Point{
+    ll x;
+    ll y;
+    ll idx;
+};
+bool comp(Point &c,Point &d){
+    if(c.x!=d.x)return c.x<d.x;
+    else return c.y<d.y; 
+}
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
+    ll n;
+    cin>>n;
+    vector<Point> a(n);
+    FOR(i,0,n){
+        cin>>a[i].x;
+        cin>>a[i].y;
+        a[i].idx=i+1;
     }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
+    sort(all(a),comp);
+    FOR(i,0,n){
+        cout<<a[i].idx<<" "<<a[i+1].idx<<"\n";
+        i++;
     }
-    cout<<"\n";
 }
 
 int main() {

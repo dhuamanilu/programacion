@@ -150,34 +150,48 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
-    }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
+    ll type,tam;
+    cin>>type>>tam;
+    ll n;
+    cin>>n;
+    auto cabe=[&](ll tty,ll ttam){
+        //1 circle 2 square 3 triangle
+        if(type==1){
+            if(tty==1){
+                return ttam<=tam;
+            }
+            else if(tty==2){
+                return ttam<=2*tam; 
+            }
+            else{
+                return ttam<=2*tam; 
             }
         }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
+        else if(type==2){
+            if(tty==1){
+                return 1.0*ttam<=1.0*tam*sqrtl(2)/2;
+            }
+            else if(tty==2){ 
+                return (1.0)*ttam<=sqrtl(2)*tam; 
+            }
+            else{
+                return 1.0*ttam<=sqrtl(2)*tam; 
+            }
+        }
+        else{
+            if(tty==1){
+                return 2*ttam<=tam;
+            }
+            else return ttam<=tam;             
+        }
+    };
+    ll ans=0;
+    FOR(i,0,n){
+        ll tty,ttam;
+        cin>>tty>>ttam;
+        ans+=cabe(tty,ttam);
     }
-    cout<<"\n";
+    cout<<ans<<"\n";
 }
 
 int main() {

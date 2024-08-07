@@ -87,11 +87,11 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+9;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
-const db EPS=0.00000001;
+
 
 
 ll cdiv(ll a, ll b) {
@@ -148,41 +148,53 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
+ll get(ll x){
+    ll s=0,e=15,m=s+(e-s)/2,guarda=0;
+	while(s<=e){
+		m=s+(e-s)/2;
+		ll act=binpow(3,m);
+		if(act>x){
+			guarda=m;
+			e=m-1;
+		}
+		else{
+			s=m+1;
+		}
+	}
+	return guarda;
+}
+const int N=200000+5;
+vl ans(N);
+vl pref(N,0);
+void init(){
+	FOR(i,1,200001){
+		ans[i]=get(i);
+	}
+	pref[1]=ans[1];
+	FOR(i,2,200001){
+		pref[i]=pref[i-1]+ ans[i];
+	}
+}
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
-    }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
-    }
-    cout<<"\n";
+	ll l,r;
+	cin>>l>>r;
+	
+	cout<<pref[r]-pref[l-1] + get(l)<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
+	init();
     int t = 1;
+    cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;

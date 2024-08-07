@@ -148,36 +148,43 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-
-void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
-    }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
+const int N=10000+5;
+vector<vl> G(N);
+vl vis(N,0);
+void dfs(ll x){
+    vis[x]=true;
+    for(auto & e: G[x]){
+        if(!vis[e]){
+            dfs(e);
         }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
     }
-    cout<<"\n";
+}
+void solve() {
+    ll islands,tunnels,bridges;
+    cin>>islands>>tunnels>>bridges;
+    FOR(i,0,tunnels){
+        ll u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    FOR(i,0,bridges){
+        ll u,v;
+        cin>>u>>v;
+        u--;
+        v--;
+        //ignore
+    }
+    ll ans=0;
+    FOR(i,0,islands){
+        if(!vis[i]){
+            ans++;
+            dfs(i);
+        }
+    }
+    cout<<ans-1<<"\n";
 }
 
 int main() {

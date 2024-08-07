@@ -150,34 +150,29 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
+    str s;
+    vs a;
+    while(cin>>s){
+        a.pb(s);
     }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
+    vl frec(3,0);
+    // tram trolleybus bus
+    each(e,a){
+        if(e=="tram") frec[0]++;
+        else if(e=="trolleybus") frec[1]++;
     }
-    cout<<"\n";
+    if(frec[0] > frec[1] ){
+        cout<<"Tram driver\n";
+    }
+    else if(frec[1]>frec[0]){
+        cout<<"Trolleybus driver\n";
+    }
+    else{
+        cout<<"Bus driver\n";
+    }
+    
+
+
 }
 
 int main() {

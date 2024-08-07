@@ -150,34 +150,23 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
-    }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
+    ll n;
+    cin>>n;
+    vl a(n);
+    map<ll,ll> m1;
+    each(e,a){cin>>e;m1[e]++;}
+    ll m;
+    cin>>m;
+    vl b(m);
+     map<ll,ll> m2;
+    each(e,b){cin>>e;m2[e]++;}
+    for(auto&e : a){
+        if(m2.count(10000 - e)){
+            cout<<"YES\n";
+            return;
         }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
     }
-    cout<<"\n";
+    cout<<"NO\n";
 }
 
 int main() {

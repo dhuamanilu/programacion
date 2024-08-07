@@ -150,34 +150,25 @@ long long binpow(long long a, long long b) {
 }
 
 void solve() {
-    ll k;
-    cin>>k;
-    vl a(k);
-    each(e,a)cin>>e;
-    set<pl> b;
-    FOR(i,0,k){
-        b.insert({a[i],i+1});
+    ll l,r;
+    cin>>l>>r;
+    if(2*r<=l){
+        cout<<fixed<<setprecision(3)<<(double)(PI*r*r)<<"\n";
     }
-    while(b.size()>0){
-        auto x=*b.rbegin();
-        b.erase(x);
-        //dbg(x);
-        cout<<x.s<<" ";
-        if(b.size()>0){
-            
-            pair<ll,ll> y=*b.rbegin();
-            b.erase(y);
-            //7dbg(y);
-            cout<<y.s<<" ";
-            if(y.f>1){
-                b.insert({y.f-1,y.s});
-            }
-        }
-        if(x.f>1){
-            b.insert({x.f-1,x.s});
-        }    
+    else if(r>=(l*sqrtl(2))/2){
+        cout<<fixed<<setprecision(3)<<(double)(l*l)<<"\n";
     }
-    cout<<"\n";
+    else{
+        double h=(1.0*l)/2.0;
+        double alfa=sqrtl(r*r - h*h);
+        double theta=(PI/2) - (2 *asin(alfa/r));
+        //dbg(theta,h,alfa,4*h*alfa,(1.0*r*r*theta)/2.0);
+        double ans=4*h*alfa + 4*(1.0*r*r*theta)/2.0 ;
+        cout<<fixed<<setprecision(3)<<ans<<"\n";
+    }
+    
+
+
 }
 
 int main() {

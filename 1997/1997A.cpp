@@ -157,11 +157,22 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	str s;
+	cin>>s;
+	ll n=s.size();
+	auto get=[](char x){
+		return x-'a' + 1;
+	};
+	FOR(i,0,n-1){
+		if(s[i]==s[i+1]){
+			cout<<s.substr(0,i+1) + char('a'+(s[i]-'a' + 1 )%26) + s.substr(i)<<"\n";
+			return;
+		}
+		
+	}
+	s+=get(s.back());
+	cout<<s<<"\n"; 
+	
 }
 
 int main() {
