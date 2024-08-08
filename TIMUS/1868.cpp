@@ -148,36 +148,49 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-ll solve2(ll n){
-    auto get=[](ll x){
-        ll ans=0;
-        while(x%10==0){
-            ans++;
-            x/=10;
-        }
-        return ans;
+
+void solve() {
+    ll n=12;
+    vs a(n);
+    each(e,a)cin>>e;
+    map<str,ll> medalla;
+    FOR(i,0,n){
+        //dbg(a[i]);
+        if(0<=i && i<=3) medalla[a[i]]=0;
+        else if(4<=i && i<=7) medalla[a[i]]=1;
+        else medalla[a[i]]=2;
+    }
+    ll pred;
+    cin>>pred;
+    auto get=[&](str &s){
+        if(s=="gold") return 0;
+        else if(s=="silver") return 1;
+        else return 2;
     };
-    ll num=1 + binpow(2,n) + binpow(3,n) + binpow(4,n);
-    return get(num);
-}
-ll solve(ll n) {
-    if(n%20==5){
-        return 2;
+    ll maxi=-1,cont=0;
+    FOR(i,0,pred){
+        ll cant;
+        cin>>cant;
+        ll corr=0;
+        FOR(j,0,cant){
+            str uni;
+            cin>>uni;
+            str ign;
+            cin>>ign;
+            str lugar;
+            cin>>lugar;
+            //dbg(uni,ign,lugar);
+            if(medalla.count(uni) && medalla[uni]==get(lugar)) corr++;
+        }
+        if(corr > maxi){
+            cont=1;
+            maxi=corr;
+        }
+        else if(corr==maxi){
+            cont++;
+        }
     }
-    else{
-        if(n%4==0){
-            return 0;
-        }
-        else if(n%4==1){
-            return 1;
-        }
-        else if(n%4==2){
-            return 1;
-        }
-        else{
-            return 2;
-        }
-    }
+    cout<<cont*5<<"\n";
    
 }
 
@@ -185,26 +198,10 @@ int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
-    /*vl ans1,ans2;
-    FOR(i,1,30){
-        ans1.pb(solve(i));
-        ans2.pb(solve2(i));
-    }
-    //dbg(ans1,ans2);
-    if(ans1!=ans2){
-        dbg("xd");
-        assert(false);
-    }
-    else{
-        dbg("ok");
-    }*/
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        cout<<solve(n)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;
