@@ -155,49 +155,61 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
+
+void solve() {
+	vs a;
+	str s;
+	while(cin>>s){
+		a.pb(s);
+	}
+	ll ans=(ll)a.size()-1;
+	str ss="";
+	each(e,a)ss+=e;
+	ll n=ss.size();
+	
+	auto isUpper=[](char a){
+		return a>='A' && a<='Z';
+	};
+	auto isLower=[](char a){
+		return a>='a' && a<='z';
+	};
+	auto same=[&](char a,char b){
+		bool ok1=isUpper(a) && isUpper(b);
+		bool ok2=isLower(a) && isLower(b);
+		return ok1 || ok2; 
+	};
 	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
+	    if(isLower(ss[i])) continue;
+		ll j=i;
+		while(j<n && isUpper(ss[i]) && isUpper(ss[j])){
+			j++;
+		} 
+		ans++;
+		i=j-1;
+	}
+	
+	for(auto & word : a){
+		std::transform(all(word),word.begin(),[](char a){
+			return std::tolower(a);
+		});
+		ll tam=word.size();
+		FOR(i,0,tam){
+			ll j=i;
+			while(j<tam && word[i]==word[j]){
+				j++;
+			} 
+			ans++;
+			i=j-1;
 		}
 	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
-}
-void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	/*
-		1
-		11
-		5 5 5 1 1 1 1 4 8 9 9 
-	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
-	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	cout<<ans<<"\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
@@ -214,8 +226,6 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
 
 
 

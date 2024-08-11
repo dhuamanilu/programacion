@@ -155,49 +155,22 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
-	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
-		}
-	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
-}
+
 void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	/*
-		1
-		11
-		5 5 5 1 1 1 1 4 8 9 9 
-	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
+	ll n,t,a;
+	cin>>n>>t>>a;
+	ll mayor=cdiv(n,2);
+	if(t>=mayor || a>=mayor){
+		cout<<"Yes\n";
 	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	else cout<<"No\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

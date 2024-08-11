@@ -155,49 +155,41 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
-	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
+
+void solve() {
+	ll n;
+	cin>>n;
+	vs a(n);
+	ll maxi=0,mini=(ll)1e18;
+	each(e,a){cin>>e;ckmax(maxi,(ll)e.size()); ckmin(mini,(ll)e.size());}
+	vector<vector<char>> b(maxi,vector<char>(max(maxi,n),'*'));
+	FOR(i,0,maxi){
+		for(ll j=n-1;j>=0;j--){
+			if(a[j].size()<=i) continue;
+			b[i][n-1-j]=a[j][i];
 		}
 	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
-}
-void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	/*
-		1
-		11
-		5 5 5 1 1 1 1 4 8 9 9 
-	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
+	//dbg(b);
+	for(auto & e : b){
+		ll idx=-1;
+		FOR(i,0,e.size()){
+			if(e[i]!='*') idx=i;
+		}
+		//dbg(e,idx);
+		FOR(i,0,idx+1){
+			cout<<e[i];
+		}
+		cout<<"\n";
 	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

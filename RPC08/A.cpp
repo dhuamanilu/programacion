@@ -155,49 +155,29 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
-	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
-		}
-	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
-}
+
 void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	/*
-		1
-		11
-		5 5 5 1 1 1 1 4 8 9 9 
-	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
+	str s;
+	cin>>s;
+	std::transform(s.begin(), s.end(), s.begin(),
+    [](unsigned char c){ return std::tolower(c); });
+	str a=s;
+	sort(all(a));
+	str a2=s;
+	sort(all(a2));
+	str s2=s;
+	reverse(all(s2));
+	if(s==a || s2==a2){
+		cout<<"yes\n";
 	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	else cout<<"no\n";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;

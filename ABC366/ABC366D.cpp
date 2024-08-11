@@ -155,49 +155,142 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
-	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
-		}
-	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
+ll n;
+void prefixSum3d(vector<vector<vector<ll> > >& arr,vector<vector<vector<ll> > >& prefixSum){
+    prefixSum[0][0][0] = arr[0][0][0];
+    for (int i = 1; i < n; i++)
+        prefixSum[i][0][0]
+            = prefixSum[i - 1][0][0] + arr[i][0][0];
+ 
+    for (int i = 1; i < n; i++)
+        prefixSum[0][i][0]
+            = prefixSum[0][i - 1][0] + arr[0][i][0];
+ 
+    for (int i = 1; i <n; i++)
+        prefixSum[0][0][i]
+            = prefixSum[0][0][i - 1] + arr[0][0][i];
+ 
+    // Step 2: Filling the cells
+    // of sides(made up using cells)
+    // which have common element arr[0][0][0].
+    // using prefix sum on 2d array
+    for (int k = 1; k < n; k++) {
+        for (int i = 1; i < n; i++) {
+            prefixSum[k][i][0]
+                = arr[k][i][0] + prefixSum[k - 1][i][0]
+                  + prefixSum[k][i - 1][0]
+                  - prefixSum[k - 1][i - 1][0];
+        }
+    }
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j <n; j++) {
+            prefixSum[0][i][j]
+                = arr[0][i][j] + prefixSum[0][i - 1][j]
+                  + prefixSum[0][i][j - 1]
+                  - prefixSum[0][i - 1][j - 1];
+        }
+    }
+    for (int j = 1; j < n; j++) {
+        for (int k = 1; k < n; k++) {
+            prefixSum[k][0][j]
+                = arr[k][0][j] + prefixSum[k - 1][0][j]
+                  + prefixSum[k][0][j - 1]
+                  - prefixSum[k - 1][0][j - 1];
+        }
+    }
+ 
+    // Step 3: Filling value
+    // in remaining cells using formula
+    for (int k = 1; k < n; k++) {
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < n; j++) {
+                prefixSum[k][i][j]
+                    = arr[k][i][j]
+ 
+                      + prefixSum[k - 1][i][j]
+                      + prefixSum[k][i - 1][j]
+                      + prefixSum[k][i][j - 1]
+ 
+                      - prefixSum[k - 1][i - 1][j]
+                      - prefixSum[k][i - 1][j - 1]
+                      - prefixSum[k - 1][i][j - 1]
+ 
+                      + prefixSum[k - 1][i - 1][j - 1];
+            }
+        }
+    }
+}
+ 
+ll calculateSum(
+    vector<vector<vector<ll> > >& arr,
+    vector<vector<vector<ll> > >& prefixSum,
+    int D, int E, int F, int X, int Y, int Z)
+{
+ 
+    // store prefix sum up to arr[X][Y][Z]:
+    int sum = prefixSum[X][Y][Z];
+ 
+    // Remove prefix sum till D, E, F.
+    if (D > 0) {
+        sum -= prefixSum[D - 1][Y][Z];
+    }
+    if (E > 0) {
+        sum -= prefixSum[X][E - 1][Z];
+    }
+    if (F > 0) {
+        sum -= prefixSum[X][Y][F - 1];
+    }
+ 
+    // Add to compensate cells removed multiple times.
+    if (D > 0 && E > 0) {
+        sum += prefixSum[D - 1][E - 1][Z];
+    }
+    if (E > 0 && F > 0) {
+        sum += prefixSum[X][E - 1][F - 1];
+    }
+    if (F > 0 && D > 0) {
+        sum += prefixSum[D - 1][Y][F - 1];
+    }
+ 
+    // Removing cells added twice in the above step.
+    if (D > 0 && E > 0 && F > 0) {
+        sum -= prefixSum[D - 1][E - 1][F - 1];
+    }
+ 
+    return sum;
 }
 void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
-	/*
-		1
-		11
-		5 5 5 1 1 1 1 4 8 9 9 
-	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
+	cin>>n;
+	vector<vector<vector<ll>>> a(n,vector<vector<ll>>(n,vector<ll>(n,0)));
+	FOR(i,0,n){
+		FOR(j,0,n){
+			FOR(k,0,n){
+				cin>>a[i][j][k];	
+			}
+		}
 	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	vector<vector<vector<ll>>> pref(n,vector<vector<ll>>(n,vector<ll>(n,0)));
+	prefixSum3d(a, pref);
+	ll q;
+	cin>>q;
+	FOR(i,0,q){
+		ll l1,r1,c1,l2,r2,c2;
+		cin>>l1>>l2>>r1>>r2>>c1>>c2;
+		l1--;
+		l2--;
+		r1--;
+		r2--;
+		c1--;
+		c2--;
+		cout<<calculateSum(a, pref, l1, r1, c1, l2, r2, c2)<<"\n";
+	}
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
