@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e16;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -154,43 +154,36 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-bool get(vl&a){
-	ll n=a.size();
-	ll sum=0;
-	each(e,a)sum+=e;
-	ll idx=-1;
-	ll ans=0;
-	FOR(i,0,n){
-		ll l=(i>=1 ? a[i-1] : (ll)1e18);
-		ll r=(i+1<n ? a[i+1] : (ll)1e18);
-		if(sum - a[i] + min(l,r) < ans){
-			ans=sum - a[i] + min(l,r);
-			idx=i;
-		}
-	}
-	if(idx==-1)return false;
-	ll l=(idx>=1 ? a[idx-1] : (ll)1e18);
-	ll r=(idx+1<n ? a[idx+1] : (ll)1e18);
-	a[idx]=min(l,r);
-	return true;
-}
-void solve() {
-	ll n,k;
-	cin>>n>>k;
-	vl a(n);
-	each(e,a) cin>>e;
+
+ll solve(vl &a,ll n,ll k) {
 	/*
 		1
 		11
 		5 5 5 1 1 1 1 4 8 9 9 
 	*/
-	FOR(i,0,k){
-		if(!get(a)) break;
+	vector<vl> dp(n,vl(k+1,BIG));
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+a[i];
 	}
-	ll sum=0;
-	each(e,a)sum+=e;
-	cout<<sum<<"\n";
+	FOR(i,0,n){
+		dp[i][0]=pref[i];
+	}
+	FOR(i,1,n){
+		ll mini=a[i];
+		FOR(j,1,min(i+1ll,k+1)){
+			ckmin(mini,a[i-j]);
+			FOR(l,0,k-j+1){
+				ckmin(dp[i][j],dp[i-j][l] + mini);
+			}
+		}
+	}
+	ll ans=BIG;
+	FOR(j,0,k+1){
+		ckmin(ans,dp[n-1][j]);
+	}
+	return ans;
 }
 
 int main() {
@@ -202,7 +195,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,n,k)<<"\n";
     }
     RAYA;
     RAYA;
