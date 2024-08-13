@@ -7,7 +7,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
-
+#include "../debugICPC.h"
 #define chk(...) if (!(__VA_ARGS__)) cerr << "\033[41m" << "Line(" << __LINE__ << ") -> function(" \
 	 << __FUNCTION__  << ") -> CHK FAILED: (" << #__VA_ARGS__ << ")" << "\033[0m" << "\n", exit(0);
 
@@ -204,14 +204,26 @@ void solve() {
         cin>>x>>y;
         a[i]=mp(x,y);
     }
-    pair<int,int> ini=a[0];
-    FOR(i,1,n){
+    while(true){
+        int idx1=rng_int(0,n-1);
+        int idx2=rng_int(0,n-1);
+        
+        while(idx2==idx1){
+            idx2=rng_int(0,n-1);
+        }
+        dbg(idx1,idx2,a[idx1],a[idx2]);
+        if(verificar(idx1,idx2,a)){
+            cout<<idx1+1<<" "<<idx2+1<<"\n";
+            return;
+        }
+    }
+    /*FOR(i,1,n){
         //suponer que el end es i
         if(verificar(0,i,a)){
            cout<<1<<" "<<i+1<<"\n";
             return;
         }
-    }  
+    }  */
 }
 
 int main() {

@@ -163,22 +163,12 @@ void solve() {
 	each(e,a) cin>>e;
 	vl b(n);
 	each(e,b) cin>>e;
-	ll i=0,j=n-1;
-	while(i<j){
-		set<ll> se;
-		se.insert(a[i]);
-		se.insert(a[j]);
-		se.insert(b[i]);
-		se.insert(b[j]);
-		ll cant=se.size();
-		if(cant>2){
-			cout<<"Alice\n";
-			return;
-		}
-		i++;
-		j--;
+	vl c=b;
+	reverse(all(c));
+	if(a==b || a==c){
+		cout<<"Bob\n";
 	}
-	cout<<"Bob\n";
+	else cout<<"Alice\n";
 }
 
 int main() {

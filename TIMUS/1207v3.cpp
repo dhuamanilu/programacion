@@ -1,5 +1,5 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
+//#pragma GCC optimize ("Ofast")
+//#pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,7 +90,8 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-mt19937 rng(0); // or mt19937_64
+auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+mt19937 rng(seed); // or mt19937_64
 
 
 
@@ -154,39 +155,72 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
+bool verificar(int idxx,int idxy,vector<pair<int,int>> &a){
+    pair<int,int> ini=a[idxx];
+    pair<int,int> fin=a[idxy];
+    int n=a.size();
+    int reg1=0,reg2=0;
+    //x=cte
+    
+    if(ini.f==fin.f){
+        FOR(i,0,n){
+            if(i==idxy || i==idxx) continue;
+                auto x=a[i].f;
+                auto y=a[i].s;
+                if(x>ini.f) reg1++;
+                else reg2++;
+        }
+        return reg1==reg2;
+    }
+    //y cte o pendiente
+    else{
+        double m=(double)(fin.s-ini.s)/(double)(fin.f-ini.f);
+        double b=fin.s-m*fin.f;
+        FOR(i,0,n){
+            if(i==idxy || i==idxx) continue;
+                auto x=a[i].f;
+                auto y=a[i].s;
+                if(m*x+b>y) reg1++;
+                else reg2++;
+        }
+        return reg1==reg2;
+    }
+    
+   
+}
+vpl solve(vpl &a) {
 	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(calc,distS,distE);
-		if(distE < calc || distS<calc){
-			return "NO";
-		}
-	}
-	return "YES";
+    sort(all(a),[&](pl &c,pl &d){
+        //dos iguales a cero
+        if(c.f==d.f && c.f==0){
+            return c.s < d.s;
+        }
+        else if(c.f==0){
+            
+        }
+        return atan((1.0*c.s)/(1.0*c.f))<atan((1.0*d.s)/(1.0*d.f));
+    });
+    
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
+        ll n;
+        cin>>n;
+        vpl a(n);
+        each(e,a){
+            cin>>e.f;
+            cin>>e.s;
+        }
+        auto x=solve(a);
     }
     RAYA;
     RAYA;

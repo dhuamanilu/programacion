@@ -156,19 +156,39 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
+ll solve(vl &a,str &s) {
 	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(calc,distS,distE);
-		if(distE < calc || distS<calc){
-			return "NO";
-		}
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+a[i];
 	}
-	return "YES";
+	//[l,r]
+	auto query=[&](ll l,ll r){
+		ll sum=pref[r];
+		if(l>=1){
+			sum-=pref[l-1];
+		}
+		return sum;
+	};
+	vl posL,posR;
+	FOR(i,0,n){
+		if(s[i]=='L'){
+			posL.pb(i);
+		}
+		else posR.pb(i);
+	}
+	ll ans=0;
+	
+	ll mini=min(posL.size(),posR.size());
+	ll i=0,j=(ll)posR.size()-1;
+	FOR(iter,0,mini){
+		if(posL[i] >posR[j]) continue;
+		ans+=query(posL[i],posR[j]);
+		i++;
+		j--;
+	}
+	return ans;
 }
 
 int main() {
@@ -182,11 +202,11 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
+		vl a(n);
+		each(e,a) cin>>e;
+		str s;
+		cin>>s;
+        cout<<solve(a,s)<<"\n";
     }
     RAYA;
     RAYA;

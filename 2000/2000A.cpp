@@ -156,19 +156,18 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
-	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(calc,distS,distE);
-		if(distE < calc || distS<calc){
-			return "NO";
+str solve(str n) {
+	if(n[0]=='1' && n[1]=='0'){
+		if(n.size()==3){
+			if(n[2]>='2') return "YES";
+			else return "NO";
+		}
+		else{
+			if(n[2]>'0') return "YES";
+			else return "NO";
 		}
 	}
-	return "YES";
+	else return "NO";
 }
 
 int main() {
@@ -180,14 +179,10 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
+		str n;
 		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
-    }
+        cout<<solve(n)<<"\n";
+    } 
     RAYA;
     RAYA;
 

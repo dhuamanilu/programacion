@@ -156,19 +156,52 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
+vs solve(vl &a,vs &b) {
 	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(calc,distS,distE);
-		if(distE < calc || distS<calc){
-			return "NO";
+	ll m=b.size();
+	map<ll,vl> c;
+	FOR(i,0,n){
+		c[a[i]].pb(i);
+	}
+	vs ans;
+	for(auto & s : b){
+		ll tam=s.size();
+		if(tam!=n){
+			ans.pb("NO");
+		}
+		else{
+			map<char,vl> d;
+			FOR(i,0,tam){
+				d[s[i]].pb(i);
+			}
+			//verificar que c y d se cumplan
+			bool ok=true;
+			for(auto &e : c){
+				FOR(k,0,e.s.size()){
+					if(s[e.s[k]]!=s[e.s[0]]){
+						ok=false;
+						break;
+					}
+				}
+			}
+			if(ok){
+				for(auto &e : d){
+					FOR(k,0,e.s.size()){
+						if(a[e.s[k]]!=a[e.s[0]]){
+							ok=false;
+							break;
+						}
+					}
+				}
+			}
+			
+			if(ok){
+				ans.pb("YES");
+			}
+			else ans.pb("NO");
 		}
 	}
-	return "YES";
+	return ans;
 }
 
 int main() {
@@ -182,11 +215,16 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
+		vl a(n);
+		each(e,a) cin>>e;
+		ll m;
+		cin>>m;
+		vs b(m);
+		each(e,b)cin>>e;
+		vs ans=solve(a,b);
+		each(e,ans){
+			cout<<e<<"\n";
+		}
     }
     RAYA;
     RAYA;
