@@ -148,60 +148,16 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-struct Tree {
-	typedef long long T;
-	static constexpr T unit = 0;
-	T f(T a, T b) { return gcd(a, b); } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
-vl solve(vector<pair<char,ll>> &a) {
-    ll q=a.size();
-    vl b;
-    each(e,a)b.pb(e.s);
-    sort(all(b));
-    b.erase( unique( b.begin(), b.end() ), b.end() );
-    //dbg(b);
-    Tree st(q);
-    vl ans;
-    map<ll,ll> frec;
-    each(e,a){
-        if(e.f=='+'){
-            frec[e.s]++;
-            if(frec[e.s]==1){
-                //insertar en el segment tree
-                //en que indice
-                ll idx=lower_bound(all(b),e.s)-b.begin();
-                //assert(idx>=0 && idx<q);
-                st.update(idx,e.s);
+
+vector<vl> solve(ll n) {
+    vector<vl> ans(n,vl(n,0));
+    /*FOR(i,0,n){
+        FOR(j,0,n){
+            if(i!=j){
+                ans[i][j]=1;
             }
-            
         }
-        else{
-            frec[e.s]--;
-            if(frec[e.s]==0){
-                //quitar en el segment tree
-                //en que indice
-                ll idx=lower_bound(all(b),e.s)-b.begin();
-                //assert(idx>=0 && idx<q);
-                st.update(idx,0);
-            }
-            
-        }
-        ans.pb(st.query(0,q));
-    }
+    }*/
     return ans;
 }
 
@@ -212,21 +168,15 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll q;
-        cin>>q;
-        vector<pair<char,ll>> a(q);
-        each(e,a){
-            cin>>e.f>>e.s;
-        }
-        
-        auto x=solve(a);
-        //dbg(a,x);
+        ll n=10,d=1000000,a=100;
+        cout<<n<<"\n"<<d<<" "<<a<<"\n";
+        auto x=solve(n);
         each(e,x){
-            if(e!=0)
-                cout<<e<<"\n";
-            else cout<<"1\n";
+            each(e2,e){
+                cout<<e2;
+            }
+            cout<<"\n";
         }
-        
     }
     RAYA;
     RAYA;
