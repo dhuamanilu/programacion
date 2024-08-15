@@ -175,27 +175,34 @@ pair<ll,vector<vector<char>>> solve(vector<vl> &G,ll d,ll a) {
     ll aquitar=0;
     vector<vector<char>> res(n,vector<char>(n,'0')); 
     //dbg(group);
+    map<pair<ll,ll>,ll> MST;
     FOR(i,0,(ll)group.size()){
         if(group[i].size()==0) continue;
-        //dbg(group[i]);
-        FOR(j,0,(ll)group[i].size()){
-            //solo quedarnos con la conexion entre actual y actual + 1
-            ll act=group[i][j];
-            ll sgte=-1;
-            if(j+1<(ll)group[i].size()){
-                sgte=group[i][j+1];
-            }
-            ll ant=-1;
-            if(j>=1){
-                ant=group[i][j-1];
-            }
+        //hallar el mst
+        vl vis2(n,0);   
+        queue<ll> cola;
+        cola.push(group[i][0]);
+        vis2[group[i][0]]=1;
+        while(!cola.empty()){
+            ll act=cola.front();
+            cola.pop();
+            
             FOR(k,0,n){
-
-                if(k==sgte || k==ant) continue;
-                if(G[act][k]){
-                    //dbg("eliminare conexion entre :",act,k);
+                if(G[act][k] && !vis2[k]){
+                    ll mini=min(act,k*1ll),maxi=max(act,k*1ll);
+                    MST[{mini,maxi}]++;
+                    cola.push(k);
+                    vis2[k]=1;
+                }
+            }
+        }
+        each(e,group[i]){
+            FOR(iter,0,n){
+                ll mini=min(e,iter*1ll),maxi=max(e,iter*1ll);
+                if(G[mini][maxi] && !MST.count({mini,maxi})){
                     aquitar++;
-                    res[act][k]='d';
+                    res[mini][maxi]='d';
+                    res[maxi][mini]='d';
                 }
             }
         }
@@ -210,8 +217,7 @@ pair<ll,vector<vector<char>>> solve(vector<vl> &G,ll d,ll a) {
         }
 
     }
-    assert(aquitar%2==0);
-    
+    //dbg(MST,aquitar);
     pair<ll,vector<vector<char>>> ans;
     ans.f=(num-1)*a + d*(aquitar/2);
     ans.s=res;
