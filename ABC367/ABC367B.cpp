@@ -1,5 +1,5 @@
-#pragma GCC optimize ("Ofast")
-#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -149,58 +149,26 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a)cin>>e;
-    auto prev=[=](ll x){
-        if(x==0) return n-1;
-        else return x-1;
-    };
-    auto next=[=](ll x){
-        if(x==n-1) return 0ll;
-        else return x+1;
-    };
-    map< vector<ll> , ll> dp;
-    auto brute=[&](vl &b,auto &&brute){
-        if(dp.count(b)){
-            return dp[b];
-        }
-        bool ok=true;
-        each(e,b){
-            if(e!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dp[b]=0;
-            return dp[b];
-        }
-        else{
-            //probar con cada elemento
-            
-            ll mini=(ll)1e18;
-            ll sum=0;
-            each(e,b)sum+=e;
-            FOR(i,0,n){
-                ll curSum=b[prev(i)] + b[i] + b[next(i)];
-                if(curSum!=0){
-                    vl c=b;
-                    c[prev(i)]=0;
-                    c[i]=0;
-                    c[next(i)]=0;
-                    ckmin(mini,brute(c,brute)+sum - curSum);
-                }
-            }
-            dp[b]=mini;
-            return dp[b];
-        }
-    };
-    cout<<brute(a,brute)<<"\n";
+	str s;
+	cin>>s;
+	auto x=s.find(".");
+	str num=s.substr(0,x);
+	str dec=s.substr(x+1);
+	if(stoll(dec)==0){
+		cout<<num<<"\n";
+	}
+	else{
+		while((ll)dec.size()>0 && dec.back()=='0')dec.pop_back();
+		cout<<num<<"."<<dec<<"\n";
+	}
 }
 
 int main() {

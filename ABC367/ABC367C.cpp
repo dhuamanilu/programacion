@@ -1,5 +1,5 @@
-#pragma GCC optimize ("Ofast")
-#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -149,58 +149,67 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
 void solve() {
-	ll n;
-	cin>>n;
+	ll n,k;
+	cin>>n>>k;
 	vl a(n);
 	each(e,a)cin>>e;
-    auto prev=[=](ll x){
-        if(x==0) return n-1;
-        else return x-1;
-    };
-    auto next=[=](ll x){
-        if(x==n-1) return 0ll;
-        else return x+1;
-    };
-    map< vector<ll> , ll> dp;
-    auto brute=[&](vl &b,auto &&brute){
-        if(dp.count(b)){
-            return dp[b];
-        }
-        bool ok=true;
-        each(e,b){
-            if(e!=0){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dp[b]=0;
-            return dp[b];
-        }
-        else{
-            //probar con cada elemento
-            
-            ll mini=(ll)1e18;
-            ll sum=0;
-            each(e,b)sum+=e;
-            FOR(i,0,n){
-                ll curSum=b[prev(i)] + b[i] + b[next(i)];
-                if(curSum!=0){
-                    vl c=b;
-                    c[prev(i)]=0;
-                    c[i]=0;
-                    c[next(i)]=0;
-                    ckmin(mini,brute(c,brute)+sum - curSum);
-                }
-            }
-            dp[b]=mini;
-            return dp[b];
-        }
-    };
-    cout<<brute(a,brute)<<"\n";
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n)pref[i]=pref[i-1]+a[i];
+	auto gen=[&](vl &act,ll sum , ll idx,auto && gen)->void{
+		if(idx==n-1){
+			while(act[idx]<=a[idx]){
+				if((sum+act[idx]) % k==0){
+					each(e,act)cout<<e<<" ";
+					cout<<"\n";
+				}
+				act[idx]++;
+			}
+			idx--;
+			if(act[idx]+1 <=a[idx]){
+				act[idx]++;
+				FOR(i,idx+1,n){
+					act[i]=1;
+				}
+				gen(act,pref[idx],idx,gen);
+			}
+			
+		}
+		
+		else{
+			gen(act,sum+act[idx],idx+1,gen);
+		}
+	};
+	vl act(n,1);
+	gen(act,0,0,gen);
+	/*FOR(it1,1,6){
+		if(n==1){
+
+		}
+		FOR(it2,1,6){
+			FOR(it3,1,6){
+				FOR(it4,1,6){
+					FOR(it5,1,6){
+						FOR(it6,1,6){
+							FOR(it7,1,6){
+								FOR(it8,1,6){
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}*/
 }
 
 int main() {
