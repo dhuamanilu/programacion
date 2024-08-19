@@ -165,13 +165,13 @@ ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
     }
     distAct.insert({0,S});
     while(distAct.size()>0){
-        dbg(dis);
+        //dbg(dis);
         auto act=*distAct.begin();
         //if(act.f==BIG) break;
         distAct.erase(act);
-        dbg("visitare ",act);
+        //dbg("visitare ",act);
         for(auto & e : G[act.s]){
-        //dbg(e);
+        //dbg("estov visitando",e.end,e.weight,act.s,dis[act.s],dis[e.end]);
         //dbg(dis[act.s],e.weight ,dis[e.end]);
             if(dis[act.s] + e.weight < dis[e.end]){
                 if(distAct.count({dis[e.end],e.end})){
@@ -190,7 +190,17 @@ int main() {
 
     int t = 1;
     //cin >> t;
-
+    /*
+    6 7
+    6 5 10
+    1 4 11
+    1 2 4
+    3 1 5
+    2 4 5
+    6 3 1
+    6 1 3
+    6 4
+    */
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
@@ -201,6 +211,8 @@ int main() {
             ll start;
             edge act;
             cin>>start>>act.end>>act.weight;
+            start--;
+            act.end--;
             act.weight*=-1;
             G[start].pb(act);
         }
