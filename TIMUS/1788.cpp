@@ -148,88 +148,66 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-struct edge{
-    ll end,weight;
-};
 
-ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
-    ll m=G.size();
-    vl dis(n,BIG);
-    dis[S]=0;
-    //<distance, vertex>
-    std::priority_queue<
-        std::pair<long long, long long>, 
-        std::vector<std::pair<long long, long long>>, 
-        std::greater<std::pair<long long, long long>>
-    > distAct;
-    //set<pair<ll,ll>> distAct;
-    /*FOR(i,0,n){
-        if(i!=S)
-            distAct.insert({dis[i],i});
-    }*/
-    distAct.push({0,S});
-    while(distAct.size()>0){
-        //dbg(distAct.size(),dis,distAct);
-        auto act=distAct.top();
-        if(act.f==BIG) break;
-        distAct.pop();
-        if(dis[act.s] < act.f)continue;
-        //dbg("visitare ",act);
-        //dbg("xd ? ",act.s);
-        for(auto & e : G[act.s]){
-        //dbg("estov visitando",distAct.size(),e.end,e.weight,act.s,dis[act.s],dis[e.end]);
-        //dbg(dis[act.s],e.weight ,dis[e.end]);
-            if(dis[act.s] + e.weight < dis[e.end]){
-                dis[e.end]=dis[act.s] + e.weight;
-                distAct.push({dis[e.end],e.end});
-            }
-        }
+
+ll solve(vl &g,vl &b) {
+    sort(all(g));
+    reverse(all(g));
+    sort(all(b));
+    reverse(all(b));
+    ll n=g.size();  
+    vl prefG(n,0);
+    prefG[0]=g[0];
+    FOR(i,1,n){
+        prefG[i]=prefG[i-1]+g[i];
     }
-    return dis[F]==BIG ? -1 : dis[F];
+    ll m=b.size();
+    vl prefB(m,0);
+    prefB[0]=b[0];
+    FOR(i,1,m){
+        prefB[i]=prefB[i-1]+b[i];
+    }
+    ll ans=BIG;
+    auto query=[&](ll x,ll y)->ll{
+        return prefB[y]-(x>=1 ? prefB[x-1] : 0ll); 
+    };
+    auto query2=[&](ll x,ll y)->ll{
+        return prefG[y]-(x>=1 ? prefG[x-1] : 0ll); 
+    };
+    FOR(i,0,(min(n,m))){
+        ll act=(i)*(query(i,m-1)) + query2(i,n-1);
+        //dbg(act);
+        ckmin(ans,act);
+    }
+    if(n<m){
+        ckmin(ans,n*(query(n,m-1)));
+    } 
+    else if(n==m){
+        ckmin(ans,0ll);
+    } 
+    else{
+        //n>m
+        //dbg(query2(m,n-1));
+        ckmin(ans,query2(m,n-1));
+    }
+    return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
-    /*
-    6 7
-    6 5 10
-    1 4 11
-    1 2 4
-    3 1 5
-    2 4 5
-    6 3 1
-    6 1 3
-    6 4
-    */
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
         ll n,m;
         cin>>n>>m;
-        vector<vector<edge>> G(n);
-        FOR(i,0,m){
-            ll start;
-            edge act;
-            cin>>start>>act.end>>act.weight;
-            start--;
-            act.end--;
-            act.weight*=-1;
-            G[start].pb(act);
-        }
-        //dbg("hola1 ");
-        ll S,F;
-        cin>>S>>F;
-        S--;
-        F--;
-        auto x=solve(n,G,S,F);
-        if(x==-1){
-            cout<<"No solution\n";
-        }
-        else cout<<-x<<"\n";
+        vl g(n);
+        each(e,g)cin>>e;
+        vl b(m);
+        each(e,b)cin>>e;
+        cout<<solve(g,b)<<"\n";
+        
     }
     RAYA;
     RAYA;

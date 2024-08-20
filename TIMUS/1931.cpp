@@ -148,88 +148,36 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-struct edge{
-    ll end,weight;
-};
 
-ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
-    ll m=G.size();
-    vl dis(n,BIG);
-    dis[S]=0;
-    //<distance, vertex>
-    std::priority_queue<
-        std::pair<long long, long long>, 
-        std::vector<std::pair<long long, long long>>, 
-        std::greater<std::pair<long long, long long>>
-    > distAct;
-    //set<pair<ll,ll>> distAct;
-    /*FOR(i,0,n){
-        if(i!=S)
-            distAct.insert({dis[i],i});
-    }*/
-    distAct.push({0,S});
-    while(distAct.size()>0){
-        //dbg(distAct.size(),dis,distAct);
-        auto act=distAct.top();
-        if(act.f==BIG) break;
-        distAct.pop();
-        if(dis[act.s] < act.f)continue;
-        //dbg("visitare ",act);
-        //dbg("xd ? ",act.s);
-        for(auto & e : G[act.s]){
-        //dbg("estov visitando",distAct.size(),e.end,e.weight,act.s,dis[act.s],dis[e.end]);
-        //dbg(dis[act.s],e.weight ,dis[e.end]);
-            if(dis[act.s] + e.weight < dis[e.end]){
-                dis[e.end]=dis[act.s] + e.weight;
-                distAct.push({dis[e.end],e.end});
-            }
+
+ll solve(vl &a) {
+    ll n=a.size(),ans=0,idx=0;  
+    FOR(i,0,n){
+        ll j=i+1;
+        while(j<n && a[i] <= a[j]){
+            j++;
         }
+        if(j-i > ans){
+            ans=j-i;
+            idx=i;
+        }
+        i=j-1;
     }
-    return dis[F]==BIG ? -1 : dis[F];
+    return idx+1;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
-    /*
-    6 7
-    6 5 10
-    1 4 11
-    1 2 4
-    3 1 5
-    2 4 5
-    6 3 1
-    6 1 3
-    6 4
-    */
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n,m;
-        cin>>n>>m;
-        vector<vector<edge>> G(n);
-        FOR(i,0,m){
-            ll start;
-            edge act;
-            cin>>start>>act.end>>act.weight;
-            start--;
-            act.end--;
-            act.weight*=-1;
-            G[start].pb(act);
-        }
-        //dbg("hola1 ");
-        ll S,F;
-        cin>>S>>F;
-        S--;
-        F--;
-        auto x=solve(n,G,S,F);
-        if(x==-1){
-            cout<<"No solution\n";
-        }
-        else cout<<-x<<"\n";
+        ll n;
+        cin>>n;
+        vl a(n);
+        each(e,a)cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

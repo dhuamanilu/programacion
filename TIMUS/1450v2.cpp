@@ -153,8 +153,44 @@ struct edge{
     ll end,weight;
 };
 
-ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
-    ll m=G.size();
+
+
+int main() {
+    cin.tie(0)->sync_with_stdio(0);
+
+    int t = 1;
+    //cin >> t;
+    /*
+    6 7
+    6 5 10
+    1 4 11
+    1 2 4
+    3 1 5
+    2 4 5
+    6 3 1
+    6 1 3
+    6 4
+    */
+    for(int idx = 0; idx < t; idx++) {
+        RAYA;
+        RAYA;
+        ll n,m;
+        cin>>n>>m;
+        vector<vector<pair<ll,ll>>> G(n);
+        FOR(i,0,m){
+            ll start;
+            pair<ll,ll> act;
+            cin>>start>>act.f>>act.s;
+            start--;
+            act.f--;
+            act.s*=-1;
+            G[start].pb(act);
+        }
+        //dbg("hola1 ");
+        ll S,F;
+        cin>>S>>F;
+        S--;
+        F--;
     vl dis(n,BIG);
     dis[S]=0;
     //<distance, vertex>
@@ -180,52 +216,13 @@ ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
         for(auto & e : G[act.s]){
         //dbg("estov visitando",distAct.size(),e.end,e.weight,act.s,dis[act.s],dis[e.end]);
         //dbg(dis[act.s],e.weight ,dis[e.end]);
-            if(dis[act.s] + e.weight < dis[e.end]){
-                dis[e.end]=dis[act.s] + e.weight;
-                distAct.push({dis[e.end],e.end});
+            if(dis[act.s] + e.s < dis[e.f]){
+                dis[e.f]=dis[act.s] + e.s;
+                distAct.push({dis[e.f],e.f});
             }
         }
     }
-    return dis[F]==BIG ? -1 : dis[F];
-}
-
-int main() {
-    cin.tie(0)->sync_with_stdio(0);
-
-    int t = 1;
-    //cin >> t;
-    /*
-    6 7
-    6 5 10
-    1 4 11
-    1 2 4
-    3 1 5
-    2 4 5
-    6 3 1
-    6 1 3
-    6 4
-    */
-    for(int idx = 0; idx < t; idx++) {
-        RAYA;
-        RAYA;
-        ll n,m;
-        cin>>n>>m;
-        vector<vector<edge>> G(n);
-        FOR(i,0,m){
-            ll start;
-            edge act;
-            cin>>start>>act.end>>act.weight;
-            start--;
-            act.end--;
-            act.weight*=-1;
-            G[start].pb(act);
-        }
-        //dbg("hola1 ");
-        ll S,F;
-        cin>>S>>F;
-        S--;
-        F--;
-        auto x=solve(n,G,S,F);
+        auto x=dis[F]==BIG ? -1 : dis[F];
         if(x==-1){
             cout<<"No solution\n";
         }

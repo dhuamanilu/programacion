@@ -148,46 +148,26 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-struct edge{
-    ll end,weight;
-};
 
-ll solve(ll n,vector<vector<edge>> &G,ll S,ll F) {
-    ll m=G.size();
-    vl dis(n,BIG);
-    dis[S]=0;
-    //<distance, vertex>
-    std::priority_queue<
-        std::pair<long long, long long>, 
-        std::vector<std::pair<long long, long long>>, 
-        std::greater<std::pair<long long, long long>>
-    > distAct;
-    //set<pair<ll,ll>> distAct;
-    /*FOR(i,0,n){
-        if(i!=S)
-            distAct.insert({dis[i],i});
-    }*/
-    distAct.push({0,S});
-    while(distAct.size()>0){
-        //dbg(distAct.size(),dis,distAct);
-        auto act=distAct.top();
-        if(act.f==BIG) break;
-        distAct.pop();
-        if(dis[act.s] < act.f)continue;
-        //dbg("visitare ",act);
-        //dbg("xd ? ",act.s);
-        for(auto & e : G[act.s]){
-        //dbg("estov visitando",distAct.size(),e.end,e.weight,act.s,dis[act.s],dis[e.end]);
-        //dbg(dis[act.s],e.weight ,dis[e.end]);
-            if(dis[act.s] + e.weight < dis[e.end]){
-                dis[e.end]=dis[act.s] + e.weight;
-                distAct.push({dis[e.end],e.end});
-            }
-        }
-    }
-    return dis[F]==BIG ? -1 : dis[F];
-}
+template<class C, bool directed> struct Dijkstra {
+	int SZ; V<C> dist; 
+	V<V<pair<int,C>>> adj;
+	void init(int _SZ) { SZ = _SZ; adj.clear(); adj.rsz(SZ); }
+	void ae(int u, int v, C cost) {
+		adj[u].pb({v,cost}); if (!directed) adj[v].pb({u,cost}); }
+	void gen(int st) {
+		dist.assign(SZ,numeric_limits<C>::max());
+		using T = pair<C,int>; pqg<T> pq; 
+		auto ad = [&](int a, C b) {
+			if (dist[a] <= b) return;
+			pq.push({dist[a] = b,a});
+		}; ad(st,0);
+		while (sz(pq)) {
+			T x = pq.top(); pq.pop(); if (dist[x.s] < x.f) continue;
+			each(y,adj[x.s]) ad(y.f,x.f+y.s);
+		}
+	}
+};
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
@@ -210,22 +190,61 @@ int main() {
         RAYA;
         ll n,m;
         cin>>n>>m;
-        vector<vector<edge>> G(n);
+        //vector<vector<pair<ll,ll>>> G(n);
+        Dijkstra<ll,true> solver;
+        solver.init(n);
         FOR(i,0,m){
             ll start;
-            edge act;
-            cin>>start>>act.end>>act.weight;
+            pair<ll,ll> act;
+            cin>>start>>act.f>>act.s;
             start--;
-            act.end--;
-            act.weight*=-1;
-            G[start].pb(act);
+            act.f--;
+            act.s*=-1;
+            solver.ae(start,act.f,act.s);
+            //G[start].pb(act);
         }
+        
         //dbg("hola1 ");
         ll S,F;
         cin>>S>>F;
         S--;
         F--;
-        auto x=solve(n,G,S,F);
+        //dbg("hola 1.5");
+        solver.gen(S);
+        //dbg("hola 2");
+    /*vl dis(n,BIG);
+    dis[S]=0;
+    //<distance, vertex>
+    std::priority_queue<
+        std::pair<long long, long long>, 
+        std::vector<std::pair<long long, long long>>, 
+        std::greater<std::pair<long long, long long>>
+    > distAct;
+    //set<pair<ll,ll>> distAct;
+    //FOR(i,0,n){
+        //if(i!=S)
+            //distAct.insert({dis[i],i});
+    //}
+    distAct.push({0,S});
+    while(distAct.size()>0){
+        //dbg(distAct.size(),dis,distAct);
+        auto act=distAct.top();
+        
+        distAct.pop();
+        if(act.f==BIG) break;
+        if(dis[act.s] < act.f)continue;
+        //dbg("visitare ",act);
+        //dbg("xd ? ",act.s);
+        for(auto & e : G[act.s]){
+        //dbg("estov visitando",distAct.size(),e.end,e.weight,act.s,dis[act.s],dis[e.end]);
+        //dbg(dis[act.s],e.weight ,dis[e.end]);
+            if(dis[act.s] + e.s < dis[e.f]){
+                dis[e.f]=dis[act.s] + e.s;
+                distAct.push({dis[e.f],e.f});
+            }
+        }
+    }*/
+        auto x=solver.dist[F]==BIG ? -1 : solver.dist[F];
         if(x==-1){
             cout<<"No solution\n";
         }
