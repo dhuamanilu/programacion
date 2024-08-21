@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e15;  //? not too close to LLONG_MAX
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -148,36 +148,51 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-
-ll solve(vl &a) {
-    ll n=a.size(),ans=0,idx=0;  
-    FOR(i,0,n){
-        ll j=i+1;
-        while(j<n && a[i] <= a[j]){
-            j++;
-        }
-        if(j-i +(i!=0) > ans){
-            ans=j-i+(i!=0);
-            idx=i;
-        }
-        i=j-1;
-    }
-    return idx+1;
+vl solve(ll n) {
+	
+	if(n%2==0){
+		vl ans;
+		ans.pb(-1);
+		return ans;
+	}
+	else{
+		vl ans(n);
+		ll i=0,j=n-1,pri=1,turno=1;
+		FOR(it,0,n){
+			if(turno){
+				ans[i++]=pri++;
+			}
+			else{
+				ans[j--]=pri++;
+			}
+			turno^=1;
+		}
+		return ans;
+	}
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
+    cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vl a(n);
-        each(e,a)cin>>e;
-        cout<<solve(a)<<"\n";
+		ll n;
+		cin>>n;
+        auto x=solve(n);
+		each(e,x)cout<<e<<" ";
+		cout<<"\n";
     }
     RAYA;
     RAYA;
