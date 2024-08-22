@@ -156,16 +156,36 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+void solve(ll n) {
+	auto query=[](ll u ,ll v)->ll{
+		cout<<"? "<<u<<" "<<v<<endl;
+		ll ans;
+		cin>>ans;
+		return ans;
+	};
+	vpl edges;
+	FOR(i,1,n){
+		ll u=i+1,v=1;
+		while(true){
+			ll x=query(u,v);
+			if(x!=u){
+				v=x;
+			}
+			else{
+				edges.pb(mp(u,v));
+				break;
+			} 
+		}
+	}
+	cout<<"! "<<endl;
+	each(e,edges){
+		cout<<e.f<<" "<<e.s<<" ";	 
+	}
+	cout<<endl;
 }
 
 int main() {
-    cin.tie(0)->sync_with_stdio(0);
+    //cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
     cin >> t;
@@ -173,7 +193,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n;
+		cin>>n;
+        solve(n);
     }
     RAYA;
     RAYA;
