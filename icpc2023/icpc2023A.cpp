@@ -148,148 +148,75 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-vpl brute(vpl &a){
-    ll n=a.size();
-    auto intersectVacio=[&](ll idx1,ll idx2){
-        pl p1=a[idx1],p2=a[idx2];
-        vpl aux={p1,p2};
-        sort(all(aux));
-        return (aux[1].f  >= aux[0].s); 
-    };
-    vpl ans;
-    bool pri=true;
-    FOR(i,0,(1ll<<n)){
-        vl ind;
-        bool ok=true;
-        FOR(j,0,n){
-            if(((1ll<<j)&i)){
-                ind.pb(j);
-            }
-        }
-        ll tam=ind.size();
-        //if(i==30) dbg(ind);
-        FOR(it1,0,tam){
-            FOR(it2,it1+1,tam){
-                //if(i==30) dbg(ind[it1],ind[it2],intersectVacio(ind[it1],ind[it2]));
-                if(!intersectVacio(ind[it1],ind[it2])){
-                    ok=false;
-                    break;
-                }
-            }
-        }
-        if(ok){
-            if(n-tam<(ll)ans.size() || pri){
-                pri=false;
-                //ans=ind;
-                vpl aborrar;
-                FOR(j,0,n){
-                    if(((1ll<<j)&i)==0){
-                        aborrar.pb(a[j]);
-                    }
-                }
-                ans=aborrar;
-            }
-        }
-    }
-    return ans;
-}
-struct info{
-    pl par;
-    ll idx;
-};
-vpl solve(vpl &a) {
+//? /Generator
+
+vl solve(vs &a,vs &b) {
 	ll n=a.size();
-    vl act(n,1);
-    auto intersectVacio=[&](ll idx1,ll idx2){
-        pl p1=a[idx1],p2=a[idx2];
-        vpl aux={p1,p2};
-        sort(all(aux));
-        return (aux[1].f  >= aux[0].s); 
-    };
-    //map<ll,ll> idxBo;
-    while(true){
-        vl cont(n,0);
-        FOR(i,0,n){
-            if(!act[i]) continue;
-            FOR(j,0,n){
-                if(!act[j] || i==j) continue;
-                if(!intersectVacio(i,j)){
-                    cont[i]++;
-                }
-            }
-        }
-        //dbg(cont);
-        ll maxi=0;
-        vector<info> cand;
-        FOR(i,0,n){
-            if(!act[i]) continue;
-            if(cont[i]>maxi){
-                maxi=cont[i];
-                cand.clear();
-                info pon;
-                pon.par=a[i];
-                pon.idx=i;
-                cand.pb(pon);
-            }
-            else if(cont[i]==maxi){
-                info pon;
-                pon.par=a[i];
-                pon.idx=i;
-                cand.pb(pon);
-            }
-        }
-        if(maxi==0){
-            break;
-        }
-        sort(all(cand),[&](info &c,info &d){
-            return c.par<d.par;
-        });
-        //each(e,cand){cout<<e.par.f<<" "<<e.par.s<<" "<<e.idx<<"\n";}
-        //dbg("borare ",cand[0].idx,cand[0].par);
-        act[cand[0].idx]=0;
-        //idxBo.pb(cand[0].idx);
-    }
-    vpl ans;
-    FOR(i,0,n){
-        if(act[i]) ans.pb(a[i]);
-    }
-    sort(all(ans));
-    return ans;
-   
+	ll g=b.size();
+	vl res(g,0);
+	str correct=a[0];
+	map<char,ll> has;
+	each(e,correct)has[e]++;
+	FOR(it,0,(ll)b.size()){
+		str guess=b[it];
+		each(word,a){
+			bool ok=true;
+			FOR(i,0,(ll)word.size()){
+				if(guess[i]=='X'){
+					if(has.count(word[i])){
+						ok=false;
+						break;
+					}
+				}
+				else if(guess[i]=='!'){
+					if(correct[i]==word[i] || !has.count(word[i])){
+						ok=false;
+						break;
+					}
+				}
+				else{
+					//  *
+					if(correct[i]!=word[i]){
+						ok=false;
+						break;
+					}
+				}
+			}
+			if(ok)res[it]++;
+		}
+	}
+
+	return res;
+
 }
+
 int main() {
     cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
-    while(0){
-        ll n=rng_ll(1,18);
-        vpl b(n);
-        each(e,b){
-            e.f=rng_ll(-999,998);
-            e.s=rng_ll(e.f+1,999);
-        }
-        auto ans1=solve(b);
-        auto ans2=brute(b);
-        if(ans1.size()!=ans2.size()){
-            dbg("xd :",b,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-    }
+    //cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){cin>>e.f;cin>>e.s;}
-        auto  x=solve(a);
-        cout<<(ll)x.size()<<"\n";
-        each(e,x){cout<<e.f<<" "<<e.s<<"\n";}
+		ll n;
+		cin>>n;
+		vs a(n);
+		each(e,a)cin>>e;
+		ll g;
+		cin>>g;
+		vs b(g);
+		each(e,b)cin>>e;
+        auto x = solve(a,b);
+		each(e,x){
+			cout<<e<<"\n";
+		}
     }
     RAYA;
     RAYA;
