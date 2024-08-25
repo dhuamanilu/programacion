@@ -156,19 +156,49 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
+ll solve(vector<vl> &a,ll m) {
 	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(distS,distE,distS+distE,calc);
-		if(distS>=2*calc || distS<=max(calc,distE)-min(calc,distE)){
-			return "NO";
+	map<ll,ll> sgte;
+	FOR(i,0,n){
+		map<ll,ll> frec;
+		each(e,a[i])frec[e]++;
+		ll pri=-1,seg=-1;
+		ll j=0;
+		while(true){
+			if(!frec[j]){
+				if(pri==-1){
+					pri=j;
+				}
+				else if(seg==-1){
+					seg=j;
+				}
+				else break;
+			}
+			j++;
+		}
+		//dbg(pri,seg);
+		if(sgte.count(pri)){
+			ll val=max(sgte[pri],seg);
+			sgte[pri]=val;
+		}
+		else{
+			sgte[pri]=seg;
 		}
 	}
-	return "YES";
+	auto st=(sgte.begin())->f;
+	while(sgte.count(st)){
+		st=sgte[st];
+	}
+	ll tengo=m;
+	
+	ll cuantos=min(tengo,st);
+	ll ans=(cuantos+1)*st;
+	//dbg(st,ans);
+	tengo-=(cuantos);
+	if(tengo>0){
+		ans+=((m-st)*((m+st+1)))/2;
+	}
+	return ans;
 }
 
 int main() {
@@ -180,13 +210,17 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vector<vl> a(n);
+		FOR(i,0,n){
+			ll len;
+			cin>>len;
+			vl aux(len);
+			each(e,aux)cin>>e;
+			a[i]=aux;
+		}
+        cout<<solve(a,m)<<"\n";
     }
     RAYA;
     RAYA;

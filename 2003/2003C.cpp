@@ -156,19 +156,35 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
-	ll n=a.size();
-	ll calc=(xs-xt)*(xs-xt) + (ys-yt)*(ys-yt);
-	for(auto &e : a){
-		ll x=e.f,y=e.s;
-		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
-		dbg(distS,distE,distS+distE,calc);
-		if(distS>=2*calc || distS<=max(calc,distE)-min(calc,distE)){
-			return "NO";
+str solve(str &s) {
+	ll n=s.size();
+	vl cont(26,0);
+	each(e,s)cont[e-'a']++;
+	set<pair<ll,ll>> se;
+	FOR(i,0,26){
+		if(cont[i]>0)
+			se.insert({cont[i],i});
+	}
+	str ans="";
+	while(!se.empty()){
+		auto x=*prev(se.end());
+		se.erase(x);
+		ans+=('a'+x.s);
+		x.f--;
+		if(!se.empty()){
+			auto y=*(prev(se.end()));
+			se.erase(y);
+			ans+=('a'+y.s);
+			y.f--;
+			if(y.f>0){
+				se.insert(y);
+			}
+		}
+		if(x.f>0){
+			se.insert(x);
 		}
 	}
-	return "YES";
+	return ans;
 }
 
 int main() {
@@ -182,11 +198,9 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vpl a(n);
-		each(e,a) {cin>>e.f;cin>>e.s;}
-		ll xs,ys,xt,yt;
-		cin>>xs>>ys>>xt>>yt;
-		cout<<solve(a,xs,ys,xt,yt)<<"\n";
+		str s;
+		cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;
