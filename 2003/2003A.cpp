@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e15;  //? not too close to LLONG_MAX
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -148,164 +148,43 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-vector<string> types={"BG","BR","BY","GR","GY","RY"};
-map <string,ll> id;
-vl solve(vs &a,vpl &querys) {
-    ll n=a.size();
-    ll q=querys.size();
-    vector<array<ll,6>> pref(n);
-    array<ll,6> pri;
-    each(e,pri)e=0;
-    pri[id[a[0]]]++;
-    pref[0]=pri;
-    FOR(i,1,n){
-        array<ll,6> act=pref[i-1];
-        act[id[a[i]]]++;
-        pref[i]=act;
-    }
-    vector<array<ll,6>> suff(n);
-    array<ll,6> priSuf;
-    each(e,priSuf)e=0;
-    priSuf[id[a[n-1]]]++;
-    suff[n-1]=priSuf;
-    for(ll i=n-2;i>=0;i--){
-        array<ll,6> act=suff[i+1];
-        act[id[a[i]]]++;
-        suff[i]=act;
-    }
-    
-    
-    vl res;
-    auto query=[&](ll idx1,ll idx2){
-        auto R=pref[idx2];
-        if(idx1>=1){
-            auto L=pref[idx1-1];
-            FOR(i,0,(ll)R.size()){
-                R[i]-=L[i];
-            }
-        }
-        return R;
-    };
-    auto query2=[&](ll idx1,ll idx2){
-        //idx1<=idx2
-        auto R=suff[idx1];
-        if(idx2+1 < n){
-            auto L=suff[idx2+1];
-            FOR(i,0,(ll)R.size()){
-                R[i]-=L[i];
-            }
-        }
-        return R;
-    };
-    auto isOk=[&](array<ll,6> info,ll id1,ll id2){
-        //auto info=query(low,high);
-        bool ok=false;
-        FOR(it,0,(ll)info.size()){
-            if(it==id1 || it==id2) continue;
-            //cout<<"it infot en it : "<<it<<" "<<info[it]<<"\n";
-            if(info[it]>0){
-                ok=true;
-                break;
-            }
-        }
-        return ok;
-        
-    };
-    
-    each(e,querys){
-        ll mini=min(e.f,e.s),maxi=max(e.f,e.s);
-        //cout<<"mini max : "<<mini<<" "<<maxi<<"\n";
-        ll id1=min(id[a[mini]],id[a[maxi]]),id2=max(id[a[mini]],id[a[maxi]]);
-        //handle special case
-        if(id1+id2==5){
-            //1ERO,verificar si es que dentro del rango mini maxi hay un "puente"
-            bool ok=isOk(query(mini,maxi),id1,id2);
-            if(ok){
-                res.pb(maxi-mini);
-            }
-            else{
-                ll cand=BIG;
-                //sino
-                //tomar el minimo entre 2 casos 
-                //caso 1 <---------- AB CD
-                //buscar binariamente el primer indice yendo a la izq 
-                //tal que la suma de los que
-                //no son id1 id2 es >0
-                auto bb2=[&](ll s,ll e){
-                    ll m=s+(e-s)/2,guarda=-1;
-                    while(s<=e){
-                        m=s+(e-s)/2;
-                        if(isOk(query2(m,mini-1),id1,id2)){
-                            guarda=m;
-                            s=m+1;
-                        }
-                        else e=m-1;
-                    }
-                    return guarda;
-                };
-                auto get1=bb2(0,mini-1);
-                if(get1!=-1){
-                    ckmin(cand,mini-get1);
-                }
-                //caso 2 AB CD----------->
-                //buscar binariamente el primer indice yendo a la der 
-                //tal que la suma de los que
-                //no son id1 id2 es >0
-                auto bb1=[&](ll s,ll e){
-                    ll m=s+(e-s)/2,guarda=-1;
-                    while(s<=e){
-                        m=s+(e-s)/2;
-                        if(isOk(query(maxi+1,m),id1,id2)){
-                            guarda=m;
-                            e=m-1;
-                        }
-                        else s=m+1;
-                    }
-                    return guarda;
-                };
-                auto get2=bb1(maxi+1,n-1);
-                if(get2!=-1){
-                    ckmin(cand,get2-maxi);
-                }
-                if(cand==BIG){
-                    res.pb(-1);
-                }
-                else res.pb(maxi-mini+2*cand);
-            }
-            
-        }
-        else{
-            res.pb(maxi-mini);
-        }
-    }
-    return res;
+str solve(str &s) {
+	ll n=s.size();
+	FOR(i,0,n){
+		str parte1=s.substr(0,i+1);
+		str parte2="";
+		if(i+1<n){
+			parte2=s.substr(i+1);
+			if(parte1[0]!=parte2.back()){
+				return "YES";
+			}
+		}
+	}
+	return "NO";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
-    cin>>t;
-    FOR(i,0,(ll)types.size()){
-        id[types[i]]=i;
-    }
+    cin >> t;
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n,q;
-        cin>>n>>q;
-        //cout<<"n q : "<<n<<" "<<q<<"\n";
-        vs a(n);
-        each(e,a)cin>>e;
-        vpl querys(q);
-        each(e,querys){
-            cin>>e.f>>e.s;
-            //cout<<e.f<<" "<<e.s<<"\n";
-            e.f--;
-            e.s--;
-        }
-        auto x=solve(a,querys);
-        each(e,x)cout<<e<<"\n";
+		ll n;
+		cin>>n;
+		str s;
+		cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;
