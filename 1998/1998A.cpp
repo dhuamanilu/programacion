@@ -159,12 +159,13 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 void solve() {
 	ll xc,yc,k;
 	cin>>xc>>yc>>k;
-	vpl a(k);
-	ll sum=0;
-	FOR(i,0,k-1){
-		sum+=i+1;
-		a[i].f=i+1;
-		a[i].s=i+1;
+	vpl a;
+	FOR(i,0,k/2){
+		pl act;
+		ll act1=(i%2==0 ? (i+1) : (-i-1));
+		act.f=xc+act1*k;
+		act.s=yc;
+		a.pb(act);
 	}
 	a[k-1].f=xc*k-sum;
 	a[k-1].s=yc*k-sum;

@@ -158,7 +158,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vector<vl> &a,ll m) {
 	ll n=a.size();
-	map<ll,ll> sgte;
+	map<ll,map<ll,ll>> sgte;
 	ll st=0;
 	FOR(i,0,n){
 		map<ll,ll> frec;
@@ -177,15 +177,56 @@ ll solve(vector<vl> &a,ll m) {
 			}
 			j++;
 		}
-		ckmax(st,seg);
+		sgte[pri][seg]++;
 	}
+	//vl vis(n+5,0);
+	vl dp(n+5,-1);
+	/*FOR(i,0,n+5){
+		if(sgte.count(i))
+			dp[i]=i;
+	}*/
+	auto dfs=[&](ll x,auto &&dfs)->ll{
+		//vis[x]=true;
+		ll maxi=0;
+		if(!sgte.count(x)) return dp[x]=x;
+		for(auto &e : sgte[x]){
+			//if(!vis[e]){
+				ckmax(maxi,dfs(e.f,dfs));
+				//if(e.s>=2)ckmax(maxi,e.f);
+			//}
+		}
+		dp[x]=maxi;
+		return dp[x];
+	};
+	FOR(i,0,n+5){
+		if(dp[i]==-1){
+			dfs(i,dfs);
+		}
+	}
+	ll porsiaca=0;
+	each(e,sgte){
+		each(e2,e.s){
+			if(e2.s>=2){
+				ckmax(porsiaca,e2.f);
+			}
+		}
+	}
+	each(e,dp){
+		ckmax(e,porsiaca);
+	}
+	dbg(porsiaca,sgte,dp);
+	ll ans=0,canti=min(n,m);
+	FOR(i,0,canti){
+		ans+=dp[i];
+	}
+	
 	ll tengo=m;
-	ll cuantos=min(tengo,st);
-	ll ans=(cuantos+1)*st;
 	//dbg(st,ans);
-	tengo-=(cuantos);
+	tengo-=(canti);
+	dbg(ans,tengo);
+	st=canti;
 	if(tengo>0){
-		ans+=((m-st)*((m+st+1)))/2;
+		ans+=((m-st+1)*((m+st)))/2;
 	}
 	return ans;
 }

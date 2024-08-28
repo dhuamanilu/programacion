@@ -162,9 +162,9 @@ str solve(vpl &a,ll xs,ll ys,ll xt,ll yt) {
 	for(auto &e : a){
 		ll x=e.f,y=e.s;
 		ll distS=(xs-x)*(xs-x) + (ys-y)*(ys-y);
-		//ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
+		ll distE=(xt-x)*(xt-x) + (yt-y)*(yt-y);
 		//dbg(calc,distS,distE);
-		if(distS>=2*calc){
+		if(distE<=calc){
 			return "NO";
 		}
 	}
