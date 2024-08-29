@@ -166,12 +166,28 @@ ll brute(ll n){
 	return cant;
 }
 void solve() {
-	ll m,n;
+	ll n,m,c;
 	while(true){
-		cin>>m>>n;
-		if(m<0) return;
-		
-	}	
+		cin>>n>>m>>c;
+		if(n==0 && m==0 && c==0)return;
+		ll mult=1;
+		if(m%2==1){
+			mult=2;
+			c^=1;
+		}
+		if(c==0){
+			ll cant1=((n-7)/2);
+			ll cant2=((m-7)/2);
+			dbg(c,mult,cant1,cant2);
+			cout<<mult*cant1*cant2<<"\n";
+		}	
+		else{
+			ll cant1=(1 + (n-8)/2);
+			ll cant2=(1 + (m-8)/2);
+			dbg(c,mult,cant1,cant2);
+			cout<<mult*cant1*cant2<<"\n";
+		}
+	}
 	
 }
 
@@ -179,39 +195,6 @@ int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
-	auto getUni=[](ll n){
-		if(n==0) return 1ll;
-		return (n/10) + 1;
-	};
-	auto getD=[](ll n){
-		if(n<100) return 0ll;
-		return 10*((n/100)-1) + n-10*((n/10)) + 1;
-	};
-	auto bruteD=[](ll n){
-		ll cant=0;
-		FOR(i,0,n+1){
-			str act=to_string(i);
-			if((ll)act.size()>=2 && act[(ll)act.size()-2]=='0') cant++;
-		}
-		return cant;
-	};
-	const int PROB=100000;
-	FOR(i,0,PROB){
-		auto ans1=brute(i);
-		auto ans2=getUni(i);
-		if(ans1!=ans2){
-			dbg("xd",i,ans1,ans2);
-			assert(false);
-		}
-		auto ans3=getD(i);
-		auto ans4=bruteD(i);
-		if(ans3!=ans4){
-			dbg("xd2",i,ans3,ans4);
-			assert(false);
-		}
-	}	
-	dbg("todo ok");
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;

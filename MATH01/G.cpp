@@ -154,68 +154,27 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-ll brute(ll n){
-	//devuelve la cantidad de ceros en las unidades desde 0 hasta n inclusivo
-	ll cant=0;
-	FOR(i,0,n+1){
-		if(i%10==0){
-			cant++;
-		}
-	}
-	return cant;
-}
-void solve() {
-	ll m,n;
-	while(true){
-		cin>>m>>n;
-		if(m<0) return;
-		
-	}	
-	
+
+ll solve(vl &a,ll k,ll mod) {
+	ll n=a.size();
+	ll sum=0;
+	each(e,a)sum+=e;
+	return (((k*(k+1))%mod)*sum)%mod;	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
-	auto getUni=[](ll n){
-		if(n==0) return 1ll;
-		return (n/10) + 1;
-	};
-	auto getD=[](ll n){
-		if(n<100) return 0ll;
-		return 10*((n/100)-1) + n-10*((n/10)) + 1;
-	};
-	auto bruteD=[](ll n){
-		ll cant=0;
-		FOR(i,0,n+1){
-			str act=to_string(i);
-			if((ll)act.size()>=2 && act[(ll)act.size()-2]=='0') cant++;
-		}
-		return cant;
-	};
-	const int PROB=100000;
-	FOR(i,0,PROB){
-		auto ans1=brute(i);
-		auto ans2=getUni(i);
-		if(ans1!=ans2){
-			dbg("xd",i,ans1,ans2);
-			assert(false);
-		}
-		auto ans3=getD(i);
-		auto ans4=bruteD(i);
-		if(ans3!=ans4){
-			dbg("xd2",i,ans3,ans4);
-			assert(false);
-		}
-	}	
-	dbg("todo ok");
+	cin>>t;
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n,k,mod;
+		cin>>n>>k>>mod;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<"Case "<<idx+1<<": "<<solve(a,k,mod)<<"\n";
     }
     RAYA;
     RAYA;
