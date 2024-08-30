@@ -155,45 +155,66 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 
-pl solve(ll n,str& s) {
-	ll j=n;
-	ll k=(ll)s.size()-2-j;
-	db d=stold(s);
-	//dbg(s,(ll)s.size(),d,k,j,binpow(10,k+j)*d ,binpow(10,k)*d);
-	ll num,den;
-	if(n==0){
-		num=lround(binpow(10,k)*d);
-		den=lround(binpow(10,k));
-	}
+str solve(vl &a,vl &b) {
+	set<ll> s1,s2;
+	each(e,a)s1.insert(e);
+	each(e,b)s2.insert(e);
+	auto verify=[&](set<ll> &c, set<ll> &d){
+		//verifica si sc es un subconjunto prio de d
+		set<ll> aux=d;
+		each(e,c)aux.insert(e);
+		if(aux==d)return true;
+		else return false;
+	};
+	if(s1==s2)return "A equals B";
+	else if(verify(s1,s2)) return "A is a proper subset of B";
+	else if(verify(s2,s1)) return "B is a proper subset of A";
 	else{
-		//dbg(binpow(10,k+j)*d,floor(binpow(10,k)*d) ,);
-		auto xd=binpow(10,k+j)*d - (lround)(binpow(10,k)*d);
-		num=(lround)(xd);
-		//dbg(xd,num);
-		den=binpow(10,k+j) -(ll)(binpow(10,k));
-		//dbg(num,den);
+		bool disj=true;
+		each(e,s1){
+			if(s2.count(e)){
+				disj=false;
+				break;
+			}
+		}
+		if(disj){
+			return "A and B are disjoint";
+		}
+		else return "I'm confused!";
 	}
-	ll gc=__gcd(num,den);
-	//dbg(num,den,gc);
-	num/=gc;
-	den/=gc;
-	return {num,den};
+	
 	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 	//setIO("xd");
-    for(int idx = 0;true; idx++) {
+	ll t=1;
+	//cin>>t;
+    for(int idx = 0;idx<t || true; idx++) {
         //RAYA;
         //RAYA;
-		ll n;
-		cin>>n;
-		if(n==-1)break;
-		str d;
-		cin>>d;
-		auto x=solve(n,d);
-		cout<<"Case "<<idx+1<<": "<<x.f<<"/"<<x.s<<"\n";
+		vl a;
+		std::string line;
+		//cin.ignore();
+		getline(std::cin, line);
+		std::istringstream iss(line);
+		ll enterNumber;
+		while (iss >> enterNumber){
+			a.pb(enterNumber);
+		}
+		vl b;
+		std::string line2;
+		//cin.ignore();
+		getline(std::cin, line2);
+		std::istringstream iss2(line2);
+		ll enterNumber2;
+		while (iss2 >> enterNumber2){
+			b.pb(enterNumber2);
+		}
+		//dbg(a,b);
+		auto x=solve(a,b);
+		cout<<x<<"\n";
     }
     RAYA;
     RAYA;

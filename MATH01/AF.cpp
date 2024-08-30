@@ -155,26 +155,15 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 
-pl solve(ll n,str& s) {
-	ll j=n;
-	ll k=(ll)s.size()-2-j;
-	db d=stold(s);
-	//dbg(s,(ll)s.size(),d,k,j,binpow(10,k+j)*d ,binpow(10,k)*d);
-	ll num,den;
-	if(n==0){
-		num=lround(binpow(10,k)*d);
-		den=lround(binpow(10,k));
-	}
-	else{
-		//dbg(binpow(10,k+j)*d,floor(binpow(10,k)*d) ,);
-		auto xd=binpow(10,k+j)*d - (lround)(binpow(10,k)*d);
-		num=(lround)(xd);
-		//dbg(xd,num);
-		den=binpow(10,k+j) -(ll)(binpow(10,k));
-		//dbg(num,den);
-	}
+pl solve(vl &a) {
+	ll n=a.size();
+	ll mult=1;
+	each(e,a)mult*=e;
+	//
+	ll num1=0,num2=mult;
+	each(e,a)num1+=mult/e;
+	ll num=n*num2,den=num1;
 	ll gc=__gcd(num,den);
-	//dbg(num,den,gc);
 	num/=gc;
 	den/=gc;
 	return {num,den};
@@ -184,15 +173,16 @@ pl solve(ll n,str& s) {
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 	//setIO("xd");
-    for(int idx = 0;true; idx++) {
+	ll t;
+	cin>>t;
+    for(int idx = 0;idx<t; idx++) {
         //RAYA;
         //RAYA;
 		ll n;
 		cin>>n;
-		if(n==-1)break;
-		str d;
-		cin>>d;
-		auto x=solve(n,d);
+		vl a(n);
+		each(e,a)cin>>e;
+		auto x=solve(a);
 		cout<<"Case "<<idx+1<<": "<<x.f<<"/"<<x.s<<"\n";
     }
     RAYA;
