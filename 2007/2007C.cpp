@@ -154,88 +154,44 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-str solve(vl &a,vl &b) {
-	map<ll,ll> m1,m2;
-	each(e,a)m1[e]++;
-	each(e,b)m2[e]++;
-	bool eq=1;
-	each(e,m1){
-		if(m2.count(e.f) && m2[e.f]==e.s)continue;
-		else{
-			eq=0;
-			break;
-		}
+ll solve(vl &a,ll val1,ll val2) {
+	//sort(all(a));
+	ll n=a.size();
+	set<ll> s;
+	each(e,a)s.insert(e);
+	ll ans=0;
+	if(val1>val2)swap(val1,val2);
+	FOR(i,0,n){
+		auto x=s.begin();
+		s.erase(x);
+		auto max=*prev(s.end());
+		ll diff=max-*x;
+		ll masgosu=min(diff%(val2-val1),min(diff%val1,diff%val2));
+		
+		//usando diff ,solo a ,solo b, una combinacion de a y de b
+
+
 	}
-	if(eq && m1.size()==m2.size()){
-		return "A equals B";
-	}
-	//a de b
-	bool es=1;
-	each(e,m1){
-		if(!m2.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "A is a proper subset of B";
-	}
-	es=1;
-	each(e,m2){
-		if(!m1.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "B is a proper subset of A";
-	}
-	es=1;
-	//dbg(m1,m2);
-	each(e,m1){
-		if(m2.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "A and B are disjoint";
-	}
-	else{
-		return "I'm confused!";
-	}
+	ans=*prev(s.end()) - *(s.begin());
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-	//setIO("xd");
-	ll t=1;
-	//cin>>t;
-    for(int idx = 0;idx<t ; idx++) {
-        //RAYA;
-        //RAYA;
-		vl a;
-		std::string line;
-		//cin.ignore();
-		if(!getline(std::cin, line))break;
-		std::istringstream iss(line);
-		ll enterNumber;
-		while (iss >> enterNumber){
-			a.pb(enterNumber);
-		}
-		vl b;
-		std::string line2;
-		//cin.ignore();
-		if(!getline(std::cin, line2)) break;
-		std::istringstream iss2(line2);
-		ll enterNumber2;
-		while (iss2 >> enterNumber2){
-			b.pb(enterNumber2);
-		}
-		//dbg(a,b);
-		auto x=solve(a,b);
-		cout<<x<<"\n";
+
+    int t = 1;
+    cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
+        RAYA;
+        RAYA;
+		ll n,val1,val2;
+		cin>>n>>val1>>val2;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<solve(a,val1,val2)<<"\n";
     }
     RAYA;
     RAYA;

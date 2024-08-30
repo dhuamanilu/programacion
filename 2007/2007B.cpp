@@ -154,89 +154,55 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-str solve(vl &a,vl &b) {
-	map<ll,ll> m1,m2;
-	each(e,a)m1[e]++;
-	each(e,b)m2[e]++;
-	bool eq=1;
-	each(e,m1){
-		if(m2.count(e.f) && m2[e.f]==e.s)continue;
+vl solve(vl &a,vector<pair<char,pair<ll,ll>>> &querys) {
+	ll n=a.size();
+	ll m=querys.size();
+	ll maxi=0;
+	each(e,a)ckmax(maxi,e);
+	vl ans;
+	each(e,querys){
+		auto rango=e.s;
+		if(e.f=='+'){
+			if(rango.s>=maxi && maxi>=rango.f){
+				maxi++;
+			}
+		}
 		else{
-			eq=0;
-			break;
+			if(rango.f<=maxi && maxi<=rango.s){
+				maxi--;
+			}
 		}
+		ans.pb(maxi);
 	}
-	if(eq && m1.size()==m2.size()){
-		return "A equals B";
-	}
-	//a de b
-	bool es=1;
-	each(e,m1){
-		if(!m2.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "A is a proper subset of B";
-	}
-	es=1;
-	each(e,m2){
-		if(!m1.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "B is a proper subset of A";
-	}
-	es=1;
-	//dbg(m1,m2);
-	each(e,m1){
-		if(m2.count(e.f)){
-			es=0;
-			break;
-		}
-	}
-	if(es){
-		return "A and B are disjoint";
-	}
-	else{
-		return "I'm confused!";
-	}
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-	//setIO("xd");
-	ll t=1;
-	//cin>>t;
-    for(int idx = 0;idx<t ; idx++) {
-        //RAYA;
-        //RAYA;
-		vl a;
-		std::string line;
-		//cin.ignore();
-		if(!getline(std::cin, line))break;
-		std::istringstream iss(line);
-		ll enterNumber;
-		while (iss >> enterNumber){
-			a.pb(enterNumber);
+
+    int t = 1;
+    cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
+        RAYA;
+        RAYA;
+		ll n,m;
+		cin>>n>>m;
+		vl a(n);
+		each(e,a)cin>>e;
+		vector<pair<char,pair<ll,ll>>> querys(m);
+		each(e,querys){
+			cin>>e.f>>e.s.f>>e.s.s;
 		}
-		vl b;
-		std::string line2;
-		//cin.ignore();
-		if(!getline(std::cin, line2)) break;
-		std::istringstream iss2(line2);
-		ll enterNumber2;
-		while (iss2 >> enterNumber2){
-			b.pb(enterNumber2);
+        auto x=solve(a,querys);
+		each(e,x){
+			cout<<e<<" ";
 		}
-		//dbg(a,b);
-		auto x=solve(a,b);
-		cout<<x<<"\n";
-    }
+		cout<<"\n";
+	}
+
     RAYA;
     RAYA;
 
