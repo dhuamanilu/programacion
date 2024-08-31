@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -155,10 +154,34 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
- solve() {
-	
-    
+ll solve(vl &a) {
+	ll n=a.size();
+	vector<vector<vector<ll>>> dp(n,vector<vector<ll>>(2,vector<ll>(2,0)));
+	//max de 1 a i ,  j =1  si derroto al monstruo 2 si lo skipeo ,
+	//k=1 si es que hago que este monstruo sea un even #
+	dp[0][1][0]=a[0];
+	FOR(i,1,n){
+		//matarlo
+		//2 opciones hacerlo par o impar
+		dp[i][1][0]=a[i]+ max(dp[i-1][0][1],dp[i-1][1][1]);
+		dp[i][1][1]=2*a[i] + max(dp[i-1][0][0],dp[i-1][1][0]);
+
+		//no matarlo
+		dp[i][0][0]=max(dp[i-1][0][0],dp[i-1][1][0]);
+		dp[i][0][1]=max(dp[i-1][0][1],dp[i-1][1][1]);
+	}
+	/*each(e,dp){
+		dbg(e);
+	}*/
+	ll ans=0;
+	FOR(j,0,2){
+		FOR(k,0,2){
+			ckmax(ans,dp[n-1][j][k]);
+		}
+	}
+	return ans;
 }
 
 int main() {
@@ -170,14 +193,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
-        }
-        auto x=solve(a);
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

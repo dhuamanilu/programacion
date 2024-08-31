@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -155,29 +154,26 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
- solve() {
-	
-    
+void solve() {
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
-        }
-        auto x=solve(a);
+        solve();
     }
     RAYA;
     RAYA;

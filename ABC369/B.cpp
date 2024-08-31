@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -155,10 +154,23 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
- solve() {
-	
-    
+ll solve(vl &a,vector<char> &s) {
+	vl L,R;
+	ll n=a.size();
+	FOR(i,0,n){
+		if(s[i]=='L')L.pb(a[i]);
+		else R.pb(a[i]);
+	}
+	ll ans=0;
+	FOR(i,0,(ll)L.size()-1){
+		ans+=abs(L[i]-L[i+1]);
+	}
+	FOR(i,0,(ll)R.size()-1){
+		ans+=abs(R[i]-R[i+1]);
+	}
+	return ans;
 }
 
 int main() {
@@ -170,14 +182,14 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
-        }
-        auto x=solve(a);
+		ll n;
+		cin>>n;
+		vl a(n);
+		vector<char> s(n);
+		FOR(i,0,n){
+			cin>>a[i]>>s[i];
+		}
+        cout<<solve(a,s)<<"\n";
     }
     RAYA;
     RAYA;

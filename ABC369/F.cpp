@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -155,10 +154,58 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
- solve() {
-	
+//? /Generator
+vector<vl> iterativeDP(vector<vector<long long>>& px) {
+	ll rows=px.size();
+	ll cols=px[0].size();
+    vector<vector<long long>> matrix(rows,vl(cols,0));
+	for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (i == 0 && j == 0)
+                matrix[i][j] = px[0][0];
+            else if (i == 0)
+                matrix[i][j] = matrix[i][j - 1] + px[i][j];
+            else if (j == 0)
+                matrix[i][j] = matrix[i - 1][j] + px[i][j];
+            else
+                matrix[i][j] = max(matrix[i - 1][j], matrix[i][j - 1]) + px[i][j];
+        }
+    }
+    return matrix;
+}
+string pathfinder(vector<vector<long long>>& matrix, vector<vector<long long>>& px, int rows, int cols, int i, int j) {
+    string path = "";
     
+    if (i == 0 && j == 0) {
+        return path;  // Hemos llegado al inicio, no agregamos nada al camino
+    } else if (i == 0) {
+        path += pathfinder(matrix, px, rows, cols, i, j - 1);
+        path += "R";  // Hemos ido a la derecha
+    } else if (j == 0) {
+        path += pathfinder(matrix, px, rows, cols, i - 1, j);
+        path += "D";  // Hemos ido hacia abajo
+    } else {
+        if (matrix[i - 1][j] >= matrix[i][j - 1]) {
+            path += pathfinder(matrix, px, rows, cols, i - 1, j);
+            path += "D";  // Hemos ido hacia abajo
+        } else {
+            path += pathfinder(matrix, px, rows, cols, i, j - 1);
+            path += "R";  // Hemos ido a la derecha
+        }
+    }
+
+    return path;
+}
+pair<ll,str> solve(ll h,ll w,vpl &a) {
+	ll n=a.size();
+	vector<vl> arr(h,vl(w,0));
+	each(e,a){
+		e.f--;
+		e.s--;
+		arr[e.f][e.s]=1;
+	}
+	auto x=iterativeDP(arr);
+	return {x[h-1][w-1],pathfinder(x,arr,h,w,h-1,w-1)};
 }
 
 int main() {
@@ -170,14 +217,12 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
-        }
-        auto x=solve(a);
+		ll h,w,n;
+		cin>>h>>w>>n;
+		vpl a(n);
+		each(e,a)cin>>e.f>>e.s;
+		auto x=solve(h,w,a);
+        cout<<x.f<<"\n"<<x.s<<"\n";
     }
     RAYA;
     RAYA;

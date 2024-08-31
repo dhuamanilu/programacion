@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -155,10 +154,62 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
- solve() {
-	
-    
+//? /Generator
+//https://www.geeksforgeeks.org/count-of-subarrays-forming-an-arithmetic-progression-ap/
+ll calcSubarray(vl &A){
+	ll N=A.size();
+    // If size of array is smaller than 2,
+    // then count will be zero
+    if (N < 2) {
+        return 0;
+    }
+ 
+    ll i = 0;
+    ll num, d, count = 0, t;
+ 
+    // Difference between first two adjacent array elements
+    d = A[i + 1] - A[i];
+ 
+    // num stores the total number of elements in a subarray
+    // for a particular difference
+    num = 1;
+ 
+    // After calculating difference, move to next element
+    // and iterate over the array
+    i = 1;
+    while (i < N - 1) {
+ 
+        // If Difference between adjacent elements is same
+        // as d, increment num
+        if (A[i + 1] - A[i] == d) {
+            num++;
+        }
+        else {
+            // Update the count if number of elements
+            // in subarray is greater than 1
+            if (num >= 1) {
+                t = num + 1;
+                count = count + (t * (t + 1)) / 2 - t;
+            }
+ 
+            // Reset num
+            num = 1;
+ 
+            // Update with new difference
+            d = A[i + 1] - A[i];
+        }
+        i++;
+    }
+ 
+    if (num >= 1) {
+        t = num + 1;
+        count = count + (t * (t + 1)) / 2 - t;
+    }
+ 
+    return count;
+}
+ll solve(vl &a) {
+	return calcSubarray(a) + a.size();
 }
 
 int main() {
@@ -170,14 +221,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n;
-        cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
-        }
-        auto x=solve(a);
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
