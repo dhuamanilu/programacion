@@ -158,9 +158,21 @@ map<char,ll> m;
 str solve(str &s1,str &s2) {
 	FOR(i,2,37){
 		FOR(j,2,37){
+			ll val1=0,val2=0;
+			FOR(k,0,s1.size()){
+				val1+=(binpow(i,k)*m[s1[k]]);
+			}
+			FOR(k,0,s2.size()){
+				val2+=(binpow(i,k)*m[s2[k]]);
+			}
 			
+			if(val1==val2){
+				dbg(val1,val2);
+				return s1+" (base "+to_string(i)+") = "+s2+" (base "+to_string(j)+")";
+			}
 		}
 	}
+	return s1+"  is not equal to "+s2+" in any base 2..36";
 	
 }
 
