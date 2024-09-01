@@ -154,32 +154,24 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-ll brute(ll n){
-	//devuelve la cantidad de ceros en las unidades desde 0 hasta n inclusivo
-	ll cant=0;
-	FOR(i,0,n+1){
-		if(i%10==0){
-			cant++;
+ll solve(ll l,ll r) {
+	auto get=[](ll n){
+		ll ans=0,tam=to_string(n).size();
+		FOR(i,0,tam-1){
+			ll power=binpow(10,i);
+			ll num=power*((n/(10*power))-1) + min(power,(n%(10*power))+1);
+			ans+=num;
 		}
-	}
-	return cant;
-}
-void solve() {
-	ll m,n;
-	while(true){
-		cin>>m>>n;
-		if(m<0) return;
-		
-	}	
-	
+		return ans;
+	};
+	return get(r)-(l>=1 ? get(l-1) : -1ll);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    /*cin >> t;
 	auto getUni=[](ll n){
 		if(n==0) return 1ll;
 		return (n/10) + 1;
@@ -192,30 +184,20 @@ int main() {
 		ll cant=0;
 		FOR(i,0,n+1){
 			str act=to_string(i);
-			if((ll)act.size()>=2 && act[(ll)act.size()-2]=='0') cant++;
+			if((ll)act.size()>=2 && act[(ll)act.size()-2]=='0'){
+				cant++;
+				dbg(i);
+			} 
 		}
 		return cant;
-	};
-	const int PROB=100000;
-	FOR(i,0,PROB){
-		auto ans1=brute(i);
-		auto ans2=getUni(i);
-		if(ans1!=ans2){
-			dbg("xd",i,ans1,ans2);
-			assert(false);
-		}
-		auto ans3=getD(i);
-		auto ans4=bruteD(i);
-		if(ans3!=ans4){
-			dbg("xd2",i,ans3,ans4);
-			assert(false);
-		}
-	}	
-	dbg("todo ok");
-    for(int idx = 0; idx < t; idx++) {
+	};*/
+    for(int idx = 0; idx < t || true; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll l,r;
+		cin>>l>>r;
+		if(l<0) break;
+		cout<<solve(l,r)<<"\n";
     }
     RAYA;
     RAYA;

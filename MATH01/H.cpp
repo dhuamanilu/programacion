@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+7;
+int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -142,11 +142,11 @@ long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
         if (b & 1)
-            res = res * a;
-        a = a * a;
+            res = (res * a)%MOD;
+        a = (a * a)%MOD;
         b >>= 1;
     }
-    return res;
+    return res%MOD;
 }
 //? /Custom Helpers
 //? Generator
@@ -154,39 +154,36 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
-ll solve(ll n,ll m,ll c) {
-	/*if(m<n){
-		swap(m,n);
-		c^=1;
-	}*/
-	if(c==0){
-		ll cant1=((n-7)/2);
-		ll cant2=((m-6)/2);
-		ll cant3=;
-		ll cant4=;
-		return cant1*cant2 + cant3*cant4;
-	}	
-	else{
-		ll cant1=((n-6)/2);
-		ll cant2=((m-7)/2);
-		ll cant3=((m-6)/2);
-		ll cant4=((n-7)/2);
-		return cant1*cant2 + cant3*cant4;
+map<char,ll> m;
+str solve(str &s1,str &s2) {
+	FOR(i,2,37){
+		FOR(j,2,37){
+			
+		}
 	}
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
+	FOR(i,0,10){
+		m['0'+i]=i;
+	}
+	FOR(i,0,26){
+		m[('A'+i)]=10+i;
+	}
+	//cin>>t;
     for(int idx = 0; idx < t || true; idx++) {
         RAYA;
         RAYA;
-		ll n,m,c;
-		cin>>n>>m>>c;
-		if(n==0 && m==0 && c==0)break;
-        cout<<solve(n,m,c)<<"\n";
+		str s1,s2;
+		if(!(cin>>s1)){
+			break;
+		}
+		cin>>s2;
+		cout<<solve(s1,s2)<<"\n";
     }
     RAYA;
     RAYA;

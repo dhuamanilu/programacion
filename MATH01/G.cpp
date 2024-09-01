@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+7;
+int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -142,11 +142,11 @@ long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
         if (b & 1)
-            res = res * a;
-        a = a * a;
+            res = (res * a)%MOD;
+        a = (a * a)%MOD;
         b >>= 1;
     }
-    return res;
+    return res%MOD;
 }
 //? /Custom Helpers
 //? Generator
@@ -155,11 +155,12 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 
-ll solve(vl &a,ll k,ll mod) {
+ll solve(vl &a,ll k) {
 	ll n=a.size();
 	ll sum=0;
 	each(e,a)sum+=e;
-	return (((k*(k+1))%mod)*sum)%mod;	
+	ll pot=binpow(n,k-1);//modulo MOD
+	return (((pot*k)%MOD)*sum)%MOD;	
 }
 
 int main() {
@@ -170,11 +171,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,mod;
-		cin>>n>>k>>mod;
+		ll n,k;
+		cin>>n>>k>>MOD;
 		vl a(n);
 		each(e,a)cin>>e;
-        cout<<"Case "<<idx+1<<": "<<solve(a,k,mod)<<"\n";
+        cout<<"Case "<<idx+1<<": "<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

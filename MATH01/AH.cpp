@@ -166,9 +166,15 @@ void solve() {
 		db sum=0;
 		each(e,a)sum+=e;
 		db equ=sum/n;
-		
-		db xd=std::floor(equ * 100 + 0.5)/100;
-
+		//dbg(equ);
+		db xd=std::floor(equ * 100 )/100;
+		db ans=0;
+		FOR(i,0,n/2){
+			//dbg(xd,a[i],xd-a[i]);
+			ans+=abs(xd-a[i]);
+		}
+		//if(n%2==1) ans+=abs()
+		cout<<fixed<<setprecision(2)<<"$"<<ans<<"\n";
 	}
 }
 
