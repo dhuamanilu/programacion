@@ -87,8 +87,8 @@ using vpd = V<pd>;
 
 
 
-int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const int MOD = 1e9+7;
+const ll BIG = 1e16;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -142,11 +142,11 @@ long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
         if (b & 1)
-            res = (res * a)%MOD;
-        a = (a * a)%MOD;
+            res = res * a;
+        a = a * a;
         b >>= 1;
     }
-    return res%MOD;
+    return res;
 }
 //? /Custom Helpers
 //? Generator
@@ -154,55 +154,93 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-map<char,ll> m;
-str solve(str &s1,str &s2) {
-	ll maxi1=0,maxi2=0;
-	each(e,s1)ckmax(maxi1,m[e]);
-	each(e,s2)ckmax(maxi2,m[e]);
-	FOR(i,maxi1+1,37){
-		FOR(j,maxi2+1,37){
-			ll val1=0,val2=0,it=0;
-			
-			for(ll k=(ll)s1.size()-1;k>=0;k--){
-				//dbg(binpow(i,k),m[s1[k]]);
-				val1+=(binpow(i,k)*m[s1[it++]]);
-			}
-			it=0;
-			for(ll k=(ll)s2.size()-1;k>=0;k--){
-				//dbg(binpow(j,k),m[s2[k]]);
-				val2+=(binpow(j,k)*m[s2[it++]]);
-			}
-			//if(i==17 && j==5) dbg(val1,val2);
-			if(val1==val2){
-				//dbg(val1,val2);
-				return s1+" (base "+to_string(i)+") = "+s2+" (base "+to_string(j)+")";
+//? /Generator
+
+ll solve(str &s) {
+	ll n=s.size();
+	auto getMaxi=[&](vector<vl> &cont){
+		vl maxi(2,0);
+		FOR(i,0,2){
+			FOR(j,0,26){
+				ckmax(maxi[i],cont[i][j]);
 			}
 		}
+		return (n/2 - maxi[0]) + (n/2 - maxi[1]);
+	};
+	if(n%2==0){
+		//solo es cmabiar 
+		vector<vl> cont(2,vl(26,0));
+		FOR(i,0,n){
+			cont[i%2][s[i]-'a']++;
+		}
+		return getMaxi(cont);
 	}
-	return s1+" is not equal to "+s2+" in any base 2..36";
-	
+	else{
+		//consultar todos los pares impares en rango 
+		vector<vector<vl>> pref(n,vector<vl>(2,vl(26,0)));
+		vector<vl> pri(2,vl(26,0));
+		pri[0][s[0]-'a']++;
+		pref[0]=pri;
+		FOR(i,1,n){	
+			//pref[i]=pref[i-1] +a [i]
+			auto x=pref[i-1];
+			x[i%2][s[i]-'a']++;
+			pref[i]=x;
+		}
+		
+		auto query=[&](ll l,ll r){
+			auto seg=pref[r];
+			if(l>=1){
+				auto pri=pref[l-1];
+				FOR(i,0,2){
+					FOR(j,0,26){
+						seg[i][j]-=pri[i][j];
+					}
+				}
+			}
+			return seg;
+		};
+		//brute force para todas las letras si borro esa
+		ll ans=BIG;
+		FOR(i,0,n){
+			//entonces la paridad de todos entre i+1 y n-1 cambiara
+			auto get=query(i+1,n-1);
+			//dbg(get);
+			auto xd=pref[n-1];
+			//dbg("xda ntes",xd);
+			xd[i%2][s[i]-'a']--;
+			FOR(j,0,2){
+				FOR(k,0,26){
+					xd[j][k]-=get[j][k];
+				}
+			}
+			FOR(j,0,2){
+				FOR(k,0,26){
+					xd[j][k]+=get[j^1][k];
+				}
+			}
+			//dbg(xd);
+			ckmin(ans,getMaxi(xd));
+		}
+		return ans+1;
+	}
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-	FOR(i,0,10){
-		m['0'+i]=i;
-	}
-	FOR(i,0,26){
-		m[('A'+i)]=10+i;
-	}
-	//cin>>t;
-    for(int idx = 0; idx < t || true; idx++) {
+    cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		str s1,s2;
-		if(!(cin>>s1)){
-			break;
-		}
-		cin>>s2;
-		cout<<solve(s1,s2)<<"\n";
+		ll n;
+		cin>>n;
+		str s;
+		cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;

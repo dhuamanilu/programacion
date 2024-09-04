@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-int MOD = 1e9+7;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -142,11 +142,11 @@ long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
         if (b & 1)
-            res = (res * a)%MOD;
-        a = (a * a)%MOD;
+            res = res * a;
+        a = a * a;
         b >>= 1;
     }
-    return res%MOD;
+    return res;
 }
 //? /Custom Helpers
 //? Generator
@@ -154,55 +154,56 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-map<char,ll> m;
-str solve(str &s1,str &s2) {
-	ll maxi1=0,maxi2=0;
-	each(e,s1)ckmax(maxi1,m[e]);
-	each(e,s2)ckmax(maxi2,m[e]);
-	FOR(i,maxi1+1,37){
-		FOR(j,maxi2+1,37){
-			ll val1=0,val2=0,it=0;
-			
-			for(ll k=(ll)s1.size()-1;k>=0;k--){
-				//dbg(binpow(i,k),m[s1[k]]);
-				val1+=(binpow(i,k)*m[s1[it++]]);
-			}
-			it=0;
-			for(ll k=(ll)s2.size()-1;k>=0;k--){
-				//dbg(binpow(j,k),m[s2[k]]);
-				val2+=(binpow(j,k)*m[s2[it++]]);
-			}
-			//if(i==17 && j==5) dbg(val1,val2);
-			if(val1==val2){
-				//dbg(val1,val2);
-				return s1+" (base "+to_string(i)+") = "+s2+" (base "+to_string(j)+")";
-			}
+//? /Generator
+
+str solve(str &s) {
+	ll n=s.size();
+	auto get=[](ll x){
+		ll raiz=sqrtl(x);
+		return raiz;
+	};
+	ll xd=get(n);
+	if(xd*xd==n){
+		//go
+		FOR(i,0,xd){
+			if(s[i]!='1')return "NO";
 		}
+		FOR(i,n-xd,n){
+			if(s[i]!='1')return "NO";
+		}
+		ll j=0;
+		str patron="1";
+		FOR(j,0,xd-2){
+			patron+="0";
+		}
+		if(xd>1)
+			patron+="1"; 
+		FOR(i,xd,n-xd){
+			if(s[i]!=patron[j])return "NO";
+			j++;
+			j%=xd;
+		}
+		return "YES";
 	}
-	return s1+" is not equal to "+s2+" in any base 2..36";
-	
+	else{
+		return "NO";
+	}
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-	FOR(i,0,10){
-		m['0'+i]=i;
-	}
-	FOR(i,0,26){
-		m[('A'+i)]=10+i;
-	}
-	//cin>>t;
-    for(int idx = 0; idx < t || true; idx++) {
+    cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		str s1,s2;
-		if(!(cin>>s1)){
-			break;
-		}
-		cin>>s2;
-		cout<<solve(s1,s2)<<"\n";
+		ll n;
+		cin>>n;
+		str s;
+		cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;

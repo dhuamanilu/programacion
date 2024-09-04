@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-int MOD = 1e9+7;
+const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -142,11 +142,11 @@ long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
         if (b & 1)
-            res = (res * a)%MOD;
-        a = (a * a)%MOD;
+            res = res * a;
+        a = a * a;
         b >>= 1;
     }
-    return res%MOD;
+    return res;
 }
 //? /Custom Helpers
 //? Generator
@@ -154,55 +154,120 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-map<char,ll> m;
-str solve(str &s1,str &s2) {
-	ll maxi1=0,maxi2=0;
-	each(e,s1)ckmax(maxi1,m[e]);
-	each(e,s2)ckmax(maxi2,m[e]);
-	FOR(i,maxi1+1,37){
-		FOR(j,maxi2+1,37){
-			ll val1=0,val2=0,it=0;
-			
-			for(ll k=(ll)s1.size()-1;k>=0;k--){
-				//dbg(binpow(i,k),m[s1[k]]);
-				val1+=(binpow(i,k)*m[s1[it++]]);
-			}
-			it=0;
-			for(ll k=(ll)s2.size()-1;k>=0;k--){
-				//dbg(binpow(j,k),m[s2[k]]);
-				val2+=(binpow(j,k)*m[s2[it++]]);
-			}
-			//if(i==17 && j==5) dbg(val1,val2);
-			if(val1==val2){
-				//dbg(val1,val2);
-				return s1+" (base "+to_string(i)+") = "+s2+" (base "+to_string(j)+")";
-			}
-		}
+//? /Generator
+
+/**
+ * Description: modular arithmetic operations
+ * Source:
+ * KACTL
+ * https://codeforces.com/blog/entry/63903
+ * https://codeforces.com/contest/1261/submission/65632855 (tourist)
+ * https://codeforces.com/contest/1264/submission/66344993 (ksun)
+ * also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp
+ * (ecnerwal) Verification: https://open.kattis.com/problems/modulararithmetic
+ */
+
+template <int MOD, int RT> struct mint {
+	static const int mod = MOD;
+	static constexpr mint rt() { return RT; }  // primitive root for FFT
+	int v;
+	explicit operator int() const {
+		return v;
+	}  // explicit -> don't silently convert to int
+	mint() : v(0) {}
+	mint(ll _v) {
+		v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+		if (v < 0) v += MOD;
 	}
-	return s1+" is not equal to "+s2+" in any base 2..36";
-	
+	bool operator==(const mint &o) const { return v == o.v; }
+	friend bool operator!=(const mint &a, const mint &b) { return !(a == b); }
+	friend bool operator<(const mint &a, const mint &b) { return a.v < b.v; }
+	friend istream &operator>>(istream &is, mint &a) {
+		ll x;
+		is >> x;
+		a = mint(x);
+		return is;
+	}
+	friend ostream &operator<<(ostream &os, mint a) {
+		os << int(a);
+		return os;
+	}
+
+	mint &operator+=(const mint &o) {
+		if ((v += o.v) >= MOD) v -= MOD;
+		return *this;
+	}
+	mint &operator-=(const mint &o) {
+		if ((v -= o.v) < 0) v += MOD;
+		return *this;
+	}
+	mint &operator*=(const mint &o) {
+		v = int((ll)v * o.v % MOD);
+		return *this;
+	}
+	mint &operator/=(const mint &o) { return (*this) *= inv(o); }
+	friend mint pow(mint a, ll p) {
+		mint ans = 1;
+		assert(p >= 0);
+		for (; p; p /= 2, a *= a)
+			if (p & 1) ans *= a;
+		return ans;
+	}
+	friend mint inv(const mint &a) {
+		assert(a.v != 0);
+		return pow(a, MOD - 2);
+	}
+
+	mint operator-() const { return mint(-v); }
+	mint &operator++() { return *this += 1; }
+	mint &operator--() { return *this -= 1; }
+	friend mint operator+(mint a, const mint &b) { return a += b; }
+	friend mint operator-(mint a, const mint &b) { return a -= b; }
+	friend mint operator*(mint a, const mint &b) { return a *= b; }
+	friend mint operator/(mint a, const mint &b) { return a /= b; }
+};
+
+using mi = mint<MOD, 5>;  // 5 is primitive root for both common mods
+using vmi = V<mi>;
+using pmi = pair<mi, mi>;
+using vpmi = V<pmi>;
+//https://www.geeksforgeeks.org/sum-product-pairs-array-elements/
+mi findProductSum(vl &A) { 
+    ll n=A.size(); 
+    mi array_sum = mi(0); 
+    FOR(i,0,n){
+		array_sum +=mi(A[i]); 
+	}
+    mi array_sum_square = array_sum * array_sum; 
+    mi individual_square_sum = 0; 
+    for (int i = 0; i < n; i++){
+		individual_square_sum += mi(A[i])*mi(A[i]); 
+	}
+    return (array_sum_square - individual_square_sum)/mi(2); 
+} 
+mi solve(vl &a) {
+	ll n=a.size();
+	mi num=findProductSum(a);
+	//dbg(num);
+	mi den=(mi(n)*mi(n-1))/mi(2);
+	//dbg(den);
+	return num*inv(den);
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-	FOR(i,0,10){
-		m['0'+i]=i;
-	}
-	FOR(i,0,26){
-		m[('A'+i)]=10+i;
-	}
-	//cin>>t;
-    for(int idx = 0; idx < t || true; idx++) {
+    cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		str s1,s2;
-		if(!(cin>>s1)){
-			break;
-		}
-		cin>>s2;
-		cout<<solve(s1,s2)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

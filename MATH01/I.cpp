@@ -179,7 +179,7 @@ str solve(str &s1,str &s2) {
 			}
 		}
 	}
-	return s1+" is not equal to "+s2+" in any base 2..36";
+	return s1+"  is not equal to "+s2+" in any base 2..36";
 	
 }
 
