@@ -155,9 +155,34 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
+ll sum(ll l,ll r){
+    return ((r-l+1)*(l+r))/2;
+}
+ll solve2(ll n,ll k){
+    // k ... k + (n+1)/2  - ( k + (n+1)/2  + 1 ... k+n-1 )
+    dbg(k,k+((n)/2) -1 ,k+((n)/2) ,k+n-1,sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
+    ll ans1=abs(sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
+    ll ans2=abs(sum(k,k+((n+1)/2) -1 )-sum(k+((n+1)/2) ,k+n-1));
+    return min(ans1,ans2);
+}
 ll solve(ll n,ll k) {
-	
+	ll s=1,e=n,m=s+(e-s)/2;
+    ll xd=BIG;
+    while(s<=e){
+        m=s+(e-s)/2;
+        //suma desde k hasta k + (m - 1) - (asub m +1 hasta 
+        ll calc=((m)*(2*k + m -1))/2 - ((n-m)*(2*k +n+m-1))/2;
+        calc=abs(calc);
+        dbg(s,e,m,calc);
+        if(calc < xd){
+            xd=calc;
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
+    }
+    return xd;
 }
 
 int main() {
@@ -171,8 +196,7 @@ int main() {
         RAYA;
 		ll n,k;
 		cin>>n>>k;
-		cout<<solve(n,k)<<"\n";
-		
+		cout<<solve2(n,k)<<"\n";
     }
     RAYA;
     RAYA;
