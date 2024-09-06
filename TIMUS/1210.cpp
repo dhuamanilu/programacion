@@ -155,7 +155,10 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
+struct info{
+    ll source;
+    ll weight;
+};
 ll solve() {
 	
     
@@ -172,10 +175,20 @@ int main() {
         RAYA;
         ll n;
         cin>>n;
-        vpl a(n);
-        each(e,a){
-            cin>>e.f;
-            cin>>e.s;
+        vector<vector<info>> a(n+1);
+        FOR(i,0,n){
+            ll tam;
+            cin>>tam;
+            ll donde;
+            while(true){
+                cin>>donde;
+                if(donde==0)break;
+                ll peso;
+                cin>>peso;
+                info aux;
+                aux.source=i+1;
+                aux.weight=peso;
+            }
         }
         auto x=solve(a);
     }
