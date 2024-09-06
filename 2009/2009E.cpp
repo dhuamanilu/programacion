@@ -156,45 +156,8 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a,vpl &queries) {
-	ll n=a.size();
-	ll q=queries.size();
-	vl pref(n,0);
-	pref[1]=a[1];
-	FOR(i,2,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	//de 1 a r ; (1 <= r <= n^2)
-	auto query=[&](ll r){
-		ll cuantos=r/(n-1);
-		ll ans=pref[n-1]*cuantos;
-		r-=cuantos*(n-1);
-		//dbg(r);
-		if(r>0){
-			//dbg(cuantos);
-			//len : r , inicio : cuabntos + 1 , fin cuantos + r 
-			//puede ser que fin pase de n
-			if(cuantos + r >= (n - 1)){
-				ans+=pref[n-1]-pref[cuantos];
-				// 
-				//dbg("ctm",r>0,cuantos + r,r+cuantos-n);
-				ans+=pref[r + cuantos - (n-1)];
-			}
-			else{
-				//dbg(cuantos+r,cuantos);
-				ans+=pref[cuantos + r]-pref[cuantos];
-			}
-			
-		}
-		return ans;
-	};
-	vl ans;
-	each(e,queries){
-		//dbg(query(e.f),query(e.f-1));
-
-		ans.pb(query(e.s) - query(e.f-1));
-	}
-	return ans;
+ll solve(ll n,ll k) {
+	
 }
 
 int main() {
@@ -206,16 +169,10 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,q;
-		cin>>n>>q;
-		vl a(n+1);
-		FOR(i,1,n+1)cin>>a[i];
-		vpl queries(q);
-		each(e,queries){
-			cin>>e.f>>e.s;
-		}
-        auto x = solve(a,queries);
-		each(e,x)cout<<e<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		cout<<solve(n,k)<<"\n";
+		
     }
     RAYA;
     RAYA;
