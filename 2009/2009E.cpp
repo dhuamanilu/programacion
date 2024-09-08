@@ -158,31 +158,33 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 ll sum(ll l,ll r){
     return ((r-l+1)*(l+r))/2;
 }
-ll solve2(ll n,ll k){
-    // k ... k + (n+1)/2  - ( k + (n+1)/2  + 1 ... k+n-1 )
+/*ll solve2(ll n,ll k){
+    //k ... k + (n+1)/2  - ( k + (n+1)/2  + 1 ... k+n-1 )
     dbg(k,k+((n)/2) -1 ,k+((n)/2) ,k+n-1,sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
     ll ans1=abs(sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
     ll ans2=abs(sum(k,k+((n+1)/2) -1 )-sum(k+((n+1)/2) ,k+n-1));
     return min(ans1,ans2);
-}
+}*/
 ll solve(ll n,ll k) {
-	ll s=1,e=n,m=s+(e-s)/2;
-    ll xd=BIG;
+	ll s=1,e=n,m=s+(e-s)/2,guarda=-1;
+    ll res=0;
     while(s<=e){
         m=s+(e-s)/2;
         //suma desde k hasta k + (m - 1) - (asub m +1 hasta 
-        ll calc=((m)*(2*k + m -1))/2 - ((n-m)*(2*k +n+m-1))/2;
-        calc=abs(calc);
-        dbg(s,e,m,calc);
-        if(calc < xd){
-            xd=calc;
+        ll sum1=(sum(k,k+m-1)); //((m)*(2*k + m -1))/2 - ((n-m)*(2*k +n+m-1))/2;
+        ll sum2=sum(k+m,k+n-1);
+        if(sum1 <=sum2){
+            guarda=k+m-1;
+            res=sum2-sum1;
             s=m+1;
         }
         else{
             e=m-1;
         }
     }
-    return xd;
+    //dbg(guarda,res);
+    ll ans2=sum(k,guarda+1) - sum(guarda+2,k+n-1);
+    return min(res,ans2);
 }
 
 int main() {
@@ -196,7 +198,7 @@ int main() {
         RAYA;
 		ll n,k;
 		cin>>n>>k;
-		cout<<solve2(n,k)<<"\n";
+		cout<<solve(n,k)<<"\n";
     }
     RAYA;
     RAYA;
