@@ -155,46 +155,34 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-vl solve(vl &a,vpl &queries) {
-	ll n=a.size();
-	ll q=queries.size();
-	vl pref(n,0);
-	pref[1]=a[1];
-	FOR(i,2,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	//de 1 a r ; (1 <= r <= n^2)
-	auto query=[&](ll r){
-		ll cuantos=r/(n-1);
-		ll ans=pref[n-1]*cuantos;
-		r-=cuantos*(n-1);
-		//dbg(r);
-		if(r>0){
-			//dbg(cuantos);
-			//len : r , inicio : cuabntos + 1 , fin cuantos + r 
-			//puede ser que fin pase de n
-			if(cuantos + r >= (n - 1)){
-				ans+=pref[n-1]-pref[cuantos];
-				// 
-				//dbg("ctm",r>0,cuantos + r,r+cuantos-n);
-				ans+=pref[r + cuantos - (n-1)];
-			}
-			else{
-				//dbg(cuantos+r,cuantos);
-				ans+=pref[cuantos + r]-pref[cuantos];
-			}
-			
-		}
-		return ans;
-	};
-	vl ans;
-	each(e,queries){
-		//dbg(query(e.f),query(e.f-1));
-
-		ans.pb(query(e.s) - query(e.f-1));
-	}
-	return ans;
+ll sum(ll l,ll r){
+    return ((r-l+1)*(l+r))/2;
+}
+ll solve2(ll n,ll k){
+    // k ... k + (n+1)/2  - ( k + (n+1)/2  + 1 ... k+n-1 )
+    dbg(k,k+((n)/2) -1 ,k+((n)/2) ,k+n-1,sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
+    ll ans1=abs(sum(k,k+((n)/2) -1 )-sum(k+((n)/2) ,k+n-1));
+    ll ans2=abs(sum(k,k+((n+1)/2) -1 )-sum(k+((n+1)/2) ,k+n-1));
+    return min(ans1,ans2);
+}
+ll solve(ll n,ll k) {
+	ll s=1,e=n,m=s+(e-s)/2;
+    ll xd=BIG;
+    while(s<=e){
+        m=s+(e-s)/2;
+        //suma desde k hasta k + (m - 1) - (asub m +1 hasta 
+        ll calc=((m)*(2*k + m -1))/2 - ((n-m)*(2*k +n+m-1))/2;
+        calc=abs(calc);
+        dbg(s,e,m,calc);
+        if(calc < xd){
+            xd=calc;
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
+    }
+    return xd;
 }
 
 int main() {
@@ -206,16 +194,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,q;
-		cin>>n>>q;
-		vl a(n+1);
-		FOR(i,1,n+1)cin>>a[i];
-		vpl queries(q);
-		each(e,queries){
-			cin>>e.f>>e.s;
-		}
-        auto x = solve(a,queries);
-		each(e,x)cout<<e<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		cout<<solve2(n,k)<<"\n";
     }
     RAYA;
     RAYA;
