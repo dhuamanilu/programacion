@@ -171,7 +171,8 @@ vl solve(vl &a,vpl &queries) {
 		r-=cuantos*n - 1;
 		if(r>0){
 			//len : r , inicio : cuabntos, fin cuantos + r -1
-			ans+=pref[cuantos + r - 1]-(cuantos>=1 ? pref[cuantos-1] : 0ll);
+			if(cuantos + r - 1 )
+			//ans+=pref[cuantos + r - 1]-(cuantos>=1 ? pref[cuantos-1] : 0ll);
 		}
 		return ans;
 	};
