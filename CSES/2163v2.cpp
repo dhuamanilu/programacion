@@ -154,45 +154,45 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
- 
+
 /**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
+ * Author: Lukas Polacek
+ * Date: 2009-10-30
  * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
+ * Source: folklore/TopCoder
+ * Description: Computes partial sums a[0] + a[1] + ... + a[pos - 1], and updates single elements a[i],
+ * taking the difference between the old and new value.
+ * Time: Both operations are $O(\log N)$.
+ * Status: Stress-tested
  */
-
-tcT> struct SegTree { // cmb(ID,b) = b
-	const T ID{}; T cmb(T a, T b) { return a+b; } 
-	int n; V<T> seg;
-	void init(int _n) { // upd, query also work if n = _n
-		for (n = 1; n < _n; ) n *= 2; 
-		seg.assign(2*n,ID); }
-	void pull(int p) { seg[p] = cmb(seg[2*p],seg[2*p+1]); }
-	void upd(int p, T val) { // set val at position p
-		seg[p += n] = val; for (p /= 2; p; p /= 2) pull(p); }
-	T query(int l, int r) {	// zero-indexed, inclusive
-		T ra = ID, rb = ID;
-		for (l += n, r += n+1; l < r; l /= 2, r /= 2) {
-			if (l&1) ra = cmb(ra,seg[l++]);
-			if (r&1) rb = cmb(seg[--r],rb);
-		}
-		return cmb(ra,rb);
+struct FT {
+	vector<ll> s;
+	FT(int n) : s(n) {}
+	void update(int pos, ll dif) { // a[pos] += dif
+		for (; pos < sz(s); pos |= pos + 1) s[pos] += dif;
 	}
-	/// int first_at_least(int lo, int val, int ind, int l, int r) { // if seg stores max across range
-	/// 	if (r < lo || val > seg[ind]) return -1;
-	/// 	if (l == r) return l;
-	/// 	int m = (l+r)/2;
-	/// 	int res = first_at_least(lo,val,2*ind,l,m); if (res != -1) return res;
-	/// 	return first_at_least(lo,val,2*ind+1,m+1,r);
-	/// }
-}; 
+	ll query(int pos) { // sum of values in [0, pos)
+		ll res = 0;
+		for (; pos > 0; pos &= pos - 1) res += s[pos-1];
+		return res;
+	}
+	//return rango entre [l r]
+	ll query(ll l,ll r){
+		return query(r+1)- query(l);
+	}
+	int lower_bound(ll sum) {// min pos st sum of [0, pos] >= sum
+		// Returns n if no sum is >= sum, or -1 if empty sum is.
+		if (sum <= 0) return -1;
+		int pos = 0;
+		for (int pw = 1 << 25; pw; pw >>= 1) {
+			if (pos + pw <= sz(s) && s[pos + pw-1] < sum)
+				pos += pw, sum -= s[pos-1];
+		}
+		return pos;
+	}
+};
 
-ll getNumber(SegTree<ll>& st,ll n,ll m, ll act ){
+ll getNumber(FT& st,ll n,ll m, ll act ){
 	//devuelve la suma DEsde  [ACT,ACT+m]
 	ll val=0;
 	if(act+m<=n){
@@ -222,10 +222,9 @@ ll getNumber(SegTree<ll>& st,ll n,ll m, ll act ){
 }
 vl solve(ll n,ll k) {
 	k++;
-	SegTree <ll> st;
-	st.init(n+1);
+	FT st(n+1);
 	FOR(i,1,n+1){
-		st.upd(i,1);
+		st.update(i,1);
 	}
 	ll act=k%n;
 	if(act==0) act+=n;
@@ -233,7 +232,7 @@ vl solve(ll n,ll k) {
 	res.pb(act);
 	while(true){
 		//dbg(act);
-		st.upd(act,0);
+		st.update(act,-1);
 		//hacer upper bound de k
 		ll s=k,e=s,m=s+(e-s)/2,guarda=-1;
 		while(e<=(k*n + 5) && getNumber(st,n,e,act)<k){
