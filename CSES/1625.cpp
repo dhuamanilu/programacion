@@ -38,16 +38,18 @@ vll dx={1,-1,0,0};
 vll dy={0,0,-1,	1};
 
 ll tryPath(ll ind,ll f,ll col){
-	if(ind==TAM && (f==7 && col==1)) return 1;
-	else if(ind==TAM) return 0;
-	//opt 3
 	if(onPath[f][col-1] && onPath[f][col+1]
 	&& (!onPath[f-1][col] && !onPath[f+1][col])) return 0;
 	if(onPath[f-1][col] && onPath[f+1][col]
 	&& (!onPath[f][col-1] && !onPath[f][col+1])) return 0;
-	//camino ya determinado
+	if((f==7 && col==1)) {
+		if(ind==TAM)  
+		return 1;
+		else return 0;
+	}
+	if(ind==TAM) return 0;
 	ll ret=0;
-	onPath[f][col]=true;
+	onPath[f][col]=1;
 	if(arr[ind]<4){
 		ll newX=f+dx[arr[ind]];
 		ll newY=col+dy[arr[ind]];
@@ -55,10 +57,13 @@ ll tryPath(ll ind,ll f,ll col){
 	}
 	else{
 		FOR(i,0,4){
-			ll newX=f+dx[arr[ind]];
-			ll newY=col+dy[arr[ind]];
+			ll newX=f+dx[i];
+			ll newY=col+dy[i];
+			if(!onPath[newX][newY]) ret+=tryPath(ind+1,newX,newY);
 		}
 	}
+	onPath[f][col]=0;
+	return ret;
 }
 
 
@@ -81,7 +86,7 @@ void solve(){
 			arr[i]=4;
 		}
 	}
-	FOR(i,0,LEN){
+	FOR(i,0,LEN+2){
 		onPath[0][i]=1;
 		onPath[8][i]=1;
 		onPath[i][8]=1;
