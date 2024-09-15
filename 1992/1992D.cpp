@@ -148,32 +148,96 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-//? Generator
-int rng_int(int L, int R) { assert(L <= R);
-	return uniform_int_distribution<int>(L,R)(rng);  }
-ll rng_ll(ll L, ll R) { assert(L <= R);
-	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+str solve(vl &a,ll m,ll k) {
+	ll n=a.size();
+	ll pos=0;
+	//W 0 C1 L 2
+	FOR(i,-1,n){
+		dbg(i);
+		if( n <= i+m ){dbg("yes1");return "YES";}
+		bool ok=false;
+		FOR(j,i+1,min(i+m+1,n)){
+			dbg(j,a[j]);
+			if(a[j]==2){
+				i=j-1;
+				ok=true;
+				break;
+			}
+		}
+		if(!ok){
+			dbg("xd?");
+			//nadar hasta un log
+			FOR(j,i+1,min(j+k+1,n)){
+				if(a[j]==2){
+					if(k>=j-i-1){
+						ok=true;
+						k-=(j-i-1);
+						i=j-1;
+						break;
+					}
+					else return "NO";
+				}
+				else if(a[j]==1) return "NO";
+			}
+			if(!ok){
+				dbg(i,m);
+				i+=m;
+				dbg(i,m,a[i]);
+				if(a[i]==1) return "NO";
+				//tengo que nadar hasta encontrar un log
+				FOR(j,i+1,min(j+k+1,n)){
+					if(a[j]==2){
+						if(k>=j-i-1){
+							ok=true;
+							k-=(j-i-1);
+							i=j-1;
+							break;
+						}
+						else return "NO";
+					}
+					else if(a[j]==1) return "NO";
+				}
+				if(!ok){
+					ll j=n+1;
+					dbg(i,j,k,j-i-1);
+					if(k>=j-i-1){
+						ok=true;
+						k-=(j-i-1);
+						i=j-1;
+						break;
+					}
+					else return "NO";
+				}
+				
+			}
+		}
+		
+	}
+	dbg("yes2");
+	return "YES";
+    
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
-
+	cin>>t;
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+        ll n,m,k;
+        cin>>n>>m>>k;
+		str s;
+		cin>>s;
+        vl a;
+		each(e,s){
+		 	if(e=='W')a.pb(0);
+			else if(e=='C')a.pb(1);
+			else a.pb(2);
+		 }
+        cout<<solve(a,m,k)<<"\n";
     }
     RAYA;
     RAYA;
