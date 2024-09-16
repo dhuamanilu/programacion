@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e16;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -156,12 +156,16 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve(vs &a,ll m) {
+	ll n=a.size();
+	vl dp(5,-BIG);
+	dp[0]=0;
+	FOR(j,0,5){
+		FOR(i,0,n){
+			
+		}
+	}
+	
 }
 
 int main() {
@@ -177,8 +181,7 @@ int main() {
 		cin>>n>>m;
 		vs a(n);
 		each(e,a)cin>>e;
-		
-        solve();
+        cout<<solve(a,m)<<"\n";
     }
     RAYA;
     RAYA;
