@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e16;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -156,12 +156,38 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve(vs &a,ll m) {
+	ll n=a.size();
+	vector<vl> dp(n,vl(5,-BIG));
+	dp[0][0]=0;
+    string narek="narek";
+    map<char,ll> xd;
+    each(e,narek)xd[e]++;
+	FOR(i,0,n){
+		FOR(j,0,5){
+			if(i==0 && j!=4) continue;
+			//procesar o no procesar
+            ll it=(j+1)%5,scorec=0,scoren=0;
+            FOR(k,0,m){
+                if(!xd.count(a[i][k])) continue;
+                if(a[i][k]==narek[it]){
+                    if(it==4){
+                        scoren+=5;
+                        it=0;
+                    }
+					else it++;
+                }  
+                else scorec++;     
+            }
+			ll ant=(i>=1 ? dp[i-1][j]:-BIG);
+			//if(ant!=-BIG)
+            	dp[i][j]=max(ant,scoren-scorec + ant);
+		}
+	}
+    ll ans=-BIG;
+    FOR(i,0,5) ckmax(ans,dp[n-1][i]);
+    return ans;
+	
 }
 
 int main() {
@@ -177,8 +203,7 @@ int main() {
 		cin>>n>>m;
 		vs a(n);
 		each(e,a)cin>>e;
-		
-        solve();
+        cout<<solve(a,m)<<"\n";
     }
     RAYA;
     RAYA;
@@ -190,11 +215,6 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
 
 
 
