@@ -156,18 +156,66 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+ll solve(ll r,ll g,ll b) {
+	//100 20 1 -> 21
+	//1 1 10000 -> 2
+	//1 10 100 -> 11
+	//45 47 43-> 45
+	//40 1000 1040 ->560??
+	//3 10 15->  9?
+	//100 90 15 -> 65
+	//120 38 42->60??
+	vl a={r,g,b};
+	sor(a);
+	ll ans1=a[0] + min((a[2]-a[0])/2,a[1]-a[0]);
+	auto get=[](vl &xd,auto &&get){
+		sor(xd);
+		if(xd.size()==2){
+			return min(xd[0],xd[1]/2);
+		}
+		else{
+			assert(xd[0]==1);
+			//restarle a 1 al otro o a ambos
+			ll res=0;
+			if(xd[1]>=2){
+				vl ra={xd[1]-2,xd[2]};
+				ckmax(res,1 + get(ra,get));
+			}
+			if(xd[2]>=2){
+				vl ra={xd[2]-2,xd[1]};
+				ckmax(res,1 + get(ra,get));
+			}
+			if(xd[1]>=1 && xd[2]>=1){
+				vl ra={xd[1]-1,xd[2]-1};
+				ckmax(res,1 + get(ra,get));
+			}
+			return res;
+		}
+		
+	};
+	ll ans2=0;
+	if(a[0]<a[2]/2){
+		ans2+=a[0];
+		vl c={a[2]-2*(a[0]),a[1]};
+		ans2+=get(c,get);
 	}
-    
-	return 0ll;
-	
+	else{
+		ans2+=a[2]/2;
+		vl c={a[0]-a[2]/2,a[1]};
+		ans2+=get(c,get);
+	}
+	ll ans3=0;
+	if(a[0]<a[1]/2){
+		ans3+=a[0];
+		vl c={a[1]-2*(a[0]),a[2]};
+		ans3+=get(c,get);
+	}
+	else{
+		ans3+=a[1]/2;
+		vl c={a[0]-a[1]/2,a[2]};
+		ans3+=get(c,get);
+	}
+	return max(ans1,max(ans2,ans3));	
 }
 
 int main() {
@@ -179,9 +227,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll r,g,b;
+		cin>>r>>g>>b;
+        cout<<solve(r,g,b)<<"\n";
     }
     RAYA;
     RAYA;

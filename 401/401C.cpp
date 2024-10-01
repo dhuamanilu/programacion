@@ -156,17 +156,82 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+str solve(ll n,ll m) {
+	//n 3 m 4 -> 0110110
+	//
+	ll tam=n+m;
+	//if(n-2>=m)return "-1";
+	if(n==m){
+	    //0101
+	    str ans="";
+	    FOR(i,0,tam){
+	        if(i%2==0)ans+="0";
+	        else ans+="1";
+	    }
+	    return ans;
 	}
-    
-	return 0ll;
+	else if(m+1==n){
+	    //0101
+	    str ans="";
+	    FOR(i,0,tam){
+	        if(i%2==0)ans+="0";
+	        else ans+="1";
+	    }
+	    return ans;
+	}
+	// 4 5 -> 101010101
+	// 4 6 -> 1101010101
+	//4 7 ->  11011010101
+	//4 8 -> 110110110110
+	// 4 9 ->1101101101101
+	//4 10 ->11011011011011
+	//110110110110 etc etc 
+	vs ans(3,"");
+	str xd1="110",xd2="101",xd3="011";
+	FOR(i,0,tam){
+		ans[0]+=xd1[i%3];
+		ans[1]+=xd2[i%3];
+		ans[2]+=xd3[i%3];
+	}
+	vector<vl> cont(3,vl(2,0));
+	auto check=[&](ll i, ll j){
+		if(i>=1){
+			return ans[j][i]=='0' || ans[j][i-1]=='0';
+		}
+		else{
+			return true;
+		}
+	};
+	FOR(i,0,tam){
+		FOR(j,0,3){
+			cont[j][ans[j][i]-'0']++;
+			ll zeros=cont[j][0],ones=cont[j][1];
+			ll falta=tam-(i+1);
+			if(zeros==n && ones==m){
+				return ans[j].substr(0,i+1);
+			}
+			// temrinar con 101010
+			else if((ans[j][i]=='0' || (check(i,j))) && (zeros + (falta/2)) ==n && (ones +(falta+1)/2 )==m ){
+				str xd=ans[j].substr(0,i+1);
+				FOR(it,0,falta){
+					if(it%2==0)xd+="1";
+					else xd+="0";
+				}
+				return xd;
+			}
+			//terminar con 010101
+			else if((ans[j][i]=='1')&& (zeros +(falta+1)/2 ) ==n && (ones + (falta/2) )==m ){
+				str xd=ans[j].substr(0,i+1);
+				FOR(it,0,falta){
+					if(it%2==0)xd+="0";
+					else xd+="1";
+				}
+				return xd;
+			}
+		}
+	}
+	
+	return "-1";
 	
 }
 
@@ -179,9 +244,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+        cout<<solve(n,m)<<"\n";
     }
     RAYA;
     RAYA;

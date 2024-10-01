@@ -156,18 +156,45 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+vl solve(str &s,vector<pair<ll,char>> &queries) {
+	ll n=s.size(),q=queries.size();
+	str pattern="ABC";
+	ll cont=0;
+	FOR(i,0,n-2){
+		str act=s.substr(i,3);
+		if(act==pattern)cont++;
 	}
-    
-	return 0ll;
-	
+	vl res;
+	each(e,queries){
+		if(e.f<=n-3){
+			str act=s.substr(e.f,3);
+			if(act==pattern)cont--;
+		}
+		if(e.f>=1 && e.f<=n-2){
+			str act=s.substr(e.f-1,3);
+			if(act==pattern)cont--;
+		}
+		if(e.f>=2 && e.f<=n-1){
+			str act=s.substr(e.f-2,3);
+			if(act==pattern)cont--;
+		}
+		s[e.f]=e.s;
+		if(e.f<=n-3){
+			str act=s.substr(e.f,3);
+			if(act==pattern)cont++;
+		}
+		if(e.f>=1 && e.f<=n-2){
+			str act=s.substr(e.f-1,3);
+			if(act==pattern)cont++;
+		}
+		if(e.f>=2 && e.f<=n-1){
+			str act=s.substr(e.f-2,3);
+			if(act==pattern)cont++;
+		}
+		res.pb(cont);
+
+	}
+	return res;
 }
 
 int main() {
@@ -179,9 +206,19 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n,q;
+		cin>>n>>q;
+		str s;
+		cin>>s;
+		vector<pair<ll,char>> queries(q);
+		each(e,queries){
+			cin>>e.f>>e.s;
+			e.f--;
+		}
+
+        auto x =solve(s,queries);
+		each(e,x)cout<<e<<"\n";
+		
     }
     RAYA;
     RAYA;
@@ -193,3 +230,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

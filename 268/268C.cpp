@@ -156,18 +156,27 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+vpl solve(ll n,ll m) {
+	vpl xd;
+	ll tam=min(n,m)+1,x,y;
+	if(n==m){
+		x=0,y=m;
+		FOR(i,0,tam){
+			xd.pb({x,y});
+			x++;
+			y--;
+		}
 	}
-    
-	return 0ll;
+	else{
+		x=n,y=m;
+		FOR(i,0,tam){
+			xd.pb({x,y});
+			x--;
+			y--;
+		}
+	}
 	
+	return xd;
 }
 
 int main() {
@@ -179,9 +188,13 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		auto x=solve(n,m);
+        cout<<x.size()<<"\n";
+		each(e,x){
+			cout<<e.f<<" "<<e.s<<"\n";
+		} 
     }
     RAYA;
     RAYA;

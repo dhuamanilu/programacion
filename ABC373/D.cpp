@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e16;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -156,17 +156,29 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
+vl solve(vector<vpl> &G) {
+	ll n=G.size()-1;
+	vl ans(n+1,-BIG);
+	vl vis(n+1,0);
+	auto dfs=[&](auto &&dfs,ll i,ll carry)-> void{
+		vis[i]=1;
+		ans[i]=carry;
+		bool ok=false;
+		for(auto &e : G[i]){
+			if(!vis[e.f]){
+				ok=true;
+				dfs(dfs,e.f,carry + e.s);
+			}
+		}
+		
+	};
 	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+		if(ans[i]==-BIG){
+			dfs(dfs,i,0);
+		}
 	}
-    
-	return 0ll;
+	dbg(ans);
+	return ans;
 	
 }
 
@@ -179,9 +191,19 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vector<vpl> G(n+1);
+		FOR(i,0,m){
+			ll u,v,w;
+			cin>>u>>v>>w;
+			G[u].pb(mp(v,w));
+		}
+        auto x = solve(G);
+		FOR(i,1,n+1){
+			cout<<x[i]<<" ";
+		}
+		cout<<"\n";
     }
     RAYA;
     RAYA;
@@ -193,3 +215,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

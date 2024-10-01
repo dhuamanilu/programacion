@@ -155,19 +155,41 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+#include <ext/pb_ds/assoc_container.hpp> 
+#include <ext/pb_ds/tree_policy.hpp> 
+using namespace __gnu_pbds; 
+  
+#define ordered_set tree<int, null_type,less<int>, rb_tree_tag,tree_order_statistics_node_update> 
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
-	}
-    
-	return 0ll;
+vl solve(vector<array<ll,3>> &queries,ll n) {
+	ll q=queries.size();
 	
+	vl res;
+	vector<ordered_set> G(n+1);
+	FOR(i,1,n+1){
+		G[i].insert(i);
+	}
+	each(e,queries){
+		if(e[0]==1){
+			ll u=e[1],v=e[2];
+			G[u].insert(v);
+			G[v].insert(u);
+			dbg("query tipe 1 added edge between u and v",u,v);
+		}
+		else{
+			ll v=e[1],k=e[2],ans=-1;
+			ll tam=G[v].size();
+			dbg("type 2",v,tam,k);
+			
+			if(tam>=k){
+				ll xd=*(G[v].find_by_order(tam-k));
+				dbg(xd);
+				ans=xd;
+			}
+			res.pb(ans);
+		}
+	}
+	return res;
 }
 
 int main() {
@@ -179,9 +201,14 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n,q;
+		cin>>n>>q;
+		vector<array<ll,3>> queries(q);
+		each(e,queries){
+			each(e2,e)cin>>e2;	
+		}
+        auto x =solve(queries,n);
+		each(e,x)cout<<e<<"\n";	
     }
     RAYA;
     RAYA;
@@ -193,3 +220,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

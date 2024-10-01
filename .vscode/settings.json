@@ -128,7 +128,8 @@
     "typeinfo": "cpp",
     "valarray": "cpp",
     "1873fv2cpp": "c",
-    "charconv": "cpp"
+    "charconv": "cpp",
+    "numbers": "cpp"
   },
   "cmake.sourceDirectory": "C:/Users/USER/Desktop/programacion_competitiva/programacion/2/cmake_stdheaders_generator",
   "C_Cpp.default.compilerPath": "c:\\msys64\\ucrt64\\bin\\gcc.exe"

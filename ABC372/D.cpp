@@ -156,18 +156,18 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
+vl solve(vl &a) {
+	ll n=a.size();
+	vl res(n);
+	stack<ll> pila;
+	for(ll i=n-1;i>=0;i--){
+		res[i]=pila.size();
+		while(pila.size()>0 && pila.top()<a[i]){
+			pila.pop();
+		}	
+		pila.push(a[i]);
 	}
-    
-	return 0ll;
-	
+	return res;
 }
 
 int main() {
@@ -179,9 +179,13 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+        auto x =solve(a);
+		each(e,x)cout<<e<<"\n";
+		
     }
     RAYA;
     RAYA;
@@ -193,3 +197,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

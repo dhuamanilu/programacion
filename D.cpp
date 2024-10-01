@@ -5,7 +5,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
-#include "../debugICPC.h"
+#include "./debugICPC.h"
 #define chk(...) if (!(__VA_ARGS__)) cerr << "\033[41m" << "Line(" << __LINE__ << ") -> function(" \
 	 << __FUNCTION__  << ") -> CHK FAILED: (" << #__VA_ARGS__ << ")" << "\033[0m" << "\n", exit(0);
 
@@ -156,18 +156,12 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll n,ll k,ll d) {
-	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
-	//tienen como maximo peso it3
-	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
-	FOR(i,1,n+1){
-	    FOR(j,i,k+1){
-            dp[1][i][j]++;
-        }
-	}
-    
-	return 0ll;
-	
+void solve() {
+	ll n;
+	cin>>n;
+	vl a(n);
+	each(e,a) cin>>e;
+	dbg(a);	
 }
 
 int main() {
@@ -179,9 +173,7 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,k,d;
-		cin>>n>>k>>d;
-        cout<<solve(n,k,d)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;
@@ -193,3 +185,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+
