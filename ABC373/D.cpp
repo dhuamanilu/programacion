@@ -177,7 +177,6 @@ vl solve(vector<vpl> &G) {
 			dfs(dfs,i,0);
 		}
 	}
-	dbg(ans);
 	return ans;
 	
 }
@@ -198,6 +197,7 @@ int main() {
 			ll u,v,w;
 			cin>>u>>v>>w;
 			G[u].pb(mp(v,w));
+			G[v].pb(mp(u,-w));
 		}
         auto x = solve(G);
 		FOR(i,1,n+1){
