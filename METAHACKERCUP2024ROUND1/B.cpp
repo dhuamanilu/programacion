@@ -2,7 +2,7 @@
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 #ifdef LOCAL
 #include "../debugICPC.h"
@@ -149,60 +149,64 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-//? /Custom Helpers
+//? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-
-
-ll solve(vl &a,ll x) {
-    ll n=a.size();
-    sor(a);
-    vl pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n) pref[i]=pref[i-1]+a[i];
-    auto query = [&](ll l,ll r) {
-        if(l==0) return pref[r];
-        return pref[r]-pref[l-1];
-    };
-    //el limite es (10^ 9) + (10^4 /2)
-    //es el peor caso cuando todos los elementos son 10^9 y tienes disponviles
-    //10^9 de agua
-    ll s=1,e=(ll)1e10,m=s+(e-s)/2,guarda=-1;
-    while(s<=e) {
-        m=s+(e-s)/2;
-        auto xd =lower_bound(all(a),m)-a.begin();
-        ll need=0;
-        if(xd>=1){
-            need = xd*m - (query(0,xd-1));
-        }
-        dbg(s,e,m,x,xd,need);
-        if(need<=x){
-            guarda=m;
-            s=m+1;
-        } 
-        else e=m-1;
-    }
-    return guarda;
-    
+//? /Generator
+const int N=(int)1e7 + 5;
+vector<bool> is_prime(N+1, true);
+vi primes;
+set<ll> primesSET;
+void init(){
+	
+	is_prime[0] = is_prime[1] = false;
+	for (int i = 2; i <= N; i++) {
+		if (is_prime[i] && (long long)i * i <=N) {
+			for (int j = i * i; j <= N; j += i)
+				is_prime[j] = false;
+		}
+	}
+	FOR(i,0,N){
+		if(is_prime[i]){
+			primes.pb(i);
+		}
+	}
+	each(e,primes)primesSET.insert(e);
+}
+ll solve(ll n) {
+	ll cantPrimos =primes.size();
+	auto x=lower_bound(all(primes),n) - primes.begin();
+	ll cont=0;
+	FOR(i,0,x){
+		dbg("xd",primes[i]);
+		if(primesSET.count(2 + primes[i])
+		&& primes[i]+2<=n){
+			cont++;
+		}
+	}
+	return cont;
 }
 
-
 int main() {
+	init();
     cin.tie(0)->sync_with_stdio(0);
+	setIn("prime_subtractorization_sample_input.txt");
+	ofstream myfile;
+	myfile.open ("prime_subtractorization_sample_output.txt");
+	
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n,x;
-        cin>>n>>x;
-        vl a(n);
-        each(e,a) cin>>e;
-        cout<<solve(a,x)<<"\n";
+		ll n;
+		cin>>n;
+        myfile<<"Case #"<<idx+1<<": "<<solve(n)<<"\n";
     }
+	myfile.close();
     RAYA;
     RAYA;
 
@@ -213,11 +217,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-

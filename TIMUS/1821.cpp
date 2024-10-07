@@ -1,5 +1,5 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
+//#pragma GCC optimize ("Ofast")
+//#pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,7 +90,8 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-mt19937 rng(0); // or mt19937_64
+auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+mt19937 rng(seed); // or mt19937_64
 
 
 
@@ -149,59 +150,59 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-//? /Custom Helpers
+//? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 
-
-ll solve(vl &a,ll x) {
+vs solve(vector<pair<str,ll>> &a){
     ll n=a.size();
-    sor(a);
-    vl pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n) pref[i]=pref[i-1]+a[i];
-    auto query = [&](ll l,ll r) {
-        if(l==0) return pref[r];
-        return pref[r]-pref[l-1];
-    };
-    //el limite es (10^ 9) + (10^4 /2)
-    //es el peor caso cuando todos los elementos son 10^9 y tienes disponviles
-    //10^9 de agua
-    ll s=1,e=(ll)1e10,m=s+(e-s)/2,guarda=-1;
-    while(s<=e) {
-        m=s+(e-s)/2;
-        auto xd =lower_bound(all(a),m)-a.begin();
-        ll need=0;
-        if(xd>=1){
-            need = xd*m - (query(0,xd-1));
+    vs ans;
+    ll mini=a[0].s;
+    ans.pb(a[0].f);
+    FOR(i,1,n){
+        dbg("estoy en",a[i].f,a[i].s,mini);
+        if(a[i].s<mini){
+            mini=a[i].s;
+            ans.pb(a[i].f);
         }
-        dbg(s,e,m,x,xd,need);
-        if(need<=x){
-            guarda=m;
-            s=m+1;
-        } 
-        else e=m-1;
     }
-    return guarda;
-    
+    dbg(ans);
+    sor(ans);
+    return ans;
 }
-
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    int t = 1;
-    cin >> t;
 
+    int t = 1;
+    //cin >> t;
+    //  t = v0+sqrt(vo*vo  + 2*a*d)/a
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        ll n,x;
-        cin>>n>>x;
-        vl a(n);
-        each(e,a) cin>>e;
-        cout<<solve(a,x)<<"\n";
+        ll n;
+        cin>>n;
+        vector<pair<str,ll>> a(n);
+        FOR(i,0,n){
+            cin>>a[i].f;
+            str time;
+            cin>>time;
+            auto pos1 = time.find(":");
+            ll h=stoll(time.substr(0,pos1));
+            auto pos2 = time.find(".",pos1+1);
+            ll m=stoll(time.substr(pos1+1,pos2-pos1-1));    
+            ll seg = stoll(time.substr(pos2+1));
+            a[i].s=600*h + 10*m + seg;
+            dbg(h,m,seg,a[i].s - (300*i));
+        }
+        sor(a);
+        auto x =solve(a);
+        cout<<x.size()<<"\n";
+        each(e,x){
+            cout<<e<<"\n";
+        }
     }
     RAYA;
     RAYA;
@@ -213,11 +214,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-
