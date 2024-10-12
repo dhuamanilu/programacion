@@ -154,71 +154,80 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-struct Tree {
-	typedef ll T;
-	static constexpr T unit = 0;
-	T f(T a, T b) { return a + b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
+
 vs solve(vl &a,vl &b,vpl &queries) {
 	ll n=a.size(),m=b.size(),q=queries.size();
-	vl posA(n+1,-1);
-	vector<set<ll>> posB(n+1);
+	vl posA(n,-1);
+	vector<set<ll>> posB(n);
 	FOR(i,0,n){
 		posA[a[i]]=i;
 	}
 	FOR(i,0,m){
 		posB[b[i]].insert(i);
 	}
-	Tree st(n);
-	ll contAct=0;
+	vl f(n,0);
+	vl start(n,BIG);
 	FOR(i,0,n){
-		if(posB[i+1].size()>0){
-			st.update(i,(*(posB[i+1].begin())>=posA[i+1]));
-			contAct++;
-		}	
-		else st.update(i,0);
+		if(posB[i].size()>0){
+			start[i]=*(posB[i].begin());
+		}
+	}
+	ll cont=0;
+	FOR(i,0,n-1){
+		f[i]=(start[a[i]] > start[a[i+1]]);
+		cont+=f[i];
 	}
 	vs ans;
-
-	ll pri=st.query(0,n);
-	if(pri==contAct)ans.pb("YA");
+	if(cont==0)ans.pb("YA");
 	else ans.pb("TIDAK");
 	for(auto &[s,t] : queries){
-		ll guarda=b[s];
-		posB[guarda].erase(s);
-		contAct--;
+		//a[posA[b[s]]+1];
+		ll sgte=posA[b[s]]+1;
+		if(sgte<n)
+			cont-=start[sgte-1] > start[sgte];
+		
+		ll ante=posA[b[s]]-1;
+		if(ante>=0)	
+			cont-=start[ante] > start[ante+1];
+
+		posB[b[s]].erase(s);
+		if(posB[b[s]].size()>0){
+			start[b[s]]=*(posB[b[s]].begin());
+		}
+		else start[b[s]]=BIG;
+
+		ll sgte2=posA[b[s]]+1;
+		if(sgte2<n)
+			cont+=start[sgte2-1] > start[sgte2];
+		
+		ll ante2=posA[b[s]]-1;
+		if(ante2>=0)	
+			cont+=start[ante2] > start[ante2+1];
+
 
 		b[s]=t;
-		if(posB[t].size()==0)contAct++;
-		posB[t].insert(s);
-		
-		if(posB[guarda].size()>0){
-			st.update(guarda - 1,(*(posB[guarda].begin())>=posA[guarda]));
-			contAct++;
-		}
-		else st.update(guarda - 1,0);
-		if(posB[t].size()>0){
-			st.update(t - 1,(*(posB[t].begin())>=posA[t]));
-		}	
-		else st.update(t - 1,0);
 
-		ll xd=st.query(0,n);
-		if(xd==contAct)ans.pb("YA");
+		ll sgte3=posA[b[s]]+1;
+		if(sgte3<n)
+			cont-=start[sgte3-1] > start[sgte3];
+		
+		ll ante3=posA[b[s]]-1;
+		if(ante3>=0)	
+			cont-=start[ante3] > start[ante3+1];
+		
+		posB[t].insert(s);
+		start[t]=*(posB[t].begin());
+			
+		ll sgte4=posA[b[s]]+1;
+		if(sgte4<n)
+			cont+=start[sgte4-1] > start[sgte4];
+		
+		ll ante4=posA[b[s]]-1;
+		if(ante4>=0)	
+			cont+=start[ante4] > start[ante4+1];
+		
+		
+		if(cont==0)ans.pb("YA");
 		else ans.pb("TIDAK");
 	}
 	return ans;
@@ -237,11 +246,11 @@ int main() {
 		ll n,m,q;
 		cin>>n>>m>>q;
 		vl a(n);
-		each(e,a)cin>>e;
+		each(e,a){cin>>e; e--;}
 		vl b(m);
-		each(e,b)cin>>e;
+		each(e,b){cin>>e; e--;}
 		vpl queries(q);
-		each(e,queries) {cin>>e.f>>e.s; e.f--;}
+		each(e,queries) {cin>>e.f>>e.s; e.f--;e.s--;}
         auto x = solve(a,b,queries);
 		each(e,x){
 			cout<<e<<"\n";

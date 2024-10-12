@@ -1,0 +1,16 @@
+class EjemploProducto
+
+types
+  Producto_Rectangulo = nat1 * nat1;
+  Producto_Tienda = seq1 of char * real * nat;
+
+functions
+  -- Función para calcular el área de un rectángulo
+  calcularArea : Producto_Rectangulo -> nat
+  calcularArea(rect) == rect#1 * rect#2;
+
+  -- Función para calcular el valor total en inventario de un producto
+  calcularValorInventario : Producto_Tienda -> real
+  calcularValorInventario(prod) == prod#2 * prod#3;
+
+end EjemploProducto

@@ -158,13 +158,15 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 vs solve(vector<pair<str,ll>> &a){
     ll n=a.size();
+    auto b=a;
+    sort(all(b),[](auto &xd1,auto &xd2){
+            return xd1.s<xd2.s;
+    });
     vs ans;
-    ll mini=a[0].s;
-    ans.pb(a[0].f);
-    FOR(i,1,n){
+    ll mini=BIG;
+    FOR(i,0,n){
         dbg("estoy en",a[i].f,a[i].s,mini);
-        if(a[i].s<mini){
-            mini=a[i].s;
+        if(a[i].s + (300*i) < b[i].s){
             ans.pb(a[i].f);
         }
     }
@@ -194,10 +196,10 @@ int main() {
             auto pos2 = time.find(".",pos1+1);
             ll m=stoll(time.substr(pos1+1,pos2-pos1-1));    
             ll seg = stoll(time.substr(pos2+1));
-            a[i].s=600*h + 10*m + seg;
+            a[i].s=600*h + 10*m + seg - (300*i);
             dbg(h,m,seg,a[i].s - (300*i));
         }
-        sor(a);
+        
         auto x =solve(a);
         cout<<x.size()<<"\n";
         each(e,x){

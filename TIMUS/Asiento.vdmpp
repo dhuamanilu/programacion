@@ -1,0 +1,71 @@
+class Asiento
+types
+  Ubicacion = <Ventana> | <Pasillo>;
+
+instance variables
+  numeroAsiento: nat1;
+  ubicacion: Ubicacion;
+  nombrePasajero: [seq of char];
+
+operations
+  
+  public Asiento: nat1 * Ubicacion * [seq of char] ==> Asiento
+  Asiento(n: nat1, u: Ubicacion, nombre: [seq of char]) == (
+    numeroAsiento := n;
+    ubicacion := u;
+    nombrePasajero := nombre;
+  );
+
+  
+  public asignarPasajero: seq of char ==> ()
+  asignarPasajero(nombre: seq of char) == (
+    nombrePasajero := nombre;
+  );
+
+  
+  public liberarAsiento: () ==> ()
+  liberarAsiento() == (
+    nombrePasajero := nil;
+  );
+
+end Asiento
+
+class Viaje
+types
+  ListaAsientos = seq of Asiento;
+
+instance variables
+  capacidadBus: nat1;
+  asientos: ListaAsientos;
+
+operations
+  public Viaje: nat1 ==> Viaje
+  Viaje(capacidad: nat1) == (
+    capacidadBus := capacidad div 2;  -- Aplicar distanciamiento social
+    asientos := [asiento | asiento in set {mk_Asiento(i, <Ventana>, nil) | i in set {1,...,capacidad div 2 div 2}} union 
+                          {mk_Asiento(i, <Pasillo>, nil) | i in set {capacidad div 2 div 2 + 1,...,capacidad div 2}}];
+  );
+
+  -- Asignar un asiento a un pasajero
+  public asignarAsiento: nat1 * seq of char ==> ()
+  asignarAsiento(numero: nat1, nombre: seq of char) ==
+    let asiento = asientos(numero - 1) in (
+      asiento.asignarPasajero(nombre)
+    )
+  pre numero >= 1 and numero <= len asientos;
+
+ 
+  public liberarAsiento: nat1 ==> ()
+  liberarAsiento(numero: nat1) ==
+    let asiento = asientos(numero - 1) in (
+      asiento.liberarAsiento()
+    )
+  pre numero >= 1 and numero <= len asientos;
+
+  -- Verificar si un asiento está disponible
+  public asientoDisponible: nat1 ==> bool
+  asientoDisponible(numero: nat1) ==
+    return asientos(numero - 1).nombrePasajero = nil
+  pre numero >= 1 and numero <= len asientos;
+
+end Viaje
