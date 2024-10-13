@@ -1,5 +1,5 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
+#pragma GCC optimize ("Ofast")
+#pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -156,12 +156,35 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve(vl &nums) {
+	ll n=nums.size();
+	ll maxi=*(max_element(all(nums)));
+	vl frec(maxi+1,0);
+	each(e,nums){
+		//frec[e]++;
+		for(ll i=1;i*i<=e;i++){
+			if(e%i==0){
+				ll div1=i;
+				ll div2=e/i;
+				if(div1==div2){
+					frec[div1]++;
+				}
+				else{
+					frec[div1]++;
+					frec[div2]++;
+				}
+			}
+		}
+	}
+	each(e,frec){
+		e=(e*(e-1))/2;
+	}
+	for(ll i=maxi;i>=1;i--){
+		for(ll j=2*i;j<=maxi;j+=i){
+			frec[i]-=frec[j];
+		}
+	}
+	return frec[1];
 }
 
 int main() {
@@ -177,7 +200,7 @@ int main() {
 		cin>>n;
 		vl a(n);
 		each(e,a) cin>>e;
-        //solve(a);
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
