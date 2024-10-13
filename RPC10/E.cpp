@@ -156,12 +156,54 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+void solve(){
+    string s;
+    cin >> s;
+    ll n = (ll)s.size();
+    ll m;
+    cin >> m;
+
+    ll response = 0;
+
+    for (ll i = 0; i < 26; ++i) {
+        char c = (char)(i + 'a');
+        ll cnt = 0;
+        for (ll j = 0; j < n; ++j) {
+            if (s[j] == c) cnt++;
+        }
+
+        dbg(cnt, n, m);
+        if(true) {
+            vl prefix;
+            ll aux = 0;
+            for (ll j = 0; j < n; ++j) {
+                if (s[j] == c) {
+                    prefix.push_back(aux);
+                } else {
+                    aux++;
+                }
+            }
+            dbg(i, prefix);
+
+            ll len = (ll)prefix.size();
+
+            dbg(len);
+            for (ll l = 0; l < len; ++l) {
+                ll available = m + prefix[l];
+
+                ll idx = (ll)(upper_bound(all(prefix), available) - prefix.begin()) - 1;
+
+                dbg(available);
+                dbg(idx);
+                if (idx >= l) {
+                    dbg(l, idx);
+                    response = max(response, idx - l + 1);
+                }
+            }
+        }
+    }
+
+    cout << response << "\n";
 }
 
 int main() {
@@ -173,11 +215,7 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+        solve();
     }
     RAYA;
     RAYA;
@@ -189,11 +227,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-

@@ -156,14 +156,6 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
-}
-
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
@@ -173,11 +165,15 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+        ll s1,x1,y1;
+        cin>>s1>>x1>>y1;
+        ll s2,x2,y2;
+        cin>>s2>>x2>>y2;
+        x2-=x1;
+        y2-=y1;
+        db r2=sqrtl((x2*x2) + (y2*y2));
+        db ans = s1*(r2*r2 - (2*r2*))
+        cout<<fixed<<setprecision(7);
     }
     RAYA;
     RAYA;
@@ -189,11 +185,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-

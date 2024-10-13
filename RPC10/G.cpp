@@ -156,12 +156,54 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+void solve(){
+    ll n, l;
+    cin >> n >> l;
+
+    // position, speed, duration
+    vector<array<ll, 3>> info(n);
+    for (int i = 0; i < n; ++i) cin >> info[i][0] >> info[i][1] >> info[i][2];
+    sor(info);
+    // position, idx
+
+    V<ll> position(n + 2);
+    position[0] = 0;
+    position[n + 1] = l;
+    V<db> dp(n + 2, BIG);
+
+    for (int i = 1; i <= n; ++i) {
+        position[i] = info[i - 1][0];
+    }
+    dbg(position);
+
+    dp[0] = 0;
+
+    for (int i = 0; i < n + 1; ++i) {
+        RAYA;
+        dbg(i);
+        // dont use it
+        dp[i + 1] = min(dp[i + 1], dp[i] + (position[i + 1] - position[i]));
+        dbg("dont use it", dp);
+        dbg(dp[i] + (position[i + 1] - position[i]));
+
+        // do use it
+        if (i > 0) {
+            ll post_distance = position[i] + info[i - 1][1] * info[i - 1][2];
+            dbg(post_distance);
+            if (post_distance > position[n + 1]) {
+                dbg("special");
+                dp[n + 1] = min(dp[n + 1], dp[i] + (db)(position[n + 1] - position[i]) / info[i - 1][1]);
+            } else {
+                int idx = (int)(lower_bound(all(position), post_distance) - position.begin());
+
+                dp[idx] = min(dp[idx], dp[i] + info[i - 1][2] + (position[idx] - post_distance));
+            }
+        }
+        dbg("do use it", dp);
+    }
+
+    cout << setprecision(15) << fixed;
+    cout << dp[n + 1] << "\n";
 }
 
 int main() {
@@ -173,11 +215,7 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+        solve();
     }
     RAYA;
     RAYA;
@@ -189,11 +227,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-

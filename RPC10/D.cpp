@@ -92,8 +92,6 @@ const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
-
-
 ll cdiv(ll a, ll b) {
 	return a / b + ((a ^ b) > 0 && a % b);
 }  // divide a by b rounded up
@@ -156,12 +154,13 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+ll solve(str &s){
+	map<char,ll> m;
+    each(e,s){
+        if(e=='-') continue;
+        m[e]++;
+    }
+    return m.size();
 }
 
 int main() {
@@ -173,11 +172,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+		str s;
+        cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;

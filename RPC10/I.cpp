@@ -92,8 +92,6 @@ const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
-
-
 ll cdiv(ll a, ll b) {
 	return a / b + ((a ^ b) > 0 && a % b);
 }  // divide a by b rounded up
@@ -155,13 +153,51 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-void solve() {
+struct Tree {
+	typedef ll T;
+	static constexpr T unit = 0;
+	T f(T a, T b) { return a+b; } // (any associative fn)
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
+	}
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
+void solve(){
 	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+    cin>>n;
+    ll q;   
+    cin>>q;
+    Tree st(n);
+    FOR(i,0,n){
+        st.update(i,1);
+    }
+    FOR(i,0,q){
+        char type;
+        cin>>type;
+        if(type=='A'){
+            ll l,r;
+            cin>>l>>r;
+            l--;
+            r--;
+            cout<<st.query(l,r+1)<<"\n";
+        }
+        else{
+            ll x;
+            cin>>x;
+            x--;
+            st.update(x,0);
+        }
+    }
 }
 
 int main() {
@@ -173,11 +209,8 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+        solve();        
+
     }
     RAYA;
     RAYA;

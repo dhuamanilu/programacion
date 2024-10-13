@@ -156,12 +156,32 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+vl solve(vl &in,vl &out ,vector<vpl> &G,ll maxi) {
+	vl vis(maxi,0);
+	vl cant(maxi,0);
+	auto dfs=[&](auto &&dfs,ll u,ll p)->void{
+		//dbg("vis",u,p);
+		vis[u]=1;
+		cant[u]=1;
+		each(e,G[u]){
+			if(e.f==p || vis[e.f]) continue;
+			dfs(dfs,e.f,u);
+		}
+	};
+	FOR(i,0,maxi){
+		if(!in[i] && out[i]){
+			//dbg("todos hijos de i no ",i);
+			each(e,G[i]){
+				if(e.s)dfs(dfs,e.f,i);
+			}
+		}
+	}
+	vl res;
+	FOR(i,0,maxi){
+		if(cant[i]) continue;
+		res.pb(i);
+	}
+	return res;
 }
 
 int main() {
@@ -175,9 +195,44 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        //solve(a);
+		map<str,ll> m;
+		vl in(2*n,0),out(2*n,0);
+		vs m2(2*n);
+		ll id=0;
+		vector<vpl> G(2*n);
+		FOR(i,0,n){
+			str u,v;
+			str orden;
+			cin>>u>>orden>>v;
+			//dbg(u,orden,v);
+			if(!m.count(u)) {
+				m[u]=id;
+				m2[id++]=u;
+			}
+			if(!m.count(v)) {
+				m[v]=id;
+				m2[id++]=v;
+			}
+			ll id1=m[u],id2=m[v];
+			if(orden=="->"){
+				in[id2]++;
+				out[id1]++;
+				G[id1].pb({id2,1});
+			}
+			else{
+				G[id1].pb({id2,0});
+				G[id2].pb({id1,0});
+			}
+		}
+		auto x = solve(in,out,G,id);
+		vs res;
+		each(e,x){
+			res.pb(m2[e]);
+		}
+		sor(res);
+		each(e,res){
+			cout<<e<<"\n";
+		}
     }
     RAYA;
     RAYA;
