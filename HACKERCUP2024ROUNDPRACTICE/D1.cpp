@@ -156,6 +156,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
+<<<<<<< HEAD
 pl solve(vl &a,ll g) {
 
 	ll n=a.size();
@@ -199,13 +200,25 @@ pl solve(vl &a,ll g) {
 	
 	
 	return ans;
+=======
+db solve(ll n,ll p) {
+	db inv=(1.0/(n*1.0));
+	db x = pow(100.0,inv) * pow(1.0*p,1-inv);
+	return x - p;
+>>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
+<<<<<<< HEAD
 	/*setIn("line_of_delivery_part_1_validation_input.txt");
 	ofstream myfile;
 	myfile.open ("line_of_delivery_part_1_validation_output.txt");*/
+=======
+	setIn("line_by_line_input.txt");
+	ofstream myfile;
+	myfile.open ("line_by_line_output.txt");
+>>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
 	
     int t = 1;
     cin >> t;
@@ -213,6 +226,7 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
+<<<<<<< HEAD
 		ll n,g;
 		cin>>n>>g;
 		vl a(n);
@@ -221,6 +235,13 @@ int main() {
         cout<<"Case #"<<idx+1<<": "<<x.f+1<<" "<<x.s<<"\n";
     }
 	//myfile.close();
+=======
+		ll n,p;
+		cin>>n>>p;
+        myfile<<fixed << setprecision(7)<<"Case #"<<idx+1<<": "<<solve(n,p)<<"\n";
+    }
+	myfile.close();
+>>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
     RAYA;
     RAYA;
 

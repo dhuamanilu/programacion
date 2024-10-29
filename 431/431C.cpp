@@ -149,16 +149,25 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
 
-
-void solve() {
-	ll n,k,d;
-	cin>>n>>k>>d;
-	/*dp i j 
-    cantidad de caminos de 
-    longitud i con suma de pesos
-    j 
-    */
+ll solve(ll n,ll k,ll d) {
+	//cantidad de caminos de longitud it1 con suma it2 y que los edges en el camino
+	//tienen como maximo peso it3
+	vector<vector<vl>> dp(n+1,vector<vl>(n+1,vl(k+1,0)));
+	FOR(i,1,n+1){
+	    FOR(j,i,k+1){
+            dp[1][i][j]++;
+        }
+	}
+    
+	return 0ll;
+	
 }
 
 int main() {
@@ -170,7 +179,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n,k,d;
+		cin>>n>>k>>d;
+        cout<<solve(n,k,d)<<"\n";
     }
     RAYA;
     RAYA;
@@ -182,11 +193,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-
