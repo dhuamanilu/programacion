@@ -2,7 +2,7 @@
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
-#include "bits/stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
 #include "../debugICPC.h"
@@ -155,93 +155,104 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-<<<<<<< HEAD
-pl solve(vl &a,ll g) {
-
-	ll n=a.size();
-	pl ans={0,BIG};
-	set<ll> xd;
-	const int N=1000000+5;
-	vi diff(N,0);
-	vi arr(N,-1);
-	ll last=a[0];
-	FOR(i,0,n){
-		xd.insert(a[i]);
-		arr[a[i]]=i;
-		if(a[i] > last){
-			diff[0]++;
-			diff[a[i]]--;
-		}
-		ll val=abs(g - a[i]) ;
-		if(val< ans.s){
-			ans.s=val;
-			ans.f=i;
-		}
+/*struct MinTree {
+	typedef ll T;
+	static constexpr T unit = LLONG_MAX;
+	T f(T a, T b) { return min(a, b); } // (any associative fn)
+	vector<T> s; int n;
+	MinTree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
 	}
-	FOR(i,1,N){
-		diff[i]+=diff[i-1];
-	}
-	/*FOR(i,0,N){
-		if(arr[i]!=-1){
-			arr[i]+=diff[i];
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
 		}
-	}*/
-	vl b=a;
-	sort(all(b));
-	ll ptr=0;
-	FOR(i,0,N){
-		if(i==b[ptr]){
-			dbg(i,arr[i],diff[i]);
-			ptr++;
-		}
+		return f(ra, rb);
 	}
-	//dbg(diff);
-	
-	
-	return ans;
-=======
-db solve(ll n,ll p) {
-	db inv=(1.0/(n*1.0));
-	db x = pow(100.0,inv) * pow(1.0*p,1-inv);
-	return x - p;
->>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
+};*/
+struct MaxTree {
+	typedef ll T;
+	static constexpr T unit = LLONG_MIN;
+	T f(T a, T b) { return max(a, b); } // (any associative fn)
+	vector<T> s; int n;
+	MaxTree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
+	}
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
+pl solve(vpl &a,ll n,ll d) {
+	ll k=a.size();
+	vl entra(n,0);
+	vl sale(n,0);
+	each(e,a){
+		entra[e.f]++;
+		sale[e.s]++;
+	}
+	vl pref(n,0);
+	pref[0]=entra[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+entra[i];
+	}
+	auto query=[&](ll l,ll r){
+		return pref[r]-(l>=1 ? pref[l-1] : 0ll);
+	};
+	ll act=0;
+	pl res={-1,-1};
+	pl cho={-1,(ll)1e15};
+	FOR(i,0,n-d+1){
+		dbg(i,act,query(i,i+d-1),cho,res);
+		act+=query(i,i+d-1);
+		
+		if(i>=1){
+			dbg(sale[i-1]);
+			act-=sale[i-1];
+		}
+		if(act > cho.f){
+			cho.f=act;
+			res.f=i;
+		}
+		if(act < cho.s){
+			cho.s=act;
+			res.s=i;
+		}
+		
+	}
+	return res;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-<<<<<<< HEAD
-	/*setIn("line_of_delivery_part_1_validation_input.txt");
-	ofstream myfile;
-	myfile.open ("line_of_delivery_part_1_validation_output.txt");*/
-=======
-	setIn("line_by_line_input.txt");
-	ofstream myfile;
-	myfile.open ("line_by_line_output.txt");
->>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
-	
+
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-<<<<<<< HEAD
-		ll n,g;
-		cin>>n>>g;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a,g);
-        cout<<"Case #"<<idx+1<<": "<<x.f+1<<" "<<x.s<<"\n";
+		ll n,d,k;
+		cin>>n>>d>>k;
+		vpl a(k);
+		each(e,a){
+			cin>>e.f>>e.s;
+			e.f--;
+			e.s--;
+		}
+		auto x=solve(a,n,d);
+        cout<<x.f+1<<" "<<x.s+1<<"\n";
     }
-	//myfile.close();
-=======
-		ll n,p;
-		cin>>n>>p;
-        myfile<<fixed << setprecision(7)<<"Case #"<<idx+1<<": "<<solve(n,p)<<"\n";
-    }
-	myfile.close();
->>>>>>> 5ab49b3bb5cd5a94d0ced52cbeafb78ada836a9b
     RAYA;
     RAYA;
 
