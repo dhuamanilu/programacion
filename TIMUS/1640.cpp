@@ -1,5 +1,5 @@
-//#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
+//? #pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -90,8 +90,7 @@ using vpd = V<pd>;
 const int MOD = 1e9+7;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
-auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 rng(seed); // or mt19937_64
+mt19937 rng(0); // or mt19937_64
 
 
 
@@ -149,75 +148,34 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-struct Competitor{
-    str name;
-    ll timeFinished;
-    ll duration;
-};
-vs solve(vector<pair<str,ll>> &a){
-    ll n=a.size();
-    vector<Competitor> b;
-    FOR(i,0,n){
-        Competitor c;
-        c.name=a[i].f;
-        c.duration=a[i].s;
-        c.timeFinished=c.duration+300*i;
-        b.pb(c);
+
+tuple<db,db,db> solve(vpl &a) {
+    ll n=sz(a);
+    db dis=0;
+    each(e,a){
+        ckmax(dis,sqrtl(e.f*e.f + e.s*e.s));
     }
-    sort(all(b),[](auto &xd1,auto &xd2){
-            return xd1.timeFinished<xd2.timeFinished;
-    });
-    vs ans;
-    ll mini=BIG;
-    FOR(i,0,n){
-        dbg("estoy en",b[i].name,b[i].timeFinished,b[i].duration,mini);
-        if(b[i].duration<mini){
-            mini=b[i].duration;
-            //ans.clear();
-            ans.pb(b[i].name);
-        }
-    }
-    dbg(ans);
-    sor(ans);
+    tuple<db,db,db> ans=make_tuple(0,0,dis);
     return ans;
 }
-
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
     int t = 1;
-    //cin >> t;
-    //  t = v0+sqrt(vo*vo  + 2*a*d)/a
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
         ll n;
         cin>>n;
-        vector<pair<str,ll>> a(n);
-        FOR(i,0,n){
-            cin>>a[i].f;
-            str time;
-            cin>>time;
-            auto pos1 = time.find(":");
-            ll h=stoll(time.substr(0,pos1));
-            auto pos2 = time.find(".",pos1+1);
-            ll m=stoll(time.substr(pos1+1,pos2-pos1-1));    
-            ll seg = stoll(time.substr(pos2+1));
-            a[i].s=600*h + 10*m + seg;
-            dbg(h,m,seg,a[i].s);
-        }
+        vpl a(n);
+        each(e,a) cin>>e.f>>e.s;
+        auto x = solve(a);
+        cout<<fixed<<setprecision(10)<<get<0>(x)<<" "<<get<1>(x)<<" "<<get<2>(x)<<"\n";
         
-        auto x =solve(a);
-        cout<<x.size()<<"\n";
-        each(e,x){
-            cout<<e<<"\n";
-        }
     }
     RAYA;
     RAYA;
@@ -229,3 +187,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+
