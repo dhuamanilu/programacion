@@ -156,26 +156,70 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(vl &a) {
-	ll n=a.size();
-	return 0;
+/**
+ * Description: Operations with fractions
+ * Source: https://martin-thoma.com/fractions-in-cpp/
+ * Verification: TopCoder MinimizeAbsoluteDifferenceDiv1
+ */
+
+struct frac {
+	ll n,d;
+	frac(ll _n, ll _d) {
+		n = _n, d = _d;
+		ll g = gcd(n,d); n /= g, d /= g;
+		if (d < 0) n *= -1, d *= -1;
+	}
+	frac(ll _n) : frac(_n,1) {}
+	frac() : frac(0) {}
+	friend frac abs(frac F) { return frac(abs(F.n),F.d); }
+	friend str ts(const frac& a) { return ts(a.n)+"/"+ts(a.d); }
+
+	friend bool operator<(const frac& l, const frac& r) { return l.n*r.d < r.n*l.d; }
+	friend bool operator==(const frac& l, const frac& r) { return l.n == r.n && l.d == r.d; }
+	friend bool operator!=(const frac& l, const frac& r) { return !(l == r); }
+
+	frac operator-() const { return frac(-n,d); }
+	friend frac operator+(const frac& l, const frac& r) { return frac(l.n*r.d+r.n*l.d,l.d*r.d); }
+	friend frac operator-(const frac& l, const frac& r) { return frac(l.n*r.d-r.n*l.d,l.d*r.d); }
+	friend frac operator*(const frac& l, const frac& r) { return frac(l.n*r.n,l.d*r.d); }
+	friend frac operator*(const frac& l, int r) { return l*frac(r,1); }
+	friend frac operator*(int r, const frac& l) { return l*r; }
+	friend frac operator/(const frac& l, const frac& r) { return l*frac(r.d,r.n); }
+	friend frac operator/(const frac& l, const int& r) { return l/frac(r,1); }
+	friend frac operator/(const int& l, const frac& r) { return frac(l,1)/r; }
+
+	friend frac& operator+=(frac& l, const frac& r) { return l = l+r; }
+	friend frac& operator-=(frac& l, const frac& r) { return l = l-r; }
+	template<class T> friend frac& operator*=(frac& l, const T& r) { return l = l*r; }
+	template<class T> friend frac& operator/=(frac& l, const T& r) { return l = l/r; }
+};
+vl solve(ll m,ll d1,ll d2) {
+    assert(d2>=d1);
+	frac oneWorkereachDay = frac(1,d1*m);
+    frac workers=frac(m);
+    vl ans;
+    frac total=frac(1);
+    FOR(i,0,d2){
+        
+    }	
+
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-
-        cout<<solve(a)<<"\n";
+        ll m,d1,d2;
+        cin>>m>>d1>>d2;
+        auto x = solve(m,d1,d2);
+        each(e,x) cout<<e<<" ";
+        cout<<"\n";
     }
     RAYA;
     RAYA;
@@ -187,7 +231,6 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
 
 
 

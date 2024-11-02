@@ -158,7 +158,13 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
 	ll n=a.size();
-	return 0;
+	sor(a);
+	ll ans=BIG;
+	FOR(i,0,n-1){
+		ll xd = lower_bound(all(a),a[i]+a[i+1]) - a.begin();
+		ckmin(ans,n-(xd-i));
+	} 
+	return ans;
 }
 
 int main() {

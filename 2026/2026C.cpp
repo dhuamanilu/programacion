@@ -156,9 +156,73 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(vl &a) {
-	ll n=a.size();
-	return 0;
+ll solve(str &s) {
+	ll n=s.size();
+	if(n==1) return 1;
+	
+	vl ones;
+	
+	FOR(i,0,n){
+		if(s[i]=='1') ones.pb(i+1);
+	}
+	if((ll)ones.size()>n/2){
+		ll cont=ones.size()-n/2;
+		FOR(i,0,n){
+			if(cont<=0) break;
+			if(s[i]=='1'){
+				s[i]='0';
+				cont--;
+			}
+		}
+		ones.clear();
+		FOR(i,0,n){
+			if(s[i]=='1') ones.pb(i+1);
+		}
+	}
+	reverse(all(ones));
+	//s[0]='0';
+	vl zeros;
+	FOR(i,0,n){
+		if(s[i]=='0') zeros.pb(i+1);
+	}
+	reverse(all(zeros));
+	set<ll> vistos;
+	ll ans=0,ptrZeros=0,ptrOnes=0;
+	dbg(ones,zeros);
+	FOR(i,0,(ll)ones.size()){
+		
+		while(ptrZeros < (ll)zeros.size() && zeros[ptrZeros] > ones[i]){
+			ptrZeros++;
+		}
+		dbg(ptrZeros);
+		if(ptrZeros < (ll)zeros.size()){
+			ptrOnes=i;
+			ans+=zeros[ptrZeros];
+			vistos.insert(zeros[ptrZeros++]);
+			vistos.insert(ones[i]);
+		}
+		else{
+			dbg("xd");
+			break;
+		}
+		
+	}
+	ptrOnes++;
+	ll right=(ll)ones.size()-1;
+	dbg("last step",ptrOnes,right);
+	while(ptrOnes < right){
+		ans+=ones[right];
+		vistos.insert(ones[right--]);
+		vistos.insert(ones[ptrOnes++]);
+	}
+
+	FOR(i,1,n+1){
+		if(!vistos.count(i)){
+			dbg("no se vio y sumare i",i);
+			ans+=i;
+		}
+	}
+	return ans;
 }
 
 int main() {
@@ -172,10 +236,11 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
+		str s;
+		cin>>s;
 
-        cout<<solve(a)<<"\n";
+
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;
