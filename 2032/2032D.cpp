@@ -156,28 +156,9 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(str &s) {
-	ll n=s.size();
-	set<ll> vistos;
-	vl ones;
-	FOR(i,0,n){
-		if(s[i]=='1') ones.pb(i+1);
-	}
-	reverse(all(ones));
-	ll ans=0,mex=1;
-	FOR(i,0,min(n/2,(ll)ones.size())){
-		if(vistos.count(ones[i])){
-			break;
-		}
-		ans+=mex;
-		vistos.insert(mex);
-		vistos.insert(ones[i]);
-		while(vistos.count(mex)) mex++;
-	}
-	FOR(i,1,n+1){
-		if(!vistos.count(i)) ans+=i;
-	}
-	return ans;
+ll solve(vl &a) {
+	ll n=a.size();
+	return 0;
 }
 
 int main() {
@@ -191,9 +172,10 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		str s;
-		cin>>s;
-		cout<<solve(s)<<"\n";
+		vl a(n);
+		each(e,a)cin>>e;
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
