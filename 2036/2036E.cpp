@@ -1,9 +1,10 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
-//#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
+#pragma GCC optimize ("Ofast")
+#pragma GCC target ("avx,avx2")
+//! #pragma GCC optimize ("trapv")
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
+
 #ifdef LOCAL
 #include "../debugICPC.h"
 #define chk(...) if (!(__VA_ARGS__)) cerr << "\033[41m" << "Line(" << __LINE__ << ") -> function(" \
@@ -155,69 +156,51 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-/**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
- * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
- */
-#pragma once
 
-struct Tree {
-	typedef long long int T;
-	static constexpr T unit =0;
-	T f(T a, T b) { return a + b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
+vl solve(vector<vl> &info,vector<vector<vector<pl>>> &queries) {
+	ll n=info.size(),k=info[0].size(),q=queries.size();
+	vector<vl> b(n,vl(k,0));
+	FOR(j,0,k){
+		b[0][j]=info[0][j];
+		FOR(i,1,n){
+			b[i][j]=b[i-1][j]|info[i][j];
 		}
-		return f(ra, rb);
 	}
-};
-vl solve(vl &a,vpl &queries) {
-	ll n=a.size();
-	ll q=queries.size();
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	Tree st(n);
-	ll val=0;
-	each(e,pref)val+=e;
-	FOR(i,0,n){
-		st.update(i,val);
-		val-=a[i]*(n-i);
-	}
-	FOR(i,0,n){
-		dbg(st.query(i,i+1));
-	}
+	dbg(b);
 	vl ans;
-	auto get=[&](ll x){
-		ll s=0,e=n-1,m=s+(e-s)/2;
-		while(s<=e){
-			m=s+(e-s)/2;
-		}
-	};
 	each(e,queries){
-		ll l=e.f,r=e.s;
-		//partir el intervalo en 3 partes la incompleta completa incompleta
-		ll pri=get(l);
+
+		ll m=e.size();
+		bool ok=false;
+		FOR(i,0,n){
+			bool okLocal=true;
+			FOR(j,0,2){
+				each(requirement,e[j]){
+					if(j==0){
+						if(b[i][requirement.f] <= requirement.s){
+							okLocal=false;
+							break;
+						}
+					}
+					else{
+						if(b[i][requirement.f] >= requirement.s){
+							okLocal=false;
+							break;
+						}
+					}
+					//dbg(requirement);
+				}
+				if(!okLocal)break;
+			}
+			if(okLocal){
+				ok=true;
+				ans.pb(i+1);
+				break;
+			}
+		}
+		if(!ok)ans.pb(-1);
 	}
 	return ans;
-
 }
 
 int main() {
@@ -229,19 +212,36 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		ll q;
-		cin>>q;
-		vpl queries(q);
-		each(e,queries){
-			cin>>e.f>>e.s;
-			e.f--;
-			e.s--;
+		ll n,k,q;
+		cin>>n>>k>>q;
+		vector<vl> info(n,vl(k,0));
+		each(e,info){
+			each(e2,e){
+				cin>>e2;
+			}
 		}
-		auto x=solve(a,queries);
+		vector<vector<vector<pl>>> queries(q);
+		each(e,queries){
+			ll num;
+			cin>>num;
+			vector<vector<pl>> act(2);
+			FOR(i,0,num){
+				ll r,c;
+				char o;
+				cin>>r>>o>>c;
+				r--;
+				auto par=mp(r,c);
+				if(o=='>'){
+					act[0].pb(par);
+				}
+				else act[1].pb(par);
+			}
+			each(ele,act){
+				sor(e);
+			}
+			e=act;
+		}
+		auto x=solve(info,queries);
 		each(e,x)cout<<e<<"\n";
     }
     RAYA;
@@ -254,11 +254,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-

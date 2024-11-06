@@ -155,76 +155,24 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-/**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
- * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
- */
-#pragma once
 
-struct Tree {
-	typedef long long int T;
-	static constexpr T unit =0;
-	T f(T a, T b) { return a + b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
-vl solve(vl &a,vpl &queries) {
+str solve(vl &a) {
 	ll n=a.size();
-	ll q=queries.size();
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	Tree st(n);
-	ll val=0;
-	each(e,pref)val+=e;
-	FOR(i,0,n){
-		st.update(i,val);
-		val-=a[i]*(n-i);
-	}
-	FOR(i,0,n){
-		dbg(st.query(i,i+1));
-	}
-	vl ans;
-	auto get=[&](ll x){
-		ll s=0,e=n-1,m=s+(e-s)/2;
-		while(s<=e){
-			m=s+(e-s)/2;
-		}
-	};
-	each(e,queries){
-		ll l=e.f,r=e.s;
-		//partir el intervalo en 3 partes la incompleta completa incompleta
-		ll pri=get(l);
-	}
-	return ans;
+	FOR(i,0,n-1){
+		ll xd=abs(a[i]-a[i+1]);
+		if(xd==5 || xd==7){
 
+		}
+		else return "NO";
+	}
+	return "YES";
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
@@ -233,16 +181,8 @@ int main() {
 		cin>>n;
 		vl a(n);
 		each(e,a)cin>>e;
-		ll q;
-		cin>>q;
-		vpl queries(q);
-		each(e,queries){
-			cin>>e.f>>e.s;
-			e.f--;
-			e.s--;
-		}
-		auto x=solve(a,queries);
-		each(e,x)cout<<e<<"\n";
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

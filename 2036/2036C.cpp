@@ -155,94 +155,76 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-/**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
- * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
- */
-#pragma once
 
-struct Tree {
-	typedef long long int T;
-	static constexpr T unit =0;
-	T f(T a, T b) { return a + b; } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
+vs solve(str &s,vpl &queries) {
+	ll n=s.size();
+	ll cont=0;
+	str xd="1100";
+	FOR(i,0,n-3){
+		str act=s.substr(i,4);
+		if(act==xd) cont++;
 	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
-vl solve(vl &a,vpl &queries) {
-	ll n=a.size();
-	ll q=queries.size();
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	Tree st(n);
-	ll val=0;
-	each(e,pref)val+=e;
-	FOR(i,0,n){
-		st.update(i,val);
-		val-=a[i]*(n-i);
-	}
-	FOR(i,0,n){
-		dbg(st.query(i,i+1));
-	}
-	vl ans;
-	auto get=[&](ll x){
-		ll s=0,e=n-1,m=s+(e-s)/2;
-		while(s<=e){
-			m=s+(e-s)/2;
-		}
-	};
+
+	vs ans;
+	dbg(cont);
 	each(e,queries){
-		ll l=e.f,r=e.s;
-		//partir el intervalo en 3 partes la incompleta completa incompleta
-		ll pri=get(l);
+		if(n<4){
+			ans.pb("NO");
+			continue;
+		}
+		ll pos=e.f,val=e.s;
+		dbg(pos,val);
+		if(pos<=n-4){
+			if(s.substr(pos,4)==xd) cont--;
+		}
+		if(pos-1<=n-4 && pos>=1){
+			if(s.substr(pos-1,4)==xd) cont--;
+		}
+		if(pos-2<=n-4 && pos>=2){
+			if(s.substr(pos-2,4)==xd) cont--;
+		}
+		if(pos-3<=n-4 && pos>=3){
+			if(s.substr(pos-3,4)==xd) cont--;
+		}
+		dbg(s);
+		s[pos]=('0'+val);
+		dbg("sepeus",s);
+		if(pos<=n-4){
+			if(s.substr(pos,4)==xd) cont++;
+		}
+		if(pos-1<=n-4 && pos>=1){
+			if(s.substr(pos-1,4)==xd) cont++;
+		}
+		if(pos-2<=n-4 && pos>=2){
+			if(s.substr(pos-2,4)==xd) cont++;
+		}
+		if(pos-3<=n-4 && pos>=3){
+			if(s.substr(pos-3,4)==xd) cont++;
+		}
+		if(cont>0)ans.pb("YES");
+		else ans.pb("NO");
 	}
 	return ans;
-
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
+		str s;
+		cin>>s;
 		ll q;
 		cin>>q;
 		vpl queries(q);
-		each(e,queries){
-			cin>>e.f>>e.s;
-			e.f--;
-			e.s--;
-		}
-		auto x=solve(a,queries);
+		each(e,queries){cin>>e.f>>e.s; e.f--;}
+		auto x=solve(s,queries);
 		each(e,x)cout<<e<<"\n";
+        
     }
     RAYA;
     RAYA;
