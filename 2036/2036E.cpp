@@ -159,46 +159,49 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 vl solve(vector<vl> &info,vector<vector<vector<pl>>> &queries) {
 	ll n=info.size(),k=info[0].size(),q=queries.size();
-	vector<vl> b(n,vl(k,0));
+	vector<vl> b(k,vl(n,0));
+	//tiene que ser [region][pais]
 	FOR(j,0,k){
-		b[0][j]=info[0][j];
+		b[j][0]=info[0][j];
 		FOR(i,1,n){
-			b[i][j]=b[i-1][j]|info[i][j];
+			b[j][i]=b[j][i-1]|info[i][j];
 		}
 	}
-	dbg(b);
+	//dbg(b);
 	vl ans;
 	each(e,queries){
-
 		ll m=e.size();
-		bool ok=false;
-		FOR(i,0,n){
-			bool okLocal=true;
-			FOR(j,0,2){
-				each(requirement,e[j]){
-					if(j==0){
-						if(b[i][requirement.f] <= requirement.s){
-							okLocal=false;
-							break;
-						}
+		ll l=0,r=n-1;
+		//deberia de iterar 2 veces
+		
+		FOR(i,0,(ll)e.size()){	
+			each(ele2,e[i]){
+				ll region=ele2.f,c=ele2.s;
+				if(i==0){
+					// >  , b [region][pais]
+					ll xd=upper_bound(all(b[region]),c)-b[region].begin();
+					ckmax(l,xd);
+				} 
+				else{
+					// < 
+					ll xd=lower_bound(all(b[region]),c)-b[region].begin();
+					if(xd==0){
+						l=1;
+						r=0;
+						break;
 					}
 					else{
-						if(b[i][requirement.f] >= requirement.s){
-							okLocal=false;
-							break;
-						}
+						xd--;
+						ckmin(r,xd);
 					}
-					//dbg(requirement);
 				}
-				if(!okLocal)break;
+				if(l>r) break;
 			}
-			if(okLocal){
-				ok=true;
-				ans.pb(i+1);
-				break;
-			}
+			if(l>r) break;
 		}
-		if(!ok)ans.pb(-1);
+		if(l>r)ans.pb(-1);
+		else ans.pb(l+1);
+		
 	}
 	return ans;
 }
@@ -237,7 +240,7 @@ int main() {
 				else act[1].pb(par);
 			}
 			each(ele,act){
-				sor(e);
+				sor(ele);
 			}
 			e=act;
 		}
