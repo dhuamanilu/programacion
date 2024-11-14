@@ -155,7 +155,57 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
+ll brute(vl &a,ll m,ll v) {
+	ll n=a.size();
+	ll ans=0;
+	vl xd(n,0);
+	auto get=[&](auto &&get,vl &b,ll faltan)->ll{
+		if(faltan==0){
+			//de los subarreglos contiguos elegir el de la smua mas grande
+			vl pos;
+			FOR(i,0,n){
+				if(b[i]==0) pos.pb(i);
+			}
+			//dbg("a y pos",a,b,pos);
+			ll actual=0;
+			FOR(i,0,(ll)pos.size()){
+				ll act=pos[i];
+				ll curSum=a[act];
+				ll j=i+1;
+				while(j<(ll)pos.size() && pos[j]-pos[j-1]==1){
+					curSum+=a[pos[j]];
+					j++;
+				}
+				ckmax(actual,curSum);
+				i=j-1;
+			}
+			return actual;
+		}
+		else{
+			ll res=-1;
+			FOR(i,0,n){
+				if(b[i]==1) continue;
+				vl c=b;
+				ll sum=a[i];
+				c[i]=1;
+				FOR(j,i+1,n){
+					if(b[j]==1) break;
+					if(sum>=v) break;
+					sum+=a[j];
+					c[j]=1;
+						
+				}
+				if(sum>=v){
+					//dbg("explorare aea",sum,c,faltan-1);
+					ckmax(res,get(get,c,faltan-1));
+				}		
+			}
+			return res;
+		}
+		
+	};
+	return get(get,xd,m);
+}
 ll solve(vl &a,ll m ,ll v) {
 	ll n=a.size();
 	vl pref(n,0),suff(n,0);
@@ -231,7 +281,24 @@ ll solve(vl &a,ll m ,ll v) {
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    int t = 1;
+    while(1){
+		ll n=rng_ll(1,7);
+		ll m=rng_ll(1,n);
+		ll v=rng_ll(1,10);
+		vl a(n);
+		each(e,a)e=rng_ll(1,10);
+		auto xd=brute(a,m,v);
+		auto xd2=solve(a,m,v);
+		if(xd!=xd2){
+			dbg(a,m,v);
+			dbg(xd,xd2);
+			assert(false);
+		}
+		else{
+			dbg("OK");
+		}
+	}
+	int t = 1;
     cin >> t;
     for(int idx = 0; idx < t; idx++) {
         RAYA;

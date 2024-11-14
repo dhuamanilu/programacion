@@ -158,21 +158,10 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
 	ll n=a.size();
-	map<ll,ll> dp;
-	vl vis(n,0);
-	auto get=[&](auto &&get,ll x){
-		if(dp.count(x)) return dp[x];
-		ll ans=x;
-		FOR(i,1,n){
-			if(vis[i]) continue;
-			if(a[i]==x-i) {
-				vis[i]=1;
-				ckmax(ans,get(get,x+i));
-			}
-		}
-		return dp[x]=ans;
-	};
-	return get(get,n);
+	map<ll,vl> m;
+	each(e,a){
+		
+	}
 }
 
 int main() {

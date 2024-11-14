@@ -129,7 +129,11 @@
     "valarray": "cpp",
     "1873fv2cpp": "c",
     "charconv": "cpp",
-    "numbers": "cpp"
+    "numbers": "cpp",
+    "string_view": "cpp",
+    "ranges": "cpp",
+    "span": "cpp",
+    "stacktrace": "cpp"
   },
   "cmake.sourceDirectory": "C:/Users/Usuario/OneDrive/Documentos/programacion/2/cmake_stdheaders_generator",
   "C_Cpp.default.compilerPath": "c:\\msys64\\ucrt64\\bin\\gcc.exe"
