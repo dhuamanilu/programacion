@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+7;
+const int MOD = 998244353;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -138,16 +138,7 @@ void setIO(str s = "") {
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
 
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
+
 //? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
@@ -155,71 +146,94 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+/**
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
+ */
 
-ll solve(ll l,ll r,ll i,ll k){
-	auto get=[](ll bit,ll x){
-		ll newx=x+1;
-		ll xd=(1ll<<bit);
-		ll veces=newx/xd;
-		ll ans=(veces/2)*xd;
-		if(veces%2==1){
-			ans+=newx%xd;
-		}
-		return ans;
-	};
-	auto getPrexirXor=[&](ll x){
-		//xor de 0 a x
-		ll ans=0;
-		FOR(it,0,61){
-			ll cant=get(it,x);
-			//dbg("pos num",it,x,cant);
-			if(cant%2==1) ans|=(1LL<<it);
-		}
-		return ans;
-	};
-	auto getXorRange=[&](ll low,ll high){
-		//dbg(getPrexirXor(high),getPrexirXor(low-1));
-		return getPrexirXor(high)^getPrexirXor(low-1);
-	};
+#pragma once
 
-	auto getNumberOfEspecials=[&](ll x){
-		// cuantos numeros hay entre 0 y n que son iguales a k mod 2^i
-		ll ans=(x-k)/(1ll<<i);
-		return ans+(k!=0 && k<=x);
-	};
+template<int MOD, int RT> struct mint {
+	static const int mod = MOD;
+	static constexpr mint rt() { return RT; } // primitive root for FFT
+	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+	mint():v(0) {}
+	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+		if (v < 0) v += MOD; }
+	bool operator==(const mint& o) const {
+		return v == o.v; }
+	friend bool operator!=(const mint& a, const mint& b) { 
+		return !(a == b); }
+	friend bool operator<(const mint& a, const mint& b) { 
+		return a.v < b.v; }
+	friend void re(mint& a) { ll x; re(x); a = mint(x); }
+	friend str ts(mint a) { return ts(a.v); }
+   
+	mint& operator+=(const mint& o) { 
+		if ((v += o.v) >= MOD) v -= MOD; 
+		return *this; }
+	mint& operator-=(const mint& o) { 
+		if ((v -= o.v) < 0) v += MOD; 
+		return *this; }
+	mint& operator*=(const mint& o) { 
+		v = int((ll)v*o.v%MOD); return *this; }
+	mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+	friend mint pow(mint a, ll p) {
+		mint ans = 1; assert(p >= 0);
+		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+		return ans; }
+	friend mint inv(const mint& a) { assert(a.v != 0); 
+		return pow(a,MOD-2); }
+		
+	mint operator-() const { return mint(-v); }
+	mint& operator++() { return *this += 1; }
+	mint& operator--() { return *this -= 1; }
+	friend mint operator+(mint a, const mint& b) { return a += b; }
+	friend mint operator-(mint a, const mint& b) { return a -= b; }
+	friend mint operator*(mint a, const mint& b) { return a *= b; }
+	friend mint operator/(mint a, const mint& b) { return a /= b; }
+};
 
-	auto get2=[&](ll x){
-		ll cuantos=getNumberOfEspecials(x);
-		ll xo2=0;
-		dbg(cuantos);
-		if(cuantos%2==1){
-			xo2|=k;
-			dbg(xo2);
-		}
-		//dbg(k,k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1));
-		xo2|=(1ll<<i)*(k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1) );
-		dbg(xo2);
-		return xo2;
-	};
-	ll otroXo=get2(r)^get2(l-1);
-	dbg(otroXo);
-	ll xoTotal=getXorRange(l,r);
-	dbg(xoTotal,otroXo);
-	return xoTotal^otroXo;
+using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+using vmi = V<mi>;
+using pmi = pair<mi,mi>;
+using vpmi = V<pmi>;
+
+V<vmi> scmb; // small combinations
+void genComb(int SZ) {
+	scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+	FOR(i,1,SZ) F0R(j,i+1) 
+		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
+}
+mi solve(ll n,ll m) {
+	mi ans=mi(0);
+	FOR(i,1,m+1){
+		/*mi cant=mi((m+i-k)/i);
+		ans+=binpow(((i-1)*cant*cant),n/2) * (n%2==0 ? 1 : m);*/
+	}
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    int t = 1;
-    cin >> t;
+    int test = 1;
+    cin >> test;
 
-    for(int idx = 0; idx < t; idx++) {
+    for(int idx = 0; idx < test; idx++) {
         RAYA;
         RAYA;
-		ll l,r,i,k;
-		cin>>l>>r>>i>>k;
-        cout<<solve(l,r,i,k)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		
+        cout<<solve(n,m)<<"\n";
     }
     RAYA;
     RAYA;

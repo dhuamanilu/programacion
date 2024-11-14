@@ -156,70 +156,91 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll l,ll r,ll i,ll k){
-	auto get=[](ll bit,ll x){
-		ll newx=x+1;
-		ll xd=(1ll<<bit);
-		ll veces=newx/xd;
-		ll ans=(veces/2)*xd;
-		if(veces%2==1){
-			ans+=newx%xd;
+ll solve(vl &a,ll m ,ll v) {
+	ll n=a.size();
+	vl pref(n,0),suff(n,0);
+	pref[0]=a[0];	
+	FOR(i,1,n)pref[i]=pref[i-1]+a[i];
+	suff[n-1]=a[n-1];
+	for(ll i=n-2;i>=0;i--)suff[i]=suff[i+1]+a[i];
+	reverse(all(suff));
+	ll i=0,j=n-1,cont=0;
+	while(j>=0 && i<n && i<=j && cont<m){
+		ll idx1=lower_bound(all(pref),v + (i>=1 ? pref[i-1]:0))-pref.begin();
+		//dbg(n-2-j,(n>=j+2 ? suff[n-2-j]:0));
+		ll idx2=lower_bound(all(suff),v + (n>=j+2 ? suff[n-2-j]:0))-suff.begin();
+		ll num1=-1;
+		ll num2=-1;
+		if(idx1<n){
+			num1=pref[idx1]-(i>=1 ? pref[i-1]:0);
+			assert(num1!=-1);
 		}
-		return ans;
-	};
-	auto getPrexirXor=[&](ll x){
-		//xor de 0 a x
-		ll ans=0;
-		FOR(it,0,61){
-			ll cant=get(it,x);
-			//dbg("pos num",it,x,cant);
-			if(cant%2==1) ans|=(1LL<<it);
+		if(idx2<n){
+			num2=suff[idx2]-(n>=j+2 ? suff[n-2-j]:0);
+			assert(num2!=-1);
 		}
-		return ans;
-	};
-	auto getXorRange=[&](ll low,ll high){
-		//dbg(getPrexirXor(high),getPrexirXor(low-1));
-		return getPrexirXor(high)^getPrexirXor(low-1);
-	};
+		dbg(i,j,idx1,idx2,num1,num2);
+		if(num1==-1 && num2==-1)break;
+		else if(num1==-1){
+			if(n-idx2-2 < i-1) break;
+			j=n-idx2-2;
+			cont++;
+		}
+		else if(num2==-1){
+			if(idx1+1 > j+1 ) break;
+			i=idx1+1;
+			cont++;
+		}
+		else{
+			if(num1<num2){
+				if(idx1+1 > j+1){
+					if(n-idx2-2 < i-1) break;
+					j=n-idx2-2;
+					cont++;
+				}
+				else{
+					i=idx1+1;
+					cont++;
+				}
+				
+			}
+			else{
+				dbg(n-idx2-2);
+				if(n-idx2-2 < i-1){
+					if(idx1+1 > j+1) break;
+					i=idx1+1;
+					cont++;
+				}
+				else{
+					j=n-idx2-2;
+					cont++;
+				}
+				
+			}
+		}
 
-	auto getNumberOfEspecials=[&](ll x){
-		// cuantos numeros hay entre 0 y n que son iguales a k mod 2^i
-		ll ans=(x-k)/(1ll<<i);
-		return ans+(k!=0 && k<=x);
-	};
-
-	auto get2=[&](ll x){
-		ll cuantos=getNumberOfEspecials(x);
-		ll xo2=0;
-		dbg(cuantos);
-		if(cuantos%2==1){
-			xo2|=k;
-			dbg(xo2);
-		}
-		//dbg(k,k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1));
-		xo2|=(1ll<<i)*(k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1) );
-		dbg(xo2);
-		return xo2;
-	};
-	ll otroXo=get2(r)^get2(l-1);
-	dbg(otroXo);
-	ll xoTotal=getXorRange(l,r);
-	dbg(xoTotal,otroXo);
-	return xoTotal^otroXo;
+		
+	}
+	//dbg(cont,i,j);
+	if(cont<m)return -1;
+	ll ans=0;
+	FOR(it,i,j+1) ans+=a[it];
+	//dbg(i,j,cont);
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
     int t = 1;
     cin >> t;
-
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll l,r,i,k;
-		cin>>l>>r>>i>>k;
-        cout<<solve(l,r,i,k)<<"\n";
+		ll n,m,v;
+		cin>>n>>m>>v;
+		vl a(n);
+		each(e,a)cin>>e;
+        cout<<solve(a,m,v)<<"\n";
     }
     RAYA;
     RAYA;

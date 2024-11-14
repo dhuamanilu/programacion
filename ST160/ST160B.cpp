@@ -156,70 +156,40 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(ll l,ll r,ll i,ll k){
-	auto get=[](ll bit,ll x){
-		ll newx=x+1;
-		ll xd=(1ll<<bit);
-		ll veces=newx/xd;
-		ll ans=(veces/2)*xd;
-		if(veces%2==1){
-			ans+=newx%xd;
+ll solve(vl &a) {
+	vl cont(2,0);
+	vl mini(2,-1);
+	ll n=a.size();
+	FOR(i,0,n){
+		cont[a[i]]++;
+		if(mini[a[i]]==-1) mini[a[i]]=i+1; 
+	}
+	if(a.back()==0){
+		return 1 + 2*(cont[0]-1) + 2*cont[1];
+	}
+	else{
+		if(mini[1]<mini[0]){
+			return 1 + 2*(cont[1]-1) + 2*cont[0];
 		}
-		return ans;
-	};
-	auto getPrexirXor=[&](ll x){
-		//xor de 0 a x
-		ll ans=0;
-		FOR(it,0,61){
-			ll cant=get(it,x);
-			//dbg("pos num",it,x,cant);
-			if(cant%2==1) ans|=(1LL<<it);
-		}
-		return ans;
-	};
-	auto getXorRange=[&](ll low,ll high){
-		//dbg(getPrexirXor(high),getPrexirXor(low-1));
-		return getPrexirXor(high)^getPrexirXor(low-1);
-	};
-
-	auto getNumberOfEspecials=[&](ll x){
-		// cuantos numeros hay entre 0 y n que son iguales a k mod 2^i
-		ll ans=(x-k)/(1ll<<i);
-		return ans+(k!=0 && k<=x);
-	};
-
-	auto get2=[&](ll x){
-		ll cuantos=getNumberOfEspecials(x);
-		ll xo2=0;
-		dbg(cuantos);
-		if(cuantos%2==1){
-			xo2|=k;
-			dbg(xo2);
-		}
-		//dbg(k,k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1));
-		xo2|=(1ll<<i)*(k==0 ? getPrexirXor(cuantos) :getPrexirXor(cuantos-1) );
-		dbg(xo2);
-		return xo2;
-	};
-	ll otroXo=get2(r)^get2(l-1);
-	dbg(otroXo);
-	ll xoTotal=getXorRange(l,r);
-	dbg(xoTotal,otroXo);
-	return xoTotal^otroXo;
+		else return ((cont[0]>0) + max(0ll,2*(cont[0]-1)) + 1 + 2*(cont[1]-1));
+	} 
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    int t = 1;
-    cin >> t;
+    int test = 1;
+    cin >> test;
 
-    for(int idx = 0; idx < t; idx++) {
+    for(int idx = 0; idx < test; idx++) {
         RAYA;
         RAYA;
-		ll l,r,i,k;
-		cin>>l>>r>>i>>k;
-        cout<<solve(l,r,i,k)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
