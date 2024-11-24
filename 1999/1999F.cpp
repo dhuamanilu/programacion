@@ -137,13 +137,17 @@ void setIO(str s = "") {
 //? Custom Helpers
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
-
+const int MOD = 1e9+7;
 long long binpow(long long a, long long b) {
     long long res = 1;
     while (b > 0) {
-        if (b & 1)
-            res = res * a;
+        if (b & 1){
+			res = res * a;
+			res%=MOD;
+		}
+            
         a = a * a;
+		a%=MOD;
         b >>= 1;
     }
     return res;
@@ -155,16 +159,35 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-const int MOD = 1e9+7;
+
+vl fact(200005,1);
+ll invfact(ll x){
+	return binpow(fact[x],MOD-2)%MOD;
+}
+ll comb(ll n ,ll k){
+	if(k==0){
+		return 1;
+	}
+	dbg(n,k,fact[n],invfact(k),invfact(n-k));
+	return fact[n] * invfact(k) %MOD *invfact (n-k) %MOD;
+}
 void solve() {
 	ll n,k;
 	cin>>n>>k;
 	vl a(n);
+	vl cont(2,0);
 	each(e,a) cin>>e;
-	ll ans=0,act=n-k+1;
-	FOR(i,1 + ((k-1)/2),1 + n-k+1 + ((k-1)/2)){
-		ans+=i*act;
-		act--;
+	each(e,a) cont[e%2]++;
+	ll ans=0;
+	FOR(i,(k+1)/2,k+1){
+		dbg(cont[1],i,cont[0],k-i);
+		if(i>cont[1] || k-i>cont[0]){
+			continue;
+		}
+		ll comb1=comb(cont[1],i);
+		ll comb2=comb(cont[0],k-i);
+		dbg(comb1,comb2);
+		ans+=comb1*comb2;
 		ans%=MOD;
 	}
 	cout<<ans<<"\n";
@@ -172,7 +195,10 @@ void solve() {
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+	FOR(i,1,200005){
+		fact[i]=fact[i-1]*i%MOD;
+	}
+	FOR(i,0,10)dbg(i,fact[i]);
     int t = 1;
     cin >> t;
 

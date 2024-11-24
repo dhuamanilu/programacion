@@ -156,37 +156,42 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
-		cout.flush();
-		ll area;
-		cin>>area;
-		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+ll solve(ll n,ll x) {
+	ll limit=sqrtl(n),ans=0;
+	//dbg(limit);
+	FOR(i,1,limit+1){
+		FOR(j,i,limit+1){
+			//i es a y j es b
+			//dbg(i,j,(n-i*j)/(i+j), x-i-j);
+			ll cant=min((n-i*j)/(i+j), x-i-j) - j + 1;
+			ll contr=0;
+			//dbg(cant);
+			if(i==j){
+				contr+= 1 + (3*(cant-1));
+			}
+			else{
+				//i < j 
+				contr+= 3 + 6*(cant-1);
+			}
+			//dbg("para i j tengo esta cantidad",i,j,cant);
+			//dbg(i,j,contr);
+			ans+=max(0LL,contr);
 		}
-		else{
-			s=m+1;
-		}
-		
 	}
-	cout<<"! "<<guarda<<endl;
+	return ans;
 }
 
 int main() {
+    cin.tie(0)->sync_with_stdio(0);
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n,x;
+		cin>>n>>x;
+        cout<<solve(n,x)<<"\n";
     }
     RAYA;
     RAYA;

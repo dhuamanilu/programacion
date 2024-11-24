@@ -156,37 +156,39 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
-		cout.flush();
-		ll area;
-		cin>>area;
-		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+ll solve(ll x,ll m) {
+	ll ans=0,deY=0;
+	FOR(i,1,m+1){
+		if(i==x) continue;
+		ll xo=x^i;
+		ll div1=x/xo;
+		ll div2=i/xo;
+		if(xo * div1 ==x){
+			ans++;
+			dbg("xo divisor de x",xo,x,i);
 		}
-		else{
-			s=m+1;
+		else if(xo * div2 ==i){
+			ans++;
+			deY++;
+			dbg("xo divisor de i",xo,x,i);
 		}
-		
 	}
-	cout<<"! "<<guarda<<endl;
+	dbg(deY,ans-deY);
+	return ans;
 }
 
 int main() {
+    cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll x,m;
+		cin>>x>>m;
+        cout<<solve(x,m)<<"\n";
     }
     RAYA;
     RAYA;

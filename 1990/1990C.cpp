@@ -156,64 +156,18 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	ll ans=0;
-	map<ll,ll> m;
-	vl b(n);
-	ll mad=0;
-	set<ll> activos;
+ll solve(vl &a) {
+	ll n=a.size();
+	ll sum=0,acum=0;
+	each(e,a)acum+=e;
+	sum+=acum;
+	vl b;
+	map<ll,ll> una,mad;
 	FOR(i,0,n){
-		ans+=a[i];
-		m[a[i]]++;
-		if(m[a[i]]>=2){
-			ckmax(mad,a[i]);
-		}
-		b[i]=mad;
-		activos.insert(mad);
+		if(mad.count(a[i])) continue;
+		
 	}
-	a=b;
-	//dbg(b,ans);
-	vpl pos(n+1,mp(-1,-1));
-	FOR(i,0,n){
-		if(pos[a[i]].f==-1){
-			pos[a[i]].f=i;
-		}
-		pos[a[i]].s=i;
-	}
-	dbg("ans antes",ans);
-	
-	while(true){
-		dbg(pos);
-		ll last=n;
-		bool ok=false;
-		for(auto & i : activos){
-			if(pos[i].f != -1 && pos[i].s!=-1){
-				ok=true;
-				if(pos[i].f==pos[i].s){
-					dbg("aumentare i ",i);
-					ans+=i;
-					pos[i].f=-1;
-					pos[i].s=-1;
-					continue;
-				}
-				dbg("aumentare i *cant ",i*(pos[i].s-pos[i].f + 1));
-				ans+=i*(pos[i].s-pos[i].f + 1);
-				pos[i].f++;
-				pos[i].s=last-1;
-				last=pos[i].f;
-			}
-			
-		}
-		if(!ok){
-			break;
-		}
-	}
-	cout<<ans<<"\n";
-	
+	return sum;
 }
 
 int main() {
@@ -225,7 +179,12 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

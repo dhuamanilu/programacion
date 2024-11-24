@@ -156,37 +156,79 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
-		cout.flush();
-		ll area;
-		cin>>area;
-		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+vl solve(ll n) {
+	/*vl a(n,0);
+	iota(all(a),1ll);
+	auto is_composite=[&](ll x){
+		if(x==1)return 0;
+		for(ll i=2;i*i<=x;i++){
+			if(x%i==0)return 1;
 		}
-		else{
-			s=m+1;
+		return 0;
+	};
+	do{
+		bool ok=1;
+		FOR(i,0,n-1){
+			if(!is_composite(a[i]+a[i+1])){
+				ok=0;
+				break;
+			}
 		}
-		
+		if(ok) return a;
+	}while(next_permutation(all(a)));*/
+	
+	
+	vl ans;
+	if(n==1){
+		ans.pb(1);
 	}
-	cout<<"! "<<guarda<<endl;
+	else if(n>=2 && n<=4){
+		ans.pb(-1);
+	}
+	else if(n>=5 && n<=7){
+		ans.pb(1);
+		ans.pb(3);
+		ans.pb(5);
+		ans.pb(4);
+		if(n==5) ans.pb(2);
+		else if(n==6){
+			ans.pb(2);
+			ans.pb(6);
+		} 
+		else if(n==7){
+			ans.pb(6);
+			ans.pb(2);
+			ans.pb(7);
+		} 
+	}
+	else{
+		ll ini=n%2==1 ? n : n-1;
+		for(ll i=ini;i>=1;i-=2){
+			ans.pb(i);
+		}
+		ans.pb(8);
+		for(ll i=2;i<=n;i+=2){
+			if(i==8) continue;
+			ans.pb(i);
+		}
+	}
+	return ans;
 }
 
 int main() {
+    cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n;
+		cin>>n;
+		auto x=solve(n);
+		each(e,x)cout<<e<<" ";
+		cout<<"\n";
     }
     RAYA;
     RAYA;

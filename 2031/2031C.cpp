@@ -159,8 +159,14 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 vl solve(ll n) {
 	vl ans;
 	if(n%2==1){
-		ans.pb(-1);
-		return ans; 
+		if(n>=27){
+			//si se puede
+			
+		} 
+		else{
+			ans.pb(-1);
+			return ans;
+		}
 	}
 	else{
 		FOR(i,0,n/2){

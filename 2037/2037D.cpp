@@ -156,37 +156,52 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
-		cout.flush();
-		ll area;
-		cin>>area;
+ll solve(vpl &a,vpl &b,ll limit) {
+	ll n=a.size(),m=b.size();
+	ll ans=0,power=1;
+	ll ptr=0;
+	multiset<ll> powerups;
+	each(e,a){
 		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+		ll l=e.f,r=e.s,len=r-l+1 ;
+		//powerups.clear();
+		while(ptr < m && b[ptr].f < l ){
+			dbg(ptr);
+			powerups.insert(b[ptr].s);
+			ptr++;
 		}
-		else{
-			s=m+1;
+		if(limit<=l-1) return ans;
+		dbg(power,len+1);
+		if(power>=len+ 1) continue;
+		while(!powerups.empty() && power<len+1){
+			power+=*powerups.rbegin();
+			powerups.erase(prev(powerups.end()));
+			ans++;
 		}
-		
+		if(power<len+1){
+			return -1;
+		}
 	}
-	cout<<"! "<<guarda<<endl;
+
+	return ans;
 }
 
 int main() {
+    cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n,m,l;
+		cin>>n>>m>>l;
+		vpl a(n);
+		each(e,a)cin>>e.f>>e.s;
+		vpl b(m);
+		each(e,b)cin>>e.f>>e.s;
+        cout<<solve(a,b,l)<<"\n";
     }
     RAYA;
     RAYA;

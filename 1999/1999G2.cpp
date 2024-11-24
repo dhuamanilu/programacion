@@ -157,26 +157,45 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
+	ll s=2,e=999;
+	ll xd=0;
+	auto ask=[](ll x1,ll x2){
+		cout<<"? "<<x1<<" "<<x2<<endl;
 		cout.flush();
 		ll area;
 		cin>>area;
-		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+		return area;
+	};
+	while(e-s > 2){
+		ll m1=s+(e-s)/3;
+		ll m2=e-(e-s)/3;
+		ll area=ask(m1,m2);
+		xd++;	
+		if(area==m1*m2){
+			s=m2+1;	
+		}
+		else if(area==m1*(m2+1)){
+			s=m1+1;
+			e=m2;
 		}
 		else{
-			s=m+1;
-		}
-		
+			assert(area==(m1+1)*(m2+1));
+			e=m1;
+		}	
 	}
-	cout<<"! "<<guarda<<endl;
+	dbg(s,e);
+	auto answer=[](ll res){
+		cout<<"! "<<res<<endl;
+	};
+	FOR(i,s,e+1){
+		if(xd>=7)break;
+		xd++;
+		if(ask(i,i)==(i+1)*(i+1)){
+			answer(i);
+			return;
+		}
+	}
+	answer(e);
 }
 
 int main() {

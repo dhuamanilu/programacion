@@ -156,37 +156,84 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-void solve() {
-	ll s=2,e=999,m=s+(e-s)/2;
-	ll guarda=3;
-	while(s<=e){
-		m=s+(e-s)/2;
-		dbg(s,e,m);
-		cout<<"? "<<1<<" "<<m<<endl;
+void solve(ll n) {
+	auto ask=[](ll l,ll r){
+		cout<<"? "<<l<<" "<<r<<endl;
 		cout.flush();
-		ll area;
-		cin>>area;
-		
-		if(area==m+1){
-			guarda=m;
-			e=m-1;	
+		ll ans;
+		cin>>ans;
+		return ans;
+	};
+
+	vl res(n,-1);
+	str ans(n,'?');
+	ll cont=0;
+	FOR(i,0,n-1){
+		ll xd=ask(i+1,i+2);
+		cont++;
+		if(xd==1){
+			ans[i]='0';
+			ans[i+1]='1';
+			i++;
 		}
 		else{
-			s=m+1;
+			ll j=i+2;
+			bool huboSi=0;
+			while(j<=n-1 && cont<n){
+				auto xd2=ask(j,j+1);
+				if(xd2==0){
+					cont++;
+					j++;
+				}
+				else{
+					huboSi=1;
+					break;
+				}
+			}
+			if(!huboSi){
+				if(cont <  n){
+
+				}
+			}
+			else{
+				if(cont<n){
+					auto xd3=ask(i,j+1);
+					cont++;
+					FOR(it,i,j-i+1 -1-xd3){
+						ans[it]='1';
+
+					}
+					FOR(it,j-xd3,j-1){
+						ans[it]='0';
+					}
+					
+				}
+			}
+
 		}
-		
 	}
-	cout<<"! "<<guarda<<endl;
+	if(cont>=n){
+		cout<<"! IMPOSSIBLE"<<endl;
+		cout.flush();
+		return;
+	}
+	cout<<"! "<<ans<<endl;
+	cout.flush();
 }
 
 int main() {
+    //cin.tie(0)->sync_with_stdio(0);
+
     int t = 1;
     cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-        solve();
+		ll n;
+		cin>>n;
+		solve(n);
+        //cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

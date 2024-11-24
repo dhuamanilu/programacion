@@ -158,10 +158,29 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
 	ll n=a.size();
-	map<ll,vl> m;
-	each(e,a){
-		
+	map<ll,vl>G;
+	
+	FOR(i,1,n){
+		//len =  ai + i - 1
+		//len + i-1
+		ll u=a[i] + i;
+		ll v=u + i;
+		G[u].pb(v);
 	}
+	dbg(G);
+	map<ll,ll> vis;
+	auto dfs=[&](auto &&dfs,ll x)->void{
+		vis[x]=1;
+		for(auto &e : G[x]){
+			if(!vis.count(e)){
+				dfs(dfs,e);
+			}
+		}
+	};
+	dfs(dfs,n);
+	ll ans=(prev(end(vis))->first);
+	return ans;
+
 }
 
 int main() {
