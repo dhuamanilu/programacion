@@ -168,11 +168,13 @@ ll brute(str &s){
 		if(l==0) return pref[r][x];
 		return pref[r][x]-pref[l-1][x];
 	};
+	ll xd=0;
 	FOR(i,0,n){
 		FOR(j,i,n){
 			FOR(k,i,j+1){
 				FOR(l,k,j+1){
 					// entre k y l inclusivo tiene que ser igual
+					xd++;
 					if(query(k,l,0)==query(k,l,1)){
 						ans++;
 					}
@@ -180,6 +182,7 @@ ll brute(str &s){
 			}
 		}
 	}
+	dbg(xd);
 	return ans;
 }
 ll solve(str &s) {
