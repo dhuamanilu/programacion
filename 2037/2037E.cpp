@@ -164,61 +164,28 @@ void solve(ll n) {
 		cin>>ans;
 		return ans;
 	};
-
-	vl res(n,-1);
-	str ans(n,'?');
-	ll cont=0;
-	FOR(i,0,n-1){
-		ll xd=ask(i+1,i+2);
-		cont++;
-		if(xd==1){
-			ans[i]='0';
-			ans[i+1]='1';
-			i++;
-		}
-		else{
-			ll j=i+2;
-			bool huboSi=0;
-			while(j<=n-1 && cont<n){
-				auto xd2=ask(j,j+1);
-				if(xd2==0){
-					cont++;
-					j++;
-				}
-				else{
-					huboSi=1;
-					break;
-				}
-			}
-			if(!huboSi){
-				if(cont <  n){
-
-				}
-			}
-			else{
-				if(cont<n){
-					auto xd3=ask(i,j+1);
-					cont++;
-					FOR(it,i,j-i+1 -1-xd3){
-						ans[it]='1';
-
-					}
-					FOR(it,j-xd3,j-1){
-						ans[it]='0';
-					}
-					
-				}
-			}
-
-		}
-	}
-	if(cont>=n){
-		cout<<"! IMPOSSIBLE"<<endl;
+	auto guess=[&](str x){
+		cout<<"! "<<x<<endl;
 		cout.flush();
+	};
+	vl pref;
+	FOR(i,0,n-1){
+		pref.pb(ask(1,i+2));
+	}
+	if(pref[0]==0){
+		guess("IMPOSSIBLE");
 		return;
 	}
-	cout<<"! "<<ans<<endl;
-	cout.flush();
+	else{
+		str ans="01";
+		FOR(i,1,n-1){
+			if(pref[i]==pref[i-1]){
+				ans+="0";
+			}
+			else ans+="1";
+		}
+		guess(ans);
+	}
 }
 
 int main() {
