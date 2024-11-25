@@ -186,7 +186,23 @@ ll brute(str &s){
 	return ans;
 }
 ll solve(str &s) {
-	return brute(s);
+	ll n=s.size();
+	map<ll,ll> m;
+	ll sum=0;
+	ll res=0;
+	FOR(i,0,n){
+		sum+=(s[i]=='1' ? 1: -1);
+		if(m.count(sum)){
+			res+=m[sum]*(n-i);
+			res%=MOD;
+		}
+		m[sum]+=i+2;
+		if(sum==0){
+			res+=(n-i);
+			res%=MOD;
+		}
+	}
+	return res;
 }
 
 int main() {
