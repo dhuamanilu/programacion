@@ -155,40 +155,52 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-ll solve(ll x,ll m) {
+ll solve1(ll x,ll m){
 	ll ans=0,deY=0;
-	FOR(i,1,m+1){
+	FOR(i,1,min(m+1,2*x)){
 		if(i==x) continue;
 		ll xo=x^i;
 		ll div1=x/xo;
 		ll div2=i/xo;
 		if(xo * div1 ==x){
 			ans++;
-			dbg("xo divisor de x",xo,x,i);
+			//dbg("xo divisor de x",xo,x,i);
 		}
 		else if(xo * div2 ==i){
 			ans++;
 			deY++;
-			dbg("xo divisor de i",xo,x,i);
+			//dbg("xo divisor de i",xo,x,i);
 		}
 	}
-	dbg(deY,ans-deY);
+	//dbg(deY,ans-deY);
 	return ans;
+}
+void solve_2() {
+	for(int i = 1; i<=1100;i++) {
+		for(int j = i; j<=i-1; j++) {
+			if(i%(i^j)==0) {
+				dbg(i, j, i^j);
+			}
+		}
+	}
+}
+
+ll solve(ll x,ll m) {
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    cin >> t;	
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
+		//solve_2();
 		ll x,m;
 		cin>>x>>m;
-        cout<<solve(x,m)<<"\n";
+        cout<<solve1(x,m)<<"\n";
     }
     RAYA;
     RAYA;

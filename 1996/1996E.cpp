@@ -182,7 +182,7 @@ ll brute(str &s){
 			}
 		}
 	}
-	dbg(xd);
+	dbg(xd);	
 	return ans;
 }
 ll solve(str &s) {
