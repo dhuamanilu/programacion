@@ -154,76 +154,74 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
 
-vl solve(ll n) {
-	vl ans;
-	if(n%2==1){
-		
-		if(n>=27){
-			ans.resize(n);
-			//si se puede
-			//1 10 26
-			//del 2 al 9 normal pares , 23 27 , 
-			//me queda del 11-22 ,24-25
-			ll col=1000000;
-			ans[0]=col;
-			ans[9]=col;
-			ans[25]=col;
-			col--;
-			for(ll i=1;i<=7;i+=2){
-				ans[i]=col;
-				ans[i+1]=col;
-				col--;
-			}
-			ans[22]=col;
-			ans[26]=col;
-			col--;
-			for(ll i=10;i<=20;i+=2){
-				ans[i]=col;
-				ans[i+1]=col;
-				col--;
-			}
-			ans[23]=col;
-			ans[24]=col;
-			col--;
-			for(ll i=27;i<n;i+=2){
-				ans[i]=col;
-				ans[i+1]=col;
-				col--;
-			}
-			return ans;
-		} 
-		else{
-			ans.pb(-1);
-			return ans;
+ll solve2(ll x,ll m) {
+	// x ^ y es divisible
+	ll cont=0; 
+	FOR(i,1,(m+1)){
+		ll xo=x^i;
+		ll minimo=lcm(x,i);
+		if(xo%x==0){
+			dbg("XOR es multiplo de X",i,xo,xo^x);
+			cont++;
+		}
+		else if(xo%i==0){
+			dbg("XOR es multiplo de Y",i,xo);
+			cont++;
+		}
+		else if(xo%(minimo)==0){
+			dbg("XOR es multiplo de LCM",i,xo,minimo);
+			cont++;
 		}
 	}
-	else{
-		FOR(i,0,n/2){
-			FOR(j,0,2){
-				ans.pb(i+1);
-			}
+	return cont;
+}
+ll solve(ll x,ll m) {
+	// x ^ y es divisible
+	ll cont=0; 
+	//los de x
+	ll s=1,e=2*m,mi=s+(e-s)/2,guarda=0;
+	while(s<=e){
+		mi=s+(e-s)/2;
+		//dbg((ll)mi*x);
+		__int128 xd=(__int128(mi)*__int128(x))^__int128(x);
+		dbg(s,e,mi*x,x,(mi*x)^x);
+		dbg((ll)xd);
+		if(xd <= __int128(m)){
+			guarda=mi;
+			s=mi+1;
 		}
-		return ans;
+		else e=mi-1;
 	}
-
+	dbg("los multiplos de x",guarda);
+	cont+=guarda;
+	//los demas
+	FOR(i,1,min(2*x,(m+1))){
+		ll xo=x^i;
+		if(xo%x==0) continue;
+		ll minimo=lcm(x,i);
+		if(xo%i==0 || xo%(minimo)==0){
+			//dbg("i vale",i,xo%i,xo%(minimo));
+			cont++;
+		}
+	}
+	
+	return cont;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    cin >> t;	
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		auto x=solve(n);
-		each(e,x)cout<<e<<" ";
-		cout<<"\n";
+		ll x,m;
+		cin>>x>>m;
+        cout<<solve(x,m)<<"\n";
+		dbg(solve2(x,m));
     }
     RAYA;
     RAYA;
