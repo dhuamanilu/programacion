@@ -155,29 +155,57 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-ll solve(vl &a) {
+ll solve2(vl a){
 	ll n=a.size();
 	map<ll,ll> m;
-	//m[0]++;
+	m[0]++;
+	ll sum=0,ans=0;
+	for(ll i=n-1;i>=0;i--){
+		sum+=a[i];
+		//dbg("reves",sum,i,a[i]);
+		if(m.count(sum)){
+			ans++;
+			m.clear();
+			m[0]++;
+			sum=0;
+		}
+		else  m[sum]++;
+	}
+	return ans;
+}
+ll solve(vl a) {
+	ll n=a.size();
+	map<ll,ll> m;
+	m[0]++;
 	ll sum=0,ans=0;
 	FOR(i,0,n){
 		sum+=a[i];
 		if(m.count(sum)){
-			dbg(sum,a[i]);
+			//dbg(sum,a[i]);
 			ans++;
 			m.clear();
 			m[0]++;
+			sum=0;
 		}
-		
-		m[sum]++;
+		else m[sum]++;
 	}
 	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+	while(0){
+		ll n=rng_ll(1,100000);
+		vl a(n);
+		each(e,a)e=rng_ll(-100000,100000);
+		auto ans1=solve(a);
+		auto ans2=solve2(a);
+		if(ans1 < ans2){
+			dbg("xd",ans1,ans2,a);
+			assert(false);
+		}
+		else dbg("ok");
+	}
     int t = 1;
     cin >> t;
 
@@ -188,7 +216,7 @@ int main() {
 		cin>>n;
 		vl a(n);
 		each(e,a)cin>>e;
-
+		//dbg(solve2(a));
         cout<<solve(a)<<"\n";
     }
     RAYA;

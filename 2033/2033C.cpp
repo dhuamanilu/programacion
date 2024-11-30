@@ -155,47 +155,78 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-ll solve(vl &a) {
+ll get(vl &xd){
+	ll ans=0;
+	//dbg(xd);
+	FOR(i,0,(ll)xd.size()-1ll){
+		ans+=(xd[i]==xd[i+1]);
+	}
+	return ans;
+}
+ll brute(vl &a){
+	ll n=a.size(),ans=BIG;
+	ll decisiones=(n/2);
+	FOR(i,0,(1ll<<decisiones)){
+		vl b=a;
+		FOR(j,0,decisiones){
+			if(i & (1ll<<j)){
+				//1 cambio 0 me mantengo
+				swap(b[j],b[n-j-1]);
+			}
+		}
+		ckmin(ans,get(b));
+	}
+	return ans;
+}
+ll solve(vl a) {
 	ll n=a.size();
 	auto comp=[&](ll i, ll a1,ll a2){
 		//retornar cuantos choques habria si es que a1 esta en i y a2 en n-i-1 , cero indexed
 		ll ans=0;
 		if(i+1<n){
 			if(a1==a[i+1]) ans++;
-		}
-		if(i-1>=0){
-			if(a1==a[i-1]) ans++;
-		}
-		ll xd=n-i-1;
-		if(xd+1<n){
-			if(a2==a[xd+1]) ans++;
 		}	
+		ll xd=n-i-1;	
 		if(xd-1>=0){
 			if(a2==a[xd-1]) ans++;
 		}
 		return ans;
 	};
 	for(ll i=(n/2) - 1;i>=0;i--){
-		ll quedarme=comp(i,a[i],a[n-i-1]);
-		ll cambiar=comp(i,a[n-i-1],a[i]);
-		dbg(i,quedarme,cambiar);
-		if(cambiar <= quedarme){
+		ll quedarme,cambiar;
+		if(i==(n/2)-1){
+			quedarme=get(a);
+			vl b=a;
+			swap(b[i],b[n-i-1]);
+			cambiar=get(b);
+		}
+		else{
+			quedarme=comp(i,a[i],a[n-i-1]);
+			cambiar=comp(i,a[n-i-1],a[i]);
+		}
+		//dbg(i,quedarme,cambiar);
+		if(cambiar < quedarme){
 			swap(a[i],a[n-i-1]);
 		}
 	}
-	ll ans=0;
-	dbg(a);
-	FOR(i,0,n-1){
-		
-		ans+=(a[i]==a[i+1]);
-	}
-	return ans;
+	return get(a);
+	
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-
+	while(0){
+		ll n=rng_ll(1,25);
+		vl a(n);
+		each(e,a) e=rng_ll(1,n);
+		auto res1=solve(a);
+		auto res2=brute(a);
+		if(res1 != res2){
+			dbg("xd",res1,res2,a);
+			assert(false);
+		}
+		else dbg("ok");
+	}
     int t = 1;
     cin >> t;
 
@@ -218,11 +249,3 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
-
-
-
-
-
-
-
-
