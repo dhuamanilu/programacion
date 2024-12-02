@@ -194,15 +194,20 @@ struct frac {
 	template<class T> friend frac& operator/=(frac& l, const T& r) { return l = l/r; }
 };
 vl solve(ll m,ll d1,ll d2) {
-    assert(d2>=d1);
 	frac oneWorkereachDay = frac(1,d1*m);
     frac workers=frac(m);
     vl ans;
     frac total=frac(1);
+	ll cant=cdiv(d1*m,d2);
+	frac invd1=frac(1,d1);
+	frac MWorkerseachday=frac(cant,d1*m);
     FOR(i,0,d2){
-        
-    }	
-
+		frac act = MWorkerseachday < total ? MWorkerseachday : total;
+		dbg(act.n,act.d);
+		total-=act;
+		ans.pb(((act*workers)/invd1).n);
+	}
+	return ans;
 	
 }
 

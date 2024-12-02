@@ -158,7 +158,19 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
 	ll n=a.size();
-	return 0;
+	map<ll,ll> m;
+	each(e,a){
+		m[e]++;
+	}
+
+	map<ll,ll> m2;
+	each(e,m){
+		m2[e.s]++;
+	}
+	ll ans=(m2.count(1)>0 ? 2*cdiv(m2[1],2) : 0ll);
+	ll resto=(ll)m.size() - (m2[1]);
+	ans+=resto;
+	return ans;
 }
 
 int main() {
