@@ -157,8 +157,19 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 ll solve(vl &a) {
-	ll n=a.size();
-	return n;
+	ll n=a.size(),ans=0;
+	vl vis(n,0);
+	FOR(i,0,n){
+		if(vis[i]) continue;
+		ll j=i,cnt=0;
+		while(!vis[j]){
+			vis[j]=1;
+			j=a[j];
+			cnt++;
+		}
+		ans+=max(0ll,((cnt+1)/2)-1);
+	}
+	return ans;
 }
 
 int main() {
@@ -173,8 +184,7 @@ int main() {
 		ll n;
 		cin>>n;
 		vl a(n);
-		each(e,a)cin>>e;
-
+		each(e,a){cin>>e;e--;}
         cout<<solve(a)<<"\n";
     }
     RAYA;
