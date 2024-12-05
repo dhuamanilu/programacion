@@ -83,18 +83,89 @@ using vpd = V<pd>;
 #define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
 #define R0F(i,a) ROF(i,0,a)
 #define rep(a) F0R(_,a)
-#define each(a,x) for (auto& a: x)     
-vl dx={-1,1,0,0};
-vl dy={0,0,1,-1};
-//U D R L
-vl quiero={1,0,2,3};                                                                                                                                                                                                                                                                                         
-ll solve(vector<vl> &a) {
-	ll n=a.size(),m=a[0].size();
-	ll cont=0;
-	auto isValid=[&](ll x,ll y){
-		return x>=0 && x<n && y>=0 && y<m;
-	};
-	return cont;
+#define each(a,x) for (auto& a: x)
+
+
+
+const int MOD = 1e9+7;
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const db PI = acos((db)-1);
+mt19937 rng(0); // or mt19937_64
+
+
+
+ll cdiv(ll a, ll b) {
+	return a / b + ((a ^ b) > 0 && a % b);
+}  // divide a by b rounded up
+ll fdiv(ll a, ll b) {
+	return a / b - ((a ^ b) < 0 && a % b);
+}  // divide a by b rounded down
+
+tcT> bool ckmin(T& a, const T& b) {
+	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
+tcT> bool ckmax(T& a, const T& b) {
+	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
+
+tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
+	sort(all(v));
+	v.erase(unique(all(v)), end(v));
+}
+tcTU > void safeErase(T &t, const U &u) {
+	auto it = t.find(u);
+	assert(it != end(t));
+	t.erase(it);
+}
+
+
+
+inline namespace FileIO {
+void setIn(str s) { freopen(s.c_str(), "r", stdin); }
+void setOut(str s) { freopen(s.c_str(), "w", stdout); }
+void setIO(str s = "") {
+	cin.tie(0)->sync_with_stdio(0);  // unsync C / C++ I/O streams
+	//? cout << fixed << setprecision(12);
+    //? cerr << fixed << setprecision(12);
+	cin.exceptions(cin.failbit);
+	// throws exception when do smth illegal
+	// ex. try to read letter into int
+	if (sz(s)) setIn(s + ".in"), setOut(s + ".out");  // for old USACO
+}
+}  // namespace FileIO
+
+
+
+//? Custom Helpers
+template <typename T>
+inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
+
+long long binpow(long long a, long long b) {
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
+
+ll solve(vpl &a) {
+	ll n=a.size(),ans=-BIG,sum=0;
+	each(e,a){
+		sum+=max(e.f,e.s);
+	}
+	each(e,a){
+		ll act=sum-max(e.f,e.s) + e.f + e.s;
+		ckmax(ans,act); 
+	}
+	return ans;
 }
 
 int main() {
@@ -106,24 +177,12 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
-		vector<vl> a(n,vl(m,0));
-		each(e,a){
-			str s;
-			cin>>s;
-			FOR(j,0,m){
-				if(s[j]=='U')
-					e[j]=0;
-				else if(s[j]=='D')
-					e[j]=1;
-				else if(s[j]=='R')
-					e[j]=2;	
-				else if(s[j]=='L')
-					e[j]=3;	
-				else e[j]=4;
-			}
-		}
+		ll n;
+		cin>>n;
+		vpl a(n);
+		each(e,a)cin>>e.f;
+		each(e,a)cin>>e.s;
+
         cout<<solve(a)<<"\n";
     }
     RAYA;

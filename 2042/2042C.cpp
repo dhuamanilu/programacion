@@ -162,21 +162,21 @@ ll solve(str &s,ll k) {
 	suff[n-1]=s[n-1]=='1' ? 1 : -1;
 	vl values;
 	if(suff[n-1] > 0) values.pb(suff[n-1]);
-	for(ll i=n-2;i>=0;i--){
+	for(ll i=n-2;i>=1;i--){
 		suff[i]=suff[i+1] +(s[i]=='1' ? 1 : -1);
 		if(suff[i]>0) values.pb(suff[i]);
 	}
-	
+	sor(values);
 	reverse(all(values));
 	dbg(values);
-	ll ans=1,i=0,sum=0;
+	ll ans=0,i=0,sum=0;
 	while(i< (ll)values.size() && sum < k){
 		ans++;
 		sum+=values[i++];
 	}
 	dbg(sum,k);
 	if(sum >=k)
-		return ans;
+		return ans + 1;
 	else return -1;
 }
 

@@ -156,25 +156,67 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-ll solve(str &st,ll lim,ll k) {
-	ll n=st.size(),cont=0,cant=0;
-	FOR(i,0,n){
-		if(st[i]=='0'){
-			cant++;
-		}
-		else cant=0;
-		dbg(i,cant);
-		if(cant>=lim){
-			cont++;
-			cant=0;
-			dbg("pondre ",i,i+k);
-			FOR(j,i,min(i+k,n)){
-				st[j]='1';
-			}
-			i+=k-1;
-		}
-	}
-	return cont;
+ll solve(str &s, str &p){
+	ll n=s.size();
+    vl ord(26,0);
+    FOR(i,0,26){    
+        ord[p[i]-'a']=i;
+    }
+    //dbg(ord);
+    vector<vl> a(26,vl(26,BIG));
+    FOR(i,0,26){
+        //dbg(ord[i]);
+        ll x=25-ord[i];
+        //de i a p de x
+        //dbg(i,x,p[x]-'a');
+        a[i][p[x]-'a']=1;
+        a[p[x]-'a'][i]=1; 
+    }
+    FOR(i,0,26){
+        a[i][i]=0;
+    }
+    //dbg(a);
+    auto d=a;
+    FOR(k,0,26){
+        FOR(i,0,26){
+            FOR(j,0,26){
+                if (d[i][k] < BIG && d[k][j] < BIG)
+                    d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+            }
+        }
+    }
+    //each(e,d) dbg(e);
+    vector<vl> dp(n,vl(26,BIG));
+    dp[0][s[0]-'a']=0;
+    auto can=[&](ll i,ll j){
+        return d[i][j]<BIG;
+    };
+    FOR(j,0,26){
+        if(s[0]-'a'==j) continue;
+        if (can(s[0]-'a',j)){
+            dp[0][j]=d[s[0]-'a'][j];
+        }
+    }
+    //each(e,dp)dbg(dp);
+    FOR(i,1,n){
+        ll act=s[i]-'a';
+        FOR(j,0,26){
+            if(dp[i-1][j]==BIG) continue;
+            //provengo desde dp i-1 j y quiero actualizar con dp i K
+            FOR(k,j,26){
+                if(can(act,k)){
+                    ckmin(dp[i][k],dp[i-1][j]+d[act][k]);
+                }
+            }
+        }
+    }
+    //dbg(dp);
+    ll ans=BIG;
+    FOR(j,0,26){
+        ckmin(ans,dp[n-1][j]);
+    }
+    dbg(ans);
+    return ans==BIG?-1:ans;
 }
 
 int main() {
@@ -186,11 +228,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,k;
-		cin>>n>>m>>k;
-		str s;
-		cin>>s;
-        cout<<solve(s,m,k)<<"\n";
+		ll n;
+		cin>>n;
+        str s,p;
+        cin>>s>>p;
+        cout<<solve(s,p)<<"\n";
     }
     RAYA;
     RAYA;
