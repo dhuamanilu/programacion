@@ -156,27 +156,36 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vpl b;
-	FOR(i,0,n){
-		b.pb(mp(a[i],i));
+str solve(str &s) {
+	ll n=s.size();
+	ll pri=s[0]-'0',seg=s[2]-'0';
+	if(s[1]=='='){
+		if(pri==seg)return s;
+		s[2]=s[0];
+		return s;
 	}
-	sor(b);
-	ll idx=-1,desdeaca=n;
-	vl ans;
-	FOR(i,0,n){
-		if(b[i].s < idx){
-			desdeaca=i;
-			break;
+	else if(s[1]=='<'){
+		if(pri<seg) return s;
+		if(pri==seg){
+			s[1]='=';
+			return s;
 		}
-		else ans.pb(b[i].f);
-		ckmax(idx,b[i].s);
+		else{
+			s[1]='>';
+			return s;
+		}
 	}
-	FOR(i,desdeaca,n){
-		ans.pb(b[i].f+1);
+	else{
+		if(pri>seg) return s;
+		if(pri==seg){
+			s[1]='=';
+			return s;
+		}
+		else{
+			s[1]='<';
+			return s;
+		}
 	}
-	return ans;
 }
 
 int main() {
@@ -188,13 +197,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		str s;
+		cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;

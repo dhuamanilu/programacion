@@ -138,45 +138,93 @@ void setIO(str s = "") {
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
 
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
+
 //? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-
-vl solve(vl &a) {
-	ll n=a.size();
-	vpl b;
-	FOR(i,0,n){
-		b.pb(mp(a[i],i));
-	}
-	sor(b);
-	ll idx=-1,desdeaca=n;
-	vl ans;
-	FOR(i,0,n){
-		if(b[i].s < idx){
-			desdeaca=i;
-			break;
+vl dx={1,-1,0,0};
+vl dy={0,0,1,-1};
+ll solve(vector<vl> &a) {
+	ll n=a.size(),m=a[0].size();
+	vector<vl> vis(n,vl(m,0));
+	vector<vl> id(n,vl(m,-1));
+	auto isValid=[&](ll x,ll y){
+		return x>=0 && x<n && y>=0 && y<m;
+	};
+	ll idx=0;
+	auto dfs=[&](auto &&dfs,ll x,ll y)->ll{
+		id[x][y]=idx;
+		vis[x][y]=1;
+		ll ans=1;
+		FOR(i,0,4){
+			ll newX=x + dx[i],newY=y+dy[i];
+			if(isValid(newX,newY) && !vis[newX][newY] && a[newX][newY]==1){
+				ans+=dfs(dfs,newX,newY);
+			}
 		}
-		else ans.pb(b[i].f);
-		ckmax(idx,b[i].s);
+		return ans;
+	};
+	map<ll,ll> tam;
+	FOR(i,0,n){
+		FOR(j,0,m){
+			if(!vis[i][j] && a[i][j]==1){
+				//dbg("inicio en i j",i,j);
+				tam[idx]=dfs(dfs,i,j);
+				idx++;
+			}
+		}
 	}
-	FOR(i,desdeaca,n){
-		ans.pb(b[i].f+1);
+	ll maxi=0;
+	each(e,tam)ckmax(maxi,e.s);
+	//todas las filas
+	ll res=0;
+	FOR(i,0,n){
+		set<ll> act;
+		ll tamActual=0;
+		FOR(j,0,m){
+			if(id[i][j]>-1){
+				act.insert(id[i][j]);
+			}
+			else tamActual++;
+			FOR(k,0,4){
+				ll newX=i + dx[k],newY=j+dy[k];
+				if(isValid(newX,newY)){
+					if(id[newX][newY]>-1)
+						act.insert(id[newX][newY]);
+				}
+			}
+		}
+		each(e,act){
+			tamActual+=tam[e];
+		}
+		ckmax(res,max(tamActual,maxi));
+
 	}
-	return ans;
+	FOR(j,0,m){
+		set<ll> act;
+		ll tamActual=0;
+		FOR(i,0,n){
+			if(id[i][j]>-1){
+				act.insert(id[i][j]);
+			}
+			else tamActual++;
+			FOR(k,0,4){
+				ll newX=i + dx[k],newY=j+dy[k];
+				if(isValid(newX,newY)){
+					if(id[newX][newY]>-1)
+						act.insert(id[newX][newY]);
+				}
+			}
+		}
+		each(e,act){
+			tamActual+=tam[e];
+		}
+		ckmax(res,max(tamActual,maxi));
+	}
+	return res;
 }
 
 int main() {
@@ -188,13 +236,19 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vector<vl> a(n,vl(m,0));
+		FOR(i,0,n){
+			str s;
+			cin>>s;
+			FOR(j,0,m){
+				if(s[j]=='#'){
+					a[i][j]=1;
+				}
+			}
+		}
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

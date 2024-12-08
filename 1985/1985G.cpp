@@ -138,16 +138,7 @@ void setIO(str s = "") {
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
 
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
+
 //? /Custom Helpers
 //? Generator
 int rng_int(int L, int R) { assert(L <= R);
@@ -155,28 +146,114 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+/**
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
+ */
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vpl b;
-	FOR(i,0,n){
-		b.pb(mp(a[i],i));
-	}
-	sor(b);
-	ll idx=-1,desdeaca=n;
-	vl ans;
-	FOR(i,0,n){
-		if(b[i].s < idx){
-			desdeaca=i;
-			break;
+#pragma once
+
+template<int MOD, int RT> struct mint {
+	static const int mod = MOD;
+	static constexpr mint rt() { return RT; } // primitive root for FFT
+	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+	mint():v(0) {}
+	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+		if (v < 0) v += MOD; }
+	bool operator==(const mint& o) const {
+		return v == o.v; }
+	friend bool operator!=(const mint& a, const mint& b) { 
+		return !(a == b); }
+	friend bool operator<(const mint& a, const mint& b) { 
+		return a.v < b.v; }
+	
+	friend str ts(mint a) { return ts(a.v); }
+   
+	mint& operator+=(const mint& o) { 
+		if ((v += o.v) >= MOD) v -= MOD; 
+		return *this; }
+	mint& operator-=(const mint& o) { 
+		if ((v -= o.v) < 0) v += MOD; 
+		return *this; }
+	mint& operator*=(const mint& o) { 
+		v = int((ll)v*o.v%MOD); return *this; }
+	mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+	friend mint pow(mint a, ll p) {
+		mint ans = 1; assert(p >= 0);
+		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+		return ans; }
+	friend mint inv(const mint& a) { assert(a.v != 0); 
+		return pow(a,MOD-2); }
+		
+	mint operator-() const { return mint(-v); }
+	mint& operator++() { return *this += 1; }
+	mint& operator--() { return *this -= 1; }
+	friend mint operator+(mint a, const mint& b) { return a += b; }
+	friend mint operator-(mint a, const mint& b) { return a -= b; }
+	friend mint operator*(mint a, const mint& b) { return a *= b; }
+	friend mint operator/(mint a, const mint& b) { return a /= b; }
+};
+
+using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+using vmi = V<mi>;
+using pmi = pair<mi,mi>;
+using vpmi = V<pmi>;
+mi binpow(mi a, long long b) {
+    mi res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * mi(a);
+        a = mi(a) * mi(a);
+        b >>= 1;
+    }
+    return res;
+}
+V<vmi> scmb; // small combinations
+void genComb(int SZ) {
+	scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+	FOR(i,1,SZ) F0R(j,i+1) 
+		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
+}
+ll solve2(ll l,ll r,ll k){
+	ll ans=0;
+	auto getSum=[](ll x){
+		ll res=0;
+		while(x>0){
+			res+=x%10;
+			x/=10;
 		}
-		else ans.pb(b[i].f);
-		ckmax(idx,b[i].s);
+		return res;
+	};
+	dbg(l,r,k);
+	FOR(i,binpow(10,l).v,(binpow(10,r).v)){
+		if(getSum(i*k)==k*getSum(i)){
+			dbg("xd",i);
+			ans++;
+		}
 	}
-	FOR(i,desdeaca,n){
-		ans.pb(b[i].f+1);
-	}
+	dbg(ans);
 	return ans;
+}
+ll solve(ll l,ll r,ll k) {
+	
+	mi ans=0;
+	ll num=(k==1 ? 9 : max(6ll-k,k<=9 ? 1ll : 0ll));
+	//dbg(num);
+	//dbg(solve2(l,r,k));
+	auto getHastaX=[&](ll x)->mi{
+		return binpow(num+1,x)-mi(1);
+	};
+	//dbg(getHastaX(r).v,getHastaX(l).v);
+	mi res=getHastaX(r)-getHastaX(l);
+	return res.v;
+	/**/
 }
 
 int main() {
@@ -188,13 +265,10 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		ll l,r,k;
+		cin>>l>>r>>k;
+		//dbg(solve2(l,r,k));
+        cout<<solve(l,r,k)<<"\n";
     }
     RAYA;
     RAYA;
