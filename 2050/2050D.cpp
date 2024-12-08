@@ -173,8 +173,11 @@ str solve(str &s) {
 			continue;
 		}
 		else{
-			swap(s[i],s[best]);
-			s[i]=s[i]-(best-i);
+			char guarda=s[best];
+			for(ll j=best;j>i;j--){
+				s[j]=s[j-1];
+			}
+			s[i]=guarda-(best-i);
 		}
 	}
 	return s;
