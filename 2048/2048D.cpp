@@ -156,86 +156,64 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
+vpl solve(str &s) {
+	ll n=s.size();
+	vector<vl> pos(2);
+	FOR(i,0,n){
+		pos[s[i]-'0'].pb(i);
 	}
-	each(e,b){
-		sum2+=e;
+	ll len=(pos[0].size() > 0 ? n - pos[0][0]: -1);
+	dbg(len);
+	if(len==-1){
+		vpl valores={{1,1},{1,n}};
+		return valores;
 	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+	pl ans={-1,-1};
+	str maxXor="0";
+	auto xor1=[](str a,str b){
+		if(a.size() < b.size()) swap(a,b);
+		ll mini=min(a.size(),b.size());
+		ll maxi=max(a.size(),b.size());
+		str res;
+		FOR(i,0,maxi-mini){
+			res+=a[i];
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
+		FOR(i,maxi-mini,maxi){
+			if(a[i]==b[i-(maxi-mini)]) res+='0';
+			else res+='1';
 		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
+		return res;
+	};
+	FOR(i,0,(ll)pos[1].size()){
+		ll act=pos[1][i];
+		if(act + len -1 >=n) break;
+		str cand2=s.substr(act,len);
+		str xo=xor1(s,cand2);
+		if(xo > maxXor){
+			maxXor=xo;
+			ans={act+1,act+len};
+		}
 	}
-	return res;
-	
+	vpl valores={ans,{1,n}};
+	return valores;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
+		str s;
+		cin>>s;
+		auto x = solve(s);
+		each(e,x){
+			cout<<e.first<<" "<<e.second<<" ";
 		}
+        cout<<"\n";
     }
     RAYA;
     RAYA;

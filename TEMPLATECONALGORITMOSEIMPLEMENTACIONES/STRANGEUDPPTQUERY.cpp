@@ -148,6 +148,7 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
+
 void update(vi  &Tree, int idx, int s,
             int e, int pos, int X)
 {

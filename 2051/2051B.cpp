@@ -156,86 +156,35 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
+ll solve(ll n,ll a,ll b,ll c) {
+	ll sum=a+b+c,cuantos=n/(sum),days=3*cuantos,hasta=cuantos*sum;
+	if(hasta<n){
+		days++;
+		hasta+=a;
 	}
-	each(e,b){
-		sum2+=e;
+	if(hasta<n){
+		days++;
+		hasta+=b;
 	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
+	if(hasta<n){
+		days++;
+		hasta+=c;
 	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
-		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
-		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
-	}
-	return res;
-	
+	return days;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
-		}
+		ll n,a,b,c;
+		cin>>n>>a>>b>>c;
+        cout<<solve(n,a,b,c)<<"\n";
     }
     RAYA;
     RAYA;

@@ -88,7 +88,7 @@ using vpd = V<pd>;
 
 
 const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e14;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
 
@@ -156,86 +156,68 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
+ll solve(vector<vl> &a,ll k) {
+	ll n=a.size(),m=a[0].size();
+	vector<vector<vl>> dp(n,vector<vl>(m,vl(m,BIG)));
+	FOR(i,0,m){
+		
+		dp[0][0][i]=a[0][i] + k*i;
+		dbg(dp[0][0][i]);
 	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
-		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
+	FOR(i,0,n){
+		FOR(j,0,m){
+			FOR(iter3,0,m){
+				FOR(l,0,m){
+					//k es cantidad de vueltas de donde viene 
+					//el anterior , l es la cantidad de vees que estoy moviendo el actual
+					if(i>=1){
+						ckmin(dp[i][j][l],dp[i-1][j][iter3] + a[i][(j+l)%m] + k*l);
 					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
+					if(j>=1){
+						//dbg("relajando ",i,j,iter3,l,dp[i][j][l],dp[i][j-1][iter3] + a[i][(j+l)%m] + k*l);
+						ckmin(dp[i][j][l],dp[i][j-1][0] + a[i][(j+l)%m] + k*l);
 					}
-			}	
+				}
+			}
 		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
 	}
-	return res;
-	
+	cout<<"debug dp\n";
+	FOR(i,0,n){
+		cout<<"i: "<<i<<"\n";
+		FOR(j,0,m){
+			cout<<"j: "<<j<<"\n";
+			FOR(it,0,m){
+				cout<<dp[i][j][it]<<" ";
+			}
+			cout<<"\n";
+		}
+		cout<<"\n";
+	}
+	ll ans=BIG;
+	FOR(i,0,m){
+		ckmin(ans,dp[n-1][m-1][i]);
+	}
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
+		ll n,m,k;
+		cin>>n>>m>>k;
+		vector<vl> a(n,vl(m,0));
+		each(e,a){
+			each(e2,e){
+				cin>>e2;
+			}
 		}
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

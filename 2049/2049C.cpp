@@ -156,86 +156,48 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
+vl solve(ll n,ll x,ll y) {
+	x--;
+	y--;
+	vector<vl> G(n);	
+	FOR(i,0,n){
+		ll ant=i>0?i-1:n-1;
+		ll sig=i<n-1?i+1:0;
+		G[i].pb(ant);
+		G[i].pb(sig);
 	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+	G[x].pb(y);
+	G[y].pb(x);
+	vl ans(n,0);
+	vector<vl> mexx(n,vl(3,0));
+	FOR(i,0,n){
+		FOR(j,0,3){
+			if(mexx[i][j]==0){
+				ans[i]=j;
+				break;
+			}
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
+		for(auto &e : G[i]){
+			mexx[e][ans[i]]=1;
 		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
 	}
-	return res;
-	
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
-		}
+		ll n,x,y;
+		cin>>n>>x>>y;
+        auto xd = solve(n,x,y);
+		each(e,xd)cout<<e<<" ";
+		cout<<"\n";
     }
     RAYA;
     RAYA;

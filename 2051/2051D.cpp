@@ -156,86 +156,41 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
-	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+ll solve(vl &a,ll x,ll y) {
+	ll n=a.size();
+	sor(a);
+	map<ll,ll> m;
+	each(e,a)m[e]++;
+	ll sum=0;
+	each(e,a)sum+=e;
+	ll ans=0;
+	dbg(a,sum);
+	FOR(i,0,n){
+		ll xd1=lower_bound(a.begin()+i+1,a.end(),sum-a[i]-y)-a.begin();
+		ll xd2=upper_bound(a.begin()+i+1,a.end(),sum-a[i]-x)-a.begin()-1;
+		if(xd1<=xd2){
+			dbg(xd1,xd2);
+			ans+=xd2-xd1+1;
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
-		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
 	}
-	return res;
-	
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
+		ll n,x,y;
+		cin>>n>>x>>y;
 		vl a(n);
 		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
-		}
+
+        cout<<solve(a,x,y)<<"\n";
     }
     RAYA;
     RAYA;

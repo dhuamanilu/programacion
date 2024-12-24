@@ -155,64 +155,136 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
+void update(vi  &Tree, int idx, int s,
+            int e, int pos, int X)
+{
+    // If current node is a
+    // leaf nodes
+    if (s == e) {
+ 
+        // Update Tree[idx]
+        Tree[idx] += X;
+    }
+ 
+    else {
+ 
+        // Divide segment tree into left
+        // and right subtree
+        int m = (s + e) / 2;
+ 
+        // Check if pos lies in left subtree
+        if (pos <= m) {
+ 
+            // Search pos in left subtree
+            update(Tree, 2 * idx, s, m, pos, X);
+        }
+        else {
+ 
+            // Search pos in right subtree
+            update(Tree, 2 * idx + 1, m + 1, e,
+                   pos, X);
+        }
+ 
+        // Update Tree[idx]
+        Tree[idx]
+            = Tree[2 * idx] + Tree[2 * idx + 1];
+    }
+}
+ 
+// Function to find the sum from
+// elements in the range [0, X]
+ll sum(vi &Tree, int idx, int s,
+        int e, int ql, int qr)
+{
+    // Check if range[ql, qr] equals
+    // to range [s, e]
+    if (ql == s && qr == e)
+        return Tree[idx];
+ 
+    if (ql > qr)
+        return 0;
+ 
+    // Divide segment tree into
+    // left subtree and
+    // right subtree
+    int m = (s + e) / 2;
+ 
+    // Return sum of elements in the range[ql, qr]
+    return sum(Tree, 2 * idx, s, m, ql, min(m, qr))
+           + sum(Tree, 2 * idx + 1, m + 1, e,
+                 max(ql, m + 1), qr);
+}
+ 
+// Function to find Xth element
+// in the array
+ll getElement(vi & Tree, int X, int N){
+    // Print element at index x
+    return sum(Tree, 1, 0, N - 1, 0, X);
+}
+ 
+// Function to update array elements
+// in the range [L, R]
+void range_Update(vi &Tree, int L,
+                  int R, int X, int N)
+{
+ 
+    // Update arr[l] += X
+    update(Tree, 1, 0, N - 1, L, X);
+ 
+    // Update arr[R + 1] += X
+    if (R + 1 < N)
+        update(Tree, 1, 0, N - 1, R + 1, -X);
+}
+pair<pl,ll> solve(vpl &a,vector<pair<char,ll>> &d,ll sx,ll sy) {
+	ll n=a.size();
+	sor(a);
+	vpl b;
 	each(e,a){
-		sum1+=e;
+		b.pb(mp(e.s,e.f));
 	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+	sor(b);
+	//orden de a
+	vi tree(4*n+5,0);
+	//orden de b
+	vi tree2(4*n+5,0);
+	dbg(a);
+	each(e,d){
+		ll newX=sx,newY=sy;
+		if(e.f=='U')newY+=e.s;
+		else if(e.f=='D')newY-=e.s;
+		else if(e.f=='L')newX-=e.s;
+		else if(e.f=='R')newX+=e.s;
+		dbg(sx,sy,newX,newY);
+		if(sx==newX){
+			ll pos=lower_bound(all(a),mp(sx,sy))-a.begin();
+			ll pos2=upper_bound(all(a),mp(newX,newY))-a.begin()-1;
+			dbg(pos,pos2);
+			if(pos<=pos2){
+				range_Update(tree,pos,pos2,1,n);
+			}
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
+		else{
+			assert(sy==newY);
+			ll pos=lower_bound(all(b),mp(sy,sx))-b.begin();
+			ll pos2=upper_bound(all(b),mp(newY,newX))-b.begin()-1;
+			dbg(b,pos,pos2);
+			if(pos<=pos2){
+				range_Update(tree2,pos,pos2,1,n);
+			}
 		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
+		sx=newX;
+		sy=newY;
 	}
-	return res;
-	
+	map<pl,ll> seen;
+	FOR(i,0,n){
+		if(getElement(tree,i,n)!=0){
+			seen[a[i]]++;
+		}
+		if(getElement(tree2,i,n)!=0){
+			seen[mp(b[i].s,b[i].f)]++;
+		}
+	}
+	return mp(mp(sx,sy),sz(seen));
 }
 
 int main() {
@@ -224,18 +296,14 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
-		}
+		ll n,m,sx,sy;
+		cin>>n>>m>>sx>>sy;
+		vpl a(n);
+		each(e,a)cin>>e.f>>e.s;
+		vector<pair<char,ll>> d(m);
+		each(e,d)cin>>e.f>>e.s;
+        auto xd =solve(a,d,sx,sy);
+		cout<<xd.f.f<<" "<<xd.f.s<<" "<<xd.s<<"\n";
     }
     RAYA;
     RAYA;

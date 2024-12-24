@@ -156,63 +156,33 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
-	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+pair<pl,ll> solve(vector<vl> &a,ll x,ll y,str &path){
+	ll h=a.size(),w=a[0].size();
+	set<pl> seen;
+	auto isValid=[&](ll x1,ll y1){
+		return x1>=0 && x1<h && y1>=0 && y1<w;
+	};
+	x--;
+	y--;
+	if(a[x][y]==2)
+		seen.insert({x,y});
+	each(e,path){
+		ll newX=x,newY=y;
+		if(e=='U')newX--;
+		else if(e=='D')newX++;
+		else if(e=='L')newY--;
+		else if(e=='R')newY++;
+		dbg(newX,newY);
+		if(!isValid(newX,newY))continue;
+		else if(a[newX][newY]==0)continue;
+		else{
+			x=newX;
+			y=newY;
+			if(a[x][y]==2)
+				seen.insert({x,y});
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
-		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
 	}
-	return res;
-	
+	return mp(mp(x,y),sz(seen));
 }
 
 int main() {
@@ -224,18 +194,22 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(n);
-		each(e,a)cin>>e;
-		vl b(m);
-		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
+		ll h,w,x,y;
+		cin>>h>>w>>x>>y;
+		vector<vl> a(h,vl(w));
+		each(e,a){
+			str s;
+			cin>>s;
+			FOR(j,0,w){
+				if(s[j]=='#')e[j]=0;
+				else if(s[j]=='.')e[j]=1;
+				else e[j]=2;	
+			}
 		}
+		str path;
+		cin>>path;
+        auto xd = solve(a,x,y,path);
+		cout<<xd.f.f+1<<" "<<xd.f.s+1<<" "<<xd.s<<"\n";
     }
     RAYA;
     RAYA;

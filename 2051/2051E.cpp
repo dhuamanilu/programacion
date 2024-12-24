@@ -156,86 +156,112 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
-	each(e,a){
-		sum1+=e;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+struct Treap{ 
+    int len;
+    const int ADD = 1000010;
+    const int MAXVAL = 1000000010;
+    unordered_map <long long, int> mp; /// Change to int if only int in treap
+    tree<long long, null_type, less<long long>, rb_tree_tag, tree_order_statistics_node_update> T;
+
+    Treap(){
+        len = 0;
+        T.clear(), mp.clear();
+    }
+
+    inline void clear(){
+        len = 0;
+        T.clear(), mp.clear();
+    }
+
+    inline void insert(long long x){
+        len++, x += MAXVAL;
+        int c = mp[x]++;
+        T.insert((x * ADD) + c);
+    }
+
+    inline void erase(long long x){
+        x += MAXVAL;
+        int c = mp[x];
+        if (c){
+            c--, mp[x]--, len--;
+            T.erase((x * ADD) + c);
+        }
+    }
+
+    /// 1-based index, returns the K'th element in the treap, -1 if none exists
+    inline long long kth(int k){
+        if (k < 1 || k > len) return -1;
+        auto it = T.find_by_order(--k);
+        return ((*it) / ADD) - MAXVAL;
+    }
+
+    /// Count of value < x in treap
+    inline int count(long long x){
+        x += MAXVAL;
+        int c = mp[--x];
+        return (T.order_of_key((x * ADD) + c));
+    }
+
+    /// Number of elements in treap
+    inline int size(){
+        return len;
+    }
+};
+
+ll solve(vl &a,vl &b,ll k) {
+	ll n=a.size();
+	vpl c;
+	set<ll> points;
+	FOR(i,0,n){
+		c.pb(mp(a[i],b[i]));
+		points.insert(a[i]);
+		points.insert(b[i]);
 	}
-	each(e,b){
-		sum2+=e;
-	}
-	map<ll,ll> m1,m2;
-	each(e,a){
-		m1[sum1-e]++;
-	}
-	each(e,b){
-		m2[sum2-e]++;
-	}
-	dbg(m1);
-	dbg(m2);
-	ll q=c.size();
-	vs res;
-	each(e,c){
-		dbg(e);
-		bool nega=false;
-		ll act=e;
-		if(act<0){
-			nega=true;
-			act*=-1;
+	sor(c);
+	vl cands;
+	each(e,points)cands.pb(e);
+	ll ptr=0;
+	Treap xd;
+	xd.clear();
+	ll ans=0,tam=0;
+	FOR(i,0,(ll)cands.size()){
+		while(ptr < n && c[ptr].f < cands[i]){
+			xd.insert(c[ptr].s);
+			tam++;
+			ptr++;
 		}
-		bool found=false;
-		for(ll i=1;i*i<=act;i++){
-			if(act%i==0){
-				//act/ i && i
-				dbg("divisores",i,act/i);
-					ll div1=i;
-					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
-					}
-			}	
+		ll pos=xd.count(cands[i]);
+		if(tam - pos > k){
+
 		}
-		if(!found) res.pb("NO");
-		else res.pb("YES");	
+		else{
+			ckmax(ans,cands[i]*(n-ptr + tam-pos));
+		}
+
 	}
-	return res;
-	
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    //cin >> t;
+    cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
+		ll n,k;
+		cin>>n>>k;
 		vl a(n);
 		each(e,a)cin>>e;
-		vl b(m);
+		vl b(n);
 		each(e,b)cin>>e;
-		vl c(q);
-		each(e,c)cin>>e;
-		auto x = solve(a,b,c);
-        each(e,x){
-			cout<<e<<"\n";
-		}
+        cout<<solve(a,b,k)<<"\n";
     }
     RAYA;
     RAYA;
