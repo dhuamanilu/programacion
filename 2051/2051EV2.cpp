@@ -155,110 +155,33 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
- 
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace std;
-using namespace __gnu_pbds;
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
 
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-struct Treap{ 
-    int len;
-    const int ADD = 1000010;
-    const int MAXVAL = 1000000010;
-    unordered_map<long long, int, custom_hash> mp;
-    tree<long long, null_type, less<long long>, rb_tree_tag, tree_order_statistics_node_update> T;
- 
-    Treap(){
-        len = 0;
-        T.clear(), mp.clear();
-    }
- 
-    inline void clear(){
-        len = 0;
-        T.clear(), mp.clear();
-    }
- 
-    inline void insert(long long x){
-        len++, x += MAXVAL;
-        int c = mp[x]++;
-        T.insert((x * ADD) + c);
-    }
- 
-    inline void erase(long long x){
-        x += MAXVAL;
-        int c = mp[x];
-        if (c){
-            c--, mp[x]--, len--;
-            T.erase((x * ADD) + c);
-        }
-    }
- 
-    /// 1-based index, returns the K'th element in the treap, -1 if none exists
-    inline long long kth(int k){
-        if (k < 1 || k > len) return -1;
-        auto it = T.find_by_order(--k);
-        return ((*it) / ADD) - MAXVAL;
-    }
- 
-    /// Count of value < x in treap
-    inline int count(long long x){
-        x += MAXVAL;
-        int c = mp[--x];
-        return (T.order_of_key((x * ADD) + c));
-    }
- 
-    /// Number of elements in treap
-    inline int size(){
-        return len;
-    }
-};
- 
 ll solve(vl &a,vl &b,ll k) {
 	ll n=a.size();
-	vpl c;
-	set<ll> points;
-	FOR(i,0,n){
-		c.pb(mp(a[i],b[i]));
-		points.insert(a[i]);
-		points.insert(b[i]);
-	}
-	sor(c);
-	vl cands;
-	each(e,points)cands.pb(e);
-	ll ptr=0;
-	Treap xd;
-	xd.clear();
-	ll ans=0,tam=0;
-	FOR(i,0,(ll)cands.size()){
-		while(ptr < n && c[ptr].f < cands[i]){
-			xd.insert(c[ptr].s);
-			tam++;
-			ptr++;
-		}
-		ll pos=xd.count(cands[i]);
-		if(tam - pos > k){
- 
-		}
-		else{
-			ckmax(ans,cands[i]*(n-ptr + tam-pos));
-		}
- 
-	}
-	return ans;
+	map<ll,ll> entradas,salidas;
+    set<ll> eventos;
+    each(e,a){
+        entradas[e]++;
+        eventos.insert(e);
+    }
+    each(e,b){
+        salidas[e]++;
+        eventos.insert(e);
+    }
+    ll cuantos=n,reviews=0,res=0;
+    each(e,eventos){
+        dbg(e);
+        if(reviews<=k){
+            ckmax(res,e*cuantos);
+        }
+        ll actB=salidas.count(e) ? salidas[e] : 0ll;
+        cuantos-=actB;
+        reviews-=actB;
+        ll actA=entradas.count(e) ? entradas[e] : 0ll;
+        reviews+=actA;
+        dbg(cuantos,reviews);
+    }
+    return res;
 }
  
 int main() {
