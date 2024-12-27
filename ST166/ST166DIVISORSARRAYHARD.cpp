@@ -1,4 +1,4 @@
-//? #pragma GCC optimize ("Ofast")
+//#pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
@@ -154,139 +154,80 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
-vl brute(vl &a){
-	ll n=a.size();
-	set<ll> values;
-	values.insert(0);
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	auto query=[&](ll l,ll r){
-		if(l==0) return pref[r];
-		return pref[r]-pref[l-1];
-	};
-	FOR(i,0,n){
-		FOR(j,i,n){
-			values.insert(query(i,j));
-		}
-	}
-	vl res;
-	for(auto x:values){
-		res.pb(x);
-	}
-	return res;
-}
-//https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-ll maxSubarraySum(vl &arr) {
-	if(arr.empty()) return 0;
-    ll res = arr[0];
-    ll maxEnding = arr[0];
 
-    for (ll i = 1; i < arr.size(); i++) {
-      
-        // Find the maximum sum ending at index i by either extending 
-        // the maximum sum subarray ending at index i - 1 or by
-        // starting a new subarray from index i
-        maxEnding = max(maxEnding + arr[i], arr[i]);
-      
-        // Update res if maximum subarray sum ending at index i > res
-        res = max(res, maxEnding);
+const int TAG=3170;
+bool add_factors(ll x,vi &toAdd){
+    int x2=x;
+    for(int i=2;i*i<=x;i++){
+        if(x2%i==0){
+            int cont=0;
+            while(x2%i==0){
+                cont++;
+                x2/=i;
+            }
+            if(cont>0){
+				toAdd[i]+=cont;
+            }
+        }
     }
-    return max(0ll,res);
+    if(x2>1){
+		if(x2 < TAG){
+			toAdd[x2]++;
+			return false;
+		}
+		else return true;
+		//toAdd[x2]++;
+    }
+	else return false;
 }
-vl solve(vl &a) {
-	ll n=a.size();
-	ll idx=0;
+
+vi solve(vi &a,ll m) {
+	ll n=sz(a);
+	vector<vector<int>> factors(n,vi(TAG,0));
+	vb esPrimo(n,0);
 	FOR(i,0,n){
-		if(a[i]!=1 && a[i]!=-1){
-			idx=i;
-			break;
+		bool xd = add_factors(a[i],factors[i]);
+		if(xd) esPrimo[i]=1; 
+	}
+	vi decomp(TAG,0);
+	FOR(i,2,m+1){
+		for(int j=i;j<=m;j*=i){
+			decomp[i]+=m/j;
 		}
 	}
-	ll L1=BIG,R1=-BIG,L2=BIG,R2=-BIG,sum=0;
-	for(ll i=idx-1;i>=0;i--){
-		sum+=a[i];
-		ckmin(L1,sum);
-		ckmax(R1,sum);
+	vi ans;
+	FOR(i,0,n){
+		int res=1;
+		FOR(j,0,TAG){
+			factors[i][j]+=decomp[j];
+		}
+		FOR(j,0,TAG){
+			res*=factors[i][j]+1;
+			res%=MOD;
+		}
+		if(esPrimo[i]){
+			res*=2;
+			res%=MOD;
+		}
+		ans.pb(res);
 	}
-	sum=0;
-	for(ll i=idx+1;i<n;i++){
-		sum+=a[i];
-		ckmin(L2,sum);
-		ckmax(R2,sum);
-	}
-	set<ll> values;
-	vl a1,a2;
-	FOR(i,0,idx){
-		a1.pb(a[i]);
-	}
-	FOR(i,idx+1,n){
-		a2.pb(a[i]);
-	}
-	auto maxiL=maxSubarraySum(a1);
-	auto maxiR=maxSubarraySum(a2);
-	each(e,a1) e*=-1;
-	auto miniL=-1*maxSubarraySum(a1);
-	each(e,a2) e*=-1;
-	auto miniR=-1*maxSubarraySum(a2);
-	dbg(a1,a2,maxiL,maxiR,miniL,miniR);
-	FOR(i,miniL,maxiL+1){
-		values.insert(i);
-	}
-	FOR(i,miniR,maxiR+1){
-		values.insert(i);
-	}
-	values.insert(0);
-	values.insert(a[idx]);	
-	FOR(i,L2,R2+1){
-		values.insert(i);
-	}
-	ll Lfinal=min({L1,L2,L1+L2}),Rfinal=max({R1,R2,R1+R2});
-	
-	FOR(i,Lfinal,Rfinal+1){
-		values.insert(a[idx] + i);
-	}
-	vl res;
-	for(auto x:values){
-		res.pb(x);
-	}
-	return res;
+	return ans;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
-	while(0){
-		ll n=rng_ll(1,10);
-		vl a(n);
-		FOR(i,0,n-1){
-			ll xd=rng_ll(1,2);
-			if(xd==1) a[i]=1;
-			else a[i]=-1;
-		}
-		a[n-1]=rng_ll(-100,100);
-		auto x=brute(a);
-		auto y=solve(a);
-		if(x!=y){
-			dbg(a,x,y);
-			assert(false);
-		}
-		else dbg(a,"OK");
-	}  
-	for(int idx = 0; idx < t; idx++) {
+    //cin >> t;
+
+    for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
+		ll n,m;
+		cin>>n>>m;
+		vi a(n);
 		each(e,a)cin>>e;
-		auto x = solve(a);
-		cout<<x.size()<<"\n";
+		auto x = solve(a,m);
 		each(e,x)cout<<e<<" ";
 		cout<<"\n";
     }

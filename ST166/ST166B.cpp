@@ -155,105 +155,17 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-vl brute(vl &a){
-	ll n=a.size();
-	set<ll> values;
-	values.insert(0);
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	auto query=[&](ll l,ll r){
-		if(l==0) return pref[r];
-		return pref[r]-pref[l-1];
-	};
-	FOR(i,0,n){
-		FOR(j,i,n){
-			values.insert(query(i,j));
-		}
-	}
-	vl res;
-	for(auto x:values){
-		res.pb(x);
-	}
-	return res;
-}
-//https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-ll maxSubarraySum(vl &arr) {
-	if(arr.empty()) return 0;
-    ll res = arr[0];
-    ll maxEnding = arr[0];
 
-    for (ll i = 1; i < arr.size(); i++) {
-      
-        // Find the maximum sum ending at index i by either extending 
-        // the maximum sum subarray ending at index i - 1 or by
-        // starting a new subarray from index i
-        maxEnding = max(maxEnding + arr[i], arr[i]);
-      
-        // Update res if maximum subarray sum ending at index i > res
-        res = max(res, maxEnding);
-    }
-    return max(0ll,res);
-}
-vl solve(vl &a) {
-	ll n=a.size();
-	ll idx=0;
-	FOR(i,0,n){
-		if(a[i]!=1 && a[i]!=-1){
-			idx=i;
-			break;
-		}
+ll solve(vl &a) {
+	map<ll,ll> m;
+	FOR(i,0,sz(a)) {
+		m[a[i]]=i+1;
 	}
-	ll L1=BIG,R1=-BIG,L2=BIG,R2=-BIG,sum=0;
-	for(ll i=idx-1;i>=0;i--){
-		sum+=a[i];
-		ckmin(L1,sum);
-		ckmax(R1,sum);
+	ll sum=0;
+	each(e,m) {
+		sum+=e.s;
 	}
-	sum=0;
-	for(ll i=idx+1;i<n;i++){
-		sum+=a[i];
-		ckmin(L2,sum);
-		ckmax(R2,sum);
-	}
-	set<ll> values;
-	vl a1,a2;
-	FOR(i,0,idx){
-		a1.pb(a[i]);
-	}
-	FOR(i,idx+1,n){
-		a2.pb(a[i]);
-	}
-	auto maxiL=maxSubarraySum(a1);
-	auto maxiR=maxSubarraySum(a2);
-	each(e,a1) e*=-1;
-	auto miniL=-1*maxSubarraySum(a1);
-	each(e,a2) e*=-1;
-	auto miniR=-1*maxSubarraySum(a2);
-	dbg(a1,a2,maxiL,maxiR,miniL,miniR);
-	FOR(i,miniL,maxiL+1){
-		values.insert(i);
-	}
-	FOR(i,miniR,maxiR+1){
-		values.insert(i);
-	}
-	values.insert(0);
-	values.insert(a[idx]);	
-	FOR(i,L2,R2+1){
-		values.insert(i);
-	}
-	ll Lfinal=min({L1,L2,L1+L2}),Rfinal=max({R1,R2,R1+R2});
-	
-	FOR(i,Lfinal,Rfinal+1){
-		values.insert(a[idx] + i);
-	}
-	vl res;
-	for(auto x:values){
-		res.pb(x);
-	}
-	return res;
+	return sum;
 }
 
 int main() {
@@ -261,34 +173,16 @@ int main() {
 
     int t = 1;
     cin >> t;
-	while(0){
-		ll n=rng_ll(1,10);
-		vl a(n);
-		FOR(i,0,n-1){
-			ll xd=rng_ll(1,2);
-			if(xd==1) a[i]=1;
-			else a[i]=-1;
-		}
-		a[n-1]=rng_ll(-100,100);
-		auto x=brute(a);
-		auto y=solve(a);
-		if(x!=y){
-			dbg(a,x,y);
-			assert(false);
-		}
-		else dbg(a,"OK");
-	}  
-	for(int idx = 0; idx < t; idx++) {
+
+    for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
 		vl a(n);
 		each(e,a)cin>>e;
-		auto x = solve(a);
-		cout<<x.size()<<"\n";
-		each(e,x)cout<<e<<" ";
-		cout<<"\n";
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
