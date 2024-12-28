@@ -157,7 +157,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 vs solve(vl &a,vl &b,vl &c){
-	ll sum1=0,sum2=0;
+	ll sum1=0,sum2=0,n=a.size(),m=b.size();
 	each(e,a){
 		sum1+=e;
 	}
@@ -166,10 +166,10 @@ vs solve(vl &a,vl &b,vl &c){
 	}
 	map<ll,ll> m1,m2;
 	each(e,a){
-		m1[sum1-e]++;
+		m1[e]++;
 	}
 	each(e,b){
-		m2[sum2-e]++;
+		m2[e]++;
 	}
 	dbg(m1);
 	dbg(m2);
@@ -184,27 +184,17 @@ vs solve(vl &a,vl &b,vl &c){
 			act*=-1;
 		}
 		bool found=false;
+		dbg(act);
 		for(ll i=1;i*i<=act;i++){
 			if(act%i==0){
 				//act/ i && i
 				dbg("divisores",i,act/i);
 					ll div1=i;
 					ll div2=act/i;
-					if(nega){
-						if((m1.count(div1) && m2.count(-div2)) || (m1.count(-div1) && m2.count(div2))
-						|| (m1.count(div2) && m2.count(-div1) ) || (m1.count(-div2) && m2.count(div1))){
-							found=true;
-							break;
-						}
-						
-					}
-					else{
-						if((m1.count(div1) && m2.count(div2)) || (m1.count(-div1) && m2.count(-div2))
-						|| (m1.count(div2) && m2.count(div1) ) || (m1.count(-div2) && m2.count(-div1))){
-							found=true;
-							break;
-						}
-						
+					if((m1.count(sum1-div1) && m2.count(sum2-div2)) || (m1.count(sum1+div1) && m2.count(sum2+div2))
+					|| (m1.count(sum1-div2) && m2.count(sum2-div1) )        || (m1.count(sum1+div2) && m2.count(sum2+div1))){
+						found=true;
+						break;
 					}
 			}	
 		}

@@ -1,4 +1,4 @@
-//#pragma GCC optimize ("Ofast")
+//? #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
@@ -154,49 +154,73 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
+/**
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
+ */
 
-const int TAG=3170;
-bool add_factors(ll x,vi &toAdd){
-    int x2=x;
-    for(int i=2;i*i<=x;i++){
-        if(x2%i==0){
-            int cont=0;
-            while(x2%i==0){
-                cont++;
-                x2/=i;
-            }
-            if(cont>0){
-				toAdd[i]+=cont;
-            }
-        }
-    }
-    if(x2>1){
-		if(x2 < TAG){
-			toAdd[x2]++;
-			return false;
-		}
-		else return true;
-		//toAdd[x2]++;
-    }
-	else return false;
+#pragma once
+
+template<int MOD, int RT> struct mint {
+	static const int mod = MOD;
+	static constexpr mint rt() { return RT; } // primitive root for FFT
+	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+	mint():v(0) {}
+	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+		if (v < 0) v += MOD; }
+	bool operator==(const mint& o) const {
+		return v == o.v; }
+	friend bool operator!=(const mint& a, const mint& b) { 
+		return !(a == b); }
+	friend bool operator<(const mint& a, const mint& b) { 
+		return a.v < b.v; }
+	friend str ts(mint a) { return ts(a.v); }
+   
+	mint& operator+=(const mint& o) { 
+		if ((v += o.v) >= MOD) v -= MOD; 
+		return *this; }
+	mint& operator-=(const mint& o) { 
+		if ((v -= o.v) < 0) v += MOD; 
+		return *this; }
+	mint& operator*=(const mint& o) { 
+		v = int((ll)v*o.v%MOD); return *this; }
+	mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+	friend mint pow(mint a, ll p) {
+		mint ans = 1; assert(p >= 0);
+		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+		return ans; }
+	friend mint inv(const mint& a) { assert(a.v != 0); 
+		return pow(a,MOD-2); }
+		
+	mint operator-() const { return mint(-v); }
+	mint& operator++() { return *this += 1; }
+	mint& operator--() { return *this -= 1; }
+	friend mint operator+(mint a, const mint& b) { return a += b; }
+	friend mint operator-(mint a, const mint& b) { return a -= b; }
+	friend mint operator*(mint a, const mint& b) { return a *= b; }
+	friend mint operator/(mint a, const mint& b) { return a /= b; }
+};
+
+using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+using vmi = V<mi>;
+using pmi = pair<mi,mi>;
+using vpmi = V<pmi>;
+
+V<vmi> scmb; // small combinations
+void genComb(int SZ) {
+	scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+	FOR(i,1,SZ) F0R(j,i+1) 
+		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
 }
-const int N=10000005;
-vb isPrime(N,1);
-vl primes;
-void init(){
-	FOR(i,2,N){
-		if(isPrime[i]){
-			for(ll j=2*i;j<N;j+=i){
-				isPrime[j]=0;
-			}
-		}
-	}
-	FOR(i,2,N){
-		if(isPrime[i])
-			primes.pb(i);
-	}
-}
-void add_factorsv2(ll x,map<ll,ll> &toAdd){
+void add_factors(ll x,map<ll,ll> &toAdd){
     vpl ans;
     ll x2=x;
     for(ll i=2;i*i<=x;i++){
@@ -215,52 +239,26 @@ void add_factorsv2(ll x,map<ll,ll> &toAdd){
 		toAdd[x2]++;
     }
 }
-map<ll,ll> getFactorsLento(ll m){
-	map<ll,ll> descomposicion;
-	FOR(i,1,m+1){
-		add_factorsv2(i,descomposicion);
-	}
-	return descomposicion;
-}
-map<ll,ll> getFactorsRapido(ll m){
-	map<ll,ll> decomp;
-	//TODO : iterar por todos los primos en vez de hasta m
-	FOR(i,0,(ll)primes.size()){
-		ll prime=primes[i];
-		if(prime > m)break;
-		for(int j=prime;j<=m;j*=prime){
-			decomp[prime]+=m/j;
-		}
-	}
-	return decomp;
-}
-vi solve(vi &a,ll m) {
+vl solve(vl &a,ll m) {
 	ll n=sz(a);
-	vector<vector<int>> factors(n,vi(TAG,0));
-	vb esPrimo(n,0);
+	vector<map<ll,ll>> factors(n);
 	FOR(i,0,n){
-		bool xd = add_factors(a[i],factors[i]);
-		if(xd) esPrimo[i]=1; 
+		add_factors(a[i],factors[i]);
 	}
-	auto decomp=getFactorsRapido(m);
-	vi ans;
+	map<ll,ll> decomp;
+	FOR(i,1,m+1){
+		add_factors(i,decomp);
+	}
+	vl ans;
 	FOR(i,0,n){
-		int res=1;
-		auto act=decomp;
-		FOR(j,0,TAG){
-			if(factors[i][j]>0){
-				act[j]+=factors[i][j];
-			}
+		mi res=mi(1);
+		each(e,decomp){
+			factors[i][e.f]+=e.s;
 		}
-		if(esPrimo[i]){
-			act[a[i]]++;
+		each(e,factors[i]){
+			res*=mi(e.s+1);
 		}
-		each(e,act){
-			res*=e.s+1;
-			res%=MOD;
-		}
-		
-		ans.pb(res);
+		ans.pb((int)res.v);
 	}
 	return ans;
 }
@@ -270,24 +268,13 @@ int main() {
 
     int t = 1;
     //cin >> t;
-	init();
-	dbg(primes.size());
-	/*FOR(i,1000,10000){
-		auto m=i;
-		auto x=getFactorsLento(m);
-		auto y=getFactorsRapido(m);
-		if(x!=y){
-			dbg(m,x,y);
-			assert(false);
-		}
-		else dbg("ok");
-	}*/
+
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
 		ll n,m;
 		cin>>n>>m;
-		vi a(n);
+		vl a(n);
 		each(e,a)cin>>e;
 		auto x = solve(a,m);
 		each(e,x)cout<<e<<" ";

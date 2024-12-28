@@ -156,46 +156,30 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vpl solve(str &s) {
-	ll n=s.size();
-	vector<vl> pos(2);
-	FOR(i,0,n){
-		pos[s[i]-'0'].pb(i);
+vl solve(vl &a,vl &b) {
+	ll n=a.size(),m=b.size();
+	sor(b);
+	ll rank=a[0];
+	a.erase(a.begin());
+	sor(a);
+	ll cant=upper_bound(all(b),rank)- b.begin();
+	vl puesto(b);
+	FOR(i,0,m){
+		puesto[i]= n -1 - (lower_bound(all(a),b[i])-a.begin());
 	}
-	ll len=(pos[0].size() > 0 ? n - pos[0][0]: -1);
-	dbg(len);
-	if(len==-1){
-		vpl valores={{1,1},{1,n}};
-		return valores;
+	dbg(a,b,rank,cant,puesto);
+	vl c;
+	FOR(i,1,m+1){
+		ll cuantos=cant/i,act=cuantos;
+		dbg(cuantos);
+		for(ll j=(cuantos*i);(j+i)<=m;j+=i){
+			dbg(act,j,puesto[j]);
+			act+=1+puesto[j];
+		}
+		c.pb(act);
+		
 	}
-	pl ans={-1,-1};
-	str maxXor="0";
-	auto xor1=[](str a,str b){
-		if(a.size() < b.size()) swap(a,b);
-		ll mini=min(a.size(),b.size());
-		ll maxi=max(a.size(),b.size());
-		str res;
-		FOR(i,0,maxi-mini){
-			res+=a[i];
-		}
-		FOR(i,maxi-mini,maxi){
-			if(a[i]==b[i-(maxi-mini)]) res+='0';
-			else res+='1';
-		}
-		return res;
-	};
-	FOR(i,0,(ll)pos[1].size()){
-		ll act=pos[1][i];
-		if(act + len -1 >=n) break;
-		str cand2=s.substr(act,len);
-		str xo=xor1(s,cand2);
-		if(xo > maxXor){
-			maxXor=xo;
-			ans={act+1,act+len};
-		}
-	}
-	vpl valores={ans,{1,n}};
-	return valores;
+	return c;
 }
 
 int main() {
@@ -207,13 +191,17 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		str s;
-		cin>>s;
-		auto x = solve(s);
+		ll n,m;
+		cin>>n>>m;
+		vl a(n);
+		each(e,a)cin>>e;
+		vl b(m);
+		each(e,b)cin>>e;
+		auto x=solve(a,b);
 		each(e,x){
-			cout<<e.first<<" "<<e.second<<" ";
+			cout<<e<<" ";
 		}
-        cout<<"\n";
+		cout<<"\n";
     }
     RAYA;
     RAYA;
