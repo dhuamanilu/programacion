@@ -156,15 +156,6 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
-
-	}
-	
-}
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
@@ -181,7 +172,7 @@ int main() {
 		each(e,a)cin>>e;
 
         auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
+		eack(e,xd) cout<<e<<" ";
 		cout<<"\n";
     }
     RAYA;
