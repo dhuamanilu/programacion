@@ -157,21 +157,16 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Generator
 
 ll solve(ll n,ll k) {
-	auto get=[&](auto &&get,ll l,ll r)->ll{
-		dbg(l,r);	
-		ll len=r-l+1,mid=(l+r)/2;
-		if(len%2==1){
-			if(mid-1>=k)
-				return get(get,1,mid-1);
-			else return mid;
-		}
-		else{
-			return get(get,1,mid);
-		}
+	auto get=[&](auto &&get,ll x,ll nivel){
+		if(x < k) return 0ll;
+		ll contr=((x%2)==1 ? (n+1)*(1ll<<(nivel-1)) : 0ll);
+		return contr + get(get,x/2,nivel+1);
+				
 	};
-	ll num=get(get,1,n),alfa=n/num,suma=(alfa*(alfa+1))/2;
-	dbg(num,alfa,suma);
-	return suma*num;
+	if((n%2)==0){
+		return get(get,n,0);
+	}
+	else return (n+1)/2 + get(get,n/2,1);
 }
 
 int main() {
