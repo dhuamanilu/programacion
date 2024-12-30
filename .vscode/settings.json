@@ -134,7 +134,9 @@
     "ranges": "cpp",
     "span": "cpp",
     "stacktrace": "cpp",
-    "bit": "cpp"
+    "bit": "cpp",
+    "format": "cpp",
+    "variant": "cpp"
   },
   "cmake.sourceDirectory": "C:/Users/Usuario/OneDrive/Documentos/programacion/2/cmake_stdheaders_generator",
   "C_Cpp.default.compilerPath": "c:\\msys64\\ucrt64\\bin\\gcc.exe"
