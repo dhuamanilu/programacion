@@ -230,8 +230,8 @@ vl solve(vl &a,vl &b,vpl &queries) {
 	}
 	sort(all(a2));
 	sort(all(b2));
-	reverse(all(a2));
-	reverse(all(b2));
+	//reverse(all(a2));
+	//reverse(all(b2));
 	FOR(i,0,n) {
 		m1[a2[i].s]=i;
 		m2[b2[i].s]=i;
