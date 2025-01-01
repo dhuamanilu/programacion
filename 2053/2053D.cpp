@@ -236,8 +236,12 @@ vl solve(vl &a,vl &b,vpl &queries) {
 		m1[a2[i].s]=i;
 		m2[b2[i].s]=i;
 	}
-	vl c(n),d(n);
-	ll i1=0,j1=n-1;
+	vl c(n);
+	vl ans;
+	FOR(i,0,n){
+		c[a2[i].s]=min(a)
+	}
+	return ans;
 
 }
 
