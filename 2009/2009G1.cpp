@@ -155,94 +155,10 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-/**
- * Description: modular arithmetic operations 
- * Source: 
-	* KACTL
-	* https://codeforces.com/blog/entry/63903
-	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
-	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
-	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
- * Verification: 
-	* https://open.kattis.com/problems/modulararithmetic
- */
 
-#pragma once
-
-template<int MOD, int RT> struct mint {
-	static const int mod = MOD;
-	static constexpr mint rt() { return RT; } // primitive root for FFT
-	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
-	mint():v(0) {}
-	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
-		if (v < 0) v += MOD; }
-	bool operator==(const mint& o) const {
-		return v == o.v; }
-	friend bool operator!=(const mint& a, const mint& b) { 
-		return !(a == b); }
-	friend bool operator<(const mint& a, const mint& b) { 
-		return a.v < b.v; }
-	friend str ts(mint a) { return ts(a.v); }
-   
-	mint& operator+=(const mint& o) { 
-		if ((v += o.v) >= MOD) v -= MOD; 
-		return *this; }
-	mint& operator-=(const mint& o) { 
-		if ((v -= o.v) < 0) v += MOD; 
-		return *this; }
-	mint& operator*=(const mint& o) { 
-		v = int((ll)v*o.v%MOD); return *this; }
-	mint& operator/=(const mint& o) { return (*this) *= inv(o); }
-	friend mint pow(mint a, ll p) {
-		mint ans = 1; assert(p >= 0);
-		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
-		return ans; }
-	friend mint inv(const mint& a) { assert(a.v != 0); 
-		return pow(a,MOD-2); }
-		
-	mint operator-() const { return mint(-v); }
-	mint& operator++() { return *this += 1; }
-	mint& operator--() { return *this -= 1; }
-	friend mint operator+(mint a, const mint& b) { return a += b; }
-	friend mint operator-(mint a, const mint& b) { return a -= b; }
-	friend mint operator*(mint a, const mint& b) { return a *= b; }
-	friend mint operator/(mint a, const mint& b) { return a /= b; }
-};
-
-using mi = mint<MOD,5>; // 5 is primitive root for both common mods
-using vmi = V<mi>;
-using pmi = pair<mi,mi>;
-using vpmi = V<pmi>;
-
-V<vmi> scmb; // small combinations
-void genComb(int SZ) {
-	scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
-	FOR(i,1,SZ) F0R(j,i+1) 
-		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
-}
-vl solve(vl &a,vl &b,vpl &queries) {
-	ll n=a.size();
-	map<ll,ll> m1,m2;
-	vpl a2,b2;
-	FOR(i,0,n) {
-		a2.pb({a[i],i});
-		b2.pb({b[i],i});
-	}
-	sort(all(a2));
-	sort(all(b2));
-	//reverse(all(a2));
-	//reverse(all(b2));
-	FOR(i,0,n) {
-		m1[a2[i].s]=i;
-		m2[b2[i].s]=i;
-	}
-	vl c(n);
-	vl ans;
-	FOR(i,0,n){
-		c[a2[i].s]=min(a)
-	}
-	return ans;
-
+vl solve(vl &a,vpl &queries,ll k) {
+	ll n=a.size(),q=queries.size();
+	
 }
 
 int main() {
@@ -254,17 +170,14 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,q;
-		cin>>n>>q;
+		ll n,k,q;
+		cin>>n>>k>>q;
 		vl a(n);
 		each(e,a)cin>>e;
-		vl b(n);
-		each(e,b)cin>>e;
-        vpl queries(q);
-		each(e,queries){cin>>e.f>>e.s;e.s--;}
-		auto x =solve(a,b,queries);
-		each(e,x)cout<<e<<" ";
-		cout<<"\n";
+		vpl queries(q);
+		each(e,queries) cin>>e.f>>e.s;
+		auto x=solve(a,queries,k);
+		each(e,x) cout<<e<<"\n";
     }
     RAYA;
     RAYA;
