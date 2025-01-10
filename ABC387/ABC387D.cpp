@@ -155,91 +155,91 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-str solve(ll n) {
-	auto query=[&](str &t){
-		cout << "? " << t << endl;
-		cout.flush();
-		ll response;
-		cin >> response;
-		cout.flush();
-		if(response==-1) exit(0);
-		return response;
+struct state{
+	ll x,y,lastDirection,steps;
+};
+vl dx={1,-1,0,0};
+vl dy={0,0,1,-1};
+ll solve(vector<vector<char>> &a) {
+	ll h=a.size(),w=a[0].size();
+	auto isValid=[&](ll x,ll y){
+		return x>=0 && x<h && y>=0 &&y<w;
 	};
-	str act="";
-	while(act.size()<n){
-		/*if(act.size()==n-1){
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
+	ll xStart,yStart,xGoal,yGoal;
+	FOR(i,0,h){
+		FOR(j,0,w){
+			if(a[i][j]=='S'){
+				xStart=i;
+				yStart=j;
 			}
-			else{
-				str con0=act+"0";
-				act=con0;
-			}
-		}*/
-		//else{
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0=act+"0";
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					break;
-				}
-			}
-		//}
-		
-	}
-	while(act.size()<n){
-		if(act.size()==n-1){
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0="0"+act;
-				act=con0;
+			if(a[i][j]=='G'){
+				xGoal=i;
+				yGoal=j;
 			}
 		}
-		else{
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
+	}
+	
+	dbg(xStart,yStart,xGoal,yGoal);
+	auto get=[&](state inicio)->ll{
+		queue<state> q;
+		vector<vector<vl>> dis(h,vector<vl>(w,vl(4,BIG)));
+		
+		//dbg(inicio.x,inicio.y,inicio.lastDirection,inicio.steps);
+		FOR(j,0,4){
+			dis[inicio.x][inicio.y][j]=0;
+			inicio.lastDirection=j;
+			q.push(inicio);
+		}
+			
+		ll answer=BIG;
+		while(q.size()){
+			state act=q.front();
+			q.pop();
+			//dbg(act.x,act.y,act.lastDirection,act.steps);
+			if(act.x==xGoal && act.y==yGoal){
+				ckmin(answer,act.steps);
+				continue;
 			}
-			else{
-				str con0="0"+act;
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					assert(false);
+			ll lim1=0,lim2=2;
+			if(act.lastDirection<=1){
+				lim1=2;
+				lim2=4;
+			}
+			FOR(i,lim1,lim2){
+				ll newX=act.x+dx[i],newY=act.y+dy[i];
+				if(!isValid(newX,newY))continue;
+				if((a[newX][newY]=='.') || (a[newX][newY]=='G')){
+					ll newSteps=act.steps+1;
+					if(dis[newX][newY][i]>newSteps){
+						dis[newX][newY][i]=newSteps;
+						q.push({newX,newY,i,newSteps});
+					}
 				}
 			}
 		}
-		
-	}
-	return act;
+		if(answer==BIG)return -1;
+		return answer;
+	};
+	ll res=get({xStart,yStart,0,0});
+	ckmax(res,get({xStart,yStart,2,0}));
+	return res;
 }
 
 int main() {
-    //cin.tie(0)->sync_with_stdio(0);
+    cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		cout.flush();
-		auto x=solve(n);
-        cout<<"! "<<x<<endl;
+		ll h,w;
+		cin>>h>>w;
+		vector<vector<char>> a(h,vector<char>(w));
+		each(e,a)each(e2,e)cin>>e2;
+		//dbg(a);
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
