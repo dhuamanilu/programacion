@@ -156,14 +156,22 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
-
+ll solve(vl &a,ll k) {
+	ll n=a.size();
+	map<ll,ll> m;
+	each(e,a)m[e]++;
+	set<pl> m2;	
+	each(e,m){
+		m2.insert({e.s,e.f});
 	}
-	
+	while(m2.size() > 0){
+		pl x=*m2.begin();
+		if(x.f>k)break;
+		k-=x.f;
+		m2.erase(m2.begin());
+		
+	}
+	return max(1ll,(ll)m2.size());
 }
 
 int main() {
@@ -175,14 +183,12 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
 		each(e,a)cin>>e;
 
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
-		cout<<"\n";
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;
