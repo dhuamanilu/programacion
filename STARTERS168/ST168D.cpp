@@ -156,78 +156,13 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(ll n) {
-	auto query=[&](str &t){
-		cout << "? " << t << endl;
-		cout.flush();
-		ll response;
-		cin >> response;
-		cout.flush();
-		if(response==-1) exit(0);
-		return response;
-	};
-	str act="";
-	while(act.size()<n){
-		/*if(act.size()==n-1){
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0=act+"0";
-				act=con0;
-			}
-		}*/
-		//else{
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0=act+"0";
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					break;
-				}
-			}
-		//}
-		
-	}
-	while(act.size()<n){
-		if(act.size()==n-1){
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0="0"+act;
-				act=con0;
-			}
-		}
-		else{
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0="0"+act;
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					assert(false);
-				}
-			}
-		}
-		
-	}
-	return act;
+ll solve(vl &a) {
+	ll n=a.size();
+	return 0;
 }
 
 int main() {
-    //cin.tie(0)->sync_with_stdio(0);
+    cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
     cin >> t;
@@ -237,9 +172,10 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		cout.flush();
-		auto x=solve(n);
-        cout<<"! "<<x<<endl;
+		vl a(n);
+		each(e,a)cin>>e;
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

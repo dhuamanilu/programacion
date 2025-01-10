@@ -156,90 +156,54 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-str solve(ll n) {
-	auto query=[&](str &t){
-		cout << "? " << t << endl;
-		cout.flush();
-		ll response;
-		cin >> response;
-		cout.flush();
-		if(response==-1) exit(0);
-		return response;
-	};
-	str act="";
-	while(act.size()<n){
-		/*if(act.size()==n-1){
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0=act+"0";
-				act=con0;
-			}
-		}*/
-		//else{
-			str con1=act+"1";
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0=act+"0";
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					break;
-				}
-			}
-		//}
-		
-	}
-	while(act.size()<n){
-		if(act.size()==n-1){
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0="0"+act;
-				act=con0;
+vpl solve(vl &a) {
+	ll n=a.size();
+	map<pl,ll> seen;
+	vpl res;
+	vl b(n,0);
+	iota(all(b),1ll);
+	FOR(i,0,n){
+		dbg(i,a,b);
+		if(a[i]!=b[i]){
+			ll j=i;
+			while(j<n && a[i]!=b[j]) j++;
+			dbg(i,j,"k ira desde j hasta > i");
+			for(ll k=j;k>i;k--){
+				res.pb({b[k],b[k-1]});
+				assert(!seen.count({b[k],b[k-1]}));
+				seen[{b[k],b[k-1]}]=1;
+				swap(b[k],b[k-1]);
 			}
 		}
-		else{
-			str con1="1"+act;
-			if(query(con1)==1){
-				act=con1;
-			}
-			else{
-				str con0="0"+act;
-				if(query(con0)==1){
-					act=con0;
-				}
-				else{
-					assert(false);
-				}
-			}
-		}
+	} 
+	FOR(i,0,n-1){
 		
+		if(!seen.count({b[i+1],b[i]}) && !seen.count({b[i],b[i+1]})){
+			res.pb({b[i+1],b[i]});
+			res.pb({b[i],b[i+1]});
+			seen[{b[i+1],b[i]}]=1;
+			seen[{b[i],b[i+1]}]=1;
+		}
 	}
-	return act;
+	return res;
 }
 
 int main() {
-    //cin.tie(0)->sync_with_stdio(0);
+    cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		cout.flush();
-		auto x=solve(n);
-        cout<<"! "<<x<<endl;
+		vl a(n);
+		each(e,a)cin>>e;
+		auto x=solve(a);
+		cout<<x.size()<<"\n";
+		each(e,x) cout<<e.f<<" "<<e.s<<"\n";
     }
     RAYA;
     RAYA;
