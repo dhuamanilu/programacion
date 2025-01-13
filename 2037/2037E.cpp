@@ -172,19 +172,37 @@ void solve(ll n) {
 	FOR(i,0,n-1){
 		pref.pb(ask(1,i+2));
 	}
-	if(pref[0]==0){
+	pref.insert(pref.begin(),0);
+	if(pref[n-1]==0){
 		guess("IMPOSSIBLE");
 		return;
 	}
 	else{
-		str ans="01";
-		FOR(i,1,n-1){
-			if(pref[i]==pref[i-1]){
-				ans+="0";
+		ll last=-1,valueLast=0;
+		str ans(n,'0');
+		FOR(i,0,n){
+			if(pref[i]!=valueLast){
+				ans[i]='1';
+				dbg(i);
+				ll cant=pref[i]-2*valueLast;
+				dbg(cant);
+				dbg(i-1,i-cant);
+				for(ll j=i-1;j>=i-cant;j--){
+					ans[j]='0';
+				}
+				dbg(i-cant-1,last);
+				for(ll j=i-cant-1;j>last;j--){
+					ans[j]='1';
+				}
+				last=i;
+				valueLast=pref[i];
+				dbg(last,valueLast);
 			}
-			else ans+="1";
 		}
+		dbg(ans);
+		//each(e,ans)assert(e!='?');
 		guess(ans);
+		return;
 	}
 }
 
