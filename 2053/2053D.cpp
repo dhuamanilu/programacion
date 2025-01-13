@@ -222,7 +222,7 @@ void genComb(int SZ) {
 }
 vl solve(vl &a,vl &b,vpl &queries) {
 	ll n=a.size();
-	map<ll,ll> m1,m2;
+	map<ll,ll> m2;
 	vpl a2,b2;
 	FOR(i,0,n) {
 		a2.pb({a[i],i});
@@ -233,11 +233,27 @@ vl solve(vl &a,vl &b,vpl &queries) {
 	reverse(all(a2));
 	reverse(all(b2));
 	FOR(i,0,n) {
-		m1[a2[i].s]=i;
 		m2[b2[i].s]=i;
 	}
-	vl c(n),d(n);
+	vl c(n);
 	ll i1=0,j1=n-1;
+	FOR(i,0,n){
+		c[i] = min(a2[i1].f,b2[j1].f);
+	}
+	mi xd=mi(1);
+	each(e,c){
+		xd*=mi(e);
+	}
+	vl ans={xd.v};
+	each(e,queries){
+		if(e.f==1){
+			
+		}
+		else{
+
+		}
+	}
+	return ans;
 
 }
 
