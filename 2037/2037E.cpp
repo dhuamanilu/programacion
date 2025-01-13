@@ -178,17 +178,18 @@ void solve(ll n) {
 		return;
 	}
 	else{
-		ll last=-1,valueLast=0;
+		ll last=-1,valueLast=0,zeros=0;
 		str ans(n,'0');
 		FOR(i,0,n){
 			if(pref[i]!=valueLast){
 				ans[i]='1';
 				dbg(i);
-				ll cant=pref[i]-2*valueLast;
+				ll cant=pref[i]-valueLast-zeros;
 				dbg(cant);
 				dbg(i-1,i-cant);
 				for(ll j=i-1;j>=i-cant;j--){
 					ans[j]='0';
+					zeros++;
 				}
 				dbg(i-cant-1,last);
 				for(ll j=i-cant-1;j>last;j--){
