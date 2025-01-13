@@ -265,7 +265,7 @@ int main() {
     
     cin >> t;
 	const int N=10000000000;
-	while(1){
+	while(0){
         ll l=rng_ll(1,N);
         ll r=rng_ll(l,N);
         ll g=rng_ll(1,N);

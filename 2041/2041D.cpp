@@ -155,34 +155,70 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
+struct State {
+    int row, col, last_dir, steps_in_dir, steps_total;
+    State(int r, int c, int ld, int sd, int st) : row(r), col(c), last_dir(ld), steps_in_dir(sd), steps_total(st) {}
+};
+ll solve(vector<vector<char>> &a) {
+	ll n=a.size(),m=a[0].size();
+    pl start,end;
+    FOR(r,0,n) {
+        FOR(c,0,m) {
+            if (a[r][c] == 'S') start = {r, c};
+            if (a[r][c] == 'T') end = {r, c};
+        }
+    }
+	queue<State> q;
+	vector<vector<vector<vl>>> dp(n,vector<vector<vl>>(m,vector<vl>(4,vl(4,-1))));	
+	State inicial={start.f,start.s,-1,0,0};
+	q.push(inicial);
+	//0 derecha 1 izquierda 2 arriba 3 abajo
+	vl dx={1,-1,0,0};
+	vl dy={0,0,1,-1};
+	auto isValid=[&](ll x,ll y){
+		return x>=0 && x < n && y>=0 && y<m;  
+	};
+	while(!q.empty()){
+		auto act=q.front();
+		q.pop();
+		ll x=act.row,y=act.col;
+		if(x==end.f && y==end.s) return act.steps_total;
+		FOR(it,0,4){
+			ll newX=x + dx[it], newY=y + dy[it];
+			if(isValid(newX,newY)){
+				if(a[newX][newY]!='#'){
+					ll cuantos=((act.last_dir == it) ? act.steps_in_dir + 1: 1ll); 
+					if(cuantos<=3){
+						if(dp[newX][newY][it][cuantos] != -1 && (dp[newX][newY][it][cuantos]  <= act.steps_total + 1)) continue;
+						dp[newX][newY][it][cuantos] = act.steps_total + 1;
+						q.push(State(newX,newY,it,cuantos,act.steps_total + 1));
+					}
+				}
+			}
+		}
 
 	}
-	
+	return -1;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
-		each(e,a)cin>>e;
-
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
-		cout<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vector<vector<char>> a(n,vector<char> (m));
+		each(e,a){
+			each(e2,e){
+				cin>>e2;
+			}
+		}
+		cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

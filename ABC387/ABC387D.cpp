@@ -155,34 +155,91 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
-
+struct state{
+	ll x,y,lastDirection,steps;
+};
+vl dx={1,-1,0,0};
+vl dy={0,0,1,-1};
+ll solve(vector<vector<char>> &a) {
+	ll h=a.size(),w=a[0].size();
+	auto isValid=[&](ll x,ll y){
+		return x>=0 && x<h && y>=0 &&y<w;
+	};
+	ll xStart,yStart,xGoal,yGoal;
+	FOR(i,0,h){
+		FOR(j,0,w){
+			if(a[i][j]=='S'){
+				xStart=i;
+				yStart=j;
+			}
+			if(a[i][j]=='G'){
+				xGoal=i;
+				yGoal=j;
+			}
+		}
 	}
 	
+	dbg(xStart,yStart,xGoal,yGoal);
+	auto get=[&](state inicio)->ll{
+		queue<state> q;
+		vector<vector<vl>> dis(h,vector<vl>(w,vl(4,BIG)));
+		
+		//dbg(inicio.x,inicio.y,inicio.lastDirection,inicio.steps);
+		FOR(j,0,4){
+			dis[inicio.x][inicio.y][j]=0;
+			inicio.lastDirection=j;
+			q.push(inicio);
+		}
+			
+		ll answer=BIG;
+		while(q.size()){
+			state act=q.front();
+			q.pop();
+			//dbg(act.x,act.y,act.lastDirection,act.steps);
+			if(act.x==xGoal && act.y==yGoal){
+				ckmin(answer,act.steps);
+				continue;
+			}
+			ll lim1=0,lim2=2;
+			if(act.lastDirection<=1){
+				lim1=2;
+				lim2=4;
+			}
+			FOR(i,lim1,lim2){
+				ll newX=act.x+dx[i],newY=act.y+dy[i];
+				if(!isValid(newX,newY))continue;
+				if((a[newX][newY]=='.') || (a[newX][newY]=='G')){
+					ll newSteps=act.steps+1;
+					if(dis[newX][newY][i]>newSteps){
+						dis[newX][newY][i]=newSteps;
+						q.push({newX,newY,i,newSteps});
+					}
+				}
+			}
+		}
+		if(answer==BIG)return -1;
+		return answer;
+	};
+	ll res=get({xStart,yStart,0,0});
+	ckmax(res,get({xStart,yStart,2,0}));
+	return res;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
-		each(e,a)cin>>e;
-
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
-		cout<<"\n";
+		ll h,w;
+		cin>>h>>w;
+		vector<vector<char>> a(h,vector<char>(w));
+		each(e,a)each(e2,e)cin>>e2;
+		//dbg(a);
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

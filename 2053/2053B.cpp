@@ -155,15 +155,64 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+/**
+ * Author: Lucian Bicsi
+ * Date: 2017-10-31
+ * License: CC0
+ * Source: folklore
+ * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
+ * Can be changed by modifying T, f and unit.
+ * Time: O(\log N)
+ * Status: stress-tested
+ */
+#pragma once
 
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
-
+struct Tree {
+	typedef long long T;
+	static constexpr T unit = 0;
+	T f(T a, T b) { return a + b; } // (any associative fn)
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
 	}
-	
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
+str solve(vpl &a) {
+	ll n=a.size();
+	Tree st((2*n)+1);
+	map<ll,ll> m;
+	FOR(i,0,n){
+		ll l=a[i].f,r=a[i].s;
+		if(l==r){
+			st.update(l,1);
+			m[l]++;
+		} 
+	}
+	str res="";
+	FOR(i,0,n){
+		ll l=a[i].f,r=a[i].s,len=r-l+1;
+		ll val=st.query(l,r+1);
+		dbg(i,val,l,r);
+		if(l==r){
+			if(m[l]==1) res+="1";
+			else res+="0";
+		}
+		else{
+			if(val<len)res+="1";
+			else res+="0";
+		}
+		
+	}
+	return res;
 }
 
 int main() {
@@ -175,14 +224,12 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
-		each(e,a)cin>>e;
+		ll n;
+		cin>>n;
+		vpl a(n);
+		each(e,a)cin>>e.f>>e.s;
 
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
-		cout<<"\n";
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

@@ -163,10 +163,24 @@ ll solve(vs &a,ll m) {
     string narek="narek";
     map<char,ll> xd;
     each(e,narek)xd[e]++;
-	FOR(i,0,n){
+    {
+         ll it2=0,scorec2=0,scoren2=0;
+        FOR(k,0,m){
+            if(!xd.count(a[0][k])) continue;
+            if(a[0][k]==narek[it2]){
+                if(it2==4){
+                    scoren2+=5;
+                    it2=0;
+                }
+                else it2++;
+            }  
+            else scorec2++;     
+        }
+        if(it2!=0) scorec2+=it2;
+        dp[0][(it2-1+5)%5]=max(0ll,scoren2-scorec2);
+    }
+	FOR(i,1,n){
 		FOR(j,0,5){
-			if(i==0 && j!=4) continue;
-			//procesar o no procesar
             ll it=(j+1)%5,scorec=0,scoren=0;
             FOR(k,0,m){
                 if(!xd.count(a[i][k])) continue;
@@ -179,12 +193,17 @@ ll solve(vs &a,ll m) {
                 }  
                 else scorec++;     
             }
-			ll ant=(i>=1 ? dp[i-1][j]:-BIG);
-			//if(ant!=-BIG)
-            	dp[i][j]=max(ant,scoren-scorec + ant);
+            ckmax(dp[i][j],dp[i-1][j]);
+            if(it!=0) scorec+=it;
+            if(j==4){
+                dp[i][(it-1+5)%5]=max(dp[i][(it-1+5)%5],scoren-scorec);
+            }
+            if(dp[i-1][j]==-BIG)continue;
+			dp[i][(it-1+5)%5]=max(dp[i-1][j],scoren-scorec + dp[i-1][j]);
 		}
 	}
     ll ans=-BIG;
+    dbg(dp);
     FOR(i,0,5) ckmax(ans,dp[n-1][i]);
     return ans;
 	

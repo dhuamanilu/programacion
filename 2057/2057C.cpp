@@ -155,15 +155,71 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
-
+vl brute(ll l,ll r){
+	vl ans;
+	ll xoMax=0;
+	FOR(i,l,r+1){
+		FOR(j,i+1,r+1){
+			FOR(k,j+1,r+1){
+				/*if(i==55 && j==63 && k==64){
+					dbg(i^j,j^k,i^k,i,j,k,(i^j)+ (j^k) + (i^k) , xoMax);
+				}*/
+				if(((i^j)+ (j^k) + (i^k)) > xoMax){
+					xoMax=(i^j)+ (j^k) + (i^k);
+					ans={i,j,k};
+				}
+			}
+		}
 	}
-	
+	return ans;
+}
+vl solve(ll l,ll r) {
+	ll pot=1;
+	while(pot*2<=r)pot*=2;
+	if(pot > l){
+		vl ans={pot,pot-1};
+		FOR(i,l,r+1){
+			if(i==pot  || i==pot-1)continue;
+			ans.pb(i);
+			break;
+		}
+		each(e,ans)assert(e>=l && e<=r);
+		return ans;
+	}
+	else{
+		
+		auto get=[&](ll num1){
+			ll num2=0;
+			for(ll i=60;i>=0;i--){
+				if((num2+(1ll<<i)-1) < l ){
+					num2+=(1ll<<i);
+				}
+				else{
+					//tengo la opcion
+					if(num2+(1ll<<i) <= r){
+						if(num1&(1ll<<i)){
+							
+						}
+						else num2+=(1ll<<i);
+					}
+				}
+
+			}
+			vl ans={num1,num2};
+			FOR(i,l,r+1){
+				if(i==num1 || i==num2)continue;
+				ans.pb(i);
+				each(e,ans)assert(e>=l && e<=r);
+				return ans;
+			}
+		};
+		auto get1=get(r);
+		auto get2=get(l);
+		ll xo1=(get1[0]^get1[1])  + (get1[1]^get1[2]) + (get1[0]^get1[2]);
+		ll xo2=(get2[0]^get2[1])  + (get2[1]^get2[2])+ (get2[0]^get2[2]);
+		if(xo1>xo2)return get1;
+		else return get2;
+	}	
 }
 
 int main() {
@@ -171,17 +227,28 @@ int main() {
 
     int t = 1;
     cin >> t;
-
-    for(int idx = 0; idx < t; idx++) {
+	while(0){
+		ll l=rng_ll(1,98);
+		ll r=rng_ll(l+2,100);
+		auto x=solve(l,r);
+		auto y=brute(l,r);
+		ll xo1=(x[0]^x[1])  + (x[1]^x[2]) + (x[0]^x[2]);
+		ll xo2=(y[0]^y[1])  + (y[1]^y[2])+ (y[0]^y[2]);
+		if(xo1!=xo2){
+			dbg(l,r);
+			dbg(xo1,xo2);
+			dbg(x,y);
+			assert(0);
+		}
+		else dbg("ok");
+	}
+	for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
-		each(e,a)cin>>e;
-
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
+		ll l,r;
+		cin>>l>>r;
+        auto x = solve(l,r);
+		each(e,x)cout<<e<<" ";
 		cout<<"\n";
     }
     RAYA;

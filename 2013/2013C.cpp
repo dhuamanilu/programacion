@@ -156,7 +156,6 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-//https://github.com/Rockbet/Problems/blob/master/IOI/2016/Day%200/Martian%20DNA.cpp
 str solve(ll n) {
 	auto query=[&](str &t){
 		cout << "? " << t << endl;
@@ -167,67 +166,64 @@ str solve(ll n) {
 		if(response==-1) exit(0);
 		return response;
 	};
-	/*str xd="1";
-	if(!query(xd)){
-		str res(n,'0');
-		return  res;
-	}*/
-	ll s=1,e=n,m=s+(e-s)/2;
-	str longest = "";
-	while(s<=e){
-		m=s+(e-s)/2;
-		//dbg(s,e,m);
-		str cand(m, '1'); 
-        if (query(cand)) {
-            longest=cand; 
-            s=m+1;             
-        } else {
-            e=m-1;            
-        }
+	str act="";
+	while(act.size()<n){
+		/*if(act.size()==n-1){
+			str con1=act+"1";
+			if(query(con1)==1){
+				act=con1;
+			}
+			else{
+				str con0=act+"0";
+				act=con0;
+			}
+		}*/
+		//else{
+			str con1=act+"1";
+			if(query(con1)==1){
+				act=con1;
+			}
+			else{
+				str con0=act+"0";
+				if(query(con0)==1){
+					act=con0;
+				}
+				else{
+					break;
+				}
+			}
+		//}
+		
 	}
-	str password=longest;
-	ll ptr=longest.size();
-	while(true){
-		if(ptr > longest.size() || password.size()>=n) break;
-		str act=password+"0";
-		if(query(act)){
-			password+="0";
-			ptr=0;
+	while(act.size()<n){
+		if(act.size()==n-1){
+			str con1="1"+act;
+			if(query(con1)==1){
+				act=con1;
+			}
+			else{
+				str con0="0"+act;
+				act=con0;
+			}
 		}
 		else{
-			password+="1";
-			ptr++;
+			str con1="1"+act;
+			if(query(con1)==1){
+				act=con1;
+			}
+			else{
+				str con0="0"+act;
+				if(query(con0)==1){
+					act=con0;
+				}
+				else{
+					assert(false);
+				}
+			}
 		}
+		
 	}
-	s=password.size()-ptr;
-	e=password.size();
-	ll guarda=0;
-	auto query2=[&](ll x,str& aux){
-    	str s=aux.substr(0, x);
-    	return query(s);
-	};
-	while(s<=e){
-		m=s+(e-s)/2;
-        if (query2(m,password)) {
-            guarda = m; 
-            s=m+1;             
-        } else {
-            e=m-1;            
-        }
-	}
-
-	deque<char> ans;
-    FOR(i,0,guarda)ans.pb(password[i]);
-    while (ans.size() < n) {
-        ans.push_front('1');
-        string aux(ans.begin(), ans.end());
-        if (!query(aux)) {
-            ans.pop_front();
-            ans.push_front('0');
-        }
-    }
-    string true_ans(ans.begin(), ans.end());
-    return true_ans;
+	return act;
 }
 
 int main() {

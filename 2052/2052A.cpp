@@ -83,153 +83,127 @@ using vpd = V<pd>;
 #define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
 #define R0F(i,a) ROF(i,0,a)
 #define rep(a) F0R(_,a)
-#define each(a,x) for (auto& a: x)                                                                                                                                                                                                                                                                                              
-ll solve(vector<vl> &a) {
-	ll n=a.size(),m=a[0].size();
-	vl dx={-1,1,0,0};
-	vl dy={0,0,1,-1};
-	auto isValid=[&](ll x,ll y){
-		return x>=0 && x<n && y>=0 && y<m;
-	};
-	vector<vl> bad(n,vl(m,0));
-	vector<vl> vis(n,vl(m,0));
-	//0 no procesado 1 siginifica que si estoy en un (bucle) 2 escape
-	FOR(i,0,n){
-		FOR(j,0,m){
-			if(a[i][j]==4){
-				FOR(k,0,4){
-					ll newX=i+dx[k],newY=j+dy[k];
-					if(isValid(newX,newY) && a[newX][newY]==4){
-						bad[i][j]=1;
-						break;
-					}
-				}
-			}
-			
-		}
-	}
-	
-	FOR(i,0,n){
-		FOR(j,0,m){
-			if(a[i][j]==4 || vis[i][j]) continue;
-			ll x=i,y=j;
-			map<pl,ll> path;
-			while(!path.count({x,y})){
-				vis[x][y]=1;
-				path[{x,y}]=1;
-				if(a[x][y]==0){
-					x--;
-				}
-				else if(a[x][y]==1){
-					x++;
-				}
-				else if(a[x][y]==2){
-					y--;
-				}
-				else if(a[x][y]==3){
-					y++;
-				}
-				else{
-					//bucle
-					path[{x,y}]=1;
-					each(e,path){
-						bad[e.f.f][e.f.s]=1;
-					}
-					break;
-				}
-				if(!isValid(x,y)){
-					//escape
-					dbg("no es valido",x,y,path);
-					each(e,path){
-						bad[e.f.f][e.f.s]=2;
-					}
-					break;
-				}
-				else{
-					if(vis[x][y]){
-						dbg(bad);
-						if(bad[x][y]<=1){
-							path[{x,y}]=1;
-							each(e,path){
-								bad[e.f.f][e.f.s]=1;
-							}
-							break;
-						}
-						else{
-							//escape
-							path[{x,y}]=1;
-							each(e,path){
-								bad[e.f.f][e.f.s]=2;
-							}
-							break;
-						}
-						
-					}
-				}
+#define each(a,x) for (auto& a: x)
 
-			}
 
-		}
-	}
+
+const int MOD = 1e9+7;
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const db PI = acos((db)-1);
+mt19937 rng(0); // or mt19937_64
+
+
+
+ll cdiv(ll a, ll b) {
+	return a / b + ((a ^ b) > 0 && a % b);
+}  // divide a by b rounded up
+ll fdiv(ll a, ll b) {
+	return a / b - ((a ^ b) < 0 && a % b);
+}  // divide a by b rounded down
+
+tcT> bool ckmin(T& a, const T& b) {
+	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
+tcT> bool ckmax(T& a, const T& b) {
+	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
+
+tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
+	sort(all(v));
+	v.erase(unique(all(v)), end(v));
+}
+tcTU > void safeErase(T &t, const U &u) {
+	auto it = t.find(u);
+	assert(it != end(t));
+	t.erase(it);
+}
+
+
+
+inline namespace FileIO {
+void setIn(str s) { freopen(s.c_str(), "r", stdin); }
+void setOut(str s) { freopen(s.c_str(), "w", stdout); }
+void setIO(str s = "") {
+	cin.tie(0)->sync_with_stdio(0);  // unsync C / C++ I/O streams
+	//? cout << fixed << setprecision(12);
+    //? cerr << fixed << setprecision(12);
+	cin.exceptions(cin.failbit);
+	// throws exception when do smth illegal
+	// ex. try to read letter into int
+	if (sz(s)) setIn(s + ".in"), setOut(s + ".out");  // for old USACO
+}
+}  // namespace FileIO
+
+
+
+//? Custom Helpers
+template <typename T>
+inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
+
+long long binpow(long long a, long long b) {
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+//? /Custom Helpers
+//? Generator
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Generator
+
+vpl solve(vl &a) {
+	ll n=a.size();
+	map<pl,ll> seen;
+	vpl res;
+	vl b(n,0);
+	iota(all(b),1ll);
 	FOR(i,0,n){
-		FOR(j,0,m){
-			if(a[i][j]==4){
-				bool ok=false;
-				FOR(k,0,4){
-					ll newX=i+dx[k],newY=j+dy[k];
-					if(isValid(newX,newY) && bad[newX][newY]==1){
-						bad[i][j]=1;
-						ok=true;
-						break;
-					}
-				}
-				if(!ok){
-					bad[i][j]=2;
-				}
+		dbg(i,a,b);
+		if(a[i]!=b[i]){
+			ll j=i;
+			while(j<n && a[i]!=b[j]) j++;
+			dbg(i,j,"k ira desde j hasta > i");
+			for(ll k=j;k>i;k--){
+				res.pb({b[k],b[k-1]});
+				assert(!seen.count({b[k],b[k-1]}));
+				seen[{b[k],b[k-1]}]=1;
+				swap(b[k],b[k-1]);
 			}
 		}
-	}
-	ll cont=0;
-	each(e,bad)dbg(e);
-	FOR(i,0,n){
-		FOR(j,0,m){
-			assert(bad[i][j]!=0);
-			if(bad[i][j]==1){
-				cont++;
-			}
+	} 
+	FOR(i,0,n-1){
+		
+		if(!seen.count({b[i+1],b[i]}) && !seen.count({b[i],b[i+1]})){
+			res.pb({b[i+1],b[i]});
+			res.pb({b[i],b[i+1]});
+			seen[{b[i+1],b[i]}]=1;
+			seen[{b[i],b[i+1]}]=1;
 		}
 	}
-	return cont;
+	return res;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
-		vector<vl> a(n,vl(m,0));
-		each(e,a){
-			str s;
-			cin>>s;
-			FOR(j,0,m){
-				if(s[j]=='U')
-					e[j]=0;
-				else if(s[j]=='D')
-					e[j]=1;
-				else if(s[j]=='L')
-					e[j]=2;	
-				else if(s[j]=='R')
-					e[j]=3;	
-				else e[j]=4;
-			}
-		}
-        cout<<solve(a)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a)cin>>e;
+		auto x=solve(a);
+		cout<<x.size()<<"\n";
+		each(e,x) cout<<e.f<<" "<<e.s<<"\n";
     }
     RAYA;
     RAYA;
@@ -241,3 +215,11 @@ int main() {
         cerr << "\033[42m++++++++++++++++++++\033[0m";
     #endif
 }
+
+
+
+
+
+
+
+

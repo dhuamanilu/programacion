@@ -1,7 +1,7 @@
-//? #pragma GCC optimize ("Ofast")
+//#pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
-//#undef _GLIBCXX_DEBUG //? for Stress Testing
+#pragma GCC optimize ("trapv")
+#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef LOCAL
@@ -138,13 +138,13 @@ void setIO(str s = "") {
 template <typename T>
 inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
 
-long long binpow(long long a, long long b) {
-    long long res = 1;
+__int128 binpow(__int128 a, __int128 b) {
+    __int128 res = 1;
     while (b > 0) {
         if (b & 1)
             res = res * a;
         a = a * a;
-        b >>= 1;
+        b /= 2;
     }
     return res;
 }
@@ -154,35 +154,141 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
+//https://www.geeksforgeeks.org/convert-a-number-from-base-a-to-base-b/
+__int128 val(char c){
+    if (c >= '0' && c <= '9')
+        return (__int128)c - '0';
+    else
+        return (__int128)c - 'A' + __int128(10);
+}
 
-vl solve(vl &a,ll n,ll m) {
-	ll q=a.size();
-	set<ll> pos;
-	pos.insert(m);
-	FOR(i,0,q){
 
-	}
-	
+__int128 toDeci(string str, __int128 base){
+
+    __int128 len = str.size();
+    __int128 power = 1;
+    __int128 num = 0;
+    for (__int128 i = len - 1; i >= 0; i--) {
+        if (val(str[i]) >= base) {
+            //printf("Invalid Number");
+            return -1;
+        }
+ 
+        // Update num
+        num += val(str[i]) * power;
+ 
+        // Update power
+        power = power * base;
+    }
+ 
+    return num;
+}
+
+char reVal(__int128 num){
+    if (num >= 0 && num <= 9)
+        return (char)(num + '0');
+    else
+        return (char)(num - 10 + 'A');
+}
+__int128 atoint128_t(std::string const & in)
+{
+    __int128 res = 0;
+    size_t i = 0;
+    bool sign = false;
+
+    if (in[i] == '-')
+    {
+        ++i;
+        sign = true;
+    }
+
+    if (in[i] == '+')
+    {
+        ++i;
+    }
+
+    for (; i < in.size(); ++i)
+    {
+        const char c = in[i];
+        if (not std::isdigit(c)) 
+            throw std::runtime_error(std::string("Non-numeric character: ") + c);
+        res *= 10;
+        res += c - '0';
+    }
+
+    if (sign)
+    {
+        res *= -1;
+    }
+
+    return res;
+}
+string fromDeci(__int128 base,__int128 inputNum){
+    string res = "";
+    while (inputNum > 0) {
+        res += reVal(inputNum % base);
+        inputNum /= base;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+str convertBase(string &s, __int128 a, __int128 b){
+    __int128 num = toDeci(s, a);
+    string ans = fromDeci(b, num);
+    return ans;
+}
+ll solve(ll l,ll r) {
+    auto sum=[&](__int128 x,__int128 lim){
+        __int128 suma=0;
+        FOR(i,1,lim){
+            suma+=binpow(i,x);
+        }
+        return suma;
+    };
+    auto get=[&](ll x)->__int128{
+        if(x<10)return 0;
+        __int128 res=0,cont=1,guarda=0;
+        for(__int128 i=10;i*10<=x;i*=10){
+            res+=sum(cont,10);
+            cont++;
+        }
+        str xd=ts(x);
+        __int128 base=xd[0]-'0';
+        res+=sum(cont,base);
+        str num="";
+        FOR(i,1,sz(xd)){
+            if(xd[i]-'0' < base){
+                num+=xd[i];
+            }
+            else{
+                FOR(j,i,sz(xd)){
+                    num+=('0'+ base -1);
+                }
+                break;
+            }
+        }   
+        res+=atoint128_t(convertBase(num,base,10)) + __int128(1);
+        return res;
+    };
+    auto xd=get(r)-get(l-1);
+    dbg((ll)(get(r)), (ll)(get(l-1)));
+    dbg('k'-'a','p'-'a');
+    return (long long)(xd);
+    
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n,m,q;
-		cin>>n>>m>>q;
-		vl a(q);
-		each(e,a)cin>>e;
-
-        auto xd =solve(a,n,m);
-		eack(e,xd)cout<<e<<" ";
-		cout<<"\n";
+		ll l,r;
+		cin>>l>>r;
+        cout<<solve(l,r)<<"\n";
     }
     RAYA;
     RAYA;
