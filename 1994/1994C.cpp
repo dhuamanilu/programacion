@@ -156,70 +156,41 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vpl solve(vl &a) {
+ll solve(vl &a,ll x) {
 	ll n=a.size();
-	vector<set<ll>> pos(3);
-	FOR(i,0,n) pos[a[i]].insert(i);
-	ll tam=pos[0].size()+pos[1].size()+pos[2].size();
-	vpl oper;
-	while(pos[0].size()>0 && *(prev(pos[0].end())) >= pos[0].size() ){
-		while(pos[2].size()>0 && *(pos[2].begin()) < pos[0].size()){
-			ll posde1=*(prev(pos[1].end()));
-			ll posde2=*(pos[2].begin());
-			if(posde1>=pos[0].size()){
-				oper.pb({posde2+1,posde1+1});
-				pos[1].erase(posde1);
-				pos[1].insert(posde2);
-				pos[2].erase(posde2);
-				pos[2].insert(posde1);
-				assert(tam==pos[0].size()+pos[1].size()+pos[2].size());
-				assert(oper.size()<=n);
-			}
-			else{
-				while(posde1 < pos[0].size()){
-					ll de1=*(prev(pos[1].end()));
-					ll de0=*(prev(pos[0].end()));
-					oper.pb({de1+1,de0+1});
-					pos[0].erase(de0);
-					pos[0].insert(de1);
-					pos[1].erase(de1);
-					pos[1].insert(de0);
-					assert(oper.size()<=n);
-					posde1=*(prev(pos[1].end()));
-				}
-			}
-			
-		}
-		assert(oper.size()<=n);
-		while(pos[1].size()>0 && *(pos[1].begin()) < pos[0].size()){
-			ll posde0=*(prev(pos[0].end()));
-			ll posde1=*(pos[1].begin());
-			oper.pb({posde1+1,posde0+1});
-			pos[1].erase(posde1);
-			pos[1].insert(posde0);
-			pos[0].erase(posde0);
-			pos[0].insert(posde1);
-			assert(tam==pos[0].size()+pos[1].size()+pos[2].size());
-			assert(oper.size()<=n);
-		}
-		assert(oper.size()<=n);
+	vl dp(n,0);
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+a[i];
 	}
-	assert(oper.size()<=n);
-	while((pos[2].size()>0) && 
-	( *(pos[2].begin()) <  (pos[0].size() + pos[1].size()) ) ){
-		ll posde2=*(pos[2].begin());
-		ll posde1=*(prev(pos[1].end()));
-		oper.pb({posde2+1,posde1+1});
-		pos[1].erase(posde1);	
-		pos[1].insert(posde2);
-		pos[2].erase(posde2);
-		pos[2].insert(posde1);
-		assert(tam==pos[0].size()+pos[1].size()+pos[2].size());
-		assert(oper.size()<=n);
+	auto query=[&](ll l,ll r){
+		if(l==0)return pref[r];
+		return pref[r]-pref[l-1];
+	};
+	ll ans=0;
+	for(ll i=n-1;i>=0;i--){
+		ll s=i,e=n-1,m=s+(e-s)/2 , guarda=-1;
+		while(s<=e){
+			m=s+(e-s)/2;
+			ll sum=query(i,m);
+			if(sum>x){
+				guarda=m;
+				e=m-1;
+			}
+			else s=m+1;
+		}
+		if(guarda==-1){
+			dp[i]=0;
+		}
+		else if(guarda==i){
+			dp[i]=1+dp[guarda];
+		}
+		else dp[i]=dp[guarda];
+		dbg(i,guarda,dp[i],n-i-dp[i]);
+		ans+=n-i-dp[i];
 	}
-	assert(tam==pos[0].size()+pos[1].size()+pos[2].size());
-	assert(oper.size()<=n);
-	return oper;
+	return ans;
 }
 
 int main() {
@@ -231,15 +202,11 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
+		ll n,x;
+		cin>>n>>x;
 		vl a(n);
 		each(e,a)cin>>e;
-        auto x = solve(a);
-		cout<<x.size()<<"\n";
-		each(e,x){
-			cout<<e.f<<" "<<e.s<<"\n";
-		}
+        cout<<solve(a,x)<<"\n";
     }
     RAYA;
     RAYA;
