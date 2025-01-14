@@ -156,56 +156,196 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vl suffixMin(n,0);
-	suffixMin[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffixMin[i]=min(suffixMin[i+1],a[i]);
-	}
-	vl res;
-	multiset<ll> chosen;
-	FOR(i,0,n){
-		if(chosen.size()){
-			ll mini=*chosen.begin();
-			if(mini + 1 < suffixMin[i]){
-				FOR(j,i,n){
-					chosen.insert(a[j]);
-				}
-				break;
-			}
-			
-		}
-		if(a[i]<=suffixMin[i]){
-			res.pb(a[i]);
-		}
-		else{
-			chosen.insert(a[i]);
-		}
-	}
-	dbg(res,chosen);
-	each(e,chosen){
-		res.pb(e+1);
-	}
-	return res;
+pair<str,vector<pair<str,ll>>> solve(vpl &steps,pl &source,pl &destination) {
+    
+	ll n=steps.size();
+    // (a , b)
+    vpl suff(n, {0, 0});
+    // 0 norte 1 este  2 sur  3 oeste
+    vl abs(n,-1);
+    ll act=0;
+    FOR(i,0,n){
+        if(steps[i].f==0){
+            act=(act-1+4)%4;
+        }
+        else if(steps[i].f==1){
+            act=(act+1)%4;
+        }
+        else if(steps[i].f==3){
+            if(act==0){
+                act=2;
+            }
+            else if(act==1){
+                act=3;
+            }
+            else if(act==2){
+                act=0;
+            }
+            else if(act==3){
+                act=1;
+            }
+        }
+        abs[i]=act;
+    }
+    for(ll i=n-2;i>=0;i--){
+        auto [a,b]=suff[i+1];
+        ll absDirection=abs[i],xd=abs[i+1];
+        a+=steps[i+1].s;
+        pl dir={0ll,0ll};
+        if(xd==0){
+            dir={b,a};
+        }
+        else if(xd==1){
+            dir={a,-b};
+        }
+        else if(xd==2){
+            dir={-b,-a};
+        }
+        else{
+            dir={-a,b};
+        }
+        auto [x,y]=dir;
+        if(absDirection==0){
+            suff[i]={y,x};
+        }
+        else if(absDirection==1){
+            suff[i]={x,-y};
+        }
+        else if(absDirection==2){
+            suff[i]={-y,-x};
+        }
+        else{
+            suff[i]={-x,y};
+        }
+    }
+    dbg(suff);
+    dbg(abs);
+    ll actX=source.f,actY=source.s;
+    ll dirAct=0;
+    FOR(i,0,n){
+        FOR(k,0,4){
+            //if(k==steps[i].f) continue;
+            ll x=actX,y=actY;
+            ll newDir;
+            if(k==0){
+                newDir=(dirAct-1+4)%4;
+            }
+            else if(k==1){
+                newDir=(dirAct+1)%4;
+            }
+            else if(k==3){
+                if(dirAct==0){
+                    newDir=2;
+                }
+                else if(dirAct==1){
+                    newDir=3;
+                }
+                else if(dirAct==2){
+                    newDir=0;
+                }
+                else if(dirAct==3){
+                    newDir=1;
+                }
+            }
+            auto [a,b]=suff[i];
+            if(newDir==0){
+                y+=steps[i].s;
+                y+=a;
+                x+=b;
+            }
+            else if(newDir==1){
+                x+=steps[i].s;
+                x+=a;
+                y-=b;
+            }
+            else if(newDir==2){
+                y-=steps[i].s;
+                y-=a;
+                x-=b;
+            }
+            else{
+                x-=steps[i].s;
+                x-=a;
+                y+=b;
+            }
+            str enstring;
+            if(k==0) enstring="left";
+            else if(k==1) enstring="right";
+            else if(k==2) enstring="straight";
+            else enstring="back";
+
+            str enstring2;
+            if(steps[i].f==0) enstring2="left";
+            else if(steps[i].f==1) enstring2="right";
+            else if(steps[i].f==2) enstring2="straight";
+            else enstring2="back";
+            if(x==destination.f && y==destination.s){
+                vector<pair<str,ll>> res;
+                res.pb({enstring2,steps[i].s});
+                res.pb({enstring,steps[i].s});
+                return {"YES",res};
+            }
+
+        }
+        
+        dirAct=abs[i];
+        if(dirAct==0){
+            actY+=steps[i].s;
+        }
+        else if(dirAct==1){
+            actX+=steps[i].s;
+        }
+        else if(dirAct==2){
+            actY-=steps[i].s;
+        }
+        else{
+            actX-=steps[i].s;
+        }
+    }
+    return {"NO",{}};
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		vpl a(n);
+		each(e,a){
+            str direction;
+            cin>>direction;
+            if(direction == "left"){
+                e.f = 0;
+            }
+            else if(direction == "right"){
+                e.f = 1;
+            }
+            else if(direction == "straight"){
+                e.f = 2;
+            }
+            else if(direction == "back"){
+                e.f = 3;
+            }
+            cin>>e.s;
+        }
+        pl source,destination;
+        cin>>source.f>>source.s>>destination.f>>destination.s;
+        auto xd=solve(a,source,destination);
+        if(xd.f=="NO"){
+            cout<<xd.f<<"\n";
+        }
+        else{
+            cout<<xd.f<<"\n";
+            for(auto e:xd.s){
+                cout<<e.f<<" "<<e.s<<"\n";
+            }
+        }
     }
     RAYA;
     RAYA;

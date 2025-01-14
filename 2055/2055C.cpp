@@ -156,36 +156,106 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vl suffixMin(n,0);
-	suffixMin[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffixMin[i]=min(suffixMin[i+1],a[i]);
-	}
-	vl res;
-	multiset<ll> chosen;
-	FOR(i,0,n){
-		if(chosen.size()){
-			ll mini=*chosen.begin();
-			if(mini + 1 < suffixMin[i]){
-				FOR(j,i,n){
-					chosen.insert(a[j]);
-				}
-				break;
-			}
-			
-		}
-		if(a[i]<=suffixMin[i]){
-			res.pb(a[i]);
+vector<vl> solve(vector<vl> &a,str &s) {
+	ll n=a.size(),m=a[0].size();
+	vector<vector<bool>> isPath(n,vector<bool>(m,false));
+	ll x=0,y=0;
+	vpl path;
+	FOR(i,0,(ll)s.size()){
+		isPath[x][y]=true;
+		path.pb({x,y});
+		if(s[i]=='D'){
+			x++;
 		}
 		else{
-			chosen.insert(a[i]);
+			y++;
 		}
 	}
-	dbg(res,chosen);
-	each(e,chosen){
-		res.pb(e+1);
+	vl sumFila(n,0);
+	FOR(i,0,n){
+		FOR(j,0,m){
+			sumFila[i]+=a[i][j];
+		}
+	}
+	
+	vl sumCol(m,0);
+	FOR(j,0,m){
+		FOR(i,0,n){
+			sumCol[j]+=a[i][j];
+		}
+	}
+	vector<vl> res=a;
+	if(n==m){
+		res[0][0]=0;
+		ll sum=0;
+		dbg("gola");
+		if(s[0]=='D'){
+			FOR(j,0,m){
+				sum+=a[0][j];
+			}
+		}
+		else{
+			FOR(i,0,n){
+				sum+=a[i][0];
+			}
+		}
+		ll actX=0,actY=0;
+		FOR(i,0,(ll)s.size()){
+			assert(actX<n && actY<m);
+			dbg(actX,actY);
+			if(s[i]=='D'){
+				res[actX][actY]=sum-sumFila[actX];
+				sumCol[actY]+=res[actX][actY];
+			}
+			else{
+				res[actX][actY]=sum-sumCol[actY];
+				sumFila[actX]+=res[actX][actY];
+			}
+			if(s[i]=='D'){
+				actX++;
+			}
+			else{
+				actY++;
+			}
+		}
+		dbg("final",actX,actY);
+		if(s.back()=='D'){
+			res[actX][actY]=sum-sumCol[actY];
+		}
+		else{
+			res[actX][actY]=sum-sumFila[actX];
+		}
+
+		
+	}
+	else{
+		//suma cero
+		
+		
+		ll actX=0,actY=0;
+		FOR(i,0,(ll)s.size()){
+			if(s[i]=='D'){
+				res[actX][actY]=-sumFila[actX];
+				sumCol[actY]+=res[actX][actY];
+			}
+			else{
+				res[actX][actY]=-sumCol[actY];
+				sumFila[actX]+=res[actX][actY];
+			}
+			if(s[i]=='D'){
+				actX++;
+			}
+			else{
+				actY++;
+			}
+		}
+		if(s.back()=='D'){
+			res[actX][actY]=-sumCol[actY];
+		}
+		else{
+			res[actX][actY]=-sumFila[actX];
+		}
+
 	}
 	return res;
 }
@@ -199,13 +269,24 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		str s;
+		cin>>s;
+		vector<vl> a(n,vl(m,0));
+		each(e,a){
+			each(e2,e){
+				cin>>e2;
+			}
+		}
+		auto x=solve(a,s);
+		each(e,x){
+			each(e2,e){
+				cout<<e2<<" ";
+			}
+			cout<<"\n";
+		}
+
     }
     RAYA;
     RAYA;

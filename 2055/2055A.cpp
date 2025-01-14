@@ -156,38 +156,12 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vl suffixMin(n,0);
-	suffixMin[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffixMin[i]=min(suffixMin[i+1],a[i]);
+str solve(ll n,ll a,ll b) {
+	ll dist=abs(a-b);
+	if(dist%2==1){
+		return "NO";
 	}
-	vl res;
-	multiset<ll> chosen;
-	FOR(i,0,n){
-		if(chosen.size()){
-			ll mini=*chosen.begin();
-			if(mini + 1 < suffixMin[i]){
-				FOR(j,i,n){
-					chosen.insert(a[j]);
-				}
-				break;
-			}
-			
-		}
-		if(a[i]<=suffixMin[i]){
-			res.pb(a[i]);
-		}
-		else{
-			chosen.insert(a[i]);
-		}
-	}
-	dbg(res,chosen);
-	each(e,chosen){
-		res.pb(e+1);
-	}
-	return res;
+	else return "YES";
 }
 
 int main() {
@@ -199,13 +173,9 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		ll n,a,b;
+		cin>>n>>a>>b;
+        cout<<solve(n,a,b)<<"\n";
     }
     RAYA;
     RAYA;

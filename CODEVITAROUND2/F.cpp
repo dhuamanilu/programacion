@@ -155,57 +155,129 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+struct Cell3D {
+    int ell, y, x;
+};
+const map<char, tuple<int,int,int>> moveDelta {
+    {'u', {0, -1,  0}},
+    {'d', {0, +1,  0}},
+    {'f', {+1, 0,  0}},
+    {'b', {-1, 0,  0}},
+    {'r', {0,  0, +1}},
+    {'l', {0,  0, -1}}
+};
+vector<Cell3D> buildBand(int S, int startEll, int startY, int startX, const string &seq) {
+    vector<Cell3D> path;
+    path.push_back({startEll, startY, startX}); 
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vl suffixMin(n,0);
-	suffixMin[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffixMin[i]=min(suffixMin[i+1],a[i]);
-	}
-	vl res;
-	multiset<ll> chosen;
-	FOR(i,0,n){
-		if(chosen.size()){
-			ll mini=*chosen.begin();
-			if(mini + 1 < suffixMin[i]){
-				FOR(j,i,n){
-					chosen.insert(a[j]);
-				}
-				break;
-			}
-			
-		}
-		if(a[i]<=suffixMin[i]){
-			res.pb(a[i]);
-		}
-		else{
-			chosen.insert(a[i]);
-		}
-	}
-	dbg(res,chosen);
-	each(e,chosen){
-		res.pb(e+1);
-	}
-	return res;
+    int curEll = startEll, curY = startY, curX = startX;
+    for (char c : seq) {
+        auto [de, dy, dx] = moveDelta.at(c);
+        curEll += de;
+        curY   += dy;
+        curX   += dx;
+        path.push_back({curEll, curY, curX});
+    }
+    if (!path.empty() && path.front().ell == path.back().ell &&
+                         path.front().y   == path.back().y   &&
+                         path.front().x   == path.back().x) {
+        path.pop_back();
+    }
+
+    return path;
 }
+bool areLinked(vector<Cell3D> &band1, vector<Cell3D> &band2) {
+    int minE1=INT_MAX, maxE1=INT_MIN;
+    int minY1=INT_MAX, maxY1=INT_MIN;
+    int minX1=INT_MAX, maxX1=INT_MIN;
+
+    for (auto &c : band1) {
+        minE1 = min(minE1, c.ell);
+        maxE1 = max(maxE1, c.ell);
+        minY1 = min(minY1, c.y);
+        maxY1 = max(maxY1, c.y);
+        minX1 = min(minX1, c.x);
+        maxX1 = max(maxX1, c.x);
+    }
+    int minE2=INT_MAX, maxE2=INT_MIN;
+    int minY2=INT_MAX, maxY2=INT_MIN;
+    int minX2=INT_MAX, maxX2=INT_MIN;
+
+    for (auto &c : band2) {
+        minE2 = min(minE2, c.ell);
+        maxE2 = max(maxE2, c.ell);
+        minY2 = min(minY2, c.y);
+        maxY2 = max(maxY2, c.y);
+        minX2 = min(minX2, c.x);
+        maxX2 = max(maxX2, c.x);
+    }
+    bool noOverlapEll = (maxE1 < minE2) || (maxE2 < minE1);
+    bool noOverlapY   = (maxY1 < minY2) || (maxY2 < minY1);
+    bool noOverlapX   = (maxX1 < minX2) || (maxX2 < minX1);
+    if (noOverlapEll || noOverlapY || noOverlapX) {
+        return false; 
+    }
+    return true; 
+}
+
+int countAbove(const vector<Cell3D> &A, const vector<Cell3D> &B) {
+    unordered_map<long long, vector<int>> bMap; 
+    bMap.reserve(B.size());
+
+    auto pack = [&](int e, int x) {
+        return (long long)e * 10000 + (long long)x;
+    };
+
+    for (auto &c : B) {
+        long long key = pack(c.ell, c.x);
+        bMap[key].push_back(c.y);
+    }
+    for (auto &kv : bMap) {
+        auto &v = kv.second;
+        sort(v.begin(), v.end());
+    }
+
+    int result = 0;
+
+    for (auto &cellA : A) {
+        long long key = pack(cellA.ell, cellA.x);
+        if (!bMap.count(key)) continue;
+        auto &ys = bMap[key];
+        auto it = upper_bound(ys.begin(), ys.end(), cellA.y);
+        result += (int)(ys.end() - it);
+    }
+    return result;
+}
+
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		int s; 
+        cin >> s;
+        int e1, y1, x1;
+        cin >> e1 >> y1 >> x1;
+        str seq1;
+        cin >> seq1;
+        vector<Cell3D> band1 = buildBand(s, e1, y1, x1, seq1);
+        int e2, y2, x2;
+        cin >> e2 >> y2 >> x2;
+        str seq2;
+        cin >> seq2;
+        vector<Cell3D> band2 = buildBand(s, e2, y2, x2, seq2);
+        if (areLinked(band1, band2)) {
+            cout << "Impossible\n";
+            return 0;
+        }
+        int above1 = countAbove(band1, band2); 
+        int above2 = countAbove(band2, band1); 
+        cout << max(above1, above2) << "\n";
     }
     RAYA;
     RAYA;

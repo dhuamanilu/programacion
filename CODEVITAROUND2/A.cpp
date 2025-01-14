@@ -156,56 +156,74 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
 
-vl solve(vl &a) {
-	ll n=a.size();
-	vl suffixMin(n,0);
-	suffixMin[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffixMin[i]=min(suffixMin[i+1],a[i]);
-	}
-	vl res;
-	multiset<ll> chosen;
-	FOR(i,0,n){
-		if(chosen.size()){
-			ll mini=*chosen.begin();
-			if(mini + 1 < suffixMin[i]){
-				FOR(j,i,n){
-					chosen.insert(a[j]);
-				}
-				break;
-			}
-			
-		}
-		if(a[i]<=suffixMin[i]){
-			res.pb(a[i]);
-		}
-		else{
-			chosen.insert(a[i]);
-		}
-	}
-	dbg(res,chosen);
-	each(e,chosen){
-		res.pb(e+1);
-	}
-	return res;
+ll solve(vpl &dots) {
+	sor(dots);
+
+    map<ll, vl> mp; 
+    for (auto [x, y] : dots) {
+        mp[x].push_back(y);
+    }
+
+    ll m = sz(mp);
+
+    vector<pair<ll,vl>> inf(m);
+    ll cur = 0;
+    for (auto& [a, b] : mp) {
+        inf[cur].first = a;
+        inf[cur].second = b;
+        cur++;
+    }
+
+    dbg(dots);
+    dbg(mp);
+    dbg(inf);
+    vd dp(m, BIG);
+
+
+    dp[0] = 0;
+    FOR(i,0,m) {
+        ll a = 1e9;
+        ll b = 1;
+
+        pl po = {inf[i].f, inf[i].s.front()};
+        FOR(j,i + 1,m) {
+            pl po2 = {inf[j].f, inf[j].s.front()};
+
+            ll a2 = po2.s - po.s;
+            ll b2 = po2.f - po.f ;
+
+            if (a * b2 > b * a2) {
+                //dbg(i, j);
+                dp[j] = min(dp[j], dp[i] + sqrtl(pow(po2.second - po.second, 2) + pow(po2.first - po.first, 2)));
+
+                a = a2;
+                b = b2;
+            }
+        }
+    }
+
+    db res = dp[m - 1] + inf[0].s.back() - inf[0].s.front() + inf[m - 1].s.back() - inf[m - 1].s.front();
+    //dbg(res);
+
+    return round(res);
+
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
     int t = 1;
-    cin >> t;
+    //cin >> t;
 
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		each(e,x) cout<<e<<" ";
-        cout<<"\n";
+		vpl a(n);
+		each(e,a)cin>>e.f>>e.s;
+
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

@@ -162,6 +162,13 @@ vpl solve(vl &a) {
 	vpl res;
 	vl b(n,0);
 	iota(all(b),1ll);
+	reverse(all(b));
+	for(ll i=n;i>=1;i--){
+		for(ll j=i-1;j>=1;j--){
+			seen[{i,j}]=1;
+			res.pb({i,j});
+		}
+	}
 	FOR(i,0,n){
 		dbg(i,a,b);
 		if(a[i]!=b[i]){
@@ -176,15 +183,6 @@ vpl solve(vl &a) {
 			}
 		}
 	} 
-	FOR(i,0,n-1){
-		
-		if(!seen.count({b[i+1],b[i]}) && !seen.count({b[i],b[i+1]})){
-			res.pb({b[i+1],b[i]});
-			res.pb({b[i],b[i+1]});
-			seen[{b[i+1],b[i]}]=1;
-			seen[{b[i],b[i+1]}]=1;
-		}
-	}
 	return res;
 }
 

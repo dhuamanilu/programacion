@@ -162,24 +162,27 @@ vl solve(vl &a,vl &b) {
 	ll rank=a[0];
 	a.erase(a.begin());
 	sor(a);
-	ll cant=upper_bound(all(b),rank)- b.begin();
-	vl puesto(b);
+	vl cant;
 	FOR(i,0,m){
-		puesto[i]= n -1 - (lower_bound(all(a),b[i])-a.begin());
-	}
-	dbg(a,b,rank,cant,puesto);
-	vl c;
-	FOR(i,1,m+1){
-		ll cuantos=cant/i,act=cuantos;
-		dbg(cuantos);
-		for(ll j=(cuantos*i);(j+i)<=m;j+=i){
-			dbg(act,j,puesto[j]);
-			act+=1+puesto[j];
+		if(rank >= b[i]){
+			cant.pb(0);
 		}
-		c.pb(act);
-		
+		else{
+			ll puesto=n-1-(ll)(lower_bound(all(a),b[i])-a.begin());
+			cant.pb(puesto);
+		}
 	}
-	return c;
+	sor(cant);
+	dbg(cant);
+	vl res;
+	FOR(i,0,m){
+		ll sum=0;
+		for(ll j=i;j<m;j+=i+1){
+			sum+=1+cant[j];
+		}
+		res.pb(sum);
+	}
+	return res;
 }
 
 int main() {
