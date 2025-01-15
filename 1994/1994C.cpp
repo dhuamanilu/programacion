@@ -183,10 +183,9 @@ ll solve(vl &a,ll x) {
 		if(guarda==-1){
 			dp[i]=0;
 		}
-		else if(guarda==i){
-			dp[i]=1+(i+1 < n ? dp[i+1] : 0ll);
+		else{
+			dp[i]=1+((guarda+1<n) ? dp[guarda+1] : 0ll);
 		}
-		else dp[i]=1+dp[guarda];
 		dbg(i,guarda,dp[i],n-i-dp[i]);
 		ans+=n-i-dp[i];
 	}
