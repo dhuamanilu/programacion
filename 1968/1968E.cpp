@@ -175,9 +175,8 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
-    ll n=a.size();
-	return 0;
+void solve() {
+    //? <>
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -192,16 +191,11 @@ int main() {
         RAYA;
     }
 
-    int t = 1;
-	cin >> t;
+    int t = 1; //! cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        solve();
     }
     RAYA;
     RAYA;
