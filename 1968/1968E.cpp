@@ -175,8 +175,36 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-void solve() {
-    //? <>
+vpl solve(ll n) {
+    vpl a;
+    a.pb({1,1});
+    auto isInside=[&](ll x, ll y) {
+        return 1 <= x && x <= n && 1 <= y && y <= n;
+    };
+    FOR(dist,n,2*n){
+        if(dist%2==0){
+            FOR(i,0,dist+1){
+                ll newX=1+i;
+                ll newY=1 + dist-i;
+                if(isInside(newX,newY)){
+                    a.pb({newX,newY});
+                    break;
+                }
+            }
+        }
+        else{
+            for(ll i=dist;i>=0;i--){
+                ll newX=1+i;
+                ll newY=1 + dist-i;
+                if(isInside(newX,newY)){
+                    a.pb({newX,newY});
+                    break;
+                }
+            }
+        }
+    }
+
+    return a;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -191,11 +219,18 @@ int main() {
         RAYA;
     }
 
-    int t = 1; //! cin >> t;
+    int t = 1;
+    cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-        solve();
+        ll n;
+        cin >> n;
+        auto x = solve(n);
+        each(e,x){
+            cout << e.f << " " << e.s << '\n';
+        }
+
     }
     RAYA;
     RAYA;
