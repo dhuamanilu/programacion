@@ -177,7 +177,14 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
     ll n=a.size();
-	return 0;
+	vl cont(2,0);
+    each(e,a)cont[e%2]++;
+    if(cont[0]>0){
+        return cont[1]+1;
+    }
+    else{
+        return cont[1]-1;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }

@@ -175,9 +175,61 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
+vl solve(vl &a) {
     ll n=a.size();
-	return 0;
+	map<ll,ll> m;
+    each(e,a)m[e]++;
+    ll maxi=0;
+    each(e,m)ckmax(maxi,e.s);
+    vl xd;
+    if(maxi>=4){
+        each(e,m){
+            if(e.s>=4){
+                xd.pb(e.f);
+                xd.pb(e.f);
+                xd.pb(e.f);
+                xd.pb(e.f);
+                break;
+            }
+        }
+        return xd;
+    }
+    else if(maxi<2){
+        xd.pb(-1);
+        return xd;
+    }
+    else{
+        ll cual;
+        each(e,m){
+            if(e.s>=2){
+                cual=e.f;
+                break;
+            }
+        }
+        vl b;
+        FOR(i,0,n){
+            if(a[i]==cual){
+                continue;
+            }
+            b.pb(a[i]);
+        }
+        FOR(i,0,m[cual]-2){
+            b.pb(cual);
+        }
+        sor(b);
+        FOR(i,1,(ll)b.size()){
+            if(b[i-1]> b[i]-2*cual){
+                xd.pb(cual);
+                xd.pb(cual);
+                xd.pb(b[i-1]);
+                xd.pb(b[i]);
+                return xd;
+            }
+        }
+        xd.pb(-1);
+        return xd;
+    }
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -201,7 +253,9 @@ int main() {
 		cin>>n;
 		vl a(n);
 		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        auto x = solve(a);
+        each(e,x)cout<<e<<" ";
+        cout<<"\n";
     }
     RAYA;
     RAYA;

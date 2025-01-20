@@ -175,9 +175,34 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
-    ll n=a.size();
-	return 0;
+str solve(vl &a,vl &b) {
+    ll n=a.size(),m=b.size();
+	multiset<ll> s1,s2;
+    each(e,a)s1.insert(e);
+    each(e,b)s2.insert(e);
+    FOR(i,0,n-m){
+        auto maxi=(prev(s2.end()));
+        if(*maxi==1)break;
+        auto encontrar=s1.find(*maxi);
+        if(encontrar!=s1.end() && (ll)s2.size()>1){
+            s1.erase(encontrar);
+            s2.erase(maxi);
+            i--;
+            continue;
+        }
+        else{
+            ll cant=*maxi;
+            ll cant1=cdiv(cant,2),cant2=fdiv(cant,2);
+            s2.insert(cant1);
+            s2.insert(cant2);
+            s2.erase(maxi);
+        }
+        
+    }
+    if(s1==s2){
+        return "YES";
+    }
+    else return "NO";
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -197,11 +222,13 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
+		ll n,m;
+		cin>>n>>m;
 		vl a(n);
 		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        vl b(m);
+        each(e,b) cin>>e;
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;
