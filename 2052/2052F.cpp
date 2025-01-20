@@ -1,54 +1,62 @@
-//? #pragma GCC optimize ("Ofast")
+//* sometimes pragmas don't work, if so, just comment it!
+#pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
-//#undef _GLIBCXX_DEBUG //? for Stress Testing
+
+//! #undef _GLIBCXX_DEBUG //? for Stress Testing
+
 #include <bits/stdc++.h>
 using namespace std;
+
+
+
 #ifdef LOCAL
-#include "../debugICPC.h"
-#define chk(...) if (!(__VA_ARGS__)) cerr << "\033[41m" << "Line(" << __LINE__ << ") -> function(" \
-	 << __FUNCTION__  << ") -> CHK FAILED: (" << #__VA_ARGS__ << ")" << "\033[0m" << "\n", exit(0);
-
-#define MACRO(code) do {code} while (false)
-#define RAYA MACRO(cerr << "\033[101m" << "================================" << "\033[0m" << endl;)
+    #include "debug.h"
 #else
-#define dbg(...)
+    #define dbg(...)     0
+    #define chk(...)     0
 
-#define chk(...)
-#define RAYA
+    #define RAYA         0
 #endif
 
+
+
 const auto beg_time = std::chrono::high_resolution_clock::now();
-// https://stackoverflow.com/questions/47980498/accurate-c-c-clock-on-a-multi-core-processor-with-auto-overclock?noredirect=1&lq=1
-double time_elapsed() {
-	return chrono::duration<double>(std::chrono::high_resolution_clock::now() -
-	                                beg_time)
-	    .count();
-}
+double time_elapsed() { return chrono::duration<double>(std::chrono::high_resolution_clock::now() - beg_time) .count(); }
+
+
 
 // building blocks
 using ll  = long long;
-using db  = long double; // or double, if TL is tight
-using str = string;      // yay python!
+using db  = long double;
+using str = string;
+
 //? priority_queue for minimum
 template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
+
 using ull  = unsigned long long;
 //? using i64  = long long;
 //? using u64  = uint64_t;
 //? using i128 = __int128;
 //? using u128 = __uint128_t;
 //? using f128 = __float128;
+
+
+
 // pairs
 using pi = pair<int, int>;
 using pl = pair<ll, ll>;
 using pd = pair<db, db>;
+
 #define mp make_pair
-#define f first
-#define s second
+#define f  first
+#define s  second
+
+
 
 #define tcT template <class T
 #define tcTU tcT, class U
-//! ^ lol this makes everything look weird but I'll try it
+
 tcT > using V = vector<T>;
 tcT, size_t SZ > using AR = array<T, SZ>;
 using vi = V<int>;
@@ -59,6 +67,12 @@ using vs = V<str>;
 using vpi = V<pi>;
 using vpl = V<pl>;
 using vpd = V<pd>;
+
+using vvi = V<vi>;
+using vvl = V<vl>;
+using vvb = V<vb>;
+
+
 
 // vectors
 // oops size(x), rbegin(x), rend(x) need C++17
@@ -75,22 +89,18 @@ using vpd = V<pd>;
 #define bk back()
 #define ts to_string
 
+#define lb lower_bound
+#define ub upper_bound
+
 
 
 // loops
-#define FOR(i,a,b) for (int i = (a); i < (b); ++i)
-#define F0R(i,a) FOR(i,0,a)
-#define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
-#define R0F(i,a) ROF(i,0,a)
-#define rep(a) F0R(_,a)
-#define each(a,x) for (auto& a: x)
-
-
-
-const int MOD = 1e9+7;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
-const db PI = acos((db)-1);
-mt19937 rng(0); // or mt19937_64
+#define FOR(i, a, b) for (int i = (a); i < (b); ++i)
+#define F0R(i, a) FOR(i, 0, a)
+#define ROF(i, a, b) for (int i = (b)-1; i >= (a); --i)
+#define R0F(i, a) ROF(i, 0, a)
+#define rep(a) F0R(_, a)
+#define each(a, x) for (auto &a : x)
 
 
 
@@ -101,10 +111,12 @@ ll fdiv(ll a, ll b) {
 	return a / b - ((a ^ b) < 0 && a % b);
 }  // divide a by b rounded down
 
-tcT> bool ckmin(T& a, const T& b) {
-	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
-tcT> bool ckmax(T& a, const T& b) {
-	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
+tcT > bool ckmin(T &a, const T &b) {
+	return b < a ? a = b, 1 : 0;
+}  // set a = min(a,b)
+tcT > bool ckmax(T &a, const T &b) {
+	return a < b ? a = b, 1 : 0;
+}  // set a = max(a,b)
 
 tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
 	sort(all(v));
@@ -115,22 +127,6 @@ tcTU > void safeErase(T &t, const U &u) {
 	assert(it != end(t));
 	t.erase(it);
 }
-
-
-
-inline namespace FileIO {
-void setIn(str s) { freopen(s.c_str(), "r", stdin); }
-void setOut(str s) { freopen(s.c_str(), "w", stdout); }
-void setIO(str s = "") {
-	cin.tie(0)->sync_with_stdio(0);  // unsync C / C++ I/O streams
-	//? cout << fixed << setprecision(12);
-    //? cerr << fixed << setprecision(12);
-	cin.exceptions(cin.failbit);
-	// throws exception when do smth illegal
-	// ex. try to read letter into int
-	if (sz(s)) setIn(s + ".in"), setOut(s + ".out");  // for old USACO
-}
-}  // namespace FileIO
 
 
 
@@ -148,60 +144,142 @@ long long binpow(long long a, long long b) {
     }
     return res;
 }
-//? /Custom Helpers
-//? Generator
+
+//? __builtin_popcountll
+ll GetBit(ll mask, ll bit) { return (mask >> bit) & 1LL; }
+void TurnOn(ll& mask, ll bit) { mask = mask | (1LL << bit); }
+void TurnOff(ll& mask, ll bit) { mask = mask & (~(1LL << bit)); }
+
+const int dddx[8]{1, 0, -1,  0, 1,  1, -1, -1};
+const int dddy[8]{0, 1,  0, -1, 1, -1,  1, -1};
+
+using vvi = V<vi>;
+using vvl = V<vl>;
+using vvb = V<vb>;
+
+const int MOD = 1e9 + 7;
+const int MX = (int)2e5 + 5;
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const db PI = acos((db)-1);
+const int dx[4]{1, 0, -1, 0}, dy[4]{0, 1, 0, -1};  //? for every grid problem!!
+mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
+
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
+//? /Custom Helpers
 
-vpl solve(vl &a) {
-	ll n=a.size();
-	map<pl,ll> seen;
-	vpl res;
-	vl b(n,0);
-	iota(all(b),1ll);
-	reverse(all(b));
-	for(ll i=n;i>=1;i--){
-		for(ll j=i-1;j>=1;j--){
-			seen[{i,j}]=1;
-			res.pb({i,j});
+//? Template
+//? /Template
+
+
+
+str solve(vector<vector<char>> &a) {
+    ll n=a.size(),m=a[0].size();
+	auto isValid=[&](ll x,ll y){
+		return x>=0 && x<n && y>=0 && y<m;
+	};
+
+	FOR(i,0,n){
+		FOR(j,0,m){
+			if(a[i][j]=='#') continue;
+			ll tot=0,damaged=0;
+			FOR(k,0,4){
+				ll newX=i+dx[k],newY=j+dy[k];
+				if(isValid(newX,newY)){
+					tot++;
+					if(a[newX][newY]=='.') damaged++;
+				}
+			}
+			if(tot-damaged==(tot-1)){
+				FOR(k,0,4){
+					ll newX=i+dx[k],newY=j+dy[k];
+					if(isValid(newX,newY)){
+						if(a[newX][newY]=='.'){
+							//dbg("pondre aca",i,j,newX,newY);
+							a[i][j]='#';
+							a[newX][newY]='#';
+							break;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+	//dbg(a);
+	vector<vl> vis(n,vl(m,0));
+	ll tam=0;
+	auto dfs=[&](auto &&dfs,ll x,ll y)->void{
+		tam++;
+		vis[x][y]=true;
+		FOR(k,0,4){
+			ll newX=x+dx[k],newY=y+dy[k];
+			if(isValid(newX,newY) && !vis[newX][newY] && a[newX][newY]=='.'){
+				dfs(dfs,newX,newY);
+			}
+		}
+	};
+	FOR(i,0,n){
+		FOR(j,0,m){
+			if(a[i][j]=='.' && !vis[i][j]){
+				tam=0;
+				dfs(dfs,i,j);
+				if(tam%2==1) return "None";
+			}
 		}
 	}
 	FOR(i,0,n){
-		dbg(i,a,b);
-		if(a[i]!=b[i]){
-			ll j=i;
-			while(j<n && a[i]!=b[j]) j++;
-			dbg(i,j,"k ira desde j hasta > i");
-			for(ll k=j;k>i;k--){
-				res.pb({b[k],b[k-1]});
-				assert(!seen.count({b[k],b[k-1]}));
-				seen[{b[k],b[k-1]}]=1;
-				swap(b[k],b[k-1]);
+		FOR(j,0,m){
+			if((a[i][j]=='.') && (i+1<n && a[i+1][j]=='.' ) && (j+1<n && a[i][j+1]=='.') && (i+1<n && j+1 <n && a[i+1][j+1]=='.' )){
+				return "Multiple";
 			}
 		}
-	} 
-	return res;
+	}
+	return "Unique";
 }
 
+void setIn(str s) { freopen(s.c_str(), "r", stdin); }
+void setOut(str s) { freopen(s.c_str(), "w", stdout); }
+
 int main() {
-    cin.tie(0)->sync_with_stdio(0);
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+
+    //? Stress Testing
+    while(1) {
+		ll n=2,m=rng_ll(1,10);
+		vector<vector<char>> a(n,vector<char>(m));
+		ll damaged=0;
+		each(e,a){
+			each(e2,e){
+				ll xd=rng_int(0,1);
+				e2=xd?'.':'#';
+				if(e2=='.') damaged++;
+			}
+		}
+		auto res=solve(a);
+		if(res!="None" && damaged%2==1){
+			dbg("q fue xd",damaged,a,res);
+			assert(false);
+		}
+		else dbg("ok");
+        //RAYA;
+    }
 
     int t = 1;
-    //cin >> t;
-
-    for(int idx = 0; idx < t; idx++) {
+	cin >> t;
+    for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-		auto x=solve(a);
-		cout<<x.size()<<"\n";
-		each(e,x) cout<<e.f<<" "<<e.s<<"\n";
+		vector<vector<char>> a(2,vector<char>(n));
+		each(e,a){
+			each(e2,e) cin>>e2;
+		}
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
@@ -210,14 +288,6 @@ int main() {
         cerr << fixed << setprecision(5);
         cerr << "\033[42m++++++++++++++++++++\033[0m\n";
         cerr << "\033[42mtime = " << time_elapsed() << "ms\033[0m\n";
-        cerr << "\033[42m++++++++++++++++++++\033[0m";
+        cerr << "\033[42m++++++++++++++++++++\033[0m\n";
     #endif
 }
-
-
-
-
-
-
-
-
