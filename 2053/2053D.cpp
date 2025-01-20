@@ -87,7 +87,7 @@ using vpd = V<pd>;
 
 
 
-const int MOD = 1e9+7;
+const int MOD =998244353;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 mt19937 rng(0); // or mt19937_64
@@ -222,36 +222,42 @@ void genComb(int SZ) {
 }
 vl solve(vl &a,vl &b,vpl &queries) {
 	ll n=a.size();
-	map<ll,ll> m2;
-	vpl a2,b2;
-	FOR(i,0,n) {
-		a2.pb({a[i],i});
-		b2.pb({b[i],i});
+	vl a2=a,b2=b;
+	map<ll,ll> m1,m2;
+	FOR(i,0,n){
+		m1[i]=a2[i];
+		m2[i]=b2[i];
 	}
 	sort(all(a2));
 	sort(all(b2));
-	//reverse(all(a2));
-	//reverse(all(b2));
-	FOR(i,0,n) {
-		m2[b2[i].s]=i;
-	}
-	vl c(n);
-	ll i1=0,j1=n-1;
-	FOR(i,0,n){
-		c[i] = min(a2[i1].f,b2[j1].f);
-	}
+	
+	
 	mi xd=mi(1);
-	each(e,c){
-		xd*=mi(e);
+	FOR(i,0,n){
+		xd*=mi(min(a2[i],b2[i]));
 	}
 	vl ans={xd.v};
 	each(e,queries){
+		dbg(a2,b2);
+		ll idx=e.s;
+		mi resAct=ans.back();
 		if(e.f==1){
-			
+			ll act=m1[idx];
+			ll xd2 = upper_bound(all(a2),act)-a2.begin()-1;
+			resAct/=mi(min(act,b2[xd2]));
+			resAct*=mi(min(act+1,b2[xd2]));
+			m1[idx]=act+1;
+			a2[xd2]=act+1;
 		}
 		else{
-
+			ll act=m2[idx];
+			ll xd3 = upper_bound(all(b2),act)-b2.begin()-1;
+			resAct/=mi(min(a2[xd3],act));
+			resAct*=mi(min(a2[xd3],act+1));
+			m2[idx]=act+1;
+			b2[xd3]=act+1;
 		}
+		ans.pb(resAct.v);
 	}
 	return ans;
 
