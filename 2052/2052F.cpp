@@ -221,6 +221,13 @@ str solve(vector<vector<char>> &a) {
 			}
 		}
 	};
+	/*
+	1
+		8
+		..#.....
+		.....###
+	
+	*/
 	FOR(i,0,n){
 		FOR(j,0,m){
 			if(a[i][j]=='.' && !vis[i][j]){
@@ -248,7 +255,7 @@ int main() {
 	cin.tie(nullptr);
 
     //? Stress Testing
-    while(1) {
+    while(0) {
 		ll n=2,m=rng_ll(1,10);
 		vector<vector<char>> a(n,vector<char>(m));
 		ll damaged=0;
