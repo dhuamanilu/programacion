@@ -181,7 +181,7 @@ str solve(vector<vector<char>> &a) {
 		return x>=0 && x<n && y>=0 && y<m;
 	};
 
-	FOR(i,0,n){
+	/*FOR(i,0,n){
 		FOR(j,0,m){
 			if(a[i][j]=='#') continue;
 			ll tot=0,damaged=0;
@@ -207,16 +207,63 @@ str solve(vector<vector<char>> &a) {
 			}
 			
 		}
+	}*/
+	auto bfs=[&](ll x1,ll y1){
+		queue<pl> act;
+		act.push({x1,y1});
+		dbg("visitando",x1,y1);
+		while(!act.empty()){
+			auto xd=act.front();
+			act.pop();
+			ll x=xd.f,y=xd.s;
+			ll vec=0;
+			FOR(k,0,4){
+				ll newX=x+dx[k],newY=y+dy[k];
+				if(isValid(newX,newY) && a[newX][newY]=='.') vec++;
+			}
+			if(vec==1){
+				FOR(k,0,4){
+					ll newX=x+dx[k],newY=y+dy[k];
+					if(isValid(newX,newY) && a[newX][newY]=='.'){
+						a[x][y]='#';
+						a[newX][newY]='#';
+						x=newX;
+						y=newY;
+						break;
+					}
+				}
+
+				FOR(k,0,4){
+					ll newX=x+dx[k],newY=y+dy[k];
+					if(isValid(newX,newY) && a[newX][newY]=='.'){
+						act.push({newX,newY});
+					}
+				}
+			}
+		}
+	};
+	FOR(i,0,n){
+		FOR(j,0,m){
+			if(a[i][j]=='.'){
+				ll vec=0;
+				FOR(k,0,4){
+					ll newX=i+dx[k],newY=j+dy[k];
+					if(isValid(newX,newY) && a[newX][newY]=='.') vec++;
+				}
+				if(vec==1){
+					bfs(i,j);
+				}
+			}
+		}
 	}
-	//dbg(a);
-	vector<vl> vis(n,vl(m,0));
 	ll tam=0;
+	vector<vl> vis(n,vl(m,0));
 	auto dfs=[&](auto &&dfs,ll x,ll y)->void{
 		tam++;
 		vis[x][y]=true;
 		FOR(k,0,4){
 			ll newX=x+dx[k],newY=y+dy[k];
-			if(isValid(newX,newY) && !vis[newX][newY] && a[newX][newY]=='.'){
+			if(isValid(newX,newY) && !vis[newX][newY] &&  a[newX][newY]=='.'){
 				dfs(dfs,newX,newY);
 			}
 		}
@@ -230,7 +277,7 @@ str solve(vector<vector<char>> &a) {
 	*/
 	FOR(i,0,n){
 		FOR(j,0,m){
-			if(a[i][j]=='.' && !vis[i][j]){
+			if((a[i][j]=='.') && !vis[i][j]){
 				tam=0;
 				dfs(dfs,i,j);
 				if(tam%2==1) return "None";
