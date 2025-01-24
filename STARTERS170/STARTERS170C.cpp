@@ -206,7 +206,7 @@ ll solve(vl &a) {
     ll res=0,j=0;
     dbg(mex,j,posibleSum);
     ckmax(res,((mex+j)*(mex+j)) + posibleSum);
-    if(mex==0) return res;
+    //if(mex==0) return res;
     FOR(i,xd,tam){
         j++;
         posibleSum-=b[i];
