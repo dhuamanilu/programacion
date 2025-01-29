@@ -176,7 +176,20 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 str solve(ll h,ll w,ll xa,ll ya,ll xb,ll yb) {
-    
+    if(xb<xa)return "Draw";
+    ll distx=abs(xa-xb),disty=abs(ya-yb),espacio1=(ya<=yb ? w-yb : yb-1),espacio2=(ya<=yb ? ya-1 : w-ya);
+    //alice
+    dbg(distx,disty,espacio1,espacio2,distx/2);
+    ll newdist1=max(0ll,distx-2*espacio1);
+    ll newdist2=max(0ll,distx-2*espacio2);
+    dbg(disty,newdist1,newdist2);
+    if(distx%2==1 && (disty<=(1 + (newdist1/2)))){
+        return "Alice";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    }
+    else if(distx%2==0 && (disty<(1 + (newdist2/2)))){
+        return "Bob";
+    }
+    else return "Draw";
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
