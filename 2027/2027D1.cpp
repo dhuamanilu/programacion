@@ -175,45 +175,55 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
  
 
-str solve(vector<vector<char>> &a) {
-    ll n=a[0].size();
-	bool mult=false;
-	FOR(i,0,n){
-		dbg("estado de a antes de hacer la poeracion en i",i,a);
-		if(i+1<n && (a[0][i]=='.' && a[1][i]=='.') && (a[0][i+1]=='.' && a[1][i+1]=='.')){
-			mult=true;
-		}
-		if(a[0][i]=='#' && a[1][i]=='.'){
-			dbg("if1");
-			if(i+1>=n || a[1][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[1][i]='#';
-				a[1][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='#'){ 
-			dbg("if2",i+1,a[0][i+1]);
-			if(i+1<n)
-				dbg(".#",i+1,a[0][i+1]);
-			if(i+1>=n || a[0][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[0][i]='#';
-				a[0][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='.'){
-			dbg("if3");
-			a[0][i]='#';
-			a[1][i]='#';
-		}
-		dbg("despesu",i,a);
+ll solve(vl &a,vl &b) {
+    ll n=a.size(),tam=b.size();
+	vl suffMax(n,0);
+	suffMax[n-1]=a[n-1];
+	for(ll i=n-2;i>=0;i--){
+		suffMax[i]=max(suffMax[i+1],a[i]);
 	}
-	if(mult) return "Multiple";
-	else return "Unique";
+	if(b[0]<suffMax[0]) return -1;
+	ll ans=0,ptr=0;
+	vl pref(n,0);
+	pref[0]=a[0];
+	FOR(i,1,n){
+		pref[i]=pref[i-1]+a[i];
+	}
+	auto query=[&](ll l,ll r){
+		if(l==0) return pref[r];
+		return pref[r]-pref[l-1];
+	};
+	FOR(i,0,n){
+		ll val=suffMax[i];
+		ll s=ptr,e=tam-1,m=s+(e-s)/2,guarda=-1;
+		while(s<=e){
+			m=s+(e-s)/2;
+			if(b[m] >= val){
+				guarda=m;
+				s=m+1;
+			}
+			else e=m-1;
+		}
+		assert(guarda!=-1);
+		ptr=guarda;
+		dbg("necesito estar en ptr",i,ptr,val);
+		guarda=-1;
+		s=i,e=n-1,m=s+(e-s)/2;
+		while(s<=e){
+			m=s+(e-s)/2;
+			ll sum=query(i,m);
+			if(sum <= b[ptr]){
+				guarda=m;
+				s=m+1;
+			}
+			else e=m-1;
+		}
+		assert(guarda!=-1);
+		dbg(tam,ptr,tam-ptr-1);
+		ans+=tam-ptr-1;
+		i=guarda;
+	}
+	return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -225,18 +235,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-		ll n=2,m=rng_ll(1,10);
-		vector<vector<char>> a(n,vector<char>(m));
-		ll damaged=0;
-		each(e,a){
-			each(e2,e){
-				ll xd=rng_int(0,1);
-				e2=xd?'.':'#';
-				if(e2=='.') damaged++;
-			}
-		}
-		auto res=solve(a);
-        //RAYA;
+		
     }
 
     int t = 1;
@@ -244,13 +243,17 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vector<vector<char>> a(2,vector<char>(n));
+		ll n,m;
+		cin>>n>>m;
+		vl a(n);
 		each(e,a){
-			each(e2,e) cin>>e2;
+			cin>>e;
 		}
-        cout<<solve(a)<<"\n";
+		vl b(m);
+		each(e,b){
+			cin>>e;
+		}
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;

@@ -173,47 +173,13 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
- 
 
-str solve(vector<vector<char>> &a) {
-    ll n=a[0].size();
-	bool mult=false;
-	FOR(i,0,n){
-		dbg("estado de a antes de hacer la poeracion en i",i,a);
-		if(i+1<n && (a[0][i]=='.' && a[1][i]=='.') && (a[0][i+1]=='.' && a[1][i+1]=='.')){
-			mult=true;
-		}
-		if(a[0][i]=='#' && a[1][i]=='.'){
-			dbg("if1");
-			if(i+1>=n || a[1][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[1][i]='#';
-				a[1][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='#'){ 
-			dbg("if2",i+1,a[0][i+1]);
-			if(i+1<n)
-				dbg(".#",i+1,a[0][i+1]);
-			if(i+1>=n || a[0][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[0][i]='#';
-				a[0][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='.'){
-			dbg("if3");
-			a[0][i]='#';
-			a[1][i]='#';
-		}
-		dbg("despesu",i,a);
-	}
-	if(mult) return "Multiple";
-	else return "Unique";
+
+ll solve(str &s,ll k) {
+    ll cont=0,m=s.size();
+    each(e,s)if(e=='S') cont++;
+    if(cont>=k) return m;
+    else return m + k-cont-1;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -225,18 +191,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-		ll n=2,m=rng_ll(1,10);
-		vector<vector<char>> a(n,vector<char>(m));
-		ll damaged=0;
-		each(e,a){
-			each(e2,e){
-				ll xd=rng_int(0,1);
-				e2=xd?'.':'#';
-				if(e2=='.') damaged++;
-			}
-		}
-		auto res=solve(a);
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -244,13 +199,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vector<vector<char>> a(2,vector<char>(n));
-		each(e,a){
-			each(e2,e) cin>>e2;
-		}
-        cout<<solve(a)<<"\n";
+		ll m,k;
+		cin>>m>>k;
+		str s;
+        cin>>s;
+        cout<<solve(s,k)<<"\n";
     }
     RAYA;
     RAYA;

@@ -173,47 +173,74 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
- 
+/**
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
+ */
 
-str solve(vector<vector<char>> &a) {
-    ll n=a[0].size();
-	bool mult=false;
-	FOR(i,0,n){
-		dbg("estado de a antes de hacer la poeracion en i",i,a);
-		if(i+1<n && (a[0][i]=='.' && a[1][i]=='.') && (a[0][i+1]=='.' && a[1][i+1]=='.')){
-			mult=true;
-		}
-		if(a[0][i]=='#' && a[1][i]=='.'){
-			dbg("if1");
-			if(i+1>=n || a[1][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[1][i]='#';
-				a[1][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='#'){ 
-			dbg("if2",i+1,a[0][i+1]);
-			if(i+1<n)
-				dbg(".#",i+1,a[0][i+1]);
-			if(i+1>=n || a[0][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[0][i]='#';
-				a[0][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='.'){
-			dbg("if3");
-			a[0][i]='#';
-			a[1][i]='#';
-		}
-		dbg("despesu",i,a);
-	}
-	if(mult) return "Multiple";
-	else return "Unique";
+#pragma once
+
+template<int MOD, int RT> struct mint {
+	static const int mod = MOD;
+	static constexpr mint rt() { return RT; } // primitive root for FFT
+	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+	mint():v(0) {}
+	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+		if (v < 0) v += MOD; }
+	bool operator==(const mint& o) const {
+		return v == o.v; }
+	friend bool operator!=(const mint& a, const mint& b) { 
+		return !(a == b); }
+	friend bool operator<(const mint& a, const mint& b) { 
+		return a.v < b.v; }
+	friend str ts(mint a) { return ts(a.v); }
+   
+	mint& operator+=(const mint& o) { 
+		if ((v += o.v) >= MOD) v -= MOD; 
+		return *this; }
+	mint& operator-=(const mint& o) { 
+		if ((v -= o.v) < 0) v += MOD; 
+		return *this; }
+	mint& operator*=(const mint& o) { 
+		v = int((ll)v*o.v%MOD); return *this; }
+	mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+	friend mint pow(mint a, ll p) {
+		mint ans = 1; assert(p >= 0);
+		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+		return ans; }
+	friend mint inv(const mint& a) { assert(a.v != 0); 
+		return pow(a,MOD-2); }
+		
+	mint operator-() const { return mint(-v); }
+	mint& operator++() { return *this += 1; }
+	mint& operator--() { return *this -= 1; }
+	friend mint operator+(mint a, const mint& b) { return a += b; }
+	friend mint operator-(mint a, const mint& b) { return a -= b; }
+	friend mint operator*(mint a, const mint& b) { return a *= b; }
+	friend mint operator/(mint a, const mint& b) { return a /= b; }
+};
+
+using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+using vmi = V<mi>;
+using pmi = pair<mi,mi>;
+using vpmi = V<pmi>;
+
+V<vmi> scmb; // small combinations
+void genComb(int SZ) {
+	scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+	FOR(i,1,SZ) F0R(j,i+1) 
+		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
+}
+
+ll solve(vl &a,ll k) {
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -225,18 +252,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-		ll n=2,m=rng_ll(1,10);
-		vector<vector<char>> a(n,vector<char>(m));
-		ll damaged=0;
-		each(e,a){
-			each(e2,e){
-				ll xd=rng_int(0,1);
-				e2=xd?'.':'#';
-				if(e2=='.') damaged++;
-			}
-		}
-		auto res=solve(a);
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -244,13 +260,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vector<vector<char>> a(2,vector<char>(n));
-		each(e,a){
-			each(e2,e) cin>>e2;
-		}
-        cout<<solve(a)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

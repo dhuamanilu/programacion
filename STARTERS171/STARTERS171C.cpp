@@ -173,47 +173,51 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
- 
 
-str solve(vector<vector<char>> &a) {
-    ll n=a[0].size();
-	bool mult=false;
-	FOR(i,0,n){
-		dbg("estado de a antes de hacer la poeracion en i",i,a);
-		if(i+1<n && (a[0][i]=='.' && a[1][i]=='.') && (a[0][i+1]=='.' && a[1][i+1]=='.')){
-			mult=true;
-		}
-		if(a[0][i]=='#' && a[1][i]=='.'){
-			dbg("if1");
-			if(i+1>=n || a[1][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[1][i]='#';
-				a[1][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='#'){ 
-			dbg("if2",i+1,a[0][i+1]);
-			if(i+1<n)
-				dbg(".#",i+1,a[0][i+1]);
-			if(i+1>=n || a[0][i+1]=='#'){
-				return "None";
-			}
-			else{
-				a[0][i]='#';
-				a[0][i+1]='#';
-			}
-		}
-		if(a[0][i]=='.' && a[1][i]=='.'){
-			dbg("if3");
-			a[0][i]='#';
-			a[1][i]='#';
-		}
-		dbg("despesu",i,a);
-	}
-	if(mult) return "Multiple";
-	else return "Unique";
+
+vl solve(vl &a,ll p) {
+    ll n=a.size();
+    vector<vpl> groups;
+    FOR(i,0,n){
+        if(a[i]==0 || (i==0)){
+            ll j=i+1;
+            vpl act;
+            if(j==1 && (a[0]!=0)) act.pb({a[0],0});
+            while(j<n && a[j]!=0){
+                act.pb({a[j],j});
+                j++;
+            }
+            if(act.size()>0)
+                groups.pb(act);
+            i=j-1;
+        }
+    }
+    vl res(n,0);
+    dbg(groups);
+    each(e,groups){
+        ll tam=e.size();
+        if(tam==0) continue;
+        bool tienePref=(e[0].s>0);
+        bool tieneSuff=(e[tam-1].s<(n-1));
+        vl suffMax(tam,0);
+        if(tieneSuff){
+            suffMax[tam-1]=e[tam-1].f;
+            for(ll i=tam-2;i>=0;i--){
+                suffMax[i]=max(suffMax[i+1],e[i].f);
+            }
+        } 
+        ll prefMax=0;
+        FOR(i,0,tam){
+            if(tienePref){
+                ckmax(prefMax,e[i].f);
+            }   
+            ll valor=BIG;
+            if(tienePref)ckmin(valor,prefMax);
+            if(tieneSuff)ckmin(valor,suffMax[i]);
+            res[e[i].s]=cdiv(valor,p);
+        }
+    }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -225,18 +229,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-		ll n=2,m=rng_ll(1,10);
-		vector<vector<char>> a(n,vector<char>(m));
-		ll damaged=0;
-		each(e,a){
-			each(e2,e){
-				ll xd=rng_int(0,1);
-				e2=xd?'.':'#';
-				if(e2=='.') damaged++;
-			}
-		}
-		auto res=solve(a);
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -244,13 +237,13 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vector<vector<char>> a(2,vector<char>(n));
-		each(e,a){
-			each(e2,e) cin>>e2;
-		}
-        cout<<solve(a)<<"\n";
+		ll n,p;
+		cin>>n>>p;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto xd =solve(a,p);
+        each(e,xd)cout<<e<<" ";
+        cout<<"\n";
     }
     RAYA;
     RAYA;
