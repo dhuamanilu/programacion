@@ -169,12 +169,8 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Custom Helpers
-
 //? Template
 //? /Template
-
- 
-
 ll solve(vl &a,vl &b) {
     ll n=a.size(),tam=b.size();
 	vl suffMax(n,0);
@@ -182,8 +178,7 @@ ll solve(vl &a,vl &b) {
 	for(ll i=n-2;i>=0;i--){
 		suffMax[i]=max(suffMax[i+1],a[i]);
 	}
-	if(b[0]<suffMax[0]) return -1;
-	ll ans=0,ptr=0;
+	//if(b[0]<suffMax[0]) return -1;
 	vl pref(n,0);
 	pref[0]=a[0];
 	FOR(i,1,n){
@@ -195,35 +190,47 @@ ll solve(vl &a,vl &b) {
 	};
 	vector<vl> dp(n,vl(tam,BIG));
 	FOR(i,0,n){
-		ll val=suffMax[i];
-		ll s=ptr,e=tam-1,m=s+(e-s)/2,guarda=-1;
-		while(s<=e){
-			m=s+(e-s)/2;
-			if(b[m] >= val){
-				guarda=m;
-				s=m+1;
+		ll sum=query(0,i);
+		FOR(j,0,tam){
+			if(sum<=b[j]){
+				dp[i][j]=tam-j-1;
 			}
-			else e=m-1;
+			else break;
 		}
-		assert(guarda!=-1);
-		ptr=guarda;
-		dbg("necesito estar en ptr",i,ptr,val);
-		guarda=-1;
-		s=i,e=n-1,m=s+(e-s)/2;
-		while(s<=e){
-			m=s+(e-s)/2;
-			ll sum=query(i,m);
-			if(sum <= b[ptr]){
-				guarda=m;
-				s=m+1;
-			}
-			else e=m-1;
-		}
-		assert(guarda!=-1);
-		dbg(tam,ptr,tam-ptr-1);
-		ans+=tam-ptr-1;
-		i=guarda;
 	}
+	
+	FOR(i,0,n){
+		FOR(j,0,tam){
+			if(j+1<tam){	
+				ckmin(dp[i][j+1],dp[i][j]);
+			}
+			if(i+1<n){
+				ll right=-1;
+				ll s=i+1,e=n-1,m=s+(e-s)/2;
+				while(s<=e){
+					m=s+(e-s)/2;
+					ll sum=query(i+1,m);
+					if(sum <= b[j]){
+						right=m;
+						s=m+1;
+					}	
+					else e=m-1;
+				}
+				if(right==-1) continue;
+				//dbg(i,right,j);
+				/*FOR(k,i+1,right+1){
+					ckmin(dp[k][j],dp[i][j] + tam -j -1 );
+				}*/
+				ckmin(dp[right][j],dp[i][j] + tam -j -1 );
+			}
+		}
+	}
+	dbg(dp);
+	ll ans=BIG;
+	FOR(j,0,tam){
+		ckmin(ans,dp[n-1][j]);
+	}
+	if(ans==BIG) ans=-1;
 	return ans;
 }
 
