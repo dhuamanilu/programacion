@@ -238,13 +238,61 @@ void genComb(int SZ) {
 	FOR(i,1,SZ) F0R(j,i+1) 
 		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
 }
+ll brute(vl &a){
+	ll n=a.size();
+	mi ans=mi(0);
+	FOR(i,0,(1ll<<n)){
+		vl state(n,-1);
+		bool estaBien=true;
+		FOR(j,0,n){
+			//o honesto 1 mentiroso
+			if(j+1<n && (1ll<<j)&i && (1ll<<(j+1))&i){
+				estaBien=false;
+				break;
+			}
+			if((1ll<<j)&i){
+				state[j]=1;
+			}
+			else state[j]=0;
+		}
+		if(!estaBien){
+			continue;
+		}
+		vl pref(n,0);
+		pref[0]=state[0];
+		FOR(i,1,n){
+			pref[i]=pref[i-1]+state[i];
+		}
+		auto query=[&](ll l,ll r){
+			if(l>=1){
+				return pref[r]-pref[l-1];
+			}
+			else return pref[r];
+		};
+		bool ok=true;
+		FOR(j,0,n){
+			if(state[j]==0 && query(0,j)!=a[j]){
+				ok=false;
+				break;
+			}
+		}
+		if(ok) ++ans;
+	}
+	return ans.v;
 
+}
 ll solve(vl &a) {
     ll n=a.size();
 	map<tuple<ll,ll,ll>,mi> dp;
 	if(a[0]==0){
 		dp[{0,0,0}]=mi(1);
 		dp[{0,0,1}]=mi(1);
+	}
+	else {
+		FOR(i,0,n+1){
+			dp[{0,i,1}]=mi(1);
+		}
+		//dp[{1,1,0}]=mi(1);
 	}
 	FOR(i,1,n){
 		if(a[i]<=i){
@@ -257,9 +305,13 @@ ll solve(vl &a) {
 		}
 		dp[{i,a[i-1],1}]+=dp.count({i-1,a[i-1],0}) ? dp[{i-1,a[i-1],0}] : mi(0);
 	}
-	mi ans=dp.count({n-1,a[n-1],0}) ? dp[{n-1,a[n-1],0}] : mi(0);
-	if(n>=2){
-		ans+=dp.count({n-1,a[n-2],1}) ? dp[{n-1,a[n-2],1}] : mi(0);
+	map<ll,ll> parche;
+	parche[a.back()]++;
+	if(n>=2)parche[a[n-2]]++;
+	mi ans=mi(0);
+	each(e,dp){
+		//dbg(e.f,e.s.v);
+		if(get<0>(e.f)==(n-1) && parche.count(get<1>(e.f))) ans+=e.s;
 	}
 	return ans.v;
 	
@@ -275,6 +327,16 @@ int main() {
     //? Stress Testing
     while(0) {
         RAYA;
+		ll n=rng_ll(1,18);
+		vl a(n);
+		each(e,a)e=rng_ll(0,n);
+		ll bruto=brute(a);
+		ll res=solve(a);
+		if(bruto!=res){
+			dbg("xd",a,bruto,res);
+			assert(false);
+		}
+		else dbg("OK");
     }
 
     int t = 1;

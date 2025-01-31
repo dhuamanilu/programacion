@@ -178,32 +178,17 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 vpl solve(ll n) {
     vpl a;
     a.pb({1,1});
-    auto isInside=[&](ll x, ll y) {
-        return 1 <= x && x <= n && 1 <= y && y <= n;
-    };
-    FOR(dist,n,2*n){
-        if(dist%2==0){
-            FOR(i,0,dist+1){
-                ll newX=1+i;
-                ll newY=1 + dist-i;
-                if(isInside(newX,newY)){
-                    a.pb({newX,newY});
-                    break;
-                }
-            }
-        }
-        else{
-            for(ll i=dist;i>=0;i--){
-                ll newX=1+i;
-                ll newY=1 + dist-i;
-                if(isInside(newX,newY)){
-                    a.pb({newX,newY});
-                    break;
-                }
-            }
-        }
+    a.pb({n,n});
+    FOR(i,1,n-2){
+        a.pb({1,i+1});
     }
-
+    if(n>2){
+        if(n%2==1)
+            a.pb({fdiv(n,2)+1,n-2});
+        else a.pb({fdiv(n,2)+1,n-2});
+    }
+        
+    
     return a;
 }
 
