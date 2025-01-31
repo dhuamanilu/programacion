@@ -173,58 +173,11 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
- 
 
-ll solve(vl &a,vl &b) {
-    ll n=a.size(),tam=b.size();
-	vl suffMax(n,0);
-	suffMax[n-1]=a[n-1];
-	for(ll i=n-2;i>=0;i--){
-		suffMax[i]=max(suffMax[i+1],a[i]);
-	}
-	if(b[0]<suffMax[0]) return -1;
-	ll ans=0,ptr=0;
-	vl pref(n,0);
-	pref[0]=a[0];
-	FOR(i,1,n){
-		pref[i]=pref[i-1]+a[i];
-	}
-	auto query=[&](ll l,ll r){
-		if(l==0) return pref[r];
-		return pref[r]-pref[l-1];
-	};
-	vector<vl> dp(n,vl(tam,BIG));
-	FOR(i,0,n){
-		ll val=suffMax[i];
-		ll s=ptr,e=tam-1,m=s+(e-s)/2,guarda=-1;
-		while(s<=e){
-			m=s+(e-s)/2;
-			if(b[m] >= val){
-				guarda=m;
-				s=m+1;
-			}
-			else e=m-1;
-		}
-		assert(guarda!=-1);
-		ptr=guarda;
-		dbg("necesito estar en ptr",i,ptr,val);
-		guarda=-1;
-		s=i,e=n-1,m=s+(e-s)/2;
-		while(s<=e){
-			m=s+(e-s)/2;
-			ll sum=query(i,m);
-			if(sum <= b[ptr]){
-				guarda=m;
-				s=m+1;
-			}
-			else e=m-1;
-		}
-		assert(guarda!=-1);
-		dbg(tam,ptr,tam-ptr-1);
-		ans+=tam-ptr-1;
-		i=guarda;
-	}
-	return ans;
+
+ll solve(vl &a) {
+    ll n=a.size();
+	return 0;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -236,7 +189,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-		
+        RAYA;
     }
 
     int t = 1;
@@ -244,17 +197,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
+		ll n;
+		cin>>n;
 		vl a(n);
-		each(e,a){
-			cin>>e;
-		}
-		vl b(m);
-		each(e,b){
-			cin>>e;
-		}
-        cout<<solve(a,b)<<"\n";
+		each(e,a) cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
