@@ -175,37 +175,8 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-pair<str,vl> solve(vl &a) {
-    vl posi,nega;
-    ll zeros=0,n=a.size();
-    each(e,a){
-        if(e>0) posi.pb(e);
-        else if(e<0) nega.pb(e);
-        else zeros++;
-    }
-    vl res;
-    if(zeros==n){
-        return mp("No",res);
-    }
-    else{
-        sor(posi);
-        sor(nega);
-        ll sum=0,i=0,j=0,tam1=(ll)posi.size(),tam2=(ll)nega.size() ,val=posi.back()-nega[0];
-        while(i<tam1){
-            while(j < tam2 && (sum + posi[i] >= val)){
-                sum+=nega[j];
-                res.pb(nega[j++]);
-            }
-            sum+=posi[i];
-            res.pb(posi[i++]);
-            
-        }
-        while(j<tam2){
-            res.pb(nega[j++]);
-        }
-        FOR(k,0,zeros) res.pb(0);
-        return mp("Yes",res);
-    }
+ll solve(vpl &a) {
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -227,14 +198,9 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        auto x = solve(a);
-        cout<<x.f<<"\n";
-        if(x.f=="Yes"){
-            each(e,x.s)cout<<e<<" ";
-            cout<<"\n";
-        }
+		vpl a(n-1);
+		each(e,a) cin>>e.f>>e.s ;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
