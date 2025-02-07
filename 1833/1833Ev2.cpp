@@ -190,6 +190,7 @@ pl solve(vl &a) {
         vis[ele]=true;
         dbg("visitando ele",ele);
         dbg(G[ele].size());
+        //if(G[])
         for(auto &e :G[ele]){
             dbg(e);
             if(!vis[e]) dfs(dfs,e);
