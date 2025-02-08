@@ -180,9 +180,9 @@ vl solve(vl &a) {
     vl cont(2,0);
     vl neg;
     ll pos=0;
-    neg.pb(-1);
+    /*neg.pb(-1);
     cont[pos%2]+=-1;
-    pos++;
+    pos++;*/
     FOR(i,0,n){
         if(a[i]<0){
             neg.pb(i);
@@ -196,12 +196,19 @@ vl solve(vl &a) {
     ll ans=0,ptr=0;
     dbg(cont,neg);
     FOR(i,0,n){
-        while(ptr < pos && i < ptr ){
+        while(ptr < pos && i > ptr ){
             cont[ptr%2]-=neg[ptr];
             ptr++;
         }
         ll par=ptr%2;
-        ans+=cont[par^1]-cont[par];
+        ll contr=cont[par^1]-cont[par];
+        if(contr<0) contr*=-1;
+        dbg(i,contr);
+        ans+=contr;
+        /*if(par!=(pos%2) && pos>0 && i<=neg.back()){
+            dbg("estoy sumando",i,n,neg.back());
+            ans+=n-neg.back();
+        }*/
     }
     vl res={ans,((n*(n+1))/2ll) - ans};
     return res;
