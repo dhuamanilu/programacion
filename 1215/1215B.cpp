@@ -175,12 +175,22 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+vl solve(vl &a) {
+    ll n=a.size();
+    vl neg;
+    neg.pb(-1);
+    FOR(i,0,n){
+        if(a[i]<0) neg.pb(i);
+    }
+    neg.pb(n);
+    ll cont=0;
+    FOR(i,1,(ll)neg.size()-1){
+        ll val=(neg[i]-neg[i-1])*(neg[i+1]-neg[i]);
+        cont+=val;
+    }
+    dbg((n*(n+1))/2ll);
+    vl res={cont,((n*(n+1))/2ll) - cont};
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -196,13 +206,17 @@ int main() {
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-        cout<<solve(n)<<"\n";
+        vl a(n);
+        each(e,a)cin>>e;
+        auto x = solve(a);
+        each(e,x)cout<<e<<" ";
+        cout<<"\n";
     }
     RAYA;
     RAYA;

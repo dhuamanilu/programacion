@@ -175,12 +175,35 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+ll solve(str &a,str &b) {
+    str c=a,d=b;
+    reverse(all(c));
+    reverse(all(d));
+    ll n=a.size(),m=b.size(),i=0;
+    vl corr(m,-1);
+    FOR(j,0,m){
+        while(i<n && c[i]!=d[j]){
+            i++;
+        }
+        if(i==n) return -1;
+        corr[j]=n-i-1;
+        i++;
+    }
+    reverse(all(corr));
+    ll ans=0,ptr=0;
+    dbg(corr);
+    FOR(i,0,n){
+        if(ptr>=m){
+            ans+=ptr+1;
+        }
+        else if(i!=corr[ptr]){
+            ans+=ptr+1;
+        }
+        else{
+            ptr++;
+        }
+    }
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -200,9 +223,9 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-        cout<<solve(n)<<"\n";
+		str a,b;
+        cin>>a>>b;
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;

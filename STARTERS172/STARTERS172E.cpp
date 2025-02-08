@@ -175,12 +175,9 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+ll solve(vl &a) {
+    ll n=a.size();
+	return 0;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -202,7 +199,9 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-        cout<<solve(n)<<"\n";
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

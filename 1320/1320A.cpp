@@ -175,12 +175,15 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+ll solve(vl &a) {
+    map<ll,ll> m;
+    ll n=a.size();
+    FOR(i,0,n){
+        m[a[i]-(i+1)]+=a[i];
+    }
+    ll ans=0;
+    each(e,m)ckmax(ans,e.s);
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -196,13 +199,15 @@ int main() {
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-        cout<<solve(n)<<"\n";
+        vl a(n);
+        each(e,a)cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

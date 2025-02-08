@@ -175,12 +175,39 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+ll solve(vl &a,ll x) {
+    ll n=a.size();
+	vl pref(n,0),suff(n,0);
+    pref[0]=1;
+    ll ans=0;
+    FOR(i,1,n){
+        if(a[i]>=a[i-1]){
+            pref[i]=pref[i-1] + 1;
+        }
+        else pref[i]=1;
+        ckmax(ans,pref[i]);
+    }
+    suff[n-1]=1;
+    for(ll i=n-2;i>=0;i--){
+        if(a[i]<=a[i+1]){
+            suff[i]=suff[i+1]+1;
+        }
+        else suff[i]=1;
+        ckmax(ans,suff[i]);
+    }
+    
+    FOR(i,0,n){
+        ll local=1;
+        ll newVal=a[i]*x;
+        if(i>=1 && newVal>=a[i-1]){
+            local+=pref[i-1];
+        }
+        if(i+1<n && newVal<=a[i+1]){
+            local+=suff[i+1];
+        }
+        ckmax(ans,local);
+    }
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -200,9 +227,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-        cout<<solve(n)<<"\n";
+		ll n,x;
+		cin>>n>>x;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,x)<<"\n";
     }
     RAYA;
     RAYA;

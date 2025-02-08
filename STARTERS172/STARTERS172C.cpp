@@ -175,12 +175,41 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll n) {
-    auto get=[](auto &&get,ll x)->ll{
-        if(x==1) return 1;
-        else return x + get(get,x/2);
-    };
-    return get(get,n);
+vl solve(vl &a,vpl &queries) {
+    ll n=a.size(),q=queries.size();
+	set<ll> no;
+    FOR(i,0,n){
+        if((i%2)!=(a[i]%2)){
+            no.insert(i);
+        }
+    }
+    ll res=0;
+    if(no.size()>0){
+        ll val=*(prev(no.end()));
+        res=(val%2)^1;
+    }
+    vl ans;
+    each(e,queries){
+        ll pos=e.f,val=e.s;
+        if(val!=a[pos]){
+            a[pos]=val;
+            if(no.count(pos)){
+                no.erase(pos);
+            }
+            else{
+                no.insert(pos);
+            }
+            if(!no.size()){
+                res=0;
+            }
+            else{
+                ll xd=*(prev(no.end()));
+                res=(xd%2)^1;
+            }
+        }
+        ans.pb(res);
+    }
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -200,9 +229,18 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
+		ll n,q;
 		cin>>n;
-        cout<<solve(n)<<"\n";
+		vl a(n);
+		each(e,a) cin>>e;
+        cin>>q;
+        vpl queries(q);
+        each(e,queries){
+            cin>>e.f>>e.s;
+            e.f--;
+        }
+        auto x = solve(a,queries);
+        each(e,x)cout<<e<<"\n";
     }
     RAYA;
     RAYA;
