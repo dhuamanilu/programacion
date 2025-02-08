@@ -1,62 +1,248 @@
+//* sometimes pragmas don't work, if so, just comment it!
+#pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
+//! #pragma GCC optimize ("trapv")
+
+//! #undef _GLIBCXX_DEBUG //? for Stress Testing
+
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef long double ld;
-typedef pair<int, int> pi;
-typedef vector<int> vi;
-typedef vector<ll> vll;
-typedef map <ll,ll> mll;
-typedef vector <pair<ll,ll>> vpll;
-typedef priority_queue<ll> pq;
-#define FOR(i, a, b) for (long long i=a; i<(b); i++)
-#define FOR1(i, a, b) for (long long i=a; i<=(b); i++)
+
+
+
+#ifdef LOCAL
+    #include "debug.h"
+#else
+    #define dbg(...)     0
+    #define chk(...)     0
+
+    #define RAYA         0
+#endif
+
+
+
+const auto beg_time = std::chrono::high_resolution_clock::now();
+double time_elapsed() { return chrono::duration<double>(std::chrono::high_resolution_clock::now() - beg_time) .count(); }
+
+
+
+// building blocks
+using ll  = long long;
+using db  = long double;
+using str = string;
+
+//? priority_queue for minimum
+template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
+
+using ull  = unsigned long long;
+//? using i64  = long long;
+//? using u64  = uint64_t;
+//? using i128 = __int128;
+//? using u128 = __uint128_t;
+//? using f128 = __float128;
+
+
+
+// pairs
+using pi = pair<int, int>;
+using pl = pair<ll, ll>;
+using pd = pair<db, db>;
+
 #define mp make_pair
+#define f  first
+#define s  second
+
+
+
+#define tcT template <class T
+#define tcTU tcT, class U
+
+tcT > using V = vector<T>;
+tcT, size_t SZ > using AR = array<T, SZ>;
+using vi = V<int>;
+using vb = V<bool>;
+using vl = V<ll>;
+using vd = V<db>;
+using vs = V<str>;
+using vpi = V<pi>;
+using vpl = V<pl>;
+using vpd = V<pd>;
+
+using vvi = V<vi>;
+using vvl = V<vl>;
+using vvb = V<vb>;
+
+
+
+// vectors
+// oops size(x), rbegin(x), rend(x) need C++17
+#define sz(x) int((x).size())
+#define bg(x) begin(x)
+#define all(x) bg(x), end(x)
+#define rall(x) x.rbegin(), x.rend()
+#define sor(x) sort(all(x))
+#define rsz resize
+#define ins insert
 #define pb push_back
-#define f first
-#define se second
+#define eb emplace_back
+#define ft front()
+#define bk back()
+#define ts to_string
+
 #define lb lower_bound
 #define ub upper_bound
-#define all(x) x.begin(), x.end()
-#define ins insert
-#define n_l '\n'
-#define dbg(...) cout << "[" << #__VA_ARGS__ << "]: "; cout << to_string(__VA_ARGS__) << endl
-template <typename T, size_t N> int SIZE(const T (&t)[N]){ return N; } template<typename T> int SIZE(const T &t){ return t.size(); } string to_string(const string s, int x1=0, int x2=1e9){ return '"' + ((x1 < s.size()) ? s.substr(x1, x2-x1+1) : "") + '"'; } string to_string(const char* s) { return to_string((string) s); } string to_string(const bool b) { return (b ? "true" : "false"); } string to_string(const char c){ return string({c}); } template<size_t N> string to_string(const bitset<N> &b, int x1=0, int x2=1e9){ string t = ""; for(int __iii__ = min(x1,SIZE(b)),  __jjj__ = min(x2, SIZE(b)-1); __iii__ <= __jjj__; ++__iii__){ t += b[__iii__] + '0'; } return '"' + t + '"'; } template <typename A, typename... C> string to_string(const A (&v), int x1=0, int x2=1e9, C... coords); int l_v_l_v_l = 0, t_a_b_s = 0; template <typename A, typename B> string to_string(const pair<A, B> &p) { l_v_l_v_l++; string res = "(" + to_string(p.first) + ", " + to_string(p.second) + ")"; l_v_l_v_l--; return res; } template <typename A, typename... C> string to_string(const A (&v), int x1, int x2, C... coords) { int rnk = rank<A>::value; string tab(t_a_b_s, ' '); string res = ""; bool first = true; if(l_v_l_v_l == 0) res += n_l; res += tab + "["; x1 = min(x1, SIZE(v)), x2 = min(x2, SIZE(v)); auto l = begin(v); advance(l, x1); auto r = l; advance(r, (x2-x1) + (x2 < SIZE(v))); for (auto e = l; e != r; e = next(e)) { if (!first) { res += ", "; } first = false; l_v_l_v_l++; if(e != l){ if(rnk > 1) { res += n_l; t_a_b_s = l_v_l_v_l; }; } else{ t_a_b_s = 0; } res += to_string(*e, coords...); l_v_l_v_l--; } res += "]"; if(l_v_l_v_l == 0) res += n_l; return res; } void dbgm(){;} template<typename Heads, typename... Tails> void dbgm(Heads H, Tails... T){ cout << to_string(H) << " | "; dbgm(T...); }
-#define dbgm(...) cout << "[" << #__VA_ARGS__ << "]: "; dbgm(__VA_ARGS__); cout << endl
-const int MOD = 1000000007;
-const char nl = '\n';
-const int MX = 100001;
-const int N=1000+3;
 
-void solve(){
-    ll n;
-    cin>>n;
-    ll a[n];
-    FOR(i,0,n){
-        cin>>a[i];
+
+
+// loops
+#define FOR(i, a, b) for (int i = (a); i < (b); ++i)
+#define F0R(i, a) FOR(i, 0, a)
+#define ROF(i, a, b) for (int i = (b)-1; i >= (a); --i)
+#define R0F(i, a) ROF(i, 0, a)
+#define rep(a) F0R(_, a)
+#define each(a, x) for (auto &a : x)
+
+
+
+ll cdiv(ll a, ll b) {
+	return a / b + ((a ^ b) > 0 && a % b);
+}  // divide a by b rounded up
+ll fdiv(ll a, ll b) {
+	return a / b - ((a ^ b) < 0 && a % b);
+}  // divide a by b rounded down
+
+tcT > bool ckmin(T &a, const T &b) {
+	return b < a ? a = b, 1 : 0;
+}  // set a = min(a,b)
+tcT > bool ckmax(T &a, const T &b) {
+	return a < b ? a = b, 1 : 0;
+}  // set a = max(a,b)
+
+tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
+	sort(all(v));
+	v.erase(unique(all(v)), end(v));
+}
+tcTU > void safeErase(T &t, const U &u) {
+	auto it = t.find(u);
+	assert(it != end(t));
+	t.erase(it);
+}
+
+
+
+//? Custom Helpers
+template <typename T>
+inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
+
+long long binpow(long long a, long long b) {
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
     }
-    sort(a,a+n);
-    if(a[0]==a[n-1] && a[0]==1){
-        cout<<"-1\n";
+    return res;
+}
+
+//? __builtin_popcountll
+ll GetBit(ll mask, ll bit) { return (mask >> bit) & 1LL; }
+void TurnOn(ll& mask, ll bit) { mask = mask | (1LL << bit); }
+void TurnOff(ll& mask, ll bit) { mask = mask & (~(1LL << bit)); }
+
+const int dddx[8]{1, 0, -1,  0, 1,  1, -1, -1};
+const int dddy[8]{0, 1,  0, -1, 1, -1,  1, -1};
+
+using vvi = V<vi>;
+using vvl = V<vl>;
+using vvb = V<vb>;
+
+const int MOD = 1e9 + 7;
+const int MX = (int)2e5 + 5;
+const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const db PI = acos((db)-1);
+const int dx[4]{1, 0, -1, 0}, dy[4]{0, 1, 0, -1};  //? for every grid problem!!
+mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
+
+int rng_int(int L, int R) { assert(L <= R);
+	return uniform_int_distribution<int>(L,R)(rng);  }
+ll rng_ll(ll L, ll R) { assert(L <= R);
+	return uniform_int_distribution<ll>(L,R)(rng);  }
+//? /Custom Helpers
+
+//? Template
+//? /Template
+
+
+
+pair<str,vl> solve(vl &a) {
+    vl posi,nega;
+    ll zeros=0,n=a.size();
+    each(e,a){
+        if(e>0) posi.pb(e);
+        else if(e<0) nega.pb(e);
+        else zeros++;
+    }
+    vl res;
+    if(zeros==n){
+        return mp("No",res);
     }
     else{
-
+        sor(posi);
+        sor(nega);
+        ll sum=0,i=0,j=0,tam1=(ll)posi.size(),tam2=(ll)nega.size() ,val=posi.back()-nega[0];
+        while(i<tam1){
+            while(j < tam2 && (sum + posi[i] >= val)){
+                sum+=nega[j];
+                res.pb(nega[j++]);
+            }
+            sum+=posi[i];
+            res.pb(posi[i++]);
+            
+        }
+        while(j<tam2){
+            res.pb(nega[j++]);
+        }
+        FOR(k,0,zeros) res.pb(0);
+        return mp("Yes",res);
     }
 }
-int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int t=1;
-    cin>>t;
-    while(t--){
-        solve();
+
+void setIn(str s) { freopen(s.c_str(), "r", stdin); }
+void setOut(str s) { freopen(s.c_str(), "w", stdout); }
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+
+    //? Stress Testing
+    while(0) {
+        RAYA;
     }
-    return 0;
+
+    int t = 1;
+	cin >> t;
+    for(int i = 0; i < t; i++) {
+        RAYA;
+        RAYA;
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto x = solve(a);
+        cout<<x.f<<"\n";
+        if(x.f=="Yes"){
+            each(e,x.s)cout<<e<<" ";
+            cout<<"\n";
+        }
+    }
+    RAYA;
+    RAYA;
+
+    #ifdef LOCAL
+        cerr << fixed << setprecision(5);
+        cerr << "\033[42m++++++++++++++++++++\033[0m\n";
+        cerr << "\033[42mtime = " << time_elapsed() << "ms\033[0m\n";
+        cerr << "\033[42m++++++++++++++++++++\033[0m\n";
+    #endif
 }
-
-
-
-
-
-
-
-

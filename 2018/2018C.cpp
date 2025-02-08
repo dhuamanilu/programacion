@@ -175,36 +175,8 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-pl solve(vl &a) {
-    ll n=a.size();
-    vector<set<ll>> G(n+1);
-    FOR(i,0,n){
-        ll u=i+1,v=a[i];
-        G[u].insert(v);
-        G[v].insert(u);
-    }
-    dbg(G);
-    ll unique=0,quant=0;
-    vl vis(n+1,0);
-    auto dfs=[&](auto &&dfs,ll ele)->void{
-        vis[ele]=true;
-        dbg("visitando ele",ele);
-        dbg(G[ele].size());
-        //if(G[])
-        for(auto &e :G[ele]){
-            dbg(e);
-            if(!vis[e]) dfs(dfs,e);
-        }
-    };
-    FOR(i,1,n+1){
-        if(G[i].size()==1) unique++;
-        else if (!vis[i]){
-            quant++;
-            dfs(dfs,i);
-        }
-    }
-    dbg(vis,quant,unique);
-    return mp(quant + (unique > 0),quant + (unique/2));
+ll solve(vpl &a) {
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -226,10 +198,9 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        auto x = solve(a);
-        cout<<x.f<<" "<<x.s<<"\n";
+		vpl a(n-1);
+		each(e,a) cin>>e.f>>e.s ;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

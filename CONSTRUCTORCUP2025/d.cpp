@@ -175,36 +175,26 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-pl solve(vl &a) {
-    ll n=a.size();
-    vector<set<ll>> G(n+1);
+str solve(str &s) {
+    ll n=s.size();
+    vl cont(2,0);
+    vl signo(2,0);
     FOR(i,0,n){
-        ll u=i+1,v=a[i];
-        G[u].insert(v);
-        G[v].insert(u);
-    }
-    dbg(G);
-    ll unique=0,quant=0;
-    vl vis(n+1,0);
-    auto dfs=[&](auto &&dfs,ll ele)->void{
-        vis[ele]=true;
-        dbg("visitando ele",ele);
-        dbg(G[ele].size());
-        //if(G[])
-        for(auto &e :G[ele]){
-            dbg(e);
-            if(!vis[e]) dfs(dfs,e);
+        if(i%2==0){
+            cont[s[i]-'0']++;
         }
-    };
-    FOR(i,1,n+1){
-        if(G[i].size()==1) unique++;
-        else if (!vis[i]){
-            quant++;
-            dfs(dfs,i);
+        else{
+            if(s[i]=='<') signo[0]++;
+            else signo[1]++;
         }
     }
-    dbg(vis,quant,unique);
-    return mp(quant + (unique > 0),quant + (unique/2));
+    bool ok1=(cont[0]==cont[1] && (signo[0]==1+signo[1]) );
+    bool ok2=((cont[0]==1 + cont[1]) && (signo[0]==signo[1]) );
+    bool ok3=((cont[0]==cont[1]) && (signo[1]==1 + signo[0]) );
+    bool ok4=((cont[1]==1 + cont[0]) && (signo[1]==signo[0]) );
+    bool xd=ok1 or ok2 or ok3 or ok4;
+    if(xd) return "Yes";
+    else return "No";
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -224,12 +214,9 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        auto x = solve(a);
-        cout<<x.f<<" "<<x.s<<"\n";
+		str s;
+        cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;
