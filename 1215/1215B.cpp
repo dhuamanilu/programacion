@@ -177,19 +177,33 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 vl solve(vl &a) {
     ll n=a.size();
+    vl cont(2,0);
     vl neg;
+    ll pos=0;
     neg.pb(-1);
+    cont[pos%2]+=-1;
+    pos++;
     FOR(i,0,n){
-        if(a[i]<0) neg.pb(i);
+        if(a[i]<0){
+            neg.pb(i);
+            cont[pos%2]+=i;
+            pos++;
+        }
     }
     neg.pb(n);
-    ll cont=0;
-    FOR(i,1,(ll)neg.size()-1){
-        ll val=(neg[i]-neg[i-1])*(neg[i+1]-neg[i]);
-        cont+=val;
+    cont[pos%2]+=n;
+    pos++;
+    ll ans=0,ptr=0;
+    dbg(cont,neg);
+    FOR(i,0,n){
+        while(ptr < pos && i < ptr ){
+            cont[ptr%2]-=neg[ptr];
+            ptr++;
+        }
+        ll par=ptr%2;
+        ans+=cont[par^1]-cont[par];
     }
-    dbg((n*(n+1))/2ll);
-    vl res={cont,((n*(n+1))/2ll) - cont};
+    vl res={ans,((n*(n+1))/2ll) - ans};
     return res;
 }
 
