@@ -177,7 +177,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vector<vl> &a) {
     ll n=a.size();
-	vl m(n+1,0);
+	map<ll,ll> m;
     FOR(i,0,n){
         bool xd=false;
         for(ll j=n-1;j>=0;j--){
@@ -191,7 +191,20 @@ ll solve(vector<vl> &a) {
             m[n]++;
     }
     ll res=0;
-    
+    for(auto it=m.begin();it!=m.end();it++){
+        auto e=*it;
+        if(e.s==0){
+            auto sgte=next(it);
+
+            if(sgte!=m.end() && *sgte->s > 0 ){
+                res++;
+            }
+            else break;
+        }
+        else{
+            res++;
+        }
+    }
     return res+1;
 }
 
