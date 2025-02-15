@@ -175,41 +175,27 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vector<vl> &a) {
-    ll n=a.size();
-	map<ll,ll> m;
+ll solve(vpl &a,ll m) {
+    ll idx=-1,value=0,n=a.size();
     FOR(i,0,n){
-        bool xd=false;
-        for(ll j=n-1;j>=0;j--){
-            if(a[i][j]!=1){
-                xd=true;
-                m[n-j-1]++;
-                break;
+        if(a[i].s > value){
+            value=a[i].s;
+            idx=i;
+        }
+        else if(a[i].s == value){
+            if(a[i].f > a[idx].f){
+                idx=i;
             }
         }
-        if(!xd)
-            m[n]++;
     }
-    ll res=0;
-    multiset<pl> b;
-    each(e,m)b.insert(mp(e.f,e.s));
-    while(!b.empty()){
-        auto e=*b.begin();
-        b.erase(e);
-        if(e.f >= res){
-            res++;
-            if(e.s>1 && e.f >=res){
-                e.s--;
-                b.insert(e);
-            }
-        } else break;
-        /*else{
-            while(!b.empty() && *(b.begin()).f  < res){
-                b.erase(b.begin());
-            }
-        }*/
+    vl dp(m+1);
+    FOR(i,0,n){
+        if(i==idx) continue;
+        for(ll j=m;j>=a[i].f;j--){
+            ckmax(dp[j],dp[j-a[i].f]+a[i].s);
+        }
     }
-    return res;
+    return dp[m] + a[idx].s;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -225,17 +211,15 @@ int main() {
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vector<vl> a(n,vl(n));
-		each(e,a){
-            each(e2,e)cin>>e2;
-        }
-        cout<<solve(a)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vpl a(n);
+		each(e,a) cin>>e.f>>e.s;
+        cout<<solve(a,m)<<"\n";
     }
     RAYA;
     RAYA;
