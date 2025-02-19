@@ -173,62 +173,22 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-ll solve(vpl &a,vpl &b,ll s1,ll s2,ll n) {
-    vector<vl> G1(n),G2(n);
-    each(e,a){
-        ll u=e.f,v=e.s;
-        G1[u].pb(v);
-        G1[v].pb(u);
-    }
-    each(e,b){
-        ll u=e.f,v=e.s;
-        G2[u].pb(v);
-        G2[v].pb(u);
-    }
-    map<pl,ll> edges1,edges2;
-    each(e,a){
-        ll mini=min(e.f,e.s),maxi=max(e.f,e.s);
-        edges1[{mini,maxi}]++;
-    }
-    each(e,b){
-        ll mini=min(e.f,e.s),maxi=max(e.f,e.s);
-        edges2[{mini,maxi}]++;
-    }
-    map<ll,ll> esp;
-    each(e,edges1){
-        if(edges2.count(e.f)){
-            esp[e.f.f]++;
-            esp[e.f.s]++;
-        }
-    }
-    vector<vl> dis(n,vl(n,BIG));
-    dis[s1][s2]=0;
-    multiset<tuple<ll,ll,ll>> ele;
-    tuple<ll,ll,ll> pri={0,s1,s2};
-    ele.insert(pri);
-    ll ans=BIG;
-    while(!ele.empty()){
-        auto xd=*ele.begin();
-        ll d=get<0>(xd),x=get<1>(xd),y=get<2>(xd);
-        ele.erase(ele.begin());
-        each(vec1,G1[x]){
-            each(vec2,G2[y]){
-                ll weight=abs(vec1-vec2);
-                if(dis[vec1][vec2] > dis[x][y] + weight){
-                    dis[vec1][vec2]=dis[x][y] + weight;
-                    ele.insert({dis[vec1][vec2],vec1,vec2});
-                }
-                if(vec1==vec2){
-                    if(esp.count(vec1)){
-                        ckmin(ans,dis[vec1][vec2]);
-                    }
-                }
-            }
-        }
 
+
+ll solve(vl &a) {
+    ll n=a.size();
+    vl neg(n,0);
+    neg[n-1]=a[n-1] < 0 ? a[n-1] : 0;
+    for(ll i=n-2;i>=0;i--){
+        neg[i]=neg[i+1] + (a[i] < 0 ? a[i] : 0);
     }
-    if(ans==BIG)ans=-1;
-    return ans;
+    ll pos=0,res=0;
+    FOR(i,0,n){
+        ckmax(res,abs(neg[i])+pos);
+        pos+=(a[i] > 0 ? a[i] : 0);
+    }
+    ckmax(res,pos);
+	return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -248,27 +208,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,s1,s2;
-		cin>>n>>s1>>s2;
-        s1--;
-        s2--;
-        ll m1;
-        cin>>m1;
-		vpl a(m1);
-        each(e,a){
-            cin>>e.f>>e.s;
-            e.f--;
-            e.s--;
-        }
-        ll m2;
-        cin>>m2;
-        vpl b(m2);
-        each(e,b){
-            cin>>e.f>>e.s;
-            e.f--;
-            e.s--;
-        }
-        cout<<solve(a,b,s1,s2,n)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
