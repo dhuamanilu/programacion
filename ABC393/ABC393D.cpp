@@ -177,6 +177,7 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(str &s) {
     ll n=s.size();
+    
 	return 0;
 }
 
