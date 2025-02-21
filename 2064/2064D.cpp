@@ -187,18 +187,30 @@ vl solve(vl &a,vl &queries) {
     }
     vl res;
     each(e,queries){
-        ll act=e;
+        ll act=e,cont=0,prev=n;
         while(act>0){
-            ll pos=0;
+            ll bit=0;
             for(ll j=29;j>=0;j--){
                 if(act&(1ll<<j)){
-                    pos=j;
+                    bit=j;
                     break;
                 }
             }
+            ll mayor=-1,idx=-1;
+            
+            if(mayor==-1){
+                res.pb(n);
+                break;
+            }
+            else{
+                if(idx==bit){
+                    cont+=prev-idx;
+                    act^=query(idx,prev-1);
+                    prev=idx;
+                }
+                else{
 
-            FOR(j,pos,30){
-
+                }
             }
         }
         
