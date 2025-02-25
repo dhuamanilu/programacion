@@ -175,17 +175,50 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
-    ll n=a.size();
-	return 0;
+void solve() {
+    ll n;
+    cin>>n;
+    vl a(n);
+    each(e,a){
+        cin>>e;
+    }
+    ll pri=0,seg=-1;
+    FOR(i,1,n){
+        if(a[i]!=a[pri-1]){
+            seg=i;
+            break;
+        }
+    }
+    auto query=[](ll x,ll y){
+        cout<<"? "<<x<<" "<<y<<endl;
+        cout.flush();
+        ll res;
+        cin>>res;
+        return res;
+    };
+    ll dis1=query(a[pri],a[seg]);
+    auto guess=[](char x){
+        cout<<"! "<<x<<endl;
+        cout.flush();
+    };
+    if(dis1==0){
+        guess('A');
+    }
+    else if(dis1>(n-1)){
+        guess('B');
+    }
+    else{
+        ll ter=-1;
+         
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr);
+	//ios::sync_with_stdio(false);
+	//cin.tie(nullptr);
 
     //? Stress Testing
     while(0) {
@@ -197,11 +230,7 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+		solve();
     }
     RAYA;
     RAYA;
