@@ -174,116 +174,10 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-/**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
- * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
- */
-#pragma once
 
-struct Tree {
-	typedef int T;
-	static constexpr T unit = INT_MIN;
-	T f(T a, T b) { return max(a, b); } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
-vl solve(vl &a,vl &queries) {
+ll solve(vl &a) {
     ll n=a.size();
-	Tree maxibit(n);  
-    for(int i=n-1;i>=0;i--){
-        for(int j=29;j>=0;j--){
-            if(a[i]&(1ll<<j)){
-                maxibit.update(i,j);
-                break;
-            }
-        }
-    }
-    vl pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n){
-        pref[i]=pref[i-1]^a[i];
-    }
-    auto query=[&](ll l,ll r){
-        if(l>=1) return pref[r]^pref[l-1];
-        else return pref[r];
-    };
-    vl res;
-    each(el,queries){
-        ll act=el,pos=n;
-        while(pos>0 && act>=a[pos-1]){
-            dbg(act,pos);
-            ll bit=0;
-            for(ll j=29;j>=0;j--){
-                if(act&(1ll<<j)){
-                    bit=j;
-                    break;
-                }
-            }
-            ll s=0,e=pos-1,m=s+(e-s)/2,guarda=-1;
-            ll state=-1;
-            while(s<=e){
-                m=s+(e-s)/2;
-                ll nose=maxibit.query(m,pos);
-                dbg(s,e,m,nose,bit);
-                if(nose>=bit){
-                    guarda=m;
-                    s=m+1;
-                    /*if(nose==bit) state=1;
-                    else state=0;*/
-                }
-                else{
-                    e=m-1;
-                }
-            }
-            dbg(guarda,pos);
-            if(guarda==-1){
-                pos=0;
-                break;
-            }   
-            else{
-                if(guarda+1<=pos-1){
-                    act^=query(guarda+1,pos-1);
-                    pos=guarda+1;
-                }
-                
-                if(act >= a[guarda]){
-                    act^=a[guarda];
-                    pos=guarda;
-                }
-                else break;
-                /*dbg(state);
-                if(state==1){
-                    act^=query(guarda,pos-1);
-                    pos=guarda;
-                }
-                else if(state==0){
-                    pos=guarda+1;
-                    break;
-                }*/
-            }   
-        }
-        dbg("sali del bucle res ",pos,n-pos);
-        res.pb(n-pos);
-    }
-    return res;
+	return 0;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -303,17 +197,12 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,q;
-		cin>>n>>q;
+		ll n;
+		cin>>n;
 		vl a(n);
 		each(e,a) cin>>e;
-        vl queries(q);
-        each(e,queries)cin>>e;
-        auto x = solve(a,queries);
-        each(e,x)cout<<e<<" ";
-        cout<<"\n";
+        cout<<solve(a)<<"\n";
     }
-    
     RAYA;
     RAYA;
 

@@ -157,7 +157,7 @@ using vvi = V<vi>;
 using vvl = V<vl>;
 using vvb = V<vb>;
 
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 const int MX = (int)2e5 + 5;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
@@ -173,117 +173,113 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
 /**
- * Author: Lucian Bicsi
- * Date: 2017-10-31
- * License: CC0
- * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right.
- * Can be changed by modifying T, f and unit.
- * Time: O(\log N)
- * Status: stress-tested
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
  */
-#pragma once
 
-struct Tree {
-	typedef int T;
-	static constexpr T unit = INT_MIN;
-	T f(T a, T b) { return max(a, b); } // (any associative fn)
-	vector<T> s; int n;
-	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
-	void update(int pos, T val) {
-		for (s[pos += n] = val; pos /= 2;)
-			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
-	}
-	T query(int b, int e) { // query [b, e)
-		T ra = unit, rb = unit;
-		for (b += n, e += n; b < e; b /= 2, e /= 2) {
-			if (b % 2) ra = f(ra, s[b++]);
-			if (e % 2) rb = f(s[--e], rb);
-		}
-		return f(ra, rb);
-	}
-};
-vl solve(vl &a,vl &queries) {
-    ll n=a.size();
-	Tree maxibit(n);  
-    for(int i=n-1;i>=0;i--){
-        for(int j=29;j>=0;j--){
-            if(a[i]&(1ll<<j)){
-                maxibit.update(i,j);
-                break;
+ #pragma once
+
+ template<int MOD, int RT> struct mint {
+     static const int mod = MOD;
+     static constexpr mint rt() { return RT; } // primitive root for FFT
+     int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+     mint():v(0) {}
+     mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+         if (v < 0) v += MOD; }
+     bool operator==(const mint& o) const {
+         return v == o.v; }
+     friend bool operator!=(const mint& a, const mint& b) { 
+         return !(a == b); }
+     friend bool operator<(const mint& a, const mint& b) { 
+         return a.v < b.v; }
+     friend str ts(mint a) { return ts(a.v); }
+    
+     mint& operator+=(const mint& o) { 
+         if ((v += o.v) >= MOD) v -= MOD; 
+         return *this; }
+     mint& operator-=(const mint& o) { 
+         if ((v -= o.v) < 0) v += MOD; 
+         return *this; }
+     mint& operator*=(const mint& o) { 
+         v = int((ll)v*o.v%MOD); return *this; }
+     mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+     friend mint pow(mint a, ll p) {
+         mint ans = 1; assert(p >= 0);
+         for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+         return ans; }
+     friend mint inv(const mint& a) { assert(a.v != 0); 
+         return pow(a,MOD-2); }
+         
+     mint operator-() const { return mint(-v); }
+     mint& operator++() { return *this += 1; }
+     mint& operator--() { return *this -= 1; }
+     friend mint operator+(mint a, const mint& b) { return a += b; }
+     friend mint operator-(mint a, const mint& b) { return a -= b; }
+     friend mint operator*(mint a, const mint& b) { return a *= b; }
+     friend mint operator/(mint a, const mint& b) { return a /= b; }
+ };
+ 
+ using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+ using vmi = V<mi>;
+ using pmi = pair<mi,mi>;
+ using vpmi = V<pmi>;
+ 
+ V<vmi> scmb; // small combinations
+ void genComb(int SZ) {
+     scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+     FOR(i,1,SZ) F0R(j,i+1) 
+         scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
+ }
+
+ll solve(vl &a) {
+    ll n=a.size()+1;
+    vector<vl> G(n+1);
+    map<pl,ll> edges;
+    FOR(i,0,n-1){
+        ll u=i+2,v=a[i];
+        G[u].pb(v);
+        G[v].pb(u);
+        ll mini=min(u,v),maxi=max(u,v);
+        edges[mp(mini,maxi)]++;
+    }
+    vector<vl> elements(n+1);
+    auto dfs=[&](auto &&dfs,ll ele,ll par,ll dista)->void{
+        each(e,G[ele]){
+            if(e!=par){
+                elements[dista].pb(e);
+                dfs(dfs,e,ele,dista+1);
             }
         }
-    }
-    vl pref(n,0);
-    pref[0]=a[0];
-    FOR(i,1,n){
-        pref[i]=pref[i-1]^a[i];
-    }
-    auto query=[&](ll l,ll r){
-        if(l>=1) return pref[r]^pref[l-1];
-        else return pref[r];
     };
-    vl res;
-    each(el,queries){
-        ll act=el,pos=n;
-        while(pos>0 && act>=a[pos-1]){
-            dbg(act,pos);
-            ll bit=0;
-            for(ll j=29;j>=0;j--){
-                if(act&(1ll<<j)){
-                    bit=j;
-                    break;
-                }
+    dfs(dfs,1,-1,1);
+    
+    vector<mi> res(n+1,mi(0));
+    res[1]=1;
+    elements[0].pb(1);
+    dbg(elements);
+    FOR(i,0,n+1){
+        each(e,elements[i]){
+            each(e2,elements[i+1]){
+                ll mini=min(e,e2),maxi=max(e,e2);
+                if(i==0 || !edges.count(mp(mini,maxi)))
+                    res[e2]+=res[e];
             }
-            ll s=0,e=pos-1,m=s+(e-s)/2,guarda=-1;
-            ll state=-1;
-            while(s<=e){
-                m=s+(e-s)/2;
-                ll nose=maxibit.query(m,pos);
-                dbg(s,e,m,nose,bit);
-                if(nose>=bit){
-                    guarda=m;
-                    s=m+1;
-                    /*if(nose==bit) state=1;
-                    else state=0;*/
-                }
-                else{
-                    e=m-1;
-                }
-            }
-            dbg(guarda,pos);
-            if(guarda==-1){
-                pos=0;
-                break;
-            }   
-            else{
-                if(guarda+1<=pos-1){
-                    act^=query(guarda+1,pos-1);
-                    pos=guarda+1;
-                }
-                
-                if(act >= a[guarda]){
-                    act^=a[guarda];
-                    pos=guarda;
-                }
-                else break;
-                /*dbg(state);
-                if(state==1){
-                    act^=query(guarda,pos-1);
-                    pos=guarda;
-                }
-                else if(state==0){
-                    pos=guarda+1;
-                    break;
-                }*/
-            }   
         }
-        dbg("sali del bucle res ",pos,n-pos);
-        res.pb(n-pos);
     }
-    return res;
+    dbg(-1/15,-2/15);
+    mi ans=0;
+    FOR(i,1,n+1){
+        ans+=res[i];
+    }
+	return ans.v;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -303,17 +299,12 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,q;
-		cin>>n>>q;
-		vl a(n);
+		ll n;
+		cin>>n;
+		vl a(n-1);
 		each(e,a) cin>>e;
-        vl queries(q);
-        each(e,queries)cin>>e;
-        auto x = solve(a,queries);
-        each(e,x)cout<<e<<" ";
-        cout<<"\n";
+        cout<<solve(a)<<"\n";
     }
-    
     RAYA;
     RAYA;
 
