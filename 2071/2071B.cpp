@@ -175,88 +175,73 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-void solve() {
-    ll n;
-    cin>>n;
-    vl a(n);
-    each(e,a){
-        cin>>e;
-    }
-    map<ll,ll> m;
-    each(e,a)m[e]++;
-    auto query=[](ll x,ll y){
-        cout<<"? "<<x<<" "<<y<<endl;
-        cout.flush();
-        ll res;
-        cin>>res;
+vl solve(ll n) {
+    vl res;
+    auto isPerfectSquare=[](ll x){
+        ll raiz=sqrtl(x);
+        return (raiz * raiz) ==  x;
+    };
+    if(isPerfectSquare((n*(n+1))/2)){
+        res.pb(-1);
         return res;
-    };
-    auto guess=[](char x){
-        cout<<"! "<<x<<endl;
-        cout.flush();
-    };
-    if(m.size()<n){
-        ll ele1=-1,ele2=a[0];
-        FOR(i,1,n+1){
-            if(!m.count(i)){
-                ele1=i;
-                break;
-            }
-        }
-        ll dis1=query(ele1,ele2);
-        if(dis1==0){
-            guess('A');
-        }
-        else{
-            guess('B');
-        }
     }
     else{
-        ll idx1=-1,idx2=-1;
+        res.resize(n);
+        iota(all(res),1ll);
+        //swap(res[0],res[1]);
+        ll act=1,sum2=0;
         FOR(i,0,n){
-            if(a[i]==1){
-                idx1=i+1;
+            if(isPerfectSquare(sum2+res[i])){
+                swap(res[i],res[i+1]);
+                act++;
             }
-            if(a[i]==n){
-                idx2=i+1;
+            sum2+=res[i];
+        }
+        auto check=[&](){
+            bool ok=true;
+            ll sum=0;
+            FOR(i,0,n){
+                sum+=res[i];
+                if(isPerfectSquare(sum)){
+                    ok=false;
+                    break;
+                }
             }
+            return ok;
+        };
+        if(!check()){
+            dbg(n,res);
+            assert(false);
         }
-        ll dis1=query(idx1,idx2);
-        if(dis1<(n-1)){
-            guess('A');
-        }
-        else if(dis1>(n-1)){
-            guess('B');
-        }
-        else{
-            ll dis2=query(idx2,idx1);
-            if(dis1==dis2){
-                guess('B');
-            }
-            else guess('A');
-        }
+        return res;
     }
-    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 
 int main() {
-	//ios::sync_with_stdio(false);
-	//cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
     //? Stress Testing
     while(0) {
-        RAYA;
+        
     }
-
+    /*FOR(i,1,10000){
+        auto xd=solve(i);
+        dbg("ok");
+    }*/
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		solve();
+		ll n;
+		cin>>n;
+        auto x=solve(n);
+        each(e,x)cout<<e<<" ";
+        cout<<"\n";
     }
     RAYA;
     RAYA;

@@ -173,90 +173,59 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-void solve() {
-    ll n;
-    cin>>n;
+void gen(ll n){
     vl a(n);
-    each(e,a){
-        cin>>e;
-    }
-    map<ll,ll> m;
-    each(e,a)m[e]++;
-    auto query=[](ll x,ll y){
-        cout<<"? "<<x<<" "<<y<<endl;
-        cout.flush();
-        ll res;
-        cin>>res;
-        return res;
+    iota(all(a),1ll);
+    auto isPerfectSquare=[](ll x){
+        ll raiz=sqrtl(x);
+        return (raiz * raiz) ==  x;
     };
-    auto guess=[](char x){
-        cout<<"! "<<x<<endl;
-        cout.flush();
-    };
-    if(m.size()<n){
-        ll ele1=-1,ele2=a[0];
-        FOR(i,1,n+1){
-            if(!m.count(i)){
-                ele1=i;
+    ll cont=0;
+    do{
+        cont++;
+        bool ok=true;
+        ll sum=0;
+        FOR(i,0,n){
+            sum+=a[i];
+            if(isPerfectSquare(sum)){
+                ok=false;
                 break;
             }
         }
-        ll dis1=query(ele1,ele2);
-        if(dis1==0){
-            guess('A');
+        if(ok){
+            dbg(a);
         }
-        else{
-            guess('B');
-        }
-    }
-    else{
-        ll idx1=-1,idx2=-1;
-        FOR(i,0,n){
-            if(a[i]==1){
-                idx1=i+1;
-            }
-            if(a[i]==n){
-                idx2=i+1;
-            }
-        }
-        ll dis1=query(idx1,idx2);
-        if(dis1<(n-1)){
-            guess('A');
-        }
-        else if(dis1>(n-1)){
-            guess('B');
-        }
-        else{
-            ll dis2=query(idx2,idx1);
-            if(dis1==dis2){
-                guess('B');
-            }
-            else guess('A');
-        }
-    }
-    
+        if(cont>1000000) break;
+    }while(next_permutation(all(a)));
+}
+
+str solve(ll k) {
+    if(k%3==1) return "YES";
+    else return "NO";
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 
 int main() {
-	//ios::sync_with_stdio(false);
-	//cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
     //? Stress Testing
     while(0) {
         RAYA;
     }
-
+    FOR(i,9,11){
+        gen(i+1);
+    }
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		solve();
+		ll k;
+		cin>>k;
+        cout<<solve(k)<<"\n";
     }
     RAYA;
     RAYA;

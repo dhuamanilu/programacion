@@ -262,19 +262,21 @@ ll solve(vl &a) {
     dfs(dfs,1,-1,1);
     
     vector<mi> res(n+1,mi(0));
+    vector<mi> acum(n+1,mi(0));
     res[1]=1;
     elements[0].pb(1);
-    dbg(elements);
-    FOR(i,0,n+1){
+    acum[0]=2;
+    FOR(i,1,n+1){
         each(e,elements[i]){
-            each(e2,elements[i+1]){
+            res[e]=acum[i-1]-res[a[e-2]];
+            acum[i]+=res[e];
+            /*each(e2,elements[i+1]){
                 ll mini=min(e,e2),maxi=max(e,e2);
                 if(i==0 || !edges.count(mp(mini,maxi)))
                     res[e2]+=res[e];
-            }
+            }*/
         }
     }
-    dbg(-1/15,-2/15);
     mi ans=0;
     FOR(i,1,n+1){
         ans+=res[i];
