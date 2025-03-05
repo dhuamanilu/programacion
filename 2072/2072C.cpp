@@ -175,57 +175,36 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vpl &a,ll st,ll en) {
-    ll n=a.size()+1;
-	vector<vl> G(n+1);
-    each(e,a){
-        ll u=e.f,v=e.s;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    vl d(n+1,BIG);
-    d[st]=0;
-    auto dfs=[&](auto &&dfs,ll act,ll par)->void{
-        each(e,G[act]){
-            if(e!=par){
-                d[e]=d[act]+1;
-                dfs(dfs,e,act);
-            }
-        }
-    };
-    dfs(dfs,st,-1);
-    vl path;
-    ll act=en;
-    while(act!=st){
-        path.pb(act);
-        each(e,G[act]){
-            if(d[e]<d[act]){
-                act=e;
-                break;
-            }
+vl solve(ll n,ll x) {
+    vl res;
+    /*ll bit=0;
+    FOR(i,0,31){
+        if(!((1ll<<i)&x)){
+            bit=i;
+            break;
         }
     }
-    dbg(path);
-    //reverse(all(path));
-    dbg(path);
-    set<ll> seen;
-    each(e,path){
-        seen.insert(e);
+    ll tam=min(n-1,(1ll<<bit));
+    FOR(i,0,tam){
+        res.pb(i);
+    }*/
+    ll orr=0;
+    //each(e,res)orr|=e;
+    ll act=0;
+    while((ll)res.size()<n){
+        ll candi=orr|act;
+        if(res.size()+1==n && candi!=x){
+            break;
+        }
+        if((candi&x)==candi){
+            orr|=act;
+            res.pb(act++);
+        }
+        else break;
     }
-    auto dfs2=[&](auto &&dfs2,ll act,ll par)->void{
-        if(!seen.count(act)){
-            path.pb(act);
-            seen.insert(act);
-        }
-        each(e,G[act]){
-            if(e!=par){
-                dfs2(dfs2,e,act);
-            }
-        }
-    };
-    dfs2(dfs2,en,-1);
-    reverse(all(path));
-    return path;
+    ll falta=n-(ll)res.size();
+    FOR(i,0,falta) res.pb(x);
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -245,14 +224,10 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,st,en;
-		cin>>n>>st>>en;
-		vpl a(n-1);
-		each(e,a) cin>>e.f>>e.s;
-        auto x = solve(a,st,en);
-        each(e,x){
-            cout<<e<<" ";
-        }
+		ll n,x;
+		cin>>n>>x;
+        auto res=solve(n,x);
+        each(e,res)cout<<e<<" ";
         cout<<"\n";
     }
     RAYA;

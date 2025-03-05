@@ -175,57 +175,11 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vpl &a,ll st,ll en) {
-    ll n=a.size()+1;
-	vector<vl> G(n+1);
-    each(e,a){
-        ll u=e.f,v=e.s;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    vl d(n+1,BIG);
-    d[st]=0;
-    auto dfs=[&](auto &&dfs,ll act,ll par)->void{
-        each(e,G[act]){
-            if(e!=par){
-                d[e]=d[act]+1;
-                dfs(dfs,e,act);
-            }
-        }
-    };
-    dfs(dfs,st,-1);
-    vl path;
-    ll act=en;
-    while(act!=st){
-        path.pb(act);
-        each(e,G[act]){
-            if(d[e]<d[act]){
-                act=e;
-                break;
-            }
-        }
-    }
-    dbg(path);
-    //reverse(all(path));
-    dbg(path);
-    set<ll> seen;
-    each(e,path){
-        seen.insert(e);
-    }
-    auto dfs2=[&](auto &&dfs2,ll act,ll par)->void{
-        if(!seen.count(act)){
-            path.pb(act);
-            seen.insert(act);
-        }
-        each(e,G[act]){
-            if(e!=par){
-                dfs2(dfs2,e,act);
-            }
-        }
-    };
-    dfs2(dfs2,en,-1);
-    reverse(all(path));
-    return path;
+ll solve(ll n,ll k,ll p) {
+    k=abs(k);
+    ll cuantos=cdiv(k,p);
+    if(cuantos>n) return -1;
+    else return cuantos;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -245,15 +199,9 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,st,en;
-		cin>>n>>st>>en;
-		vpl a(n-1);
-		each(e,a) cin>>e.f>>e.s;
-        auto x = solve(a,st,en);
-        each(e,x){
-            cout<<e<<" ";
-        }
-        cout<<"\n";
+		ll n,k,p;
+		cin>>n>>k>>p;
+        cout<<solve(n,k,p)<<"\n";
     }
     RAYA;
     RAYA;

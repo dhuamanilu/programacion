@@ -175,57 +175,41 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vpl &a,ll st,ll en) {
-    ll n=a.size()+1;
-	vector<vl> G(n+1);
-    each(e,a){
-        ll u=e.f,v=e.s;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    vl d(n+1,BIG);
-    d[st]=0;
-    auto dfs=[&](auto &&dfs,ll act,ll par)->void{
-        each(e,G[act]){
-            if(e!=par){
-                d[e]=d[act]+1;
-                dfs(dfs,e,act);
+vpl solve(ll k) {
+    
+    auto get=[](ll n){
+        ll s=1,e=5+((1+(ll)sqrtl(1+8*n))/2),m=s+(e-s)/2,guarda=-1;
+        while(s<=e){
+            m=s+(e-s)/2;
+            //dbg(s,e,m,(m*(m-1))/2,k);
+            if((m*(m-1))/2<=n){
+                guarda=m;
+                s=m+1;
             }
+            else e=m-1;
         }
+        return guarda;
     };
-    dfs(dfs,st,-1);
-    vl path;
-    ll act=en;
-    while(act!=st){
-        path.pb(act);
-        each(e,G[act]){
-            if(d[e]<d[act]){
-                act=e;
-                break;
-            }
+    ll act=k;
+    vpl res;
+    ll val=0;
+    FOR(i,0,1000){
+        if(act==0) break;
+        ll faltan=get(act);
+        //dbg(act,faltan);
+        //dbg(act,faltan,(faltan*(faltan-1))/2);
+        act-=(faltan*(faltan-1))/2;
+        FOR(j,0,faltan){
+            res.pb(mp(i,val+j));
         }
+        val+=800;
     }
-    dbg(path);
-    //reverse(all(path));
-    dbg(path);
-    set<ll> seen;
-    each(e,path){
-        seen.insert(e);
+    if(act!=0){
+        dbg(k,res,act);
+        assert(false);
     }
-    auto dfs2=[&](auto &&dfs2,ll act,ll par)->void{
-        if(!seen.count(act)){
-            path.pb(act);
-            seen.insert(act);
-        }
-        each(e,G[act]){
-            if(e!=par){
-                dfs2(dfs2,e,act);
-            }
-        }
-    };
-    dfs2(dfs2,en,-1);
-    reverse(all(path));
-    return path;
+    assert((ll)res.size()<=500);
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -237,7 +221,9 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll k=rng_ll(0,100000);
+        auto res=solve(k);
+        dbg("ok");
     }
 
     int t = 1;
@@ -245,15 +231,13 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,st,en;
-		cin>>n>>st>>en;
-		vpl a(n-1);
-		each(e,a) cin>>e.f>>e.s;
-        auto x = solve(a,st,en);
-        each(e,x){
-            cout<<e<<" ";
+		ll k;
+		cin>>k;
+		auto res=solve(k);
+        cout<<res.size()<<"\n";
+        each(e,res){
+            cout<<e.f<<" "<<e.s<<"\n";
         }
-        cout<<"\n";
     }
     RAYA;
     RAYA;

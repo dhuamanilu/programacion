@@ -175,57 +175,21 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vpl &a,ll st,ll en) {
-    ll n=a.size()+1;
-	vector<vl> G(n+1);
-    each(e,a){
-        ll u=e.f,v=e.s;
-        G[u].pb(v);
-        G[v].pb(u);
-    }
-    vl d(n+1,BIG);
-    d[st]=0;
-    auto dfs=[&](auto &&dfs,ll act,ll par)->void{
-        each(e,G[act]){
-            if(e!=par){
-                d[e]=d[act]+1;
-                dfs(dfs,e,act);
-            }
-        }
-    };
-    dfs(dfs,st,-1);
-    vl path;
-    ll act=en;
-    while(act!=st){
-        path.pb(act);
-        each(e,G[act]){
-            if(d[e]<d[act]){
-                act=e;
-                break;
+pl solve(vl &a) {
+    ll n=a.size(),maxi=0;
+    pl ans={1,1};
+	FOR(i,0,n){
+        ll inv=0,other=0;
+        FOR(j,i+1,n){
+            if(a[i]>a[j]) inv++;
+            else if(a[i]<a[j]) other++;
+            if(inv-other > maxi){
+                maxi=inv-other;
+                ans={i+1,j+1};
             }
         }
     }
-    dbg(path);
-    //reverse(all(path));
-    dbg(path);
-    set<ll> seen;
-    each(e,path){
-        seen.insert(e);
-    }
-    auto dfs2=[&](auto &&dfs2,ll act,ll par)->void{
-        if(!seen.count(act)){
-            path.pb(act);
-            seen.insert(act);
-        }
-        each(e,G[act]){
-            if(e!=par){
-                dfs2(dfs2,e,act);
-            }
-        }
-    };
-    dfs2(dfs2,en,-1);
-    reverse(all(path));
-    return path;
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -245,15 +209,12 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,st,en;
-		cin>>n>>st>>en;
-		vpl a(n-1);
-		each(e,a) cin>>e.f>>e.s;
-        auto x = solve(a,st,en);
-        each(e,x){
-            cout<<e<<" ";
-        }
-        cout<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto res=solve(a);
+        cout<<res.f<<" "<<res.s<<"\n";
     }
     RAYA;
     RAYA;
