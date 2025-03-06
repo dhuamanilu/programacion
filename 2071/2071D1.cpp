@@ -173,11 +173,70 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-ll solve(vl &a) {
+ll brute(vl &a,ll L,ll R){
     ll n=a.size();
-	return 0;
+    map<ll,ll> seen;
+    auto get2=[&](auto &&get2,ll num)->ll{
+        if(seen.count(num)) return seen[num];
+        assert(num>=1);
+        if(num<=n){
+            seen[num]=a[num-1];
+            return a[num-1];
+        }
+        else{
+            ll mitad=num/2,res=0;
+            FOR(i,1,mitad+1){
+                ll val=(i<=n ? a[i-1] : get2(get2,i));
+                res^=val;
+            }
+            seen[num]=res;
+            return res;
+        }
+    };
+    return get2(get2,L);
+}
+
+ll solve(vl &a,ll L,ll R) {
+    ll n=a.size();
+    vl prefXor(n,0);
+    prefXor[0]=a[0];
+    FOR(i,1,n){
+        prefXor[i]=prefXor[i-1]^a[i];
+    }
+    auto query=[&](ll l,ll r){
+        if(l>=1){
+            return prefXor[r]^prefXor[l-1];
+        }
+        else{
+            return prefXor[r];
+        }
+    };
+    auto get=[&](auto &&get,ll num)->ll{
+        assert(num>=1);
+        if(num<=n){
+            return a[num-1];
+        }
+        else{
+            ll mitad=num/2;
+            if(mitad<=n){
+                return query(0,mitad-1);
+            }
+            else{
+                ll act=(query(0,n-1));
+                if(n%2==0){
+                    act^=get(get,n+1);
+                }
+                if(mitad%2==1){
+                    return act;
+                }
+                else{
+                    return act ^ get(get,mitad);
+                }
+            }
+        }
+        
+    };
+    return get(get,L);
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -189,7 +248,17 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll n=rng_ll(1,100);
+        vl a(n);
+        each(e,a)e=rng_ll(0,1);
+        ll cual = rng_ll(1,100000);
+        ll ans1=brute(a,cual,cual);
+        ll ans2=solve(a,cual,cual);
+        if(ans1!=ans2){
+            dbg("xd?",a,cual,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
     }
 
     int t = 1;
@@ -197,11 +266,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
+		ll n,l,r;
+		cin>>n>>l>>r;
 		vl a(n);
 		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        cout<<solve(a,l,r)<<"\n";
     }
     RAYA;
     RAYA;

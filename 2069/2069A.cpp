@@ -173,35 +173,146 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-void gen(ll n){
-    vl a(n);
-    iota(all(a),1ll);
-    auto isPerfectSquare=[](ll x){
-        ll raiz=sqrtl(x);
-        return (raiz * raiz) ==  x;
-    };
-    ll cont=0;
-    do{
-        cont++;
-        bool ok=true;
-        ll sum=0;
-        FOR(i,0,n){
-            sum+=a[i];
-            if(isPerfectSquare(sum)){
-                ok=false;
-                break;
-            }
-        }
-        if(ok){
-            dbg(a);
-        }
-        if(cont>1000000) break;
-    }while(next_permutation(all(a)));
-}
 
-str solve(ll k) {
-    if(k%3==1) return "YES";
-    else return "NO";
+
+ll solve(str &a) {
+    ll n=a.size(),i=0,j=n-1;
+    while(i<j && a[i]==a[j]){
+        i++;
+        j--;
+    }
+    if(i>=j){
+        return 0;
+    }
+    //dbg(((-2)%2));
+    auto get1=[&](){
+        ll s=i,e=j,m=s+(e-s)/2,guarda1=-1;
+        while(s<=e){
+            m=s+(e-s)/2;
+            bool ok=true;
+            if(m<n/2){
+                ll lim1=n-m-1;
+                ll ptr1=m+1,ptr2=lim1-1;
+                while(ptr1<ptr2){
+                    if(a[ptr1]!=a[ptr2]){
+                        ok=false;
+                        break;
+                    }
+                    ptr1++;
+                    ptr2--;
+                }
+                if(ok){
+                    map<char,ll> m1;
+                    FOR(it,i,m+1){
+                        m1[a[it]]++;
+                    }
+                    map<char,ll> m2;
+                    FOR(it,lim1,n-i){
+                        m2[a[it]]++;
+                    }
+                    if(m1!=m2){
+                        ok=false;
+                    }
+                }
+            }
+            else{
+                map<char,ll> m1;
+                FOR(it,i,m+1){
+                    m1[a[it]]++;
+                }
+                FOR(it,m+1,n-i){
+                    if(!m1.count(a[it]) || m1[a[it]]==0){
+                        ok=false;
+                        break;
+                    }
+                    else{
+                        m1[a[it]]--;
+                    }
+                }
+                each(ele,m1){
+                    if((ele.s%2)!=0){
+                        ok=false;
+                        break;
+                    }
+                }
+            }
+            if(ok){
+                guarda1=m;
+                e=m-1;
+            }
+            else s=m+1;   
+        }
+        ll res=guarda1-i+1;
+        return res;
+    };
+    
+    auto get2=[&](){
+        ll s=i,e=j,m=s+(e-s)/2,guarda1=-1;
+        while(s<=e){
+            m=s+(e-s)/2;
+            bool ok=true;
+            //dbg(s,e,m);
+            if(m >= n/2){
+                //dbg("caso 1",m);
+                ll lim1=n-m-1;
+                ll ptr1=lim1+1,ptr2=m-1;
+                while(ptr1<ptr2){
+                    //dbg(ptr1,ptr2,a[ptr1],a[ptr2]);
+                    if(a[ptr1]!=a[ptr2]){
+                        ok=false;
+                        break;
+                    }
+                    ptr1++;
+                    ptr2--;
+                }
+                if(ok){
+                    map<char,ll> m1;
+                    FOR(it,n-j-1,n-m){
+                        m1[a[it]]++;
+                    }
+                    map<char,ll> m2;
+                    FOR(it,m,j+1){
+                        m2[a[it]]++;
+                    }
+                    if(m1!=m2){
+                        ok=false;
+                    }
+                }
+            }
+            else{
+                //dbg("caso 2",m);
+                map<char,ll> m1;
+                FOR(it,m,j+1){
+                    m1[a[it]]++;
+                }
+                FOR(it,i,m){
+                    if(!m1.count(a[it]) || m1[a[it]]==0){
+                        ok=false;
+                        break;
+                    }
+                    else{
+                        m1[a[it]]--;
+                    }
+                }
+                each(ele,m1){
+                    if((ele.s%2)!=0){
+                        ok=false;
+                        break;
+                    }
+                }
+            }
+            //dbg(ok,s,e,m);
+            if(ok){
+                guarda1=m;
+                s=m+1;
+            }
+            else e=m-1;   
+        }
+        ll res=j-guarda1+1;
+        //dbg(res);
+        return res;
+    };
+    return min(get1(),get2());
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -214,18 +325,26 @@ int main() {
     //? Stress Testing
     while(0) {
         RAYA;
+        ll n=rng_ll(1,10000);
+        str xd(n,'a');
+        each(e,xd){
+            e='a'+rng_ll(0,25);
+        }
+        if(solve(xd)==1){
+            dbg("xd",xd);
+            assert(false);
+        }
+        else dbg("ok");
     }
-    /*FOR(i,9,11){
-        gen(i+1);
-    }*/
+
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll k;
-		cin>>k;
-        cout<<solve(k)<<"\n";
+		str s;
+        cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;
