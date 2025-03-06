@@ -175,17 +175,44 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-str solve(vl &a) {
-    ll n=a.size();
-    if(n<=2) return "YES";
-    else{
-        FOR(i,0,n-2){
-            if(a[i]==1 && a[i+1]==0 && a[i+2]==1){
-                return "NO";
+ll solve(vector<vl> &a) {
+    ll n=a.size(),m=a[0].size();
+    vl cho((n*m)+1,0);
+    auto isValid=[&](ll x,ll y){
+        return x>=0 && x<n && y>=0 && y<m;
+    };
+    vl frec((n*m)+1,0);
+    FOR(i,0,n){
+        FOR(j,0,m){
+            frec[a[i][j]]++;
+            FOR(k,0,4){
+                ll newX=i+dx[k],newY=j+dy[k];
+                if(isValid(newX,newY)){
+                    if(a[i][j]==a[newX][newY]){
+                        cho[a[i][j]]++;
+                    }
+                }
             }
         }
-        return "YES";
     }
+    vpl b;
+    FOR(i,1,n*m+1){
+        if(frec[i]>0){
+            b.pb(mp(cho[i],i));
+        }
+    }
+    sor(b);
+    ll res=0;
+    FOR(i,0,(ll)b.size()-1){
+        if(b[i].f==0){
+            res++;
+        }
+        else{
+            res+=2;
+        }
+    }
+
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -205,10 +232,14 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-        cin>>n;
-        vl a(n-2);
-        each(e,a)cin>>e;
+		ll n,m;
+        cin>>n>>m;
+        vector<vl> a(n,vl(m));
+        each(e,a){
+            each(e2,e){
+                cin>>e2;
+            }
+        }
         cout<<solve(a)<<"\n";
     }
     RAYA;
