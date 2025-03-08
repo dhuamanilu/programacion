@@ -241,8 +241,26 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(vl &a) {
     ll n=a.size();
-    
-    return res;
+    vector<vector<mi>> dp(n,vector<mi>(3,mi(0)));
+    if(a[0]==1){
+        dp[0][0]=mi(1);
+    }
+    FOR(i,1,n){
+        dp[i]=dp[i-1];
+        if(a[i]==1){
+            dp[i][0]=dp[i-1][0]+ mi(1);
+        }
+        else if(a[i]==2){
+            dp[i][1]=mi(2)*dp[i-1][1] +  dp[i-1][0]; 
+        }
+        else{
+            dp[i][2]=dp[i-1][2] + dp[i-1][1];
+        }
+    }
+    FOR(i,0,(ll)dp.size()){
+        dbg(dp[i][0].v,dp[i][1].v,dp[i][2].v);
+    }
+    return dp[n-1][2].v;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
