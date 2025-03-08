@@ -172,33 +172,34 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 //? Template
 //? /Template
-
-
-
+const int N=1000000+5;
+vl cont(N,0);
+void init(){
+    FOR(i,1,N){
+        ll num=i,contr=0;
+        while(num%2==0 && num>0){
+            num/=2;
+            contr++;
+        }
+        cont[i]=contr;
+    }
+}
 vl solve(ll n,ll k) {
-    ll pot=0;
-    while((1ll<<pot)<=n){
-        pot++;
+    vl res(n);
+    res[0]=k;
+    res[n-1]=k;
+    ll val1=0,val2=0;
+    FOR(i,1,n-1){
+        val1+=cont[n-i];
+        val2+=cont[i];
+        dbg(cont[n-i+1],cont[i]);
+        dbg(i,val1,val2);
+        if(val1 > val2){
+            res[i]=0;
+        }
+        else res[i]=k;
     }
-    ll zeros=(1ll<<pot)-n;
-    vl res;
-    if(zeros==n){
-        FOR(i,0,n){
-            res.pb(k);
-        }
-    }
-    else{
-        ll otro=(n-zeros)/2;
-        FOR(i,0,otro){
-            res.pb(k);
-        }
-        FOR(i,0,zeros){
-            res.pb(0);
-        }
-        FOR(i,0,otro){
-            res.pb(k);
-        }
-    } 
+
     return res;
 }
 
@@ -213,7 +214,7 @@ int main() {
     while(0) {
         RAYA;
     }
-
+    init();
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
