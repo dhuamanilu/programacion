@@ -1,7 +1,7 @@
 //* sometimes pragmas don't work, if so, just comment it!
 #pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
-//#pragma GCC optimize ("trapv")
+//? #pragma GCC target ("avx,avx2")
+//! #pragma GCC optimize ("trapv")
 
 //! #undef _GLIBCXX_DEBUG //? for Stress Testing
 
@@ -173,107 +173,17 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-const int N=200000+5;
-bool isPrime[N];
-ll lpf[N];
-vl primes;
-void init(){
-    iota(lpf,lpf+N,0ll);
-    FOR(i,0,N){
-        isPrime[i]=true;
-    }
-    FOR(i,2,N){
-        if(isPrime[i]){
-            for(ll j=2*i;j<N;j+=i){
-                isPrime[j]=false;
-                lpf[j]=i;
-            }
-        }
-    }
-    FOR(i,2,N){
-        if(isPrime[i]){
-            primes.pb(i);
-        }
-    }
-}
 
-ll solve(vl &a) {
-    ll n=a.size();
-	map<ll,ll> m;
-    each(e,a)m[e]++;
-    ll res=0,primosTot=0;
-    vvl fact(n);
-    FOR(i,0,n){
-        ll cont=0,act=a[i];
-        vl factores;
-        while(act > 1){
-            cont++;
-            if(cont > 2){
-                break;
-            }
-            factores.pb(lpf[act]);
-            act/=lpf[act];
-        }
-        if(cont<=2){
-            if(cont==1)
-                primosTot++;
-            fact[i]=factores;
-        }
+
+str solve(vl &a,vl &b) {
+    map<ll,ll> m1,m2;
+    each(e,a)m1[e]++;
+    each(e,b)m2[e]++;
+    ll tam1=m1.size(),tam2=m2.size();
+    if(tam1 + tam2>3){
+        return "YES";
     }
-    ll primos=0;
-    //dbg(m);
-    vl esp;
-    FOR(i,0,n){
-        if(m[a[i]] > 1){
-            m[a[i]]--;
-        }
-        else m.erase(a[i]);
-        ll cont=fact[i].size();
-        if(cont<=2 && cont>0){
-            if(cont==1){
-                primos++;
-                //dbg("add",primosTot,primos,(m.count(a[i]) ? m[a[i]] : 0ll ));
-                ll contr=primosTot-primos-(m.count(a[i]) ? m[a[i]] : 0ll );
-                //dbg(contr);
-                res+=max(0ll,contr);
-                esp.pb(a[i]);
-             }
-             else if(cont==2){
-                ll fact1=fact[i][0],fact2=fact[i][1];
-                /*if(m.count(fact1)){
-                    res+=m[fact1];
-                }
-                if(fact1!= fact2 && m.count(fact2)){
-                    res+=m[fact2];
-                }*/
-                res+=m[a[i]]+1;
-             }
-             
-        }
-        
-        
-    }
-    //dbg(res,primos);
-    map<ll,ll> xdd;
-    each(e,a)xdd[e]++;
-    map<ll,ll> extra;
-    each(e,esp){
-        extra[e]++;
-    }
-    ll falta=0;
-    each(e,extra){
-        ll val=0;
-        each(e2,primes){
-            ll numerito=e.f*e2;
-            if(numerito > n) break;
-            if(xdd.count(numerito)){
-                val+=xdd[numerito];
-            }
-        }
-        falta+=e.s*val;
-    }
-    dbg(res,falta);
-    return res+falta;
+    else return "NO";
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -282,7 +192,7 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-    init();
+
     //? Stress Testing
     while(0) {
         RAYA;
@@ -296,8 +206,14 @@ int main() {
 		ll n;
 		cin>>n;
 		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+		each(e,a){
+            cin>>e;
+        }
+        vl b(n);
+		each(e,b){
+            cin>>e;
+        }
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;
