@@ -175,38 +175,64 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
+ll solve(vl &a,ll k) {
+    vpl b;
+    ll n=a.size();
+    ll res=0;
+    if(k==1){
+        ll maxi=max(a[0],a[n-1]);
+        FOR(i,1,n-1){
+            ckmax(res,a[i]+maxi);
+        }
+        ckmax(res,a[0]+a[n-1]);
+        return res;
+    }
+    
+    FOR(i,0,n){
+        b.pb(mp(a[i],i));
+    }
+    sor(b);
+    reverse(all(b));
+    
+    FOR(i,0,k+1){
+        res+=b[i].f;
+    }
+    return res;
+    /*FOR(i,0,n-k+1){
+        ll mini=BIG,maxi=-BIG;
+        ll sum=0;
+        FOR(j,i,i+k){
+            sum+=b[j].f;
+            ckmin(mini,b[j].s);
+            ckmax(maxi,b[j].s);
+        }
+        dbg(mini,maxi,sum);
+        bool ok=false;
+        FOR(it,0,i){
+            if(b[it].s >= mini && b[it].s<=maxi){
+                ckmax(res,sum + b[it].f);
+                ok=true;
+                break;
+            }
+        }
+        if(!ok){
+            FOR(it,i+k,n){
+                if(b[it].s >= mini && b[it].s<=maxi){
+                    ckmax(res,sum + b[it].f);
+                    ok=true;
+                    break;
                 }
             }
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+        if(maxi<n-1){
+            ckmax(res,sum+a[n-1]);
         }
+        else if(mini > 0){
+            ckmax(res,sum+ a[0]);
+        }
+        
     }
-    return res;
+    return res;*/
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -222,15 +248,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

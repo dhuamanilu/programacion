@@ -175,36 +175,44 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
+vector<vector<char>> solve(vector<vector<char>> &a) {
+    vector<vector<char>> res=a;
+    vector<vector<char>> res2=a;
+    each(e,res2){
+        each(e2,e)e2='X';
+    }
+    ll n=a.size();
+    FOR(i,0,n){
+        FOR(k,0,(i+1)%4){
+            //rotarlo k veces
+            FOR(j,i,n-i-1){
+                ll actI=i,actJ=j;
+                FOR(it,0,4){
+                    if(i==0 && j==1){
+                        dbg(actJ,n-1-actI);
+                        dbg(actI,actJ);
+                    }
+                    
+                    res2[actJ][n-1-actI]=res[actI][actJ];
+                    ll val=actI;
+                    actI=actJ;
+                    actJ=n-1-val;
+                }
+                actI=i,actJ=j;
+                if(i==0 && j==1){
+                    each(e,res2) dbg(e);
+                }
+                
+                FOR(it,0,4){
+                    //dbg(actI,actJ);
+                    res[actI][actJ]=res2[actI][actJ];
+                    ll val=actI;
+                    actI=actJ;
+                    actJ=n-1-val;
                 }
             }
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
-        }
+        
     }
     return res;
 }
@@ -226,11 +234,21 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n;
+		cin>>n;
+		vector<vector<char>> a(n,vector<char>(n,0));
+        each(e,a){
+            each(e2,e){
+                cin>>e2;
+            }
+        }
+        auto x = solve(a);
+        each(e,x){
+            each(e2,e){
+                cout<<e2;
+            }
+            cout<<"\n";
+        }
     }
     RAYA;
     RAYA;

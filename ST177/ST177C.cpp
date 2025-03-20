@@ -175,35 +175,26 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
+vector<array<ll,3>> solve(str &a,str &b) {
+    ll n=a.size();
+	vl bad(n,0);
     ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
-                }
-            }
+    FOR(i,0,n){
+        if(a[i]!=b[i]){
+            bad[i]++;
+            cont++;
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+    }
+    vector<array<ll,3>> res;
+    if(cont > (n/2)){
+        res.pb({1,1,n});
+        each(e,bad){
+            e^=1;
+        }
+    }
+    FOR(i,0,n){
+        if(bad[i]==1){
+            res.pb({1,i+1,i+1});
         }
     }
     return res;
@@ -222,15 +213,21 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n;
+		cin>>n;
+		str a;
+	    cin>>a;
+        str b;
+        cin>>b;
+        auto x =solve(a,b);
+        cout<<x.size()<<"\n";
+        each(e,x){
+            cout<<get<0>(e)<<" "<<get<1>(e)<<" "<<get<2>(e)<<"\n";
+        }
     }
     RAYA;
     RAYA;

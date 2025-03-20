@@ -175,37 +175,17 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
-                }
-            }
-        }
-    };
+ll solve(ll n,ll k) {
     ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+    if(n%2==1){
+        if(k%2==1){
+            n-=k;
         }
+        else n-=(k-1);
+        res++;
     }
+    ll val=((k%2==1) ? k-1: k); 
+    res+=cdiv(n,val);
     return res;
 }
 
@@ -222,15 +202,13 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+        cout<<solve(n,k)<<"\n";
     }
     RAYA;
     RAYA;

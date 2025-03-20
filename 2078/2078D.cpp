@@ -174,39 +174,61 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
+ll brute(vector<array<ll,4>> &a){
+    ll res=-BIG,n=a.size();
+    auto get=[&](auto &&get,ll enA,ll enB,ll i)->void{
+        if(i==n){
+            ckmax(res,enA+enB);
+            return;
+        }
+        else{
+            ll cantA=(a[i][0] ? enA*(a[i][1]-1):a[i][1] ),cantB=(a[i][2] ? enB*(a[i][3]-1):a[i][3]);
+            FOR(j,0,cantA+1){
+                FOR(k,0,cantB+1){
+                    ll newCantA=enA + j + (cantB - k),newCantB= enB  + (cantA - j) + k;
+                    get(get,newCantA,newCantB,i+1);
                 }
             }
         }
     };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+    get(get,1,1,0);
+    return res;
+}
+ll solve(vector<array<ll,4>> &a) {
+    ll n=a.size();
+    vector<array<ll,4>> b;
+    ll mult1=1,mult2=1,sum1=0,sum2=0;
+    reverse(all(a));
+    each(e,a){
+        if(e[0]==0){
+            sum1+=e[1];
+        }
+        else{
+            mult1*=e[1];
+        }
+        if(e[2]==0){
+            sum2+=e[3];
+        }
+        else{
+            mult2*=e[3];
+        }
+        b.pb({sum1,mult1,sum2,mult2});
+    }
+    reverse(all(b));
+    reverse(all(a));
+    ll enA=1,enB=1;
+    FOR(i,0,n){
+        
+        ll cantA=(a[i][0] ? enA*(a[i][1]-1):a[i][1] ),cantB=(a[i][2] ? enB*(a[i][3]-1):a[i][3] );
+        dbg(enA,enB,cantA,cantB);
+        if(b[i][1]>b[i][3]){
+            enA+=cantA+cantB;
+        }
+        else{
+            enB+=cantB+cantA;
         }
     }
-    return res;
+    return enA+enB;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -217,20 +239,61 @@ int main() {
 	cin.tie(nullptr);
 
     //? Stress Testing
-    while(0) {
+    while(1) {
+        ll n=rng_ll(1,3);
+        vector<array<ll,4>> a(n);
+        each(e,a){
+            e[0]=rng_ll(0,1);
+            if(e[0]==0){
+                e[1]=rng_ll(1,5);
+            }
+            else{
+                e[1]=rng_ll(2,3);
+            }
+            e[2]=rng_ll(0,1);
+            if(e[2]==0){
+                e[3]=rng_ll(1,5);
+            }
+            else{
+                e[3]=rng_ll(2,3);
+            }
+        }
+        ll ans1=brute(a);
+        ll ans2=solve(a);
+        if(ans1!=ans2){
+            dbg(a,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
         RAYA;
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n;
+		cin>>n;
+		vector<array<ll,4>> a(n);
+		each(e,a){
+            char t1,t2;
+            ll val1,val2;
+            cin>>t1>>val1>>t2>>val2;
+            array<ll,4> act;
+            if(t1=='+'){
+                act[0]=0;
+            }
+            else act[0]=1;
+            act[1]=val1;
+            if(t2=='+'){
+                act[2]=0;
+            }
+            else act[2]=1;
+            act[3]=val2;
+            e=act;
+        }
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

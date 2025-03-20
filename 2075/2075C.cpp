@@ -175,36 +175,39 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
-                }
-            }
+ll solve(vl &a,ll n) {
+    sor(a);
+    each(e,a){
+        e=min(e,n-1);
+    }
+    //dbg(a);
+    ll m=a.size();
+	vl b(m);
+    FOR(i,0,m){
+        b[i]=(a[i]-(n-1));
+    }
+    vl pref(m,0);
+    pref[0]=a[0];
+    FOR(i,1,m){
+        pref[i]=pref[i-1]+a[i];
+    }
+    auto query=[&](ll l,ll r){
+        if(l>=1){
+            return pref[r]-pref[l-1];
+        }
+        else{
+            return pref[r];
         }
     };
     ll res=0;
     FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
-        }
+        ll idx=lower_bound(all(a),n-1-a[i])-a.begin();
+        ll cant=m-idx;
+        dbg("cant before",cant);
+        if(idx<=i)cant--;
+        ll sum=query(idx,m-1)-(idx<=i ? a[i] : 0ll);
+        dbg(idx,cant,sum,cant*b[i]+sum);
+        res+=((cant)*b[i]) + sum;
     }
     return res;
 }
@@ -222,15 +225,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vl a(m);
+		each(e,a) cin>>e;
+        cout<<solve(a,n)<<"\n";
     }
     RAYA;
     RAYA;

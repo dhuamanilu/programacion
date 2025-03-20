@@ -174,39 +174,52 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
-                }
-            }
-        }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+ll brute(ll x){
+    FOR(i,1,x){
+        ll y=i,z=x^y;
+        if(x<y+z && y<x+z && z < y+x){
+            //dbg("de x una res es",x,y);
+            return y;
         }
     }
-    return res;
+    return -1;
+}
+ll solve(ll x) {
+    auto isPower=[](ll num){
+        while(num%2==0 && num>0){
+            num/=2;
+        }
+        return num==1;
+    };
+	if(isPower(x) || isPower(x+1)){
+        return -1;
+    }
+    else{
+        ll res=1,bit=0;
+        for(ll j=32;j>=0;j--){
+            if(x&(1ll<<j)){
+                bit=j;
+                break;
+            }
+        }
+        ll par=x%2;
+        FOR(i,1,bit){
+            if(par==0){
+                if((1ll<<i)&x){
+                    res+=(1ll<<i);
+                    return res;
+                }
+            }
+            else{
+                if(!((1ll<<i)&x)){
+                    res+=(1ll<<i);
+                    return res;
+                }
+            }
+            
+        }
+        return -1;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -218,19 +231,26 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll x=rng_ll(1,100000);
+        ll ans1=brute(x),ans2=solve(x);
+        if(ans1!=ans2 && ans2==-1){
+            dbg(x,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
+        //RAYA;
     }
-
+    /*FOR(i,1,100){
+        ll xd = brute(i);
+    }*/
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll x;
+		cin>>x;
+        cout<<solve(x)<<"\n";
     }
     RAYA;
     RAYA;

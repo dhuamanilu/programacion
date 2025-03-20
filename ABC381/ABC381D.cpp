@@ -3,7 +3,7 @@
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 
-//! #undef _GLIBCXX_DEBUG //? for Stress Testing
+#undef _GLIBCXX_DEBUG //? for Stress Testing
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -173,37 +173,71 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
+ll brute(vl &a){
+    ll n=a.size(),res=0;
+    FOR(i,0,n){
+        FOR(j,i+1,n){
+            ll len=j-i+1;
+            if(len%2==1) continue;
+            bool ok=true;
+            map<ll,ll> m;
+            FOR(k,i,j){
+                if(a[k]!=a[k+1] || m.count(a[k])){
+                    ok=false;
+                    break;
                 }
+                else{
+                    m[a[k]]++;
+                    k++;
+                } 
+            }
+            if(ok){
+                ckmax(res,len);
             }
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
+    }
+    return res;
+}
+
+ll solve(vl a) {
+    ll n=a.size(),res=0;
+    /*vl b;
+    FOR(i,0,n){
+        if(i+1< n && a[i]==a[i+1]){
+            ll j=i+1;
+            while(j<n && (a[i]==a[j])){
+                j++;
             }
+            vl c;
+            c.pb(a[i]);
+            c.pb(a[i]);
+            i=j-1;
+        }
+        else b.pb(a[i]);
+    }
+    a=b;
+    n=a.size();*/
+    map<ll,ll> m;
+    auto hacer=[&](auto &&hacer,ll i,ll j)->ll{
+        while(j+1<n && (a[j]==a[j+1]) && !m.count(a[j])){
+            m[a[j]]=j;
+            j+=2;
+        }
+        ckmax(res,j-i);
+        if(j+1<n){
+            //dbg(a[j],a[j+1]);
+            if((a[j]==a[j+1]) && m.count(a[j])){
+                ll pos=m[a[j]]+2;
+                m.erase(a[j]);
+                return hacer(hacer,pos,j);
+            }
+        }
+        else return j-1;
+    };
+	FOR(i,0,n-1){
+        if(a[i]==a[i+1]){
+            i=hacer(hacer,i,i);
+            m.clear();
         }
     }
     return res;
@@ -217,7 +251,16 @@ int main() {
 	cin.tie(nullptr);
 
     //? Stress Testing
-    while(0) {
+    while(1) {
+        ll n=rng_ll(1,200);
+        vl a(n);
+        each(e,a)e=rng_ll(1,n);
+        ll ans1=brute(a),ans2=solve(a);
+        if(ans1!=ans2){
+            dbg(a,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
         RAYA;
     }
 
@@ -226,11 +269,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;

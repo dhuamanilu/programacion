@@ -1,9 +1,9 @@
 //* sometimes pragmas don't work, if so, just comment it!
 #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
+#pragma GCC optimize ("trapv")
 
-//! #undef _GLIBCXX_DEBUG //? for Stress Testing
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -175,35 +175,27 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
-                }
-            }
+pl solve(ll n) {
+    ll raizCubica=cbrtl(n)+3;
+    pl res={-1,-1};
+    dbg(raizCubica);
+
+    FOR(i,1,2*raizCubica){ 
+        __int128 u=__int128(i);
+        __int128 pri=__int128(-3)*u*u;
+        __int128 dis=sqrtl(__int128(9)*u*u*u*u - ((__int128(12)*u)*(u*u*u - __int128(n))));
+        __int128 arriba=pri+dis;
+        __int128 abajo=__int128(6)*u;
+        if(i==276544){
+            dbg((ll)pri,(ll)dis,(ll)arriba,(ll)abajo);
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
-            }
+        if((arriba%abajo)==0 && arriba >=abajo){
+            dbg((ll)i,(ll)arriba,(ll)abajo);
+            ll b=arriba/abajo;
+            ll a = b + i;
+            dbg(a,b);
+            res=mp(a,b);
+            return res;
         }
     }
     return res;
@@ -226,11 +218,15 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n;
+		cin>>n;
+		auto x =solve(n);
+        if(x.f==-1){
+            cout<<-1<<"\n";
+        }
+        else{
+            cout<<x.f<<" "<<x.s<<"\n";
+        }
     }
     RAYA;
     RAYA;

@@ -174,37 +174,35 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-
-ll solve(vpl &a,ll m,ll n) {
-    vector<vi> vis(m,vi(n,0));
-    auto isValid=[&](ll x,ll y){
-        return x>=0 && x<m && y>=0 && y <n;
-    };
-    ll cont=0;
-    map<pl,ll> ma;
-    each(e,a)ma[mp(e.f-1,e.s-1)]++;
-    auto dfs=[&](auto &&dfs,ll x,ll y)->void{
-        vis[x][y]=true;
-        cont++;
-        FOR(it,0,4){
-            ll newX=x+dx[it],newY=y+dy[it];
-            if(isValid(newX,newY)){
-                if(!vis[newX][newY] && !ma.count(mp(newX,newY))){
-                    dfs(dfs,newX,newY);
+pl brute(ll n,ll k){
+    FOR(i,1,n+1){
+        FOR(j,1,n+1){
+            if(i-j>=k){
+                if(abs(lcm(i,j)-__gcd(i,j))>=2*k){
+                    return mp(i,j);
                 }
             }
         }
-    };
-    ll res=0;
-    FOR(i,0,m){
-        FOR(j,0,n){
-            if(!vis[i][j] && !ma.count(mp(i,j))){
-                cont=0;
-                dfs(dfs,i,j);
-                //dbg(cont);
-                ckmax(res,cont);
+    }
+    return mp(-1,-1);
+}
+pl solve(ll n,ll k) {
+    pl res={-1,-1};
+    FOR(i,0,100){
+        ll a=n-i;
+        FOR(j,0,100){
+            ll b=a-k-j;
+            /*if(j==0){
+                dbg("hola",a,b,lcm(a,b),__gcd(a,b));
+            }*/
+            if(b>=1 && a>=1){
+                if(abs(lcm(a,b)-__gcd(a,b))>=2*k){
+                    res=mp(a,b);
+                    return res;
+                }
             }
         }
+
     }
     return res;
 }
@@ -215,22 +213,30 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-
+    //dbg(brute(693,690),solve(693,690));
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll n=rng_ll(1,1000);
+        ll k=rng_ll(1,1000);
+        pl ans1=brute(n,k);
+        pl ans2=solve(n,k);
+        if(ans1.f!=-1 && ans2.f==-1){
+            dbg(n,k,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
+        //RAYA;
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll m,n,k;
-		cin>>m>>n>>k;
-		vpl a(k);
-        each(e,a)cin>>e.f>>e.s;
-        cout<<solve(a,m,n)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		pl x=solve(n,k);
+        cout<<x.f<<" "<<x.s<<"\n";
     }
     RAYA;
     RAYA;
