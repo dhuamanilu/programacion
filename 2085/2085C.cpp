@@ -174,53 +174,20 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
+
+ll solve(ll x,ll y) {
+    if(x==y) return -1;
+    ll res=0;
+    while(true){
+        if((x+res)&(y+res)==0){
+            break;
         }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+        for(ll i=32;i>=0;i--){
+            if(pot&(x+res) && pot&(y+res)){
+                
             }
         }
-    };
-    get(get,x,n,m);
-    return res;
-}
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
     }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
-        }
-    }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
-        }
-    }
-    res.s=x3;
     return res;
 }
 
@@ -233,17 +200,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -251,10 +208,9 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll x,y;
+		cin>>x>>y;
+        cout<<solve(x,y)<<"\n";
     }
     RAYA;
     RAYA;

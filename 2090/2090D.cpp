@@ -174,54 +174,150 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
-        }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+
+using u64 = uint64_t;
+using u128 = __uint128_t;
+
+u64 binpower(u64 base, u64 e, u64 mod) {
+    u64 result = 1;
+    base %= mod;
+    while (e) {
+        if (e & 1)
+            result = (u128)result * base % mod;
+        base = (u128)base * base % mod;
+        e >>= 1;
+    }
+    return result;
+}
+
+bool check_composite(u64 n, u64 a, u64 d, int s) {
+    u64 x = binpower(a, d, n);
+    if (x == 1 || x == n - 1)
+        return false;
+    for (int r = 1; r < s; r++) {
+        x = (u128)x * x % n;
+        if (x == n - 1)
+            return false;
+    }
+    return true;
+};
+bool MillerRabin(u64 n) { // returns true if n is prime, else returns false.
+    if (n < 2)
+        return false;
+
+    int r = 0;
+    u64 d = n - 1;
+    while ((d & 1) == 0) {
+        d >>= 1;
+        r++;
+    }
+
+    for (int a : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37}) {
+        if (n == a)
+            return true;
+        if (check_composite(n, a, d, r))
+            return false;
+    }
+    return true;
+}
+const int N=100000+5;
+vl isPrime(N,1);
+vl primes;
+void init(){
+    isPrime[1]=0;
+    FOR(i,2,N){
+        if(isPrime[i]){
+            for(ll j=2*i;j<N;j+=i){
+                isPrime[j]=0;
             }
         }
-    };
-    get(get,x,n,m);
-    return res;
+    }
+    FOR(i,2,N){
+        if(isPrime[i]){
+            primes.pb(i);
+        }
+    }
 }
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
+void brute(ll n){
+    vl a(n);
+    iota(all(a),1ll);
+    /*auto isPrime=[](ll num){
+        if(num==1) return false;
+        for(ll i=2;i*i<=num;i++){
+            if(num%i==0) return false;
+        }
+        return true;
+    };*/
+    ll cuantos=0;
+    do{
+        vl c;
+        ll sum=0;
+        FOR(i,0,n){
+            sum+=a[i];
+            c.pb(cdiv(sum,i+1));
+        }
+        ll cont=0;
+        each(e,c){
+            if(MillerRabin(e)) cont++;
+        }
+        if(cont +1>= n/3){
+            //dbg(a,c,cont);
+            cuantos++;
+        }
+        else {
+            dbg(a,c,cont);
+            break;
+        }
+    }while(next_permutation(all(a)));
+    dbg(cuantos);
+}
+vl solve(ll n) {
+    vl a;
+    ll cuantos=0,ptr=0,suma=0;
+    vl seen(n+1,0);
+    while(cuantos < (n/3) - 1 && ptr < (ll)primes.size()){
+        //dbg(primes[ptr],cuantos+1);
+        ll ele=(cuantos+1)*(primes[ptr++]-1) +1 - (suma);
+        while(ele<n && seen[ele]==1){
+            ele++;
+        }
+        if(ele>=n){
+            ele=n;
+            while(ele>1 && seen[ele]==1){
+                ele--;
+            }
+        }
+        //dbg(ele,n);
+        assert(ele<=n);
+        
+        a.pb(ele);
+        suma+=ele;
+        assert(seen[ele]==0);
+        seen[ele]=1;
+        cuantos++;
+        //dbg(suma,ele,cuantos);
     }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+    FOR(i,1,n+1){
+        if(seen[i]==0){
+            a.pb(i);
         }
     }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
+    auto check=[&](){
+        vl c;
+        ll sum=0;
+        FOR(i,0,n){
+            sum+=a[i];
+            c.pb(cdiv(sum,i+1));
         }
-    }
-    res.s=x3;
-    return res;
+        ll cont=0;
+        each(e,c){
+            if(MillerRabin(e)) cont++;
+        }
+        dbg(cont,n);
+        return cont +1>= n/3;
+    };
+    assert(check());
+    return a;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -230,31 +326,28 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-
+    init();
+    dbg((ll)primes.size());
+    dbg(solve(100000));
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
-
+    /*FOR(i,1,15){
+        brute(i);
+    }*/
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll n;
+		cin>>n;
+        auto ans=solve(n);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

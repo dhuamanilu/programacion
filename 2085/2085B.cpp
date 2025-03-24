@@ -174,54 +174,60 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
+
+vpl solve(vl &a) {
+    vpl res;
+    map<ll,ll> m;
+    ll n=a.size();
+    set<ll> zeros;
+    FOR(i,0,n){
+        m[a[i]]++;
+        if(a[i]==0){
+            zeros.insert(i);
+        }
+    }
+    if(!m.count(0)){
+        res.pb({1,n});
+        return res;
+    }
+    else if(m[0]==1){
+        ll idx=*(zeros.begin());
+        if(idx>1){
+            res.pb({1,idx});
+            res.pb({1,2});
+            res.pb({1,n-idx+1});
+            return res;
         }
         else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+            if(idx==0){
+                res.pb({2,n-1});
+                res.pb({1,2});
+                res.pb({1,2});
             }
-        }
-    };
-    get(get,x,n,m);
-    return res;
-}
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
-    }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+            else{
+                res.pb({3,n});
+                res.pb({2,3});
+                res.pb({1,2});
+            }
+            
         }
     }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
+    else{
+        if(m[0]==n){
+            res.pb({1,2});
+            res.pb({2,n-1});
+            res.pb({1,2});
+        }
+        else{
+            ll porfin=-1;
+            FOR(i,0,n){
+                if(a[i]!=0){
+                    porfin=i;
+                }
+            }
+            res.pb({1,porfin+1});
         }
     }
-    res.s=x3;
-    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -233,17 +239,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -251,10 +247,15 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto ans=solve(a);
+        cout<<(ll)ans.size()<<"\n";
+        each(e,ans){
+            cout<<e.f<<" "<<e.s<<"\n";
+        }
     }
     RAYA;
     RAYA;

@@ -174,53 +174,30 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
+
+str solve(str &s,ll r,ll c) {
+    ll n=s.size();
+	map<pl,ll> m;
+    ll enx=0,eny=0;
+    str res="";
+    FOR(i,0,n){
+        m[mp(-enx,-eny)]++;
+        if(s[i]=='N'){
+            enx--;
         }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
-            }
+        else if(s[i]=='W'){
+            eny--;
         }
-    };
-    get(get,x,n,m);
-    return res;
-}
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
-    }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+        else if(s[i]=='S'){
+            enx++;
         }
-    }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
+        else eny++;
+        dbg(m,enx,eny,r-enx,c-eny);
+        if(m.count(mp(r-enx,c-eny))){
+            res+="1";
         }
+        else res+="0";
     }
-    res.s=x3;
     return res;
 }
 
@@ -233,28 +210,19 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll n,r,c;
+		cin>>n>>r>>c;
+		str s;
+        cin>>s;
+        cout<<solve(s,r,c)<<"\n";
     }
     RAYA;
     RAYA;

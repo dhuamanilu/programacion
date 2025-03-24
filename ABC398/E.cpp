@@ -174,54 +174,63 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
+
+void solve() {
+    ll n;
+    cin>>n;
+    vpl a(n-1);
+    each(e,a) cin>>e.f>>e.s;
+    vector<set<ll>> G(n+1);
+    map<pl,ll> edges;
+    each(e,a){
+        ll u=e.f,v=e.s;
+        G[u].insert(v);
+        G[v].insert(u);
+        ll mini=min(u,v),maxi=max(u,v);
+        edges[mp(mini,maxi)]++;
+    } 
+    auto dfs=[&](auto &&dfs,ll x,ll par,ll dis,ll tar)->ll{
+        if(x==tar){
+            return dis;
         }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+        dis++;
+        each(e,G[x]){
+            if(e!=par){
+                dfs(dfs,e,x,dis,tar);
             }
         }
+        return -BIG;
     };
-    get(get,x,n,m);
-    return res;
-}
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
-    }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+    
+    
+    map<pl,ll> xd;
+    FOR(i,1,n+1){
+        FOR(j,i+1,n+1){
+            ll mini=min(i,j),maxi=max(i,j);
+            if(edges.count(mp(mini,maxi))) continue;
+            /*G[mini].insert(maxi);
+            G[maxi].insert(mini);*/
+            if(dfs(dfs,i,-1,0,j)%2==1){
+                xd[mp(mini,maxi)]++;
+            }
+            /*G[mini].erase(maxi);
+            G[maxi].erase(mini);*/
         }
     }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
+    if((ll)xd.size()%2==1){
+        cout<<"First"<<endl;
+        cout.flush();
+        while(!xd.empty()){
+            auto ele=*xd.begin();
+            cout<<ele.f.f<<" "<<ele.f.s<<endl;
+            xd.erase(ele);
+            
         }
     }
-    res.s=x3;
-    return res;
+    else{
+        cout<<"Second"<<endl;
+        cout.flush();
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -233,28 +242,16 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		
+        solve();
     }
     RAYA;
     RAYA;

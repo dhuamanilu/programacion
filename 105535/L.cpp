@@ -172,56 +172,60 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 //? Template
 //? /Template
+set<vl> se;
+void init(){
+    vl a = {2, 2, 2, 269, 7487};
+    FOR (i, 0, 5) {
+        FOR (j, 0, 5) {
+            FOR (k, 0, 5) {
+                FOR (l, 0, 5) {
+                    FOR (m, 0, 5) {
+                        vvl aux(5);
+                        aux[i].pb(a[0]);
+                        aux[j].pb(a[1]);
+                        aux[k].pb(a[2]);
+                        aux[l].pb(a[3]);
+                        aux[m].pb(a[4]);
 
+                        for (auto& e: aux) sor(e);
+                        sort(rall(aux));
+                        while (!aux.empty() && aux.back().size() == 0) aux.pop_back();
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
-        }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+                        vl aux2;
+                        for (auto& e : aux) {
+                            ll response = 1;
+                            for (auto ee : e) response *= ee;
+                            aux2.push_back(response);
+                        }
+                        sor(aux2);
+                        se.insert(aux2);
+                    }
+                }
             }
         }
-    };
-    get(get,x,n,m);
-    return res;
+    }
+    //for (auto e : s) dbg(e);
 }
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
-    }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+
+vl solve(vl &a) {
+    map<ll,ll> m;
+    each(e,a)m[e]++;
+    each(e,se){
+        map<ll,ll> m2;
+        each(e2,e){
+            m2[e2]++;
         }
-    }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
+        bool ok=true;
+        each(ele,m2){
+            if(!m.count(ele.f) || m[ele.f] < ele.s){
+                ok=false;
+                break;
+            }
         }
+        if(ok) return e;
     }
-    res.s=x3;
-    return res;
+    vl vacio;
+    return vacio;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -230,31 +234,33 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-
+    init();
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
-	cin >> t;
+    //each(e,factores)dbg(e);
+    //dbg(factores);
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll n;
+        cin>>n;
+        vl a(n);
+        each(e,a){
+            cin>>e;
+        }
+        auto res=solve(a);
+        cout<<res.size()<<"\n";
+        if((ll)res.size()){
+            each(e,res){
+                cout<<e<<" ";
+            }
+            cout<<"\n";
+        }
     }
     RAYA;
     RAYA;

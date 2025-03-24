@@ -175,9 +175,28 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
-    ll n=a.size();
-	return 0;
+ll solve(vector<vl> &a) {
+    ll n=a.size(),m=a[0].size();
+	ll row=0,col=0;
+    FOR(i,0,n){
+        ll cont=0;
+        FOR(j,0,m){
+            cont+=(a[i][j]);
+        }
+        if(cont%2==1){
+            row++;
+        }
+    }
+    FOR(j,0,m){
+        ll cont=0;
+        FOR(i,0,n){
+            cont+=(a[i][j]);
+        }
+        if(cont%2==1){
+            col++;
+        }
+    }
+    return max(row,col);
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -197,10 +216,16 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
+		ll n,m;
+		cin>>n>>m;
+		vector<vl> a(n,vl(m,0));
+		each(e,a){
+            each(e2,e){
+                char xd;
+                cin>>xd;
+                e2=xd-'0';
+            }
+        }
         cout<<solve(a)<<"\n";
     }
     RAYA;

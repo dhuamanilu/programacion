@@ -1,6 +1,6 @@
 //* sometimes pragmas don't work, if so, just comment it!
 #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
+//#pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 
 //! #undef _GLIBCXX_DEBUG //? for Stress Testing
@@ -174,53 +174,54 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-pl brute(ll x,ll n,ll m){
-    pl res={BIG,-BIG};
-    auto get=[&](auto &&get,ll val,ll op1,ll op2)->void{
-        if(op1==0 && op2==0){
-            ckmin(res.f,val);
-            ckmax(res.s,val);
-            return;
-        }
-        else{
-            if(op1 > 0){
-                get(get,val/2,op1-1,op2);
-            }   
-            if(op2 > 0){
-                ll num=cdiv(val,2);
-                get(get,num,op1,op2-1);
+
+vpl solve(vl &a) {
+    ll n=a.size();
+    set<tuple<ll,ll,ll>> disp;
+    FOR(i,0,16*(ll)sqrtl(n)){
+        ll x=1,y=1+3*i;
+        while(true){
+            disp.insert({x+y,x,y});
+            disp.insert({x+y+1,x,y+1});
+            disp.insert({x+y+1,x+1,y});
+            disp.insert({x+y+4,x+1,y+1});
+            if(y>=3){
+                x+=3;
+                y-=3;
+            }
+            else{
+                break;
             }
         }
-    };
-    get(get,x,n,m);
-    return res;
-}
-pl solve(ll x,ll n,ll m) {
-    pl res;
-    ll x2=x,n2=n,m2=m;
-    while((x2>1) &&  m2 >0){
-        x2=cdiv(x2,2);
-        m2--;
     }
-    if(n2>0){
-        while(x2 > 0 && (n2 > 0)){
-            x2/=2;
-            n2--;
+    disp.erase({2,1,1});
+	ll maxiX=1,maxiY=1;
+    vpl res;
+    res.pb({1,1});
+    FOR(i,1,n){
+        if(a[i]){
+            auto act=*disp.begin();
+            disp.erase(act);
+            res.pb({get<1>(act),get<2>(act)});
+        }
+        else{
+            if(maxiY>=3){
+                maxiX+=3;
+                maxiY-=3;
+                res.pb({maxiX,maxiY});
+                ll falta=((maxiX%3==2 && maxiY%3==2) ? 2 : 0ll);
+                disp.erase({maxiX+maxiY+falta,maxiX,maxiY});
+            }
+            else{
+                ll cuanto=((maxiX+maxiY+1)/3);
+                maxiX=1;
+                maxiY=1+3*cuanto;
+                res.pb({maxiX,maxiY});
+                ll falta=((maxiX%3==2 && maxiY%3==2) ? 2 : 0ll);
+                disp.erase({maxiX+maxiY+falta,maxiX,maxiY});
+            }
         }
     }
-    res.f=x2;
-    ll x3=x;
-    while((x3>0) && n > 0 ){
-        x3/=2;
-        n--;
-    }
-    if(m>0){
-        while((x3 > 1) && m > 0){
-            x3=cdiv(x3,2);
-            m--;
-        }
-    }
-    res.s=x3;
     return res;
 }
 
@@ -233,17 +234,7 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        ll x=rng_ll(0,6);
-        ll n=rng_ll(0,10);
-        ll m=rng_ll(0,10);
-        auto ans1=brute(x,n,m);
-        auto ans2=solve(x,n,m);
-        if(ans1!=ans2){
-            dbg("xd",x,n,m,ans1,ans2);
-            assert(false);
-        }
-        else dbg("ok");
-        //RAYA;
+        RAYA;
     }
 
     int t = 1;
@@ -251,10 +242,14 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll x,n,m;
-		cin>>x>>n>>m;
-        auto xd = solve(x,n,m);
-        cout<<xd.f<<" "<<xd.s<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        auto res = solve(a);
+        each(e,res){
+            cout<<e.f<<" "<<e.s<<"\n";
+        }
     }
     RAYA;
     RAYA;
