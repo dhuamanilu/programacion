@@ -175,25 +175,18 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a,ll k) {
-    ll n=a.size();
-    vvl dp(n+1,vl(n,0));
-    dp[0][0]=0;
-    dp[0][k]=a[0];
-    FOR(i,1,n+1){
-        FOR(j,0,n){
-            ckmax(dp[i][j],dp[i-1][j]);
-            if(j+1<n){
-                ckmax(dp[i][j],dp[i-1][j+1]);
-            }
-            if(j>=k && i<n){
-                ckmax(dp[i][j],dp[i-1][j-k]+a[i]);
-            }
-            
+vl solve(ll n) {
+    vl a;
+    if(n%2==0){
+        a.pb(-1);
+    }
+    else{
+        a.pb(1);
+        for(ll i=n;i>1;i--){
+            a.pb(i);
         }
     }
-    each(e,dp) dbg(e);
-    return dp[n-1][0];
+    return a;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -213,11 +206,13 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,k;
-		cin>>n>>k;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a,k)<<"\n";
+		ll n;
+		cin>>n;
+		auto ans=solve(n);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

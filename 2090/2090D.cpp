@@ -241,14 +241,6 @@ void init(){
 void brute(ll n){
     vl a(n);
     iota(all(a),1ll);
-    /*auto isPrime=[](ll num){
-        if(num==1) return false;
-        for(ll i=2;i*i<=num;i++){
-            if(num%i==0) return false;
-        }
-        return true;
-    };*/
-    ll cuantos=0;
     do{
         vl c;
         ll sum=0;
@@ -261,44 +253,32 @@ void brute(ll n){
             if(MillerRabin(e)) cont++;
         }
         if(cont +1>= n/3){
-            //dbg(a,c,cont);
-            cuantos++;
+            //dbg(a);
         }
-        else {
-            dbg(a,c,cont);
-            break;
-        }
+        //else dbg(a,c);
     }while(next_permutation(all(a)));
-    dbg(cuantos);
+    
 }
 vl solve(ll n) {
     vl a;
-    ll cuantos=0,ptr=0,suma=0;
-    vl seen(n+1,0);
-    while(cuantos < (n/3) - 1 && ptr < (ll)primes.size()){
-        //dbg(primes[ptr],cuantos+1);
-        ll ele=(cuantos+1)*(primes[ptr++]-1) +1 - (suma);
-        while(ele<n && seen[ele]==1){
-            ele++;
-        }
-        if(ele>=n){
-            ele=n;
-            while(ele>1 && seen[ele]==1){
-                ele--;
+    ll suma=0;
+    map<ll,ll> seen;
+    FOR(i,0,(ll)primes.size()){
+        if((ll)a.size()>=((n/3)-1)) break;
+        ll tam=(ll)a.size();
+        FOR(j,1,tam+2){
+            ll cand=(primes[i]-1)*(tam+1)+j-suma;
+            if(seen.count(cand)){
+                continue;
             }
+            a.pb(cand);
+            suma+=cand;
+            seen[cand]++;
+            if((ll)a.size()>=((n/3)-1)) break;
         }
-        //dbg(ele,n);
-        assert(ele<=n);
-        
-        a.pb(ele);
-        suma+=ele;
-        assert(seen[ele]==0);
-        seen[ele]=1;
-        cuantos++;
-        //dbg(suma,ele,cuantos);
     }
     FOR(i,1,n+1){
-        if(seen[i]==0){
+        if(!seen.count(i)){
             a.pb(i);
         }
     }
@@ -327,13 +307,13 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
     init();
-    dbg((ll)primes.size());
-    dbg(solve(100000));
+    /*dbg((ll)primes.size());
+    dbg(solve(100000));*/
     //? Stress Testing
     while(0) {
         RAYA;
     }
-    /*FOR(i,1,15){
+    /*FOR(i,9,10){
         brute(i);
     }*/
     int t = 1;

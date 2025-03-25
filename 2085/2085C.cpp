@@ -177,18 +177,12 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 ll solve(ll x,ll y) {
     if(x==y) return -1;
-    ll res=0;
-    while(true){
-        if((x+res)&(y+res)==0){
-            break;
-        }
-        for(ll i=32;i>=0;i--){
-            if(pot&(x+res) && pot&(y+res)){
-                
-            }
-        }
+    if(x<y)swap(x,y);
+    ll pot=1;
+    while(pot <= x){
+        pot*=2;
     }
-    return res;
+    return pot-x;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }

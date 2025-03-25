@@ -157,7 +157,7 @@ using vvi = V<vi>;
 using vvl = V<vl>;
 using vvb = V<vb>;
 
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 const int MX = (int)2e5 + 5;
 const ll BIG = 1e18;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
@@ -173,27 +173,144 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
+/**
+ * Description: modular arithmetic operations 
+ * Source: 
+	* KACTL
+	* https://codeforces.com/blog/entry/63903
+	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
+	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
+	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
+ * Verification: 
+	* https://open.kattis.com/problems/modulararithmetic
+ */
 
+ #pragma once
 
-ll solve(vl &a,ll k) {
-    ll n=a.size();
-    vvl dp(n+1,vl(n,0));
-    dp[0][0]=0;
-    dp[0][k]=a[0];
-    FOR(i,1,n+1){
-        FOR(j,0,n){
-            ckmax(dp[i][j],dp[i-1][j]);
-            if(j+1<n){
-                ckmax(dp[i][j],dp[i-1][j+1]);
+ template<int MOD, int RT> struct mint {
+     static const int mod = MOD;
+     static constexpr mint rt() { return RT; } // primitive root for FFT
+     int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
+     mint():v(0) {}
+     mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
+         if (v < 0) v += MOD; }
+     bool operator==(const mint& o) const {
+         return v == o.v; }
+     friend bool operator!=(const mint& a, const mint& b) { 
+         return !(a == b); }
+     friend bool operator<(const mint& a, const mint& b) { 
+         return a.v < b.v; }
+     friend str ts(mint a) { return ts(a.v); }
+    
+     mint& operator+=(const mint& o) { 
+         if ((v += o.v) >= MOD) v -= MOD; 
+         return *this; }
+     mint& operator-=(const mint& o) { 
+         if ((v -= o.v) < 0) v += MOD; 
+         return *this; }
+     mint& operator*=(const mint& o) { 
+         v = int((ll)v*o.v%MOD); return *this; }
+     mint& operator/=(const mint& o) { return (*this) *= inv(o); }
+     friend mint pow(mint a, ll p) {
+         mint ans = 1; assert(p >= 0);
+         for (; p; p /= 2, a *= a) if (p&1) ans *= a;
+         return ans; }
+     friend mint inv(const mint& a) { assert(a.v != 0); 
+         return pow(a,MOD-2); }
+         
+     mint operator-() const { return mint(-v); }
+     mint& operator++() { return *this += 1; }
+     mint& operator--() { return *this -= 1; }
+     friend mint operator+(mint a, const mint& b) { return a += b; }
+     friend mint operator-(mint a, const mint& b) { return a -= b; }
+     friend mint operator*(mint a, const mint& b) { return a *= b; }
+     friend mint operator/(mint a, const mint& b) { return a /= b; }
+ };
+ 
+ using mi = mint<MOD,5>; // 5 is primitive root for both common mods
+ using vmi = V<mi>;
+ using pmi = pair<mi,mi>;
+ using vpmi = V<pmi>;
+ 
+ V<vmi> scmb; // small combinations
+ void genComb(int SZ) {
+     scmb.assign(SZ,vmi(SZ)); scmb[0][0] = 1;
+     FOR(i,1,SZ) F0R(j,i+1) 
+         scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
+ }
+
+ll solve(vvl &a,ll d) {
+    ll n=a.size(),m=a[0].size();
+    vector<vector<vector<ll>>> dp(n,vector<vector<ll>>(m,vector<ll>(2,ll(0))));
+    reverse(all(a));
+    FOR(j,0,m){
+        if(a[0][j]){
+            dp[0][j][0]=ll(1);
+        }
+    }
+    vector<vector<vector<ll>>> pref(n,vector<vector<ll>>(m,vector<ll>(2,ll(0))));
+    pref[0][0][0]=dp[0][0][0];
+    FOR(j,1,m){
+        pref[0][j][0]=pref[0][j-1][0]+dp[0][j][0];
+    }
+    auto query=[&](ll row,ll val1,ll val2,ll k)->mi{
+        if(val1==0){
+            return pref[row][val2][k];
+        }
+        else{
+            return pref[row][val2][k]-pref[row][val1-1][k];
+        }
+    };
+    ll dcua=d*d;
+    FOR(j,0,m){
+        if(!a[0][j]) continue;
+        
+        /*FOR(l,1,min(d+1,m)){
+            ll disy=(l-j)*(l-j);
+            if(disy > dcua) break;
+            if(disy<=dcua){
+                dp[0][j][1]+=dp[0][l][0];
             }
-            if(j>=k && i<n){
-                ckmax(dp[i][j],dp[i-1][j-k]+a[i]);
+        }*/
+    }
+    each(e,dp){
+        dbg(e);
+    }
+    RAYA;
+    FOR(i,1,n){
+        FOR(j,0,m){
+            if(!a[0][j]) continue;
+            FOR(l,1,min(d+1,m)){
+                ll disy=(l-j)*(l-j);
+                if(disy > dcua) break;
+                if(1+disy<=dcua){
+                    dp[i][j][0]+=dp[i-1][l][0];
+                    dp[i][j][0]+=dp[i-1][l][1];
+                }
+            }
+            FOR(l,1,min(d+1,m)){
+                ll disy=(l-j)*(l-j);
+                if(disy > dcua) break;
+                if(1+disy<=dcua){
+                    dp[i][j][1]+=dp[i-1][l][0];
+                }
+                if(disy<=dcua){
+                    dp[i][j][1]+=dp[i][l][0];
+                }
             }
             
         }
+        each(e,dp){
+            dbg(e);
+        }
+        RAYA;
     }
-    each(e,dp) dbg(e);
-    return dp[n-1][0];
+    mi res=mi(0);
+    FOR(j,0,m){
+        res+=dp[n-1][j][0];
+        res+=dp[n-1][j][1];
+    }
+    return res.v;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -213,11 +330,17 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,k;
-		cin>>n>>k;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a,k)<<"\n";
+		ll n,m,d;
+		cin>>n>>m>>d;
+		vvl a(n,vl(m,0));
+		each(e,a){
+            each(e2,e){
+                char x;
+                cin>>x;
+                e2=(x=='X');
+            }
+        }
+        cout<<solve(a,d)<<"\n";
     }
     RAYA;
     RAYA;

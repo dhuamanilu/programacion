@@ -188,15 +188,17 @@ vpl solve(vl &a) {
     }
     if(!m.count(0)){
         res.pb({1,n});
-        return res;
     }
     else if(m[0]==1){
         ll idx=*(zeros.begin());
-        if(idx>1){
+        if(idx==(n-1)){
+            res.pb({n-1,n});
+            res.pb({1,n-1});
+        }
+        else if(idx>1){
             res.pb({1,idx});
             res.pb({1,2});
-            res.pb({1,n-idx+1});
-            return res;
+            res.pb({1,n-idx});
         }
         else{
             if(idx==0){
@@ -204,12 +206,11 @@ vpl solve(vl &a) {
                 res.pb({1,2});
                 res.pb({1,2});
             }
-            else{
+            else{   
                 res.pb({3,n});
                 res.pb({2,3});
                 res.pb({1,2});
             }
-            
         }
     }
     else{
@@ -219,15 +220,32 @@ vpl solve(vl &a) {
             res.pb({1,2});
         }
         else{
-            ll porfin=-1;
-            FOR(i,0,n){
-                if(a[i]!=0){
-                    porfin=i;
+            if(a[0]!=0){
+                ll indice1=*zeros.begin()+1,indice2=*prev(zeros.end())+1;
+                res.pb({indice1,indice2});
+                res.pb({1,n-(indice2-indice1+1)+1});
+            }
+            else{
+                dbg("XD?");
+                res.pb({1,2});
+                bool falta=false;
+                FOR(i,2,n){
+                    if(a[i]==0){
+                        falta=true;
+                        break;
+                    }
+                }
+                if(falta){
+                    res.pb({2,n-1});
+                    res.pb({1,2});
+                }
+                else{
+                    res.pb({1,n-1});
                 }
             }
-            res.pb({1,porfin+1});
         }
     }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }

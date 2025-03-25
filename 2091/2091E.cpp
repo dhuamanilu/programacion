@@ -1,9 +1,9 @@
 //* sometimes pragmas don't work, if so, just comment it!
 #pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
+//#pragma GCC optimize ("trapv")
 
-//! #undef _GLIBCXX_DEBUG //? for Stress Testing
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -173,27 +173,46 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-ll solve(vl &a,ll k) {
-    ll n=a.size();
-    vvl dp(n+1,vl(n,0));
-    dp[0][0]=0;
-    dp[0][k]=a[0];
-    FOR(i,1,n+1){
-        FOR(j,0,n){
-            ckmax(dp[i][j],dp[i-1][j]);
-            if(j+1<n){
-                ckmax(dp[i][j],dp[i-1][j+1]);
+const int N=10000000+5;
+vb isPrime(N,true);
+vi primes;
+void init(){
+    isPrime[1]=false;
+    FOR(i,2,N){
+        if(isPrime[i]){
+            for(ll j=2*i;j<N;j+=i){
+                isPrime[j]=false;
             }
-            if(j>=k && i<n){
-                ckmax(dp[i][j],dp[i-1][j-k]+a[i]);
-            }
-            
         }
     }
-    each(e,dp) dbg(e);
-    return dp[n-1][0];
+    FOR(i,2,N){
+        if(isPrime[i]){
+            primes.pb(i);
+        }
+    }
+}
+
+ll solve(ll n) {
+    ll res=0;
+    ll tam=(ll)primes.size();
+    FOR(i,1,n+1){
+        ll s=0,e=tam-1,m=s+(e-s)/2,guarda=-1;
+        while(s<=e){
+            m=s+(e-s)/2;
+            if(1ll*i*primes[m]<=n){
+                guarda=m;
+                s=m+1;
+            }
+            else e=m-1;
+        }
+        if(guarda==-1){
+            continue;
+        }
+        else{
+            res+=guarda+1;
+        }
+    }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -207,17 +226,15 @@ int main() {
     while(0) {
         RAYA;
     }
-
+    init();
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,k;
-		cin>>n>>k;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a,k)<<"\n";
+		ll n;
+		cin>>n;
+        cout<<solve(n)<<"\n";
     }
     RAYA;
     RAYA;
