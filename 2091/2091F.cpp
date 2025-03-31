@@ -238,17 +238,23 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
      FOR(i,1,SZ) F0R(j,i+1) 
          scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
  }
-
+ template<int MOD, int RT>
+ std::ostream& operator<<(std::ostream &os, const mint<MOD, RT> &m) {
+     return os << m.v;
+ }
+ 
 ll solve(vvl &a,ll d) {
     ll n=a.size(),m=a[0].size();
-    vector<vector<vector<ll>>> dp(n,vector<vector<ll>>(m,vector<ll>(2,ll(0))));
+    vector<vector<vector<mi>>> dp(n,vector<vector<mi>>(m,vector<mi>(2,mi(0))));
     reverse(all(a));
+    //each(e,a) reverse(all(e));
     FOR(j,0,m){
         if(a[0][j]){
-            dp[0][j][0]=ll(1);
+            dp[0][j][0]=mi(1);
         }
     }
-    vector<vector<vector<ll>>> pref(n,vector<vector<ll>>(m,vector<ll>(2,ll(0))));
+    //each(e,a)dbg(e);
+    vector<vector<vector<mi>>> pref(n,vector<vector<mi>>(m,vector<mi>(2,mi(0))));
     pref[0][0][0]=dp[0][0][0];
     FOR(j,1,m){
         pref[0][j][0]=pref[0][j-1][0]+dp[0][j][0];
@@ -258,58 +264,60 @@ ll solve(vvl &a,ll d) {
             return pref[row][val2][k];
         }
         else{
+            /*if(row==1 && val2==3 && val1==3 && k==0){
+                dbg(pref[row][val2][k],pref[row][val1-1][k],pref[row][val2][k]-pref[row][val1-1][k]);
+            }*/
             return pref[row][val2][k]-pref[row][val1-1][k];
         }
     };
     ll dcua=d*d;
     FOR(j,0,m){
         if(!a[0][j]) continue;
-        
-        /*FOR(l,1,min(d+1,m)){
-            ll disy=(l-j)*(l-j);
-            if(disy > dcua) break;
-            if(disy<=dcua){
-                dp[0][j][1]+=dp[0][l][0];
-            }
-        }*/
+        ll alfa1=min((ll)j,d);
+        mi contr1=alfa1>=1 ? query(0,j-alfa1,j-1,0) : mi(0);
+        ll alfa2=min(d,(m-1-j));
+        mi contr2=alfa2>=1 ?query(0,j+1,j+alfa2,0) : mi(0) ;
+        dp[0][j][1]+= contr1 + contr2;
     }
-    each(e,dp){
-        dbg(e);
+    
+    pref[0][0][1]=dp[0][0][1];
+    FOR(j,1,m){
+        pref[0][j][1]=pref[0][j-1][1]+dp[0][j][1];
     }
-    RAYA;
+    
     FOR(i,1,n){
         FOR(j,0,m){
-            if(!a[0][j]) continue;
-            FOR(l,1,min(d+1,m)){
-                ll disy=(l-j)*(l-j);
-                if(disy > dcua) break;
-                if(1+disy<=dcua){
-                    dp[i][j][0]+=dp[i-1][l][0];
-                    dp[i][j][0]+=dp[i-1][l][1];
-                }
+            if(a[i][j]){
+                ll beta1=min((ll)sqrtl(dcua-1),(ll)j);
+                mi contr1=query(i-1,j-beta1,j,0);
+                mi contr3=query(i-1,j-beta1,j,1);
+                ll beta2=min((ll)sqrtl(dcua-1),m-1-j);
+                mi contr2=beta2>=1 ? query(i-1,j+1,j+beta2,0) : mi(0) ;
+                mi contr4=beta2>=1 ? query(i-1,j+1,j+beta2,1) : mi(0) ;
+                dp[i][j][0]+= contr1 + contr2 + contr3 + contr4;
+                pref[i][j][0]+=dp[i][j][0];
             }
-            FOR(l,1,min(d+1,m)){
-                ll disy=(l-j)*(l-j);
-                if(disy > dcua) break;
-                if(1+disy<=dcua){
-                    dp[i][j][1]+=dp[i-1][l][0];
-                }
-                if(disy<=dcua){
-                    dp[i][j][1]+=dp[i][l][0];
-                }
+            if(j>0){
+                pref[i][j][0]+=pref[i][j-1][0];
+            } 
+        }
+        //dbg(pref[i]);
+        FOR(j,0,m){
+            if(a[i][j]){
+                ll alfa1=min((ll)j,d);
+                mi contr1=alfa1>=1 ? query(i,j-alfa1,j-1,0) : mi(0);
+                ll alfa2=min(d,(m-1-j));
+                mi contr2=alfa2>=1 ?query(i,j+1,j+alfa2,0) : mi(0) ;
+                dp[i][j][1]+=contr1+contr2;
+                pref[i][j][1]+=dp[i][j][1];
             }
-            
-        }
-        each(e,dp){
-            dbg(e);
-        }
-        RAYA;
+            if(j>0){
+                pref[i][j][1]+=pref[i][j-1][1];
+            } 
+        } 
     }
-    mi res=mi(0);
-    FOR(j,0,m){
-        res+=dp[n-1][j][0];
-        res+=dp[n-1][j][1];
-    }
+    //each(e,dp) dbg(e);
+    mi res=pref[n-1][m-1][0] + pref[n-1][m-1][1];
     return res.v;
 }
 

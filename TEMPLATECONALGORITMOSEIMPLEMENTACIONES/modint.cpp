@@ -63,3 +63,7 @@ void genComb(int SZ) {
 	FOR(i,1,SZ) F0R(j,i+1) 
 		scmb[i][j] = scmb[i-1][j]+(j?scmb[i-1][j-1]:0);
 }
+template<int MOD, int RT>
+std::ostream& operator<<(std::ostream &os, const mint<MOD, RT> &m) {
+	return os << m.v;
+}

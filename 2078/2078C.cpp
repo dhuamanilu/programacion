@@ -175,9 +175,17 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
+vl solve(vl &a) {
     ll n=a.size();
-	return 0;
+    sor(a);
+    ll res=0;
+    FOR(i,1,n){
+        res+=a[i]-a[i-1];
+        i++;
+    }
+    vl ans=a;
+    ans.pb(res);
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -199,9 +207,13 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		vl a(n);
+		vl a(2*n);
 		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        auto ans = solve(a);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

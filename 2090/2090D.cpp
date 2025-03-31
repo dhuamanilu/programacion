@@ -265,9 +265,12 @@ vl solve(ll n) {
     map<ll,ll> seen;
     FOR(i,0,(ll)primes.size()){
         if((ll)a.size()>=((n/3)-1)) break;
-        ll tam=(ll)a.size();
-        FOR(j,1,tam+2){
+        
+        for(ll j=1;true;j++){
+            ll tam=(ll)a.size();
             ll cand=(primes[i]-1)*(tam+1)+j-suma;
+            if(cdiv(cand,(tam+1)) > primes[i]) break;
+            //dbg(i,j,cand);
             if(seen.count(cand)){
                 continue;
             }
@@ -280,6 +283,11 @@ vl solve(ll n) {
     FOR(i,1,n+1){
         if(!seen.count(i)){
             a.pb(i);
+        }
+    }
+    if(a.size()>10){
+        FOR(i,0,10){
+            dbg(a[i]);
         }
     }
     auto check=[&](){

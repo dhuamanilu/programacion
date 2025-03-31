@@ -175,100 +175,72 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vl &a,vl &b) {
-    sor(a);
-    sor(b);
-    dbg(a,b);
+vl solve(str &s) {
+    ll n=s.size();
+	vl cont(3,0);
+    FOR(i,0,n){
+        if(s[i]=='L') cont[0]++;
+        else if(s[i]=='I') cont[1]++;
+        else cont[2]++;
+    }
     vl res;
-    ll n=a.size(),m=b.size();
-    ll ptr1=0,ptr2=n-1,ptr3=0,ptr4=m-1,debe1=0,debe2=0,sum=0;
-    vl ops;
-    while((ptr1< ptr2 && ptr3 < ptr4)){
-        if(((ptr2-ptr1-1 >= debe1) && (ptr4-ptr3-1 >= debe2) )){
-            ll cand1=a[ptr2]-a[ptr1];
-            ll cand2=b[ptr4]-b[ptr3];
-            if(cand1 > cand2){
-                sum+=cand1;
-                ptr1++;
-                ptr2--;
-                debe2++;
-                ops.pb(1);
-            }
-            else{
-                sum+=cand2;
-                ptr3++;
-                ptr4--;
-                debe1++;
-                ops.pb(2);
-            }
-            res.pb(sum);
-        }
-        else if((ptr2-ptr1-1 >= debe1)){
-            ll cand1=a[ptr2]-a[ptr1];
-            sum+=cand1;
-            ptr1++;
-            ptr2--;
-            debe2++;
-            ops.pb(1);
-            res.pb(sum);
-        }
-        else if((ptr4-ptr3-1 >= debe2)){
-            ll cand2=b[ptr4]-b[ptr3];
-            sum+=cand2;
-            ptr3++;
-            ptr4--;
-            debe1++;
-            ops.pb(2);
-            res.pb(sum);
-        }
-        else break;
+    if(cont[0]==n || cont[1]==n || cont[2]==n){
+        res.pb(-1);
+        return res;
     }
-    ll maxi=0,n2=n,m2=m;
-    if(n2<m2)swap(n2,m2);
-    while(n2 >=2 && m2 >= 1){
-        n2-=2;
-        m2--;
-        maxi++;
-        if(n2<m2)swap(n2,m2);
-    }
-    ll tam=res.size();
-    dbg(maxi,tam,ptr1,ptr2,ptr3,ptr4);
-    if(maxi > (ll)res.size()){
-        FOR(i,0,maxi-tam){
-            if((ll)ops.size()>0){
-                ll xd=ops.back();
-                ops.pop_back();
-                if(xd==1){
-                    ptr1--;
-                    ptr2++;
-                    sum-=(a[ptr2]-a[ptr1]);
-                    sum+=(b[ptr4]-b[ptr3]);
-                    ptr4--;
-                    ptr3++;
-                    sum+=(b[ptr4]-b[ptr3]);
-                }
-                else{
-                    ptr3--;
-                    ptr4++;
-                    sum-=(b[ptr4]-b[ptr3]);
-                    sum+=(a[ptr2]-a[ptr1]);
-                    ptr1++;
-                    ptr2--;
-                    sum+=(a[ptr2]-a[ptr1]);
+    else{
+        while(true){
+            ll tam=s.size();
+            bool ok=false;
+            FOR(i,0,tam-1){
+                if(s[i]!=s[i+1]){
+                    vl xd(3,0);
+                    if(s[i]=='L') xd[0]++;
+                    else if(s[i]=='I') xd[1]++;
+                    else xd[2]++;
+
+                    if(s[i+1]=='L') xd[0]++;
+                    else if(s[i+1]=='I') xd[1]++;
+                    else xd[2]++;
+
+                    if(xd[0]==0){
+                        if(cont[0]<n){
+                            ok=true;
+                            res.pb(i+1);
+                            cont[0]++;
+                            s.insert(s.begin()+i+1,'L');
+                            break;
+                        }
+                    }
+                    else if(xd[1]==0){
+                        if(cont[1]<n){
+                            ok=true;
+                            res.pb(i+1);
+                            cont[1]++;
+                            s.insert(s.begin()+i+1,'I');
+                            break;
+                        }
+                    }
+                    else{
+                        if(cont[2]<n){
+                            ok=true;
+                            res.pb(i+1);
+                            cont[2]++;
+                            s.insert(s.begin()+i+1,'T');
+                            break;
+                        }
+                    }
+                    
                 }
             }
-            else{
-                if((ll)a.size()==1){
-                    sum+=b[ptr4]-b[ptr3];
-                }
-                else{
-                    sum+=a[ptr2]-a[ptr1];
-                }
+            dbg(s,cont);
+            assert(ok);
+            if(cont[0]>=n && cont[1]>=n && cont[2]>=n){
+                break;
             }
-            res.pb(sum);
         }
+        return res;
     }
-    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -288,18 +260,20 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
-		vl a(n);
-		each(e,a) cin>>e;
-        vl b(m);
-		each(e,b) cin>>e;
-        auto ans=solve(a,b);
-        cout<<ans.size()<<"\n";
-        each(e,ans){
-            cout<<e<<" ";
+		ll n;
+		cin>>n;
+		str s;
+        cin>>s;
+        auto ans=solve(s);
+        if((ll)ans.size()==1 && ans[0]==-1){
+            cout<<"-1\n";
         }
-        cout<<"\n";
+        else{
+            cout<<(ll)ans.size()<<"\n";
+            each(e,ans){
+                cout<<e<<"\n";
+            }
+        }
     }
     RAYA;
     RAYA;

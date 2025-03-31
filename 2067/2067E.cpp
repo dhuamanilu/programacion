@@ -173,11 +173,105 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
+ll brute(vl &a){
+    ll n=a.size(),res=0;
+    auto getMex=[](vl &arr,ll ini,ll fin){
+        map<ll,ll> m;
+        FOR(i,ini,fin+1){
+            m[arr[i]]++;
+        }
+        ll mex=0;
+        while(m.count(mex)) mex++;
+        return mex;
+    };
+    FOR(i,0,(1ll<<n)){
+        vl b;
+        FOR(j,0,n){
+            if((1ll<<j)&i){
+                b.pb(a[j]);
+            }
+        }
+        bool ok=true;
+        ll mini=BIG,tam=b.size();
+        FOR(k,0,tam){
+            ckmin(mini,b[k]);
+            if(mini < getMex(b,k+1,tam-1)){
+                ok=false;
+                break;
+            }
+        }
+        if(ok){
+            ckmax(res,tam);
+        }
+    }
+    return res;
+}
 
 ll solve(vl &a) {
-    ll n=a.size();
-	return 0;
+    ll idx=-1,n=a.size();
+    FOR(i,0,n){
+        if(a[i]==0){
+            idx=i;
+            break;
+        }
+    }
+    if(idx==-1){
+        return n;
+    }
+    else{
+        vl izq;
+        FOR(i,0,idx){
+            izq.pb(a[i]);
+        }
+        sor(izq);
+        map<ll,ll> m;
+        FOR(i,idx,n){
+            m[a[i]]++;
+        }
+        ll mex=0;
+        while(m.count(mex)){
+            mex++;
+        }
+        ll tam=izq.size();
+        ll cant=upper_bound(all(izq),mex)-izq.begin();
+        ll cuantos=tam-cant;
+        ll res=cuantos + (a[0]==mex) + (n - idx -(m[0]-1));
+        FOR(i,1,mex){
+            ll contr=m.count(i) ? m[i] : 0ll;
+            ll cant2=upper_bound(all(izq),i)-izq.begin();
+            ll cuantos2=tam-cant2;
+            ll val=((cuantos2)+ (a[0]==i) + (n-idx-(m[0]-1) - contr) );
+            ckmax(res,val);         
+        }
+        set<ll> os;
+        each(e,izq){
+            os.insert(e);
+        }
+        ll guardamex=mex,k=idx-1,agregar=0;
+        FOR(j,guardamex,n){
+            while(!m.count(j) && k>=0){
+                m[a[k]]++;
+                agregar++;
+                auto xd=os.lower_bound(a[k]);
+                if(xd!=os.end()){
+                    os.erase(xd);   
+                }
+                k--;
+            }
+            while(m.count(mex)){
+                mex++;
+            }
+            ll cant2=upper_bound(all(izq),mex)-izq.begin();
+            ll cuantos2=tam-cant2;
+            dbg(n-idx-(m[0]-1),j,cuantos2,mex,agregar);
+            auto it=lower_bound(all(izq),mex);
+            ll ctmr=it!=izq.end() ? *it : -1;
+            ll val=cuantos2+(n-idx-(m[0]-1))+(ctmr==mex) + agregar;
+            ckmax(res,val);
+        }
+        ckmax(res,n-m[0]);
+        return res;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -186,10 +280,22 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-
+    vl asd={11, 1, 11, 3, 3, 12, 2, 7, 11, 0, 7};
+    dbg(brute(asd),solve(asd));
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll n=rng_ll(1,15);
+        vl a(n);
+        each(e,a){
+            e=rng_ll(0,15);
+        }
+        ll ans1=brute(a);
+        ll ans2=solve(a);
+        if(ans1!=ans2){
+            dbg("xd",ans1,ans2,a);
+            assert(false);
+        }
+        else dbg("ok");
     }
 
     int t = 1;

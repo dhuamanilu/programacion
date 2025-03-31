@@ -175,100 +175,61 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-vl solve(vl &a,vl &b) {
-    sor(a);
-    sor(b);
-    dbg(a,b);
-    vl res;
-    ll n=a.size(),m=b.size();
-    ll ptr1=0,ptr2=n-1,ptr3=0,ptr4=m-1,debe1=0,debe2=0,sum=0;
-    vl ops;
-    while((ptr1< ptr2 && ptr3 < ptr4)){
-        if(((ptr2-ptr1-1 >= debe1) && (ptr4-ptr3-1 >= debe2) )){
-            ll cand1=a[ptr2]-a[ptr1];
-            ll cand2=b[ptr4]-b[ptr3];
-            if(cand1 > cand2){
-                sum+=cand1;
-                ptr1++;
-                ptr2--;
-                debe2++;
-                ops.pb(1);
-            }
-            else{
-                sum+=cand2;
-                ptr3++;
-                ptr4--;
-                debe1++;
-                ops.pb(2);
-            }
-            res.pb(sum);
-        }
-        else if((ptr2-ptr1-1 >= debe1)){
-            ll cand1=a[ptr2]-a[ptr1];
-            sum+=cand1;
-            ptr1++;
-            ptr2--;
-            debe2++;
-            ops.pb(1);
-            res.pb(sum);
-        }
-        else if((ptr4-ptr3-1 >= debe2)){
-            ll cand2=b[ptr4]-b[ptr3];
-            sum+=cand2;
-            ptr3++;
-            ptr4--;
-            debe1++;
-            ops.pb(2);
-            res.pb(sum);
-        }
-        else break;
+ll solve(vpl &a,ll n,ll x) {
+    ll m=a.size();
+	vvl G(n+1),G2(n+1);
+    each(e,a){
+        ll u=e.f,v=e.s;
+        G[u].pb(v);
+        G2[v].pb(u);
     }
-    ll maxi=0,n2=n,m2=m;
-    if(n2<m2)swap(n2,m2);
-    while(n2 >=2 && m2 >= 1){
-        n2-=2;
-        m2--;
-        maxi++;
-        if(n2<m2)swap(n2,m2);
-    }
-    ll tam=res.size();
-    dbg(maxi,tam,ptr1,ptr2,ptr3,ptr4);
-    if(maxi > (ll)res.size()){
-        FOR(i,0,maxi-tam){
-            if((ll)ops.size()>0){
-                ll xd=ops.back();
-                ops.pop_back();
-                if(xd==1){
-                    ptr1--;
-                    ptr2++;
-                    sum-=(a[ptr2]-a[ptr1]);
-                    sum+=(b[ptr4]-b[ptr3]);
-                    ptr4--;
-                    ptr3++;
-                    sum+=(b[ptr4]-b[ptr3]);
-                }
-                else{
-                    ptr3--;
-                    ptr4++;
-                    sum-=(b[ptr4]-b[ptr3]);
-                    sum+=(a[ptr2]-a[ptr1]);
-                    ptr1++;
-                    ptr2--;
-                    sum+=(a[ptr2]-a[ptr1]);
+    vvl dis(n+1,vl(2,BIG));
+    dis[1][0]=0;
+    dis[1][1]=0;
+    //dis, ele ,(cambiado o no)
+    priority_queue<array<ll,3>> cola;
+    cola.push({0,1,0});
+    cola.push({-x,1,1});
+    while(!cola.empty()){
+        auto act=cola.top();
+        dbg(act);
+        cola.pop();
+        ll d=-act[0],ele=act[1],camb=act[2];
+        if(camb){
+            each(e,G2[ele]){
+                dbg("ver camb 1",d,e,dis[e]);
+                if(d+1 < dis[e][camb]){
+                    dis[e][camb]=d+1;
+                    cola.push({-d-1,e,camb});
                 }
             }
-            else{
-                if((ll)a.size()==1){
-                    sum+=b[ptr4]-b[ptr3];
-                }
-                else{
-                    sum+=a[ptr2]-a[ptr1];
+            each(e,G[ele]){
+                dbg("otro camboip al cero",d,e,x,dis[e]);
+                if(d+x+1 < dis[e][camb^1]){
+                    dis[e][camb^1]=d+x+1;
+                    cola.push({-d-x-1,e,camb^1});
                 }
             }
-            res.pb(sum);
+        }
+        else{
+            each(e,G[ele]){
+                //dbg("ver camb 0",d,e,dis[e]);
+                if(d+1 < dis[e][camb]){
+                    dis[e][camb]=d+1;
+                    cola.push({-d-1,e,camb});
+                }
+            }
+            each(e,G2[ele]){
+                //dbg("otro camboip al uno",d,e,x,dis[e]);
+                if(d+x+1 < dis[e][camb^1]){
+                    dis[e][camb^1]=d+x+1;
+                    cola.push({-d-x-1,e,camb^1});
+                }
+            }
         }
     }
-    return res;
+
+    return min(dis[n][0],dis[n][1]);
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -284,22 +245,15 @@ int main() {
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
-		vl a(n);
-		each(e,a) cin>>e;
-        vl b(m);
-		each(e,b) cin>>e;
-        auto ans=solve(a,b);
-        cout<<ans.size()<<"\n";
-        each(e,ans){
-            cout<<e<<" ";
-        }
-        cout<<"\n";
+		ll n,m,x;
+		cin>>n>>m>>x;
+		vpl a(m);
+		each(e,a) cin>>e.f>>e.s;
+        cout<<solve(a,n,x)<<"\n";
     }
     RAYA;
     RAYA;

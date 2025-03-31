@@ -1,5 +1,5 @@
 //* sometimes pragmas don't work, if so, just comment it!
-#pragma GCC optimize ("Ofast")
+//#pragma GCC optimize ("Ofast")
 //? #pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 
@@ -173,102 +173,67 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-vl solve(vl &a,vl &b) {
-    sor(a);
-    sor(b);
-    dbg(a,b);
-    vl res;
-    ll n=a.size(),m=b.size();
-    ll ptr1=0,ptr2=n-1,ptr3=0,ptr4=m-1,debe1=0,debe2=0,sum=0;
-    vl ops;
-    while((ptr1< ptr2 && ptr3 < ptr4)){
-        if(((ptr2-ptr1-1 >= debe1) && (ptr4-ptr3-1 >= debe2) )){
-            ll cand1=a[ptr2]-a[ptr1];
-            ll cand2=b[ptr4]-b[ptr3];
-            if(cand1 > cand2){
-                sum+=cand1;
-                ptr1++;
-                ptr2--;
-                debe2++;
-                ops.pb(1);
-            }
-            else{
-                sum+=cand2;
-                ptr3++;
-                ptr4--;
-                debe1++;
-                ops.pb(2);
-            }
-            res.pb(sum);
-        }
-        else if((ptr2-ptr1-1 >= debe1)){
-            ll cand1=a[ptr2]-a[ptr1];
-            sum+=cand1;
-            ptr1++;
-            ptr2--;
-            debe2++;
-            ops.pb(1);
-            res.pb(sum);
-        }
-        else if((ptr4-ptr3-1 >= debe2)){
-            ll cand2=b[ptr4]-b[ptr3];
-            sum+=cand2;
-            ptr3++;
-            ptr4--;
-            debe1++;
-            ops.pb(2);
-            res.pb(sum);
-        }
-        else break;
-    }
-    ll maxi=0,n2=n,m2=m;
-    if(n2<m2)swap(n2,m2);
-    while(n2 >=2 && m2 >= 1){
-        n2-=2;
-        m2--;
-        maxi++;
-        if(n2<m2)swap(n2,m2);
-    }
-    ll tam=res.size();
-    dbg(maxi,tam,ptr1,ptr2,ptr3,ptr4);
-    if(maxi > (ll)res.size()){
-        FOR(i,0,maxi-tam){
-            if((ll)ops.size()>0){
-                ll xd=ops.back();
-                ops.pop_back();
-                if(xd==1){
-                    ptr1--;
-                    ptr2++;
-                    sum-=(a[ptr2]-a[ptr1]);
-                    sum+=(b[ptr4]-b[ptr3]);
-                    ptr4--;
-                    ptr3++;
-                    sum+=(b[ptr4]-b[ptr3]);
-                }
-                else{
-                    ptr3--;
-                    ptr4++;
-                    sum-=(b[ptr4]-b[ptr3]);
-                    sum+=(a[ptr2]-a[ptr1]);
-                    ptr1++;
-                    ptr2--;
-                    sum+=(a[ptr2]-a[ptr1]);
-                }
-            }
-            else{
-                if((ll)a.size()==1){
-                    sum+=b[ptr4]-b[ptr3];
-                }
-                else{
-                    sum+=a[ptr2]-a[ptr1];
-                }
-            }
-            res.pb(sum);
-        }
-    }
-    return res;
+ll solve2(vl &a,ll x) {
+	vl b=a;
+	ll n=b.size();
+	ll res=0;
+	auto get=[&](auto &&get,vl arr,ll ops)->ll{
+		bool todozero=true;
+		FOR(i,0,n){
+			if(arr[i]!=0){
+				todozero=false;
+				break;
+			}
+		}
+		if(todozero){
+			return ops;
+		}
+		else{
+            ll aea=BIG;
+			FOR(i,0,n){
+				if(arr[i]==0) continue;
+				bool inner=false;
+				FOR(j,i+1,n){
+					if(arr[j]==0) continue;
+					inner=true;
+					vl c=arr;
+					c[i]--;
+					c[j]--;
+					ll puesta=get(get,c,ops+1);
+                    ckmin(aea,puesta);
+				}
+				if(!inner){
+				    vl c=arr;
+					c[i]--;
+					ll puesta=get(get,c,ops+1);
+                    ckmin(aea,puesta);
+				}
+			}
+            return aea;
+		}
+		
+	};
+	return get(get,b,0);
+}
+ll solve(vl &a,ll x) {
+	priority_queue<ll> xd;
+	each(e,a)xd.push(e);
+	ll ans=0;
+	while((ll)xd.size() > 0){
+		vl act;
+		ll tam=xd.size();
+		FOR(i,0,min(tam,x)){
+			act.pb(xd.top());	
+			xd.pop();
+		}
+		ans+=act.back();
+		FOR(i,0,(ll)act.size()){
+			ll meter=act[i] - act.back();
+			if(meter>0)
+				xd.push(meter);
+		}
+	}
+	return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -279,7 +244,18 @@ int main() {
 	cin.tie(nullptr);
 
     //? Stress Testing
-    while(0) {
+    while(1) {
+        ll n=rng_ll(1,7);
+		ll x=2;
+		vl a(n);
+		each(e,a) e=rng_ll(1,10);
+		ll ans1=solve(a,x);
+		ll ans2=solve2(a,x);
+		if(ans1 > ans2){
+			dbg(a,x,ans1,ans2);
+			assert(false);
+		}
+		else dbg("ok");
         RAYA;
     }
 
@@ -288,18 +264,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,m;
-		cin>>n>>m;
+		ll n,x;
+		cin>>n>>x;
 		vl a(n);
 		each(e,a) cin>>e;
-        vl b(m);
-		each(e,b) cin>>e;
-        auto ans=solve(a,b);
-        cout<<ans.size()<<"\n";
-        each(e,ans){
-            cout<<e<<" ";
-        }
-        cout<<"\n";
+        cout<<solve(a,x)<<"\n";
     }
     RAYA;
     RAYA;
