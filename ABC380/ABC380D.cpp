@@ -154,11 +154,36 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Generator
 
-ll solve(vl &a) {
-	ll n=a.size();
-	return 0;
+vector<char> solve(str &s,vl &queries) {
+	ll n=s.size();
+	vector<char> ans;
+	auto change=[](char x){
+		if(islower(x))	return toupper(x);
+		else return tolower(x);
+	};
+	auto getType=[](auto &&getType,ll num)->ll{
+		if(num==1){
+			return 1;
+		}
+		else{
+			ll pot=1;
+			while((2*pot) < num){
+				pot*=2;
+			}
+			return 1 ^ getType(getType,num-pot);
+		}
+	};
+	each(e,queries){
+		ll cant=cdiv(e,n);
+		ll type=getType(getType,cant);
+		//dbg(e,type);
+		if(type){
+			ans.pb(s[(e-1)%n]);
+		}
+		else ans.pb(change(s[(e-1)%n]));
+	}
+	return ans;
 }
 
 int main() {
@@ -170,12 +195,15 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-
-        cout<<solve(a)<<"\n";
+		str s;
+		cin>>s;
+		ll q;
+		cin>>q;
+		vl queries(q);
+		each(e,queries)cin>>e;
+		dbg(s,q,queries);
+		each(e,solve(s,queries))cout<<e<<" ";
+		cout<<"\n";
     }
     RAYA;
     RAYA;

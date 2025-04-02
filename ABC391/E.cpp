@@ -175,7 +175,18 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-
+V<array<ll,3>> solve(vpl &a,ll n) {
+    V<vpl>  G(n+1);
+    ll m=a.size();
+    FOR(i,0,m){
+        ll u=a[i].f,v=a[i].s;
+        //if(u!=v){   
+            G[u].pb({i+1,v});
+            G[v].pb({i+1,u});
+        //}
+    }
+    
+}
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -191,11 +202,21 @@ int main() {
 
     int t = 1;
 	//cin >> t;
-
     for(int i = 0; i < t; i++) {
-        vs aea={"CODEFORCES","EYE","TESTING","SYSTEM","APRIL","FOOLS",""};
-        db a=36.1024779,b=-115.1747509;
-        cout<<fixed<<setprecision(6)<<a<<" "<<b<<"\n";
+        RAYA;
+        RAYA;
+		ll n,m;
+		cin>>n>>m;
+		vpl a(m);
+		each(e,a) cin>>e.f>>e.s;
+        auto ans=solve(a,n);
+        cout<<(ll)ans.size()<<"\n";
+        each(e,ans){
+            each(e2,e){
+                cout<<e2<<" ";
+            }
+            cout<<"\n";
+        }
     }
     RAYA;
     RAYA;

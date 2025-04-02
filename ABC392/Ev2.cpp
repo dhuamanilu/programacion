@@ -175,7 +175,69 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
+V<array<ll,3>> solve(vpl &a,ll n) {
+    V<vpl>  G(n+1);
+    ll m=a.size();
+    FOR(i,0,m){
+        ll u=a[i].f,v=a[i].s;
+        //if(u!=v){   
+            G[u].pb({i+1,v});
+            G[v].pb({i+1,u});
+        //}
+    }
+    vl comp(n+1,-1);
+    ll id=0;
+    vl vis(n+1,false);
+    vl necesario(m+1,0);
+    auto dfs=[&](auto &&dfs,ll ele)->void{
+        vis[ele]=true;
+        comp[ele]=id;
+        each(e,G[ele]){
+            if(!vis[e.s]){
+                necesario[e.f]=1;
+                dfs(dfs,e.s);
+            }
+        }
+    };
+    FOR(i,1,n+1){
+        if(!vis[i]){
+            dfs(dfs,i);
+            id++;
+        }
+    }
+    V<set<ll>> indices(id);
+    FOR(i,1,m+1){
+        if(!necesario[i]){
+            ll u=a[i-1].f;
+            indices[comp[u]].insert(i);
+        }
+    }
 
+    vl repr(id,-1);
+    FOR(i,1,n+1){
+        if(repr[comp[i]]==-1){
+            repr[comp[i]]=i;
+        }
+    }
+    V<pair<ll,set<ll>>> xd;
+    FOR(i,0,id){
+        xd.pb(mp(i,indices[i]));
+    }
+    sort(all(xd),[](auto &ele1,auto &ele2){
+        return ele1.s.size() > ele2.s.size();
+    });
+    ll ptr=0,ptr2=1;
+    V<array<ll,3>> res;
+    while(ptr2<(ll)xd.size()){ 
+        ll idx=*(xd[ptr].s.begin());
+        xd[ptr].s.erase(xd[ptr].s.begin());
+        ll fuente=a[idx-1].f;
+        auto hacia=(xd[ptr2++].f);
+        res.pb({idx,fuente,repr[hacia]});
+        if(xd[ptr].s.size()==0) ptr++;       
+    }
+    return res;
+}
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -191,11 +253,21 @@ int main() {
 
     int t = 1;
 	//cin >> t;
-
     for(int i = 0; i < t; i++) {
-        vs aea={"CODEFORCES","EYE","TESTING","SYSTEM","APRIL","FOOLS",""};
-        db a=36.1024779,b=-115.1747509;
-        cout<<fixed<<setprecision(6)<<a<<" "<<b<<"\n";
+        RAYA;
+        RAYA;
+		ll n,m;
+		cin>>n>>m;
+		vpl a(m);
+		each(e,a) cin>>e.f>>e.s;
+        auto ans=solve(a,n);
+        cout<<(ll)ans.size()<<"\n";
+        each(e,ans){
+            each(e2,e){
+                cout<<e2<<" ";
+            }
+            cout<<"\n";
+        }
     }
     RAYA;
     RAYA;

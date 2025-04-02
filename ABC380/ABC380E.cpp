@@ -155,10 +155,116 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
-
-ll solve(vl &a) {
-	ll n=a.size();
-	return 0;
+struct query{
+	ll type,x,c;
+};
+void update(vi  &Tree, int idx, int s,
+            int e, int pos, int X)
+{
+    // If current node is a
+    // leaf nodes
+    if (s == e) {
+ 
+        // Update Tree[idx]
+        Tree[idx] += X;
+    }
+ 
+    else {
+ 
+        // Divide segment tree into left
+        // and right subtree
+        int m = (s + e) / 2;
+ 
+        // Check if pos lies in left subtree
+        if (pos <= m) {
+ 
+            // Search pos in left subtree
+            update(Tree, 2 * idx, s, m, pos, X);
+        }
+        else {
+ 
+            // Search pos in right subtree
+            update(Tree, 2 * idx + 1, m + 1, e,
+                   pos, X);
+        }
+ 
+        // Update Tree[idx]
+        Tree[idx]
+            = Tree[2 * idx] + Tree[2 * idx + 1];
+    }
+}
+ 
+// Function to find the sum from
+// elements in the range [0, X]
+ll sum(vi &Tree, int idx, int s,
+        int e, int ql, int qr)
+{
+    // Check if range[ql, qr] equals
+    // to range [s, e]
+    if (ql == s && qr == e)
+        return Tree[idx];
+ 
+    if (ql > qr)
+        return 0;
+ 
+    // Divide segment tree into
+    // left subtree and
+    // right subtree
+    int m = (s + e) / 2;
+ 
+    // Return sum of elements in the range[ql, qr]
+    return sum(Tree, 2 * idx, s, m, ql, min(m, qr))
+           + sum(Tree, 2 * idx + 1, m + 1, e,
+                 max(ql, m + 1), qr);
+}
+ 
+// Function to find Xth element
+// in the array
+ll getElement(vi & Tree, int X, int N){
+    // Print element at index x
+    return sum(Tree, 1, 0, N - 1, 0, X);
+}
+ 
+// Function to update array elements
+// in the range [L, R]
+void range_Update(vi &Tree, int L,
+                  int R, int X, int N){
+ 
+    // Update arr[l] += X
+    update(Tree, 1, 0, N - 1, L, X);
+ 
+    // Update arr[R + 1] += X
+    if (R + 1 < N)
+        update(Tree, 1, 0, N - 1, R + 1, -X);
+}
+vl solve(V<query> &a,ll n) {
+	ll q=a.size();
+	vi pref(4*n+5,0),suff(4*n+5,0);
+	vl res;
+	map<ll,ll> m;
+	FOR(i,0,n){
+		m[i]++;
+	}
+	vl color(n);
+	iota(all(color),0);
+	each(e,a){
+		if(e.type==1){
+			if(e.c==){
+				ll cant=getElement(suff,e.x,n);
+				ll L=e.x-getElement(pref,e.x,n);
+				ll R=e.x-1;
+				if(L<=R){
+					range_Update(pref,L,R,-cant,n);
+				}
+			}
+			
+			
+		}
+		else{
+			res.pb(m[e.c]);
+		}
+	}	
+	return res;
 }
 
 int main() {
@@ -170,12 +276,26 @@ int main() {
     for(int idx = 0; idx < t; idx++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a)cin>>e;
-
-        cout<<solve(a)<<"\n";
+		ll n,q;
+		cin>>n>>q;
+		V<query> a(q);
+		each(e,a){
+			cin>>e.type;
+			if(e.type==1){
+				cin>>e.x>>e.c;
+				e.x--;
+				e.c--;
+			}
+			else{
+				cin>>e.c;
+				e.c--;
+			}
+			
+		}
+        auto ans=solve(a,n);
+		each(e,ans){
+			cout<<e<<"\n";
+		}
     }
     RAYA;
     RAYA;

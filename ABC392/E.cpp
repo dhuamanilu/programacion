@@ -176,11 +176,70 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 V<array<ll,3>> solve(vpl &a,ll n) {
-    
+    V<vpl>  G(n+1);
+    ll m=a.size();
+    FOR(i,0,m){
+        ll u=a[i].f,v=a[i].s;
+        //if(u!=v){   
+            G[u].pb({i+1,v});
+            G[v].pb({i+1,u});
+        //}
+    }
+    vl comp(n+1,-1);
+    ll id=0;
+    vl vis(n+1,false);
+    vl necesario(m+1,0);
+    auto dfs=[&](auto &&dfs,ll ele)->void{
+        vis[ele]=true;
+        comp[ele]=id;
+        each(e,G[ele]){
+            if(!vis[e.s]){
+                necesario[e.f]=1;
+                dfs(dfs,e.s);
+            }
+        }
+    };
+    FOR(i,1,n+1){
+        if(!vis[i]){
+            dfs(dfs,i);
+            id++;
+        }
+    }
+    V<set<ll>> indices(id);
+    FOR(i,1,m+1){
+        if(!necesario[i]){
+            ll u=a[i-1].f;
+            indices[comp[u]].insert(i);
+        }
+    }
 
-
+    vl repr(id,-1);
+    FOR(i,1,n+1){
+        if(repr[comp[i]]==-1){
+            repr[comp[i]]=i;
+        }
+    }
+    set<pair<set<ll>,ll>> xd;
+    FOR(i,0,id){
+        xd.insert(mp(indices[i],i));
+    }
+    /*set<ll> faltan;
+    FOR(i,0,id){
+        faltan.insert(i);
+    }*/
+    //dbg(faltan,xd);
+    ll ptrLeft=0;
     V<array<ll,3>> res;
-
+    auto act=prev(xd.end());
+    FOR(i,0,id-1){
+        if(ptrLeft==id-1)break;
+        if(act!=xd.begin() && (*act).f.size()==0){
+            act=prev(act);
+        }
+        auto xddd=*act;
+        ll idx=(*xddd.f.begin(),);
+        res.pb({});
+    }
     return res;
 }
 

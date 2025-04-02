@@ -173,9 +173,81 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
+/**
+ * Author: Lukas Polacek
+ * Date: 2009-10-26
+ * License: CC0
+ * Source: folklore
+ * Description: Disjoint-set data structure.
+ * Time: $O(\alpha(N))$
+ */
+#pragma once
 
+struct UF {
+	vi e;
+	UF(int n) : e(n, -1) {}
+	bool sameSet(int a, int b) { return find(a) == find(b); }
+	int size(int x) { return -e[find(x)]; }
+	int find(int x) { return e[x] < 0 ? x : e[x] = find(e[x]); }
+	bool join(int a, int b) {
+		a = find(a), b = find(b);
+		if (a == b) return false;
+		if (e[a] > e[b]) swap(a, b);
+		e[a] += e[b]; e[b] = a;
+		return true;
+	}
+};
 
-
+ll solve(str &s,str &t) {
+    ll n=s.size(),res=0;
+    set<char> s1,s2;
+    each(e,s)s1.insert(e);
+    each(e,t)s2.insert(e);
+    if((ll)s1.size() < (ll)s2.size()){
+        return -1;
+    }
+    else{
+        vvl idx1(26),idx2(26);
+        FOR(i,0,n){
+            idx1[s[i]-'a'].pb(i);
+            idx2[t[i]-'a'].pb(i);
+        }
+        ll res=0;
+        UF dsu(26);
+        FOR(i,0,26){
+            if((ll)idx2[i].size()> 0){
+                vl todo;
+                ll act=idx2[i][0];
+                if(s[act]!=t[act]){
+                    res++;
+                }
+                dbg(act,idx1[s[act]-'a']);
+                each(e,idx1[s[act]-'a']){
+                    todo.pb(e);
+                }
+                FOR(j,1,(ll)idx2[i].size()){
+                    ll num=s[idx2[i][j]]-'a';
+                    dbg(i,j,act,idx2[i][j],s[idx2[i][j]],num);
+                    if(!dsu.sameSet(s[act]-'a',num)){
+                        dsu.join(act,num);
+                        if(s[idx2[i][j]]!=t[idx2[i][j]]){
+                            res++;
+                        }
+                        each(e,idx1[num]){
+                            todo.pb(e);
+                        }
+                    }
+                }
+                sor(todo);
+                dbg(i,todo,idx2[i]);
+                if(todo!=idx2[i]){
+                    return -1;
+                }
+            }
+        }
+        return res;
+    }
+}
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -191,11 +263,14 @@ int main() {
 
     int t = 1;
 	//cin >> t;
-
     for(int i = 0; i < t; i++) {
-        vs aea={"CODEFORCES","EYE","TESTING","SYSTEM","APRIL","FOOLS",""};
-        db a=36.1024779,b=-115.1747509;
-        cout<<fixed<<setprecision(6)<<a<<" "<<b<<"\n";
+        RAYA;
+        RAYA;
+		ll n;
+		cin>>n;
+		str s,t;
+        cin>>s>>t;
+        cout<<solve(s,t)<<"\n";
     }
     RAYA;
     RAYA;

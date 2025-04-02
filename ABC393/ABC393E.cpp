@@ -175,9 +175,41 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
+vl solve(vl &a,ll k) {
     ll n=a.size();
-	return 0;
+    //sor(a);
+    ll maxi=*(max_element(all(a)));
+	map<ll,vl> mult;
+    auto fact=[&](ll num,ll j){
+        for(ll i=1;i*i<=num;i++){
+            if((num%i)==0){
+                //dbg(i,num);
+                if((i*i)==num){
+                    mult[i].pb(j);
+                }
+                else{
+                    mult[i].pb(j);
+                    mult[num/i].pb(j);
+                }
+            }
+        }
+    };
+    //dbg(a);
+    FOR(i,0,n){
+        //dbg("a fact",e);
+        fact(a[i],i);
+    }
+    //dbg(mult);
+    vl res(n,1);
+    for (auto iter = mult.rbegin(); iter != mult.rend(); ++iter) {
+        if(iter->second.size() >=k){
+            each(e,iter->second){
+                ckmax(res[e],iter->first);
+            }
+            iter->second.clear();
+        }
+    }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -193,15 +225,18 @@ int main() {
     }
 
     int t = 1;
-	cin >> t;
+	//cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
+		ll n,k;
+		cin>>n>>k;
 		vl a(n);
 		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+        auto ans=solve(a,k);
+        each(e,ans){
+            cout<<e<<"\n";
+        }
     }
     RAYA;
     RAYA;

@@ -175,7 +175,42 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-
+ll solve(vvl &a,ll mult,ll p,ll q) {
+    ll res=a[p][q];
+    a[p][q]=0;
+    ll h=a.size(),w=a[0].size();
+    auto isValid=[&](ll fil,ll col){
+        return fil>=0 && fil < h && col>=0 && col<w; 
+    };
+    using Info=array<ll,3>;
+    set<Info> se;
+    FOR(i,0,4){
+        ll newX=p + dx[i],newY=q+dy[i];
+        if(isValid(newX,newY) && a[newX][newY]!=0 ){
+            se.insert({a[newX][newY],newX,newY});
+        }
+    }
+    while(!se.empty()){
+        auto act=*se.begin();
+        se.erase(act);
+        ll val=act[0],x=act[1],y=act[2];
+        ll cant=cdiv(res,mult);
+        if(val < cant){
+            res+=val;
+            a[x][y]=0;
+            FOR(i,0,4){
+                ll newX=x+dx[i],newY=y+dy[i];
+                if(isValid(newX,newY) && a[newX][newY]!=0){
+                    se.insert({a[newX][newY],newX,newY});
+                }
+                
+            }
+        }
+        else break;
+        
+    }
+    return res;
+}
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -191,11 +226,22 @@ int main() {
 
     int t = 1;
 	//cin >> t;
-
     for(int i = 0; i < t; i++) {
-        vs aea={"CODEFORCES","EYE","TESTING","SYSTEM","APRIL","FOOLS",""};
-        db a=36.1024779,b=-115.1747509;
-        cout<<fixed<<setprecision(6)<<a<<" "<<b<<"\n";
+        RAYA;
+        RAYA;
+		ll h,w,x;
+		cin>>h>>w>>x;
+        ll p,q;
+        cin>>p>>q;
+        p--;
+        q--;
+		vvl a(h,vl(w,0));
+		each(e,a){
+            each(e2,e){
+                cin>>e2;
+            }
+        }
+        cout<<solve(a,x,p,q)<<"\n";
     }
     RAYA;
     RAYA;

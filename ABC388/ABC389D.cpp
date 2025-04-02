@@ -175,7 +175,10 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-
+ll solve(vl &a) {
+    ll n=a.size();
+	return 0;
+}
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
 void setOut(str s) { freopen(s.c_str(), "w", stdout); }
@@ -190,12 +193,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
-
+	cin >> t;
     for(int i = 0; i < t; i++) {
-        vs aea={"CODEFORCES","EYE","TESTING","SYSTEM","APRIL","FOOLS",""};
-        db a=36.1024779,b=-115.1747509;
-        cout<<fixed<<setprecision(6)<<a<<" "<<b<<"\n";
+        RAYA;
+        RAYA;
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a)<<"\n";
     }
     RAYA;
     RAYA;
