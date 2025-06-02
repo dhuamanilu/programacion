@@ -175,13 +175,19 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(ll x) {
-    ll ans=1;
-    FOR(i,2,21){
-        ans*=i;
-        if(ans==x) return i;
+vl solve(ll n) {
+    vl res;
+    if(n%2==0){
+        res.pb(-1);
+        return res;
     }
-    return -1;
+    else{
+        res.pb(n);
+        FOR(i,0,n-1){
+            res.pb(i+1);
+        }
+        return res;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -197,13 +203,17 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-        cout<<solve(n)<<"\n";
+		auto ans=solve(n);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

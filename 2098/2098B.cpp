@@ -175,60 +175,48 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
-    }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
+ll solve(vl &a,ll k) {
+    ll n=a.size();
+	sor(a);
+    set<pl> intervals;
+    if(n%2==1){
+        if(k>0){
+            k--;
+            ll mid=n/2;
+            intervals.insert({a[mid],a[mid]});
+            a.erase(a.begin()+mid);
+            n--;
         }
         else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
-            }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
+            return 1;
         }
         
-    };
-    return get(get,0,ene);
+    }
+    ll j=n/2 ,i=j-1;
+    while(true){
+        intervals.insert({a[i],a[j]});
+        if(k>=2){
+            i--;
+            j++;
+            k-=2;
+        }
+        else break;
+    }
+    auto [L,R]=*intervals.begin();
+    ll res=0;
+    each(e,intervals){
+        auto [l,r]=e;
+        if(l<=R){
+            ckmax(R,r);
+        }
+        else{
+            res+=R-L+1;
+            L=l;
+            R=r;
+        }
+    }
+    res+=R-L+1;
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +232,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

@@ -159,7 +159,7 @@ using vvb = V<vb>;
 
 const int MOD = 1e9 + 7;
 const int MX = (int)2e5 + 5;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e15;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 const int dx[4]{1, 0, -1, 0}, dy[4]{0, 1, 0, -1};  //? for every grid problem!!
 mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
@@ -175,60 +175,51 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
+ll solve(vl &a,vl &b) {
+    ll n=a.size(),m=b.size();
+	vl mini(m,BIG),maxi(m,-BIG);
+    ll ptr=0;
     FOR(i,0,m){
-        nive.pb(a[i]-'0');
+        while(ptr < n && a[ptr] < b[i]){
+            ptr++;
+        }
+        if(ptr<n){
+            mini[i]=ptr++;
+        }
+        else break;
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
+    if(mini[m-1]<n){
+        return 0;
     }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
+    else{
+        ptr=n-1;
+        for(ll i=m-1;i>=0;i--){
+            while(ptr >=0 && a[ptr] < b[i]){
+                ptr--;
+            }
+            if(ptr>=0){
+                maxi[i]=ptr--;
+            }
+            else break;
         }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
+        ll res=BIG;
+        FOR(i,0,m){
+            ll pos=-1;
+            if(i>=1){
+                pos=mini[i-1];
             }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
+            ll pos2=n;
+            if(i+1<m){
+                pos2=maxi[i+1];
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
+            if(pos+1<=pos2){
+                ckmin(res,b[i]);
             }
-            return res;
+
         }
-        
-    };
-    return get(get,0,ene);
+        if(res==BIG) res=-1;
+        return res;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +235,17 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vl a(n);
+		each(e,a) cin>>e;
+        vl b(m);
+		each(e,b) cin>>e;
+        cout<<solve(a,b)<<"\n";
     }
     RAYA;
     RAYA;

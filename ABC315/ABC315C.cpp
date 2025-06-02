@@ -175,60 +175,54 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
+ll solve(vl &f,vl &s) {
+    ll n=f.size();
+	//ll maxi=*(max_element(all(f)));
+    vector<set<ll>> porSabor(n);
+    FOR(i,0,n){
+        porSabor[f[i]].insert(s[i]);
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
+    vl prefMax(n,-BIG),suffMax(n,-BIG);
+    prefMax[0]=porSabor[0].size() > 0 ? *porSabor[0].rbegin() : -BIG;
+    vl valMax(n,0);
+    FOR(i,1,n){
+        ll val=-BIG;
+        if(porSabor[i].size()>0){
+            val=*porSabor[i].rbegin();
+            valMax[i]=val;
         }
-        xd.pb(nuevo);
+        prefMax[i]=max(prefMax[i-1],val);
     }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
+    suffMax[n-1]=porSabor[n-1].size() > 0 ? *porSabor[n-1].rbegin() : -BIG;
+    for(ll i=n-2;i>=0;i--){
+        ll val=valMax[i];
+        suffMax[i]=max(suffMax[i+1],val);
+    }
+    ll res=0;
+    FOR(i,0,n){
+        ll val=-BIG;
+        if(porSabor[i].size()>0){
+            if(i>=1){
+                ckmax(val,prefMax[i-1]);
             }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
+            if(i+1<n){
+                ckmax(val,suffMax[i+1]);
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
+            if(val!=-BIG){
+                ckmax(res,valMax[i]+val);
             }
-            return res;
+            if(porSabor[i].size()>=2){
+                ll xd1=*porSabor[i].rbegin();
+                ll xd2=*(next(porSabor[i].rbegin()));
+                ckmax(res,xd1 + (xd2/2));
+                //ckmax(res,xd2 + (xd1/2));
+            }
         }
         
-    };
-    return get(get,0,ene);
+        
+    }
+    return res;
+
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -250,9 +244,12 @@ int main() {
         RAYA;
 		ll n;
 		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		vl f(n),s(n);
+		FOR(i,0,n){
+            cin>>f[i]>>s[i];
+            f[i]--;
+        }
+        cout<<solve(f,s)<<"\n";
     }
     RAYA;
     RAYA;

@@ -54,11 +54,13 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll x;
+    cin>>x;
+    cout<<(ll)ceil(log2(1ll*8*1000000*x))<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    cin>>t;
+    //cin>>t;
     while(t--) solve();
 }

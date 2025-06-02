@@ -175,60 +175,36 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
+ll solve(vl &p,ll lim){
+    if(lim==0) return 0;
+    ll n=p.size();
+	sor(p);
+    ll ans=0;
+    dbg(p);
+    FOR(i,0,n-1){
+        ll times=p[i+1]/p[i];
+        ll ra=(ll)sqrt(times);
+        ll maxi=(times-(2*ra))/2;
+        ll acomprar=min(ra + maxi,(ll)sqrtl(lim/p[i]));
+        dbg(i,acomprar,lim,ans);
+        ans+=acomprar;
+        lim-=acomprar*acomprar*p[i];
+        /*ll s=times,e=sqrtl(lim/p[i]),m=s+(e-s)/2
+        while(s<=e){
+            m=s+(e-s)/2;
+            if(m*m*p[i]<=((m-1)*(m-1)*p[i]) + p[i+1]){
+
+            }
+        }*/
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
+    if(lim > 0){
+        /*ll acomprar=(ll)sqrtl(lim/p[0]);
+        dbg(acomprar,lim,ans);
+        ans+=acomprar;
+        lim-=acomprar*acomprar*p[0];*/
+        ans+=solve(p,lim);
     }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
-            }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
-        }
-        
-    };
-    return get(get,0,ene);
+    return ans;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -248,11 +224,11 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vl p(n);
+		each(e,p)cin>>e;
+        cout<<solve(p,m)<<"\n";
     }
     RAYA;
     RAYA;

@@ -175,9 +175,69 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(vl &a) {
+ll solve(vl &v,vl &a,vl &c,ll x){
     ll n=a.size();
-	return 0;
+	vvl dp(vvl(x+1,vl(3,0)));
+    dp[c[0]][v[0]]=a[0];
+    FOR(i,1,n){
+        auto ndp=dp;
+        ll val=v[i];
+        FOR(j,0,x+1){
+            if(j+c[i]<=x){
+                ckmax(ndp[j+c[i]][val],dp[j][val] + a[i]);
+            }
+            else break;
+        }
+        dp=ndp;
+    }
+    //dbg("normal",dp);
+    FOR(j,1,x+1){
+        FOR(k,0,3){
+            ckmax(dp[j][k],dp[j-1][k]);
+        }
+    }
+   
+    auto get=[&](ll mini,ll type){
+        ll s=0,e=(ll)x,m=s+(e-s)/2,guarda=-1;
+        while(s<=e){
+            m=s+(e-s)/2;
+            //dbg("DEL GET INTERNO",s,e,m,type);
+            if(dp[m][type] >=mini){
+                guarda=m;
+                e=m-1;
+            }
+            else{
+                s=m+1;
+            }
+        }
+        return guarda;
+    };
+    ll s=0,e=(ll)1e9,m=s+(e-s)/2,guarda=-1;
+    while(s<=e){
+        m=s+(e-s)/2;
+        //m = minima vitamina,todos tiene que ser >= m 
+        //dbg(s,e,m);
+        ll consumo=0;
+        FOR(i,0,3){
+            ll contr=get(m,i);
+            if(contr!=-1){
+                consumo+=contr;
+            }
+            else{
+                consumo=BIG;
+                break;
+            }
+        }
+        //dbg(consumo);
+        if(consumo <=x){
+            guarda=m;
+            s=m+1;
+        }
+        else{
+            e=m-1;
+        }
+    }
+    return guarda;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -197,11 +257,14 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        cout<<solve(a)<<"\n";
+		ll n,x;
+		cin>>n>>x;
+		vl v(n),a(n),c(n);
+		FOR(j,0,n){
+            cin>>v[j]>>a[j]>>c[j];
+            v[j]--;
+        }
+        cout<<solve(v,a,c,x)<<"\n";
     }
     RAYA;
     RAYA;

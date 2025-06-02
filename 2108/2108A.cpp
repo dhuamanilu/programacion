@@ -54,6 +54,24 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
+    ll n;
+    cin>>n;
+    cout<<((n*n)/4)+1<<"\n";
+    /*for(int i=1;i<11;i++){
+        vl a(i);
+        iota(a.begin(),a.end(),1ll);
+        set<ll> xd;
+        do{
+            ll cont=0;
+            for(int j=0;j<i;j++){
+                cont+=abs(a[j]-(j+1));
+            }
+            xd.insert(cont);
+        }while(next_permutation(a.begin(),a.end()));
+        dbg(i);
+        dbg(xd.size());
+        RAYA;
+    }*/
     
 }
 int main() {

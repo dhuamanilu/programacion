@@ -54,7 +54,14 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
+    ll n;
+    cin>>n;
+    vl a(n);
+    for(auto &e :a)cin>>e;
+    V<pl> b(n);
+    for(auto &e :b)cin>>e.first>>e.second;
     
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

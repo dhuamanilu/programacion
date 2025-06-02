@@ -54,7 +54,30 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
+    ll n,x;
+    cin>>n>>x;
+	if((n+x)%2==1) cout<<"0\n";
+	else{
+		set<ll> res;
+		auto hacer=[&](ll num){
+			for(ll i=1;i*i<=num;i++){
+				if(num%i==0){
+					if((i+1)>=x){
+						res.insert(i+1);
+					}  
+					if(((num/i)+1) >=x){
+						res.insert((num/i)+1);
+					}
+						
+				}
+			}
+		};
+		hacer((n-x)/2);
+		hacer((n+x-2)/2);
+		cout<<(ll)res.size()<<"\n";
+	}	
     
+	
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

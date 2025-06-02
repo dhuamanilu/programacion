@@ -54,7 +54,53 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    auto isSquare=[](ll x){
+        ll raiz=sqrtl(x);
+        return ((raiz*raiz)==x);
+    };
+    if(!isSquare(n)){
+        cout<<"No\n";
+    }
+    else{
+        ll num=sqrtl(n);
+        for(int i=0;i<num;i++){
+            if(s[i]=='0'){
+                cout<<"No\n";
+                return;
+            }
+        }
+        //GA;
+        for(int i=n-1;i>=n-num;i--){
+            if(s[i]=='0'){
+                cout<<"No\n";
+                return;
+            }
+        }
+        //GA;
+        for(int i=num;i<n-2*num+1;i+=num){
+            if(s[i]=='0'){
+                cout<<"No\n";
+                return;
+            }
+            //GA;
+            for(int j=i+1;j<i+num-1;j++){
+                if(s[j]=='1'){
+                    cout<<"No\n";
+                    return;
+                }
+            }
+            if(s[i+num-1]=='0'){
+                cout<<"No\n";
+                return;
+            }
+        }
+        //GA;
+        cout<<"Yes\n";
+    }
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

@@ -54,11 +54,17 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    bitset<32> num(n);
+    cout<<num<<"\n";
+    cout<<~num<<"\n";
+    cout<<(num<<1)<<"\n";
+    cout<<(num>>1)<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    cin>>t;
+    //cin>>t;
     while(t--) solve();
 }

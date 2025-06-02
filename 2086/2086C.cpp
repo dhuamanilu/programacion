@@ -175,60 +175,23 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
+vl solve(vl &p,vl &d) {
+    ll n=p.size();
+    vl vis(n,0);
+    ll cont=0;
+    vl res;
+    FOR(i,0,n){
+        if(!vis[d[i]]){
+            ll ele=d[i];
+            while(!vis[ele]){
+                vis[ele]=1;
+                ele=p[ele];
+                cont++;
+            }
+        }
+        res.pb(cont);
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
-            }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
-        }
-        
-    };
-    return get(get,0,ene);
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +207,27 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		vl p(n);
+		each(e,p){
+            cin>>e;
+            e--;
+        }
+        vl d(n);
+		each(e,d){
+            cin>>e;
+            e--;
+        }
+        auto ans=solve(p,d);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

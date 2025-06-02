@@ -175,60 +175,32 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
-    }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
+ll solve(vl &a,ll k,ll x) {
+    ll n=a.size();
+	vl pref(n,0);
+    pref[0]=a[0];
+    FOR(i,1,n){
+        pref[i]=pref[i-1]+a[i];
+    }    
+    auto query=[&](ll l,ll r){
+        if(l>0){
+            return pref[r]-pref[l-1];
         }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
-            }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
-        }
-        
+        else return pref[r];
     };
-    return get(get,0,ene);
+    ll s=0,e=(k*n)-1,m=s+(e-s)/2,guarda=-1;
+    while(s<=e){
+        m=s+(e-s)/2;
+        ll cuantos=k - 1 - ((m/n));
+        ll sum=query(m%n,n-1)+(cuantos*pref[n-1]);
+        dbg(s,e,m,cuantos,query(m%n,n-1),sum);
+        if(sum>=x){
+            guarda=m;
+            s=m+1;
+        }
+        else e=m-1;
+    }
+    return guarda+1;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +216,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,k,x;
+		cin>>n>>k>>x;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,k,x)<<"\n";
     }
     RAYA;
     RAYA;

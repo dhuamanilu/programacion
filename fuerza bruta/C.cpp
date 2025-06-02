@@ -54,7 +54,18 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    ll maxi=0,x=0;
+    for(int i=2;i<=n;i++){
+        ll k=n/i;
+        ll num=i*((k)*(k+1))/2;
+        if(num > maxi){
+            maxi=num;
+            x=i;
+        }
+    }
+    cout<<x<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

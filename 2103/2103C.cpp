@@ -175,60 +175,82 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
-    }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
+str solve(vl &a,ll k) {
+    ll n=a.size();
+	//1 2 , 1 3 , 2 3
+    //https://codesignal.com/learn/courses/maximizing-efficiency-in-problem-solving-techniques-in-cpp/lessons/using-heaps-in-cpp-to-calculate-prefix-medians
+    auto get=[&](vl &arr,ll idx){
+        priority_queue<ll, vl,greater<ll>> minHeap;
+        priority_queue<ll> maxHeap;
+        vl medians;
+        pl res={-1,-1};
+        ll tam=arr.size();
+        FOR(i,idx,tam-2) {
+            ll num=arr[i];
+            if (!maxHeap.empty() && num < maxHeap.top()) {
+                maxHeap.push(num);
+            } else {
+                minHeap.push(num);
             }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
+            if (maxHeap.size() > minHeap.size()) {
+                minHeap.push(maxHeap.top());
+                maxHeap.pop();
+            } else if (minHeap.size() > maxHeap.size() + 1) {
+                maxHeap.push(minHeap.top());
+                minHeap.pop();
             }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
+            int median;
+            if (minHeap.size() == maxHeap.size()) {
+                median = maxHeap.top();
+            } else {
+                median = minHeap.top();
+            }
+            if(medians.empty()){
+                res.s=i;
+                medians.pb(median);
+            }
+            else{
+                if(median > medians.back()){
+                    break;
+                }
+                else{
+                    res.s=i;
+                    medians.pb(median);
                 }
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
         }
-        
+        if(medians.empty()){
+            res={a[idx],idx};
+        }
+        else res.f=medians.back();
+        return res;
     };
-    return get(get,0,ene);
+    auto findMedian=[](vl arr,ll idx1,ll idx2){
+        vl ress;
+        FOR(i,idx1,idx2){
+            ress.pb(arr[i]);
+        }
+        sor(ress);
+        ll tam=(ll)(ress.size()/2) -((ll)ress.size()%2 == 0) ;
+        return ress[tam];
+    };
+    auto xd1=get(a,0);
+    auto xd2=get(a,xd1.s+1);
+
+    reverse(all(a));
+    auto xd3=get(a,0);
+    auto xd4=get(a,xd3.s+1);
+    ll media1=findMedian(a,xd2.s+1,n);
+    ll ans1=findMedian({xd1.f,xd2.f,media1},0,3);
+    ll media2=findMedian(a,xd1.s+1,xd3.s);
+    ll ans2=findMedian({xd1.f,xd3.f,media2},0,3);
+    ll media3=findMedian(a,0,xd4.s);
+    ll ans3=findMedian({xd2.f,xd3.f,media3},0,3);
+    ll ans4= min(ans1,min(ans2,ans3));
+    dbg(ans4);
+    if(ans4<=k) return "YES";
+    else return "NO";
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +266,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,k;
+		cin>>n>>k;
+		vl a(n);
+		each(e,a) cin>>e;
+        cout<<solve(a,k)<<"\n";
     }
     RAYA;
     RAYA;

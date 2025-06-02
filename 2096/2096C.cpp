@@ -175,60 +175,56 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
-    }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
-        }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
+ll solve(vvl &h,vl &a,vl &b) {
+    ll n=a.size();
+	vvl dp(n,vl(2,BIG));
+    dp[0][0]=0;
+    dp[0][1]=a[0];
+    FOR(i,1,n){
+        FOR(l,0,2){
+            FOR(k,0,2){
+                bool ok=true;
+                FOR(j,0,n){
+                    if(( h[i-1][j] + k )== h[i][j] + l){
+                        ok=false;
+                        break;
+                    }
+                }
+                if(ok){
+                    ckmin(dp[i][l],dp[i-1][k] + (l ? a[i] : 0ll));
                 }
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
         }
-        
-    };
-    return get(get,0,ene);
+    }
+    //dbg(dp[n-1]);
+    ll res=min(dp[n-1][0],dp[n-1][1]);
+    FOR(i,0,n){
+        FOR(j,0,2){
+            dp[i][j]=BIG;
+        }
+    }
+    dp[0][0]=0;
+    dp[0][1]=b[0];
+    
+    FOR(i,1,n){
+        FOR(l,0,2){
+            FOR(k,0,2){
+                bool ok=true;
+                FOR(j,0,n){
+                    if(( h[j][i-1] + k )== h[j][i] + l){
+                        ok=false;
+                        break;
+                    }
+                }
+                if(ok){
+                    ckmin(dp[i][l],dp[i-1][k] + (l ? b[i] : 0ll));
+                }
+            }
+        }
+    }
+    res+=min(dp[n-1][0],dp[n-1][1]);
+    if(res>=BIG) res=-1;
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +240,20 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		vvl h(n,vl(n,0));
+		each(e,h){
+            each(e2,e)cin>>e2;
+        }
+        vl a(n),b(n);
+        each(e,a)cin>>e;
+        each(e,b)cin>>e;
+        cout<<solve(h,a,b)<<"\n";
     }
     RAYA;
     RAYA;

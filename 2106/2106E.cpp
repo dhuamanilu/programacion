@@ -159,7 +159,7 @@ using vvb = V<vb>;
 
 const int MOD = 1e9 + 7;
 const int MX = (int)2e5 + 5;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+const ll BIG = 1e15;  //? not too close to LLONG_MAX
 const db PI = acos((db)-1);
 const int dx[4]{1, 0, -1, 0}, dy[4]{0, 1, 0, -1};  //? for every grid problem!!
 mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
@@ -175,60 +175,70 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
+vl solve(vl &p,V<array<ll,3>> &querys) {
+    ll n=p.size();
+    vl pos(n+1,-1);
+    FOR(i,0,n){
+        pos[p[i]]=i;
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
+    
+    auto get=[&](ll low,ll high,ll k){
+        ll s=low,e=high,m=s+(e-s)/2;
+        array<ll,4> res={0,0,0,0};
+        //res 0 tengo que ser menor pero soy mayor
+        while(s<=e){
+            
+            m=s+(e-s)/2;
+            dbg(s,e,m);
+            if(pos[k]==m){
+                break;
             }
-            else nuevo.pb(1);
-            i+=2;
+            else if(pos[k] < m){
+                if(p[m] < k){
+                    res[1]++;
+                }
+                else{
+                    res[3]++;
+                }
+                e=m-1;
+            }
+            else{
+                if(p[m] > k){
+                    res[0]++;
+                }
+                else res[2]++;
+                s=m+1;
+            }
         }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
+        return res;
+    };
+    vl res;
+    each(e,querys){
+        ll l=e[0],r=e[1],k=e[2];
+        l--;
+        r--;
+        dbg(l,r,k,pos[k]);
+        if(pos[k] < l || pos[k] > r){
+            res.pb(-1);
         }
         else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
+            auto bad=get(l,r,k);
+            dbg(bad);
+            //res 0 tengo que ser menor pero soy mayor
+            if(bad[0] > (k -1 - bad[2])|| bad[1] > (n-k - bad[3])){
+                res.pb(-1);
             }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
+            else{
+                ll num=min(bad[0],bad[1]);
+                bad[1]-=num;
+                bad[0]-=num;
+                num*=2;
+                res.pb(num+2*(bad[0]+bad[1]));
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
         }
         
-    };
-    return get(get,0,ene);
+    }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +254,25 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,q;
+		cin>>n>>q;
+		vl p(n);
+		each(e,p) cin>>e;
+        V<array<ll,3>> querys(q);
+		each(e,querys){
+            FOR(j,0,3){
+                cin>>e[j];
+            }
+        }
+        auto ans=solve(p,querys);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

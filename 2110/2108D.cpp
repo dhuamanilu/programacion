@@ -54,7 +54,42 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    vl a(n);
+    for(auto &e :a)cin>>e;
+    vl b;
+    for(int i=0;i<n;i++){
+        ll j=i+1;
+        while(j<n && a[i]==a[j]){
+            j++;
+        }
+        b.push_back(a[i]);
+        i=j-1;
+    }
+    map<ll,vl> m;
+    ll tam=b.size();
+    for(int i=0;i<tam;i++){
+        m[b[i]].push_back(i);
+    }
+    vl esta(tam,0);
+    ll cont=0;
+    for(auto it=m.rbegin();it!=m.rend();it++){
+        for(auto & e : it->second){
+            if(e+1<tam && esta[e+1]){
+                esta[e]=1;
+            }
+            else if(e>=1 && esta[e-1]){
+                esta[e]=1;
+            }
+            else{
+                cont++;
+                esta[e]=1;
+            }
+        }
+    }
+    cout<<cont<<"\n";
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

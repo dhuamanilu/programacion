@@ -173,43 +173,40 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
-
-vl solve(vl &a,ll k) {
-    ll n=a.size();
-    //sor(a);
-    ll maxi=*(max_element(all(a)));
-	map<ll,vl> mult;
-    auto fact=[&](ll num,ll j){
-        for(ll i=1;i*i<=num;i++){
-            if((num%i)==0){
-                //dbg(i,num);
-                if((i*i)==num){
-                    mult[i].pb(j);
-                }
-                else{
-                    mult[i].pb(j);
-                    mult[num/i].pb(j);
-                }
-            }
-        }
-    };
-    //dbg(a);
+const int N=1200000 + 5;
+int n,k;
+int a[N];
+int mult[N];
+int res[N];
+int frec[N];
+void solve() {
+    int maxi=INT_MIN;
     FOR(i,0,n){
-        //dbg("a fact",e);
-        fact(a[i],i);
+        ckmax(maxi,a[i]);
     }
-    //dbg(mult);
-    vl res(n,1);
-    for (auto iter = mult.rbegin(); iter != mult.rend(); ++iter) {
-        if(iter->second.size() >=k){
-            each(e,iter->second){
-                ckmax(res[e],iter->first);
-            }
-            iter->second.clear();
+    FOR(i,0,maxi+1){
+        mult[i]=0;
+        res[i]=0;
+        frec[i]=0;
+    }
+    FOR(i,0,n){
+        frec[a[i]]++;
+    }
+    FOR(i,1,maxi+1){
+        for(ll j=i;j<=maxi;j+=i){
+            mult[i]+=frec[j];
         }
     }
-    return res;
+    FOR(i,0,maxi+1) {
+        if(mult[i] >=k){
+            for(ll j=i;j<=maxi;j+=i){
+                ckmax(res[j],(int)i);
+            }
+        }
+    }
+    FOR(i,0,n){
+        cout<<res[a[i]]<<"\n";
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -229,14 +226,9 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n,k;
 		cin>>n>>k;
-		vl a(n);
-		each(e,a) cin>>e;
-        auto ans=solve(a,k);
-        each(e,ans){
-            cout<<e<<"\n";
-        }
+		FOR(i,0,n)cin>>a[i];
+        solve();
     }
     RAYA;
     RAYA;

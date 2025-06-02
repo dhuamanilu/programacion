@@ -173,7 +173,44 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? Template
 //? /Template
 
-
+ll brute(vl &a){
+    vl b=a;
+    ll n=b.size();
+    ll ans=0;
+    sor(b);
+    auto dfs=[&](auto &&dfs,vl &c,ll ops){
+        if((ll)c.size()<=1){
+            ckmax(ans,ops);
+            return;
+        }
+        else{
+            sor(c);
+            ll tam=c.size(); 
+            FOR(i,0,tam){
+                ll idx=lower_bound(all(c),2*c[i])-c.begin();
+                if(idx==tam){
+                    ckmax(ans,ops);
+                    return;
+                }
+                FOR(j,idx,tam){
+                    //emparejar i con j 
+                    dbg(i,j);
+                    vl nuevo;
+                    FOR(it,0,tam){
+                        if(it==i  ||  it==j){
+                            continue;
+                        }
+                        nuevo.pb(c[it]);
+                    }
+                    dbg(nuevo);
+                    dfs(dfs,nuevo,ops+1);
+                }
+            }
+        }
+    };
+    dfs(dfs,b,0);
+    return ans;
+}
 
 ll solve(vl &a) {
     ll n=a.size();
@@ -182,12 +219,11 @@ ll solve(vl &a) {
     ll res=0;
     while(!m.empty()){
         ll xd=*m.begin();
-        auto it=m.lower_bound(2*xd);
-        if(it!=m.end()){
-            ll val2=*it;
+        ll it=*prev(m.end());
+        if(it>=2*xd){
             res++;
-            safeErase(m,xd);
-            m.erase(it);
+            m.erase(m.find(xd));
+            m.erase(m.find(it));
         }
         else break;
     }
@@ -200,10 +236,23 @@ void setOut(str s) { freopen(s.c_str(), "w", stdout); }
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-
+    vl aaa={2, 3, 16, 18, 22, 29, 49};
+    dbg(solve(aaa));
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll n=rng_ll(1,8);
+        vl a(n);
+        each(e,a)e=rng_ll(1,50);
+        ll ans1=brute(a);
+        ll ans2=solve(a);
+        if(ans1!=ans2){
+            vl xd=a;
+            sor(xd);
+            dbg(xd,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
+        //RAYA;
     }
 
     int t = 1;

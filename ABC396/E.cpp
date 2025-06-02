@@ -175,60 +175,70 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
+vl solve(vl &x,vl &y,vl &z,ll n) {
+    ll m=x.size();
+    V<set<pl>> G(n+1);
     FOR(i,0,m){
-        nive.pb(a[i]-'0');
+        ll u=x[i],v=y[i],w=z[i];
+        dbg(u,v,w);
+        G[u].insert({v,w});
+        G[v].insert({u,w});
     }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
+    dbg(G);
+    vl vis(n+1,0);
+    vl cont(31,0);
+    vl xorr(n+1,-1);
+    vpl path;
+    bool ok=true;
+    auto dfs=[&](auto &&dfs,ll ele,ll xo)->void{
+        vis[ele]=true;
+        xorr[ele]=xo;
+        path.pb({ele,xo});
+        FOR(i,0,31){
+            if((1ll<<i)&xo){
+                cont[i]++;
             }
-            else nuevo.pb(1);
-            i+=2;
         }
-        xd.pb(nuevo);
-    }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
-        }
-        else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
+        each(e,G[ele]){
+            if(vis[e.f]){
+                if((xo^xorr[e.f])!=e.s){
+                    ok=false;
+                    return;
                 }
             }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
+            else{
+                dfs(dfs,e.f,xo^e.s);
             }
-            return res;
         }
-        
     };
-    return get(get,0,ene);
+    vl res(n);
+    FOR(i,1,n+1){
+        if(!vis[i]){
+            cont.clear();
+            path.clear();
+            cont.resize(31);
+            dfs(dfs,i,0);
+            dbg(i,path,cont);
+            ll xd=0,tam=path.size();
+            FOR(j,0,31){
+                if(cont[j]>fdiv(tam-1,2)){
+                    xd+=(1ll<<j);
+                }
+            }
+            
+            res[i-1]=xd;
+            each(e,path){
+                dbg(e,xd,xd^e.s);
+                res[e.f-1]=xd^e.s;
+            }
+        }
+        if(!ok) break;
+    }
+    if(!ok){
+        res.clear();
+        res.pb(-1);
+    }
+    return res;
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -248,11 +258,17 @@ int main() {
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		ll n;
-		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		ll n,m;
+		cin>>n>>m;
+		vl x(m),y(m),z(m);
+		FOR(j,0,m){
+            cin>>x[j]>>y[j]>>z[j];
+        }
+        auto ans=solve(x,y,z,n);
+        each(e,ans){
+            cout<<e<<" ";
+        }
+        cout<<"\n";
     }
     RAYA;
     RAYA;

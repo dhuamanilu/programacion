@@ -175,8 +175,73 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &s) {
-	return (s[0]-'0')*(s[2]-'0');
+vpl solve(vl &a,vl &b) {
+    ll n=a.size();
+	vl posA(n,-1),posB(n,-1);
+    FOR(i,0,n){
+        posA[a[i]]=i;
+        posB[b[i]]=i;
+    }
+    ll cont=0;
+    FOR(i,0,n){
+        if(posA[i]==posB[i]){
+            cont++;
+        }
+    }
+    vpl res;
+    dbg(n,cont);
+    if(((n%2==0) && (cont > 0)) || ((n%2==1) && (cont >1))){
+        res.pb({-1,-1});
+        return res;
+    }
+    else{
+        ll mitad=n/2;
+        if(n%2==1){
+            FOR(i,0,n){
+                if(posA[i]==posB[i] && (posA[i]!=(mitad))){
+                    res.pb({posA[i]+1,mitad+1});
+                    ll guarda=posA[i];
+                    posA[i]=mitad;
+                    ll ele=a[mitad];
+                    posA[ele]=guarda;
+                    a[mitad]=i;
+                    a[guarda]=ele;
+
+                    ll guarda2=posB[i];
+                    posB[i]=mitad;
+                    ll ele2=b[mitad];
+                    posB[ele2]=guarda2;
+                    b[mitad]=i;
+                    b[guarda2]=ele2;
+                }
+            }
+        }
+        FOR(i,0,mitad){
+            if(a[posB[a[i]]]!=b[i]){
+                res.clear();
+                res.pb({-1,-1});
+                return res;
+            }
+            if(posB[a[i]]!=n-i-1){
+                res.pb({posB[a[i]]+1,n-i});
+
+                ll guarda=posB[a[i]];
+                posA[a[guarda]]=n-i-1;
+                ll ele=a[n-i-1];    
+                posA[ele]=guarda;
+                a[n-i-1]=a[i];
+                a[guarda]=ele;
+
+                ll guarda2=posB[a[i]];
+                posB[b[guarda]]=n-i-1;
+                ll ele2=b[n-i-1];
+                posB[ele2]=guarda2;
+                b[n-i-1]=b[i];
+                b[guarda2]=ele2;
+            }
+        }
+        return res;
+    }
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -192,13 +257,33 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
-		str s;
-        cin>>s;
-        cout<<solve(s)<<"\n";
+		ll n;
+		cin>>n;
+		vl a(n);
+		each(e,a){
+            cin>>e;
+            e--;
+        }
+        vl b(n);
+		each(e,b){
+            cin>>e;
+            e--;
+        }
+        auto ans=solve(a,b);
+        ll tam=ans.size();
+        if(tam==1 && ans[0].f==-1){
+            cout<<"-1\n";
+        }
+        else{
+            cout<<tam<<"\n";
+            each(e,ans){
+                cout<<e.f<<" "<<e.s<<"\n";
+            }
+        }
     }
     RAYA;
     RAYA;

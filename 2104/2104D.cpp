@@ -53,12 +53,59 @@ using vl = V<ll>;
 #define RAYA   dbg("================================");
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
+const int N=10000000;
+const int LIM=400000+5;
+vl sums(LIM,0);
+vl primes;
+V<bool> isPrime(N,1);
+void init(){
+    isPrime[1]=false;
+    for(int i=2;i<N;i++){
+        if(isPrime[i]){
+            for(int j=2*i;j<N;j+=i){
+                isPrime[j]=false;
+            }
+        }
+    }
+    for(int i=2;i<N;i++){
+        if(isPrime[i]){
+            primes.push_back(i);
+        }
+    }
+    ll acum=0,ptr=0;
+    for(auto & e:primes){
+        acum+=e;
+        ptr++;
+        sums[ptr]=acum;
+        if(ptr>=LIM-5){
+            break;
+        }
+    }
+}
 void solve(){
-    
+    ll n;
+    cin>>n;
+    vl a(n);
+    for(auto &e : a){
+        cin>>e;
+    }
+    sort(a.begin(),a.end());
+    ll sum=0;
+    for(auto &e : a){
+        sum+=e;
+    }
+    ll cont=0;
+    while(cont<n && sums[n-cont] > sum){
+        sum-=a[cont];
+        cont++;
+    }
+    cout<<cont<<"\n";
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    ll t=1;
+    init();
+    ll t;
     cin>>t;
     while(t--) solve();
 }

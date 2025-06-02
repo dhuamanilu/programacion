@@ -175,60 +175,37 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 
 
 
-ll solve(str &a,ll ene) {
-    ll m=a.size();
-    vl nive;
-    FOR(i,0,m){
-        nive.pb(a[i]-'0');
-    }
-    vvl xd={nive};
-    while((ll)xd.back().size() > 1){
-        auto act=xd.back();
-        ll tam=act.size();
-        
-        vl nuevo;
-        FOR(i,0,tam){
-            vl cont(2,0);
-            cont[act[i]]++;
-            cont[act[i+1]]++;
-            cont[act[i+2]]++;
-            if(cont[0] > cont[1]){
-                nuevo.pb(0);
-            }
-            else nuevo.pb(1);
-            i+=2;
+ll solve(str &s) {
+    ll n=s.size();
+    map<char,ll> xd;
+    each(e,s)xd[e]++;
+    ll tam=xd.size();
+    if(tam==1){
+        if(s[0]=='0'){
+            return n;
         }
-        xd.pb(nuevo);
+        else return n+1;
     }
-    //dbg(xd);
-    auto get=[&](auto &&get,ll idx,ll niv)->ll{
-        if(niv==0){
-            return 1;
+    else{
+        set<ll> s1,s2;
+        FOR(i,0,n-1){
+            if(s[i]=='0' && s[i+1]=='1'){
+                s1.insert(i);
+            }
+            else if(s[i]=='1' && s[i+1]=='0'){
+                s2.insert(i);
+            }
+        }
+        ll tam2=s1.size(),tam3=s2.size();
+        ll ops=n + tam2 + tam3 + (s[0]=='1');
+        if(tam2 >=2  || tam3 >=2){
+            return ops-2;
         }
         else{
-            vl cont(2,0);
-            FOR(i,0,3){
-                cont[xd[niv-1][((3*idx)+i)]]++;
-            }
-            ll maxi=cont[1] > cont[0];
-            vl vals;
-            FOR(i,0,3){
-                ll ind=(3*idx) + i;
-                if(xd[niv-1][ind]==maxi){
-                    vals.pb(get(get,ind,niv-1));
-                }
-            }
-            sor(vals);
-            dbg(idx,niv,vals);
-            ll res=0;
-            FOR(i,0,(ll)vals.size()-1){
-                res+=vals[i];
-            }
-            return res;
+            return n+1;
         }
-        
-    };
-    return get(get,0,ene);
+    }
+    
 }
 
 void setIn(str s) { freopen(s.c_str(), "r", stdin); }
@@ -244,15 +221,15 @@ int main() {
     }
 
     int t = 1;
-	//cin >> t;
+	cin >> t;
     for(int i = 0; i < t; i++) {
         RAYA;
         RAYA;
 		ll n;
 		cin>>n;
-		str a;
-		cin>>a;
-        cout<<solve(a,n)<<"\n";
+		str s;
+        cin>>s;
+        cout<<solve(s)<<"\n";
     }
     RAYA;
     RAYA;

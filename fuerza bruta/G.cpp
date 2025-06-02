@@ -54,7 +54,39 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll l,r,g;
+    cin>>l>>r>>g;
+    pl ans={-1,-1};
+	ll L1=l/g,R1=(r+g-1)/g;
+	if(L1==R1){
+		if(L1==1){
+			ans=make_pair(L1*g,R1*g);
+		}
+		else ans=make_pair(-1,-1);
+	} 
+	for(ll i=L1;i<=R1;i++){
+	    if(__gcd(i,R1)==1){
+	        ll distAns=(ans.second-ans.first);
+	        ll distAct=g*(R1-i);
+	        if(distAct > distAns){
+	            ans=make_pair(g*(i),g*(R1));
+	        }
+	        break;
+	    }
+	    else{
+	        for(ll j=R1;j>=i;j--){
+	            if(__gcd(i,j)==1){
+	                ll distAns=(ans.second-ans.first);
+        	        ll distAct=g*(j-i);
+        	        if(distAct > distAns){
+        	            ans=make_pair(g*(i),g*(j));
+        	        }
+        	        break;
+	            }
+	        }
+	    }
+	}
+	cout<<ans.first<<" "<<ans.second<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

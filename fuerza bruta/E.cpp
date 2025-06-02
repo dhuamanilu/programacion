@@ -54,7 +54,50 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    string s;
+    cin>>s;
+    set<ll> ids;
+    ll n=s.size();
+    for(int i=0;i+3<n;i++){
+        if(s[i]=='1' && s[i+1]=='1' && s[i+2]=='0' && s[i+3]=='0'){
+            ids.insert(i);
+        }
+    }
+    ll q;
+    cin>>q;
+    string ver="1100";
+    while(q--){
+        //dbg(s);
+        ll i,v;
+        cin>>i>>v;
+        i--;
+        if((s[i]-'0')!=v){
+            for(int k=0;k<4;k++){
+                if(ids.count(i-k)){
+                    ids.erase(i-k);
+                    break;
+                }
+            }
+            s[i]='0'+v;
+            for(int k=0;k<4;k++){
+                bool ok=true;
+                if(i<k){
+                    continue;
+                }
+                for(int xd=0;xd<4;xd++){
+                    if(s[i-k+xd]!=ver[xd]){
+                        ok=false;
+                        break;
+                    }
+                }
+                if(ok){
+                    ids.insert(i-k);
+                }
+            }
+        }
+        cout<<(ids.size() > 0 ? "YES\n":"NO\n");
+    }
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

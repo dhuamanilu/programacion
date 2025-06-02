@@ -54,11 +54,36 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    map<ll,vector<vl>> m;
+    for(ll i=0;i<(1ll<<n);i++){
+        vl act;
+        ll val=0;
+        for(ll j=0;j<n;j++){
+            if(i&(1ll<<j)){
+                act.emplace_back(j);
+                val|=j;
+            }
+        }
+        sort(act.begin(),act.end());
+        m[val].emplace_back(act);
+    }
+    ll i=0;
+    for(auto &e : m){
+        for(auto &ele : e.second){
+            cout<<i++<<": ";
+            for(auto & mento : ele){
+                cout<<mento<<" ";
+            }
+            cout<<"\n";
+        }
+        
+    }
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    cin>>t;
+    //cin>>t;
     while(t--) solve();
 }

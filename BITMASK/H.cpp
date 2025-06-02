@@ -54,11 +54,30 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
+    ll n;
+    cin>>n;
+    vector<pl> a(n);
+    for(auto&e : a)cin>>e.first>>e.second;
+    for(auto&e : a){
+        ll xd=e.first;
+        for(ll i=0;i<61;i++){
+            if((1ll<<i)&e.first){
+
+            }
+            else{
+                if(xd+(1ll<<i)<=e.second){
+                    xd+=(1ll<<i);
+                }
+            }
+        }
+        cout<<xd<<"\n";
+    }
     
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    cin>>t;
+    //cin>>t;
     while(t--) solve();
 }

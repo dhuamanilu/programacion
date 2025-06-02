@@ -54,7 +54,48 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
+    ll n,x;
+    cin>>n>>x;
+    vl ids;
+    for(int i =30;i>=0;i--){
+        if((1ll<<i)&x){
+            ids.push_back(i);
+        }
+    }
+    ll tam=ids.size();
     
+    ll res=0;
+    for(int i =0;i<tam;i++){
+        res+=(1ll<<ids[i]);
+    }
+    ll faltan=max(0ll,n-tam);
+    if((faltan%2)==0){
+        res+=faltan;
+    }
+    else{
+        if(n==1){
+            res=-1;
+        }
+        else{
+            if(tam==0){
+                res+=faltan+3;
+            }
+            else if(ids.back()!=0){
+                res+=faltan+1;
+            }
+            else{
+                if(tam>=2){
+                    res+=faltan+1;
+                }
+                else{
+                    res+=faltan+3;
+                }
+            }
+        }
+    }
+    
+    
+    cout<<res<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

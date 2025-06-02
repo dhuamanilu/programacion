@@ -155,115 +155,140 @@ int rng_int(int L, int R) { assert(L <= R);
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 //? /Generator
+
 struct query{
 	ll type,x,c;
 };
-void update(vi  &Tree, int idx, int s,
-            int e, int pos, int X)
-{
-    // If current node is a
-    // leaf nodes
-    if (s == e) {
- 
-        // Update Tree[idx]
-        Tree[idx] += X;
-    }
- 
-    else {
- 
-        // Divide segment tree into left
-        // and right subtree
-        int m = (s + e) / 2;
- 
-        // Check if pos lies in left subtree
-        if (pos <= m) {
- 
-            // Search pos in left subtree
-            update(Tree, 2 * idx, s, m, pos, X);
-        }
-        else {
- 
-            // Search pos in right subtree
-            update(Tree, 2 * idx + 1, m + 1, e,
-                   pos, X);
-        }
- 
-        // Update Tree[idx]
-        Tree[idx]
-            = Tree[2 * idx] + Tree[2 * idx + 1];
-    }
+
+/**
+ * Author: Simon Lindholm
+ * Date: 2016-10-08
+ * License: CC0
+ * Source: me
+ * Description: Segment tree with ability to add or set values of large intervals, and compute max of intervals.
+ * Can be changed to other things.
+ * Use with a bump allocator for better performance, and SmallPtr or implicit indices to save memory.
+ * Time: O(\log N).
+ * Usage: Node* tr = new Node(v, 0, sz(v));
+ * Status: stress-tested a bit
+ */
+
+/*static char buf[450 << 20];
+void* operator new(size_t s) {
+	static size_t i = sizeof buf;
+	assert(s < i);
+	return (void*)&buf[i -= s];
 }
- 
-// Function to find the sum from
-// elements in the range [0, X]
-ll sum(vi &Tree, int idx, int s,
-        int e, int ql, int qr)
-{
-    // Check if range[ql, qr] equals
-    // to range [s, e]
-    if (ql == s && qr == e)
-        return Tree[idx];
- 
-    if (ql > qr)
-        return 0;
- 
-    // Divide segment tree into
-    // left subtree and
-    // right subtree
-    int m = (s + e) / 2;
- 
-    // Return sum of elements in the range[ql, qr]
-    return sum(Tree, 2 * idx, s, m, ql, min(m, qr))
-           + sum(Tree, 2 * idx + 1, m + 1, e,
-                 max(ql, m + 1), qr);
-}
- 
-// Function to find Xth element
-// in the array
-ll getElement(vi & Tree, int X, int N){
-    // Print element at index x
-    return sum(Tree, 1, 0, N - 1, 0, X);
-}
- 
-// Function to update array elements
-// in the range [L, R]
-void range_Update(vi &Tree, int L,
-                  int R, int X, int N){
- 
-    // Update arr[l] += X
-    update(Tree, 1, 0, N - 1, L, X);
- 
-    // Update arr[R + 1] += X
-    if (R + 1 < N)
-        update(Tree, 1, 0, N - 1, R + 1, -X);
-}
-vl solve(V<query> &a,ll n) {
+void operator delete(void*) {}*/
+
+const int inf = 1e9;
+struct Node {
+	Node *l = 0, *r = 0;
+	int lo, hi, mset = inf, madd = 0, val = -inf;
+	Node(int lo,int hi):lo(lo),hi(hi){} // Large interval of -inf
+	Node(vi& v, int lo, int hi) : lo(lo), hi(hi) {
+		if (lo + 1 < hi) {
+			int mid = lo + (hi - lo)/2;
+			l = new Node(v, lo, mid); r = new Node(v, mid, hi);
+			val = max(l->val, r->val);
+		}
+		else val = v[lo];
+	}
+	int query(int L, int R) {
+		if (R <= lo || hi <= L) return -inf;
+		if (L <= lo && hi <= R) return val;
+		push();
+		return max(l->query(L, R), r->query(L, R));
+	}
+	void set(int L, int R, int x) {
+		if (R <= lo || hi <= L) return;
+		if (L <= lo && hi <= R) mset = val = x, madd = 0;
+		else {
+			push(), l->set(L, R, x), r->set(L, R, x);
+			val = max(l->val, r->val);
+		}
+	}
+	void add(int L, int R, int x) {
+		if (R <= lo || hi <= L) return;
+		if (L <= lo && hi <= R) {
+			if (mset != inf) mset += x;
+			else madd += x;
+			val += x;
+		}
+		else {
+			push(), l->add(L, R, x), r->add(L, R, x);
+			val = max(l->val, r->val);
+		}
+	}
+	void push() {
+		if (!l) {
+			int mid = lo + (hi - lo)/2;
+			l = new Node(lo, mid); r = new Node(mid, hi);
+		}
+		if (mset != inf)
+			l->set(lo,hi,mset), r->set(lo,hi,mset), mset = inf;
+		else if (madd)
+			l->add(lo,hi,madd), r->add(lo,hi,madd), madd = 0;
+	}
+};
+vl solve(vector<query> &a,ll n) {
 	ll q=a.size();
-	vi pref(4*n+5,0),suff(4*n+5,0);
-	vl res;
 	map<ll,ll> m;
 	FOR(i,0,n){
 		m[i]++;
 	}
-	vl color(n);
-	iota(all(color),0);
+	vi cl(n);
+	iota(all(cl),0);
+	vi pr(n,0),sf(n,0);
+	Node* tree=new Node(cl,0,sz(cl));
+	Node* pref=new Node(pr,0,sz(pr));
+	Node* suff=new Node(sf,0,sz(sf));
+	vl res;
 	each(e,a){
 		if(e.type==1){
-			if(e.c==){
-				ll cant=getElement(suff,e.x,n);
-				ll L=e.x-getElement(pref,e.x,n);
-				ll R=e.x-1;
-				if(L<=R){
-					range_Update(pref,L,R,-cant,n);
+			ll colorActual=tree->query(e.x,e.x+1);
+			dbg(e.x,e.c,colorActual);
+			if(e.c!=colorActual){
+				ll L=e.x-pref->query(e.x,e.x+1);
+				ll R=e.x;
+				int cant=suff->query(e.x,e.x+1)+1;
+				dbg(L,R,cant);
+				if(L<R){
+					suff->add(L,R,-cant);
+				}
+				ll len2=R-L;
+				pref->add(e.x,e.x+cant,-len2);
+
+				m[colorActual]-=cant;
+				m[e.c]+=cant;
+				tree->set(e.x,e.x+cant,e.c);
+				ll idx2=e.x+cant;
+				if(idx2<n && e.c==tree->query(idx2,idx2+1)){
+					ll cant2=suff->query(idx2,idx2+1)+1;
+					dbg(e.x,e.x+cant2,cant2);
+					suff->add(e.x,e.x+cant,cant2);
+					ll L2=idx2,R2=L2+cant2;
+					dbg(L2,R2);
+					pref->add(L2,R2,cant);
+				}
+				ll idx3=L-1;
+				dbg(idx3);
+				if(idx3>=0 && e.c==tree->query(idx3,idx3+1)){
+					ll L3=idx3-pref->query(idx3,idx3+1),R3=e.x;
+					dbg(L3,R3);
+					ll cuantosxd=1+suff->query(e.x,e.x+1);
+					suff->add(L3,R3,cuantosxd);
+					ll L4=e.x,R4=L4+cuantosxd;
+					dbg(L4,R4);
+					pref->add(L4,R4,R3-L3);
 				}
 			}
-			
-			
 		}
 		else{
+			dbg(m,e.c);
 			res.pb(m[e.c]);
 		}
-	}	
+	}
 	return res;
 }
 
@@ -278,20 +303,23 @@ int main() {
         RAYA;
 		ll n,q;
 		cin>>n>>q;
-		V<query> a(q);
+		V<query> a(q,{0,0,0});
 		each(e,a){
 			cin>>e.type;
 			if(e.type==1){
 				cin>>e.x>>e.c;
 				e.x--;
 				e.c--;
+				//dbg(e.type,e.x,e.c);
 			}
 			else{
 				cin>>e.c;
 				e.c--;
+				//dbg(e.type,e.c);
 			}
 			
 		}
+		//dbg("hola");
         auto ans=solve(a,n);
 		each(e,ans){
 			cout<<e<<"\n";

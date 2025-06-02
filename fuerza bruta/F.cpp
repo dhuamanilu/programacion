@@ -54,7 +54,18 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll x,m;
+    cin>>x>>m;
+    ll ans=0;
+    for(int i=1;i<=min(m,2*x);i++){
+        ll num=x^i;
+        if(i==x) continue;
+        if(num <=m && ((x%num==0 || i%num==0))){
+            ans++;
+        }
+    }
+    cout<<ans<<"\n";
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

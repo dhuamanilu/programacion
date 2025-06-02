@@ -54,11 +54,24 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    vl a(n);
+    for(auto &e : a)cin>>e;
+    multiset<ll> ms;
+    for(auto &e : a)ms.insert(e);
+    ll sum=0;
+    for(int i=0;i<n;i++){
+        cout<<sum+*prev(ms.end())<<" ";
+        sum+=a[n-i-1];
+        ms.erase(ms.find(a[n-i-1]));
+    }
+    cout<<"\n";
+
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    ll t=1;
+    ll t;
     cin>>t;
     while(t--) solve();
 }

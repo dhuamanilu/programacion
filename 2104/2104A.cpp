@@ -54,11 +54,22 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll a,b,c;
+    cin>>a>>b>>c;
+    ll sum=a+b+c;
+    if(sum%3!=0){
+        cout<<"NO\n";
+    }
+    else{
+        if(b > (sum/3)){
+            cout<<"NO\n";
+        }
+        else cout<<"YES\n";
+    }
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    ll t=1;
+    ll t;
     cin>>t;
     while(t--) solve();
 }

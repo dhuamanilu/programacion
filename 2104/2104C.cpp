@@ -54,11 +54,37 @@ using vl = V<ll>;
 
 void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
-    
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    ll bob=0,alice=0;
+    for(auto &e : s){
+        if(e=='A')alice++; 
+        else bob++;
+    }
+
+    if(s[0]==s.back()){
+        if(s[0]=='A') cout<<"Alice\n";
+        else cout<<"Bob\n";
+    }
+    else{
+        if(s[0]=='A'){
+            if(bob > 1)
+                cout<<"Bob\n";
+            else cout<<"Alice\n";
+        } 
+        else{
+            if(s[n-2]=='B'){
+                cout<<"Bob\n";
+            }
+            else cout<<"Alice\n";
+        } 
+    }
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    ll t=1;
+    ll t;
     cin>>t;
     while(t--) solve();
 }
