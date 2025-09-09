@@ -174,82 +174,137 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 //? /Template
 
 
-
-str solve(vl &a,ll k) {
+string brute(vl &a,ll tar){
     ll n=a.size();
-	//1 2 , 1 3 , 2 3
-    //https://codesignal.com/learn/courses/maximizing-efficiency-in-problem-solving-techniques-in-cpp/lessons/using-heaps-in-cpp-to-calculate-prefix-medians
-    auto get=[&](vl &arr,ll idx){
-        priority_queue<ll, vl,greater<ll>> minHeap;
-        priority_queue<ll> maxHeap;
-        vl medians;
-        pl res={-1,-1};
+    auto find_median=[](vl&arr, ll l,ll r){
+        vl xd;
+        for(int i=l;i<r;i++){
+            xd.push_back(arr[i]);
+        }
+        sor(xd);
+        return xd[(xd.size())/2];
+    };
+    for(ll i=0;i<n;i++){
+        
+        for(ll j=i+1;j<n;j++){
+            ll median1=find_median(a,i,j);
+            
+            for(ll k=j+1;k<n;k++){
+                ll median2=find_median(a,j,k);
+                ll median3=find_median(a,k,n);
+                vl xd={median1,median2,median3};
+                sor(xd);
+                if(xd[1]<=tar){
+                    return "YES";
+                }
+            }
+        }
+    }
+    return "NO";
+}
+string solve(vl &a,ll k) {
+    ll n=a.size();
+	vl b(n);
+    for(ll i=0;i<n;i++){
+        if(a[i]<=k){
+            b[i]=1;
+        }
+        else b[i]=-1;
+    }
+    auto get_pref=[](vl &arr){
         ll tam=arr.size();
-        FOR(i,idx,tam-2) {
-            ll num=arr[i];
-            if (!maxHeap.empty() && num < maxHeap.top()) {
-                maxHeap.push(num);
-            } else {
-                minHeap.push(num);
+        vl pref(tam,0);
+        pref[0]=arr[0];
+        for(ll i=1;i<tam;i++){
+            pref[i]=pref[i-1] + arr[i];
+        }
+        return pref;
+    };
+    auto get_msp=[](vl &pref){
+        ll tam=pref.size();
+        vl msp(tam,0);
+    
+        msp[tam-2]=pref[tam-2];
+        for(ll i=tam-3;i>=0;i--){
+            msp[i]=max(msp[i+1],pref[i]);
+        }
+        return msp;
+    };
+    auto get_xd=[](vl &b){
+        ll tam=b.size();
+        vl suff(tam,0);
+        suff[tam-1]=b[tam-1];
+        for(ll i=tam-2;i>=0;i--){
+            suff[i]=suff[i+1] + b[i];
+        }
+        vl xd(tam,0);
+        xd[tam-2]=suff[tam-2];
+        for(ll i=tam-3;i>=0;i--){
+            xd[i]=max(xd[i+1],suff[i]);
+        }
+        return xd;
+    };
+    auto verificar=[&](vl &xd){
+        auto pref=get_pref(xd);
+        auto msp=get_xd(pref);
+        dbg(msp);
+        ll tam=xd.size();
+        for(ll i=0;i+2<tam;i++){
+            dbg(i,pref[i],msp[i+1]);
+            if(pref[i]>=0 && pref[i]<=msp[i+1]){
+                return true;
             }
-            if (maxHeap.size() > minHeap.size()) {
-                minHeap.push(maxHeap.top());
-                maxHeap.pop();
-            } else if (minHeap.size() > maxHeap.size() + 1) {
-                maxHeap.push(minHeap.top());
-                minHeap.pop();
-            }
-            int median;
-            if (minHeap.size() == maxHeap.size()) {
-                median = maxHeap.top();
-            } else {
-                median = minHeap.top();
-            }
-            if(medians.empty()){
-                res.s=i;
-                medians.pb(median);
-            }
-            else{
-                if(median > medians.back()){
+        }
+        return false;
+    };
+    bool ok=verificar(b);
+    if(ok){
+        dbg("primera");
+        return "YES";
+    }
+    else{
+        reverse(all(b));
+        if(verificar(b)){
+            dbg("segunda al revez");
+            return "YES";
+        }
+        else{
+            ll first=-1;
+            auto pref=get_pref(b);
+            for(ll i=0;i<n;i++){
+                if(pref[i]>=0){
+                    first=i;
                     break;
                 }
-                else{
-                    res.s=i;
-                    medians.pb(median);
+            }
+            dbg(b,pref,first);
+            if(first!=-1){
+                ll last=n;
+                reverse(all(b));
+                auto suff=get_pref(b);
+                dbg(suff);
+                reverse(all(suff));
+                for(ll i=0;i<n;i++){
+                    if(suff[i]>=0){
+                        last=n-1-i;
+                        break;
+                    }
+                }
+                dbg(last);
+                if(last==n or (first + 1 )==last){
+                    return "NO";
+                }
+                else {
+                    dbg("final encontre caso first last",first,last,b);
+                    return "YES";
                 }
             }
-        }
-        if(medians.empty()){
-            res={a[idx],idx};
-        }
-        else res.f=medians.back();
-        return res;
-    };
-    auto findMedian=[](vl arr,ll idx1,ll idx2){
-        vl ress;
-        FOR(i,idx1,idx2){
-            ress.pb(arr[i]);
-        }
-        sor(ress);
-        ll tam=(ll)(ress.size()/2) -((ll)ress.size()%2 == 0) ;
-        return ress[tam];
-    };
-    auto xd1=get(a,0);
-    auto xd2=get(a,xd1.s+1);
+            else{
+                return "NO";
+            }
 
-    reverse(all(a));
-    auto xd3=get(a,0);
-    auto xd4=get(a,xd3.s+1);
-    ll media1=findMedian(a,xd2.s+1,n);
-    ll ans1=findMedian({xd1.f,xd2.f,media1},0,3);
-    ll media2=findMedian(a,xd1.s+1,xd3.s);
-    ll ans2=findMedian({xd1.f,xd3.f,media2},0,3);
-    ll media3=findMedian(a,0,xd4.s);
-    ll ans3=findMedian({xd2.f,xd3.f,media3},0,3);
-    ll ans4= min(ans1,min(ans2,ans3));
-    dbg(ans4);
-    if(ans4<=k) return "YES";
-    else return "NO";
+        }
+    }
     
 }
 
@@ -262,6 +317,16 @@ int main() {
 
     //? Stress Testing
     while(0) {
+        ll n=rng_ll(1,50);
+        vl a(n);
+        for(auto & e : a)e=rng_ll(1,100);
+        ll k=rng_ll(1,100);
+        auto ans1=brute(a,k);
+        auto ans2=solve(a,k);
+        if(ans1!=ans2){
+            dbg("Xd",ans1,ans2,a,k);
+            assert(false);
+        }
         RAYA;
     }
 
@@ -274,6 +339,7 @@ int main() {
 		cin>>n>>k;
 		vl a(n);
 		each(e,a) cin>>e;
+
         cout<<solve(a,k)<<"\n";
     }
     RAYA;

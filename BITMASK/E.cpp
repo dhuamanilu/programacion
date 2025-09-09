@@ -63,7 +63,7 @@ void solve(){
         for(ll j=0;j<n;j++){
             if(i&(1ll<<j)){
                 act.emplace_back(j);
-                val|=j;
+                val|=1ll<<j;
             }
         }
         m[val].emplace_back(act);

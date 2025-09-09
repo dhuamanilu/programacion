@@ -56,15 +56,15 @@ void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(ll tc){
     ll a,b;
     cin>>a>>b;
-    ll val=0;
+    ll val=a,acum=a;
     for(int i=61;i>=0;i--){
-        if((1ll<<i)&a){
-            val+=(1ll<<i);
-        }
-        else{
-            if(val+(1ll<<i)<=b){
+        if(((1ll<<i)&a)==0){
+            if(a+(1ll<<i) - acum<=b){
                 val+=(1ll<<i);
             }
+        }
+        else{
+            acum-=(1ll<<i);
         }
     }
     ll res=0;

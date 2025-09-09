@@ -1,0 +1,9 @@
+BUY (10 apple, 10 carrot, 10 banana, ())
+UNPACK 1
+UNPACK 2
+PACK (3 apple, (5 cArrot, 2 banana))
+PACK (3 apple, (5 carrOt, 1 banana))
+PACK (5 apple, (3 banana))
+? MIN apple
+? MIN CaRRoT
+? CONTAINS apple

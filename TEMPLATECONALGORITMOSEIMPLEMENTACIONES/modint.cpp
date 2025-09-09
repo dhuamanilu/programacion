@@ -25,7 +25,7 @@ template<int MOD, int RT> struct mint {
 		return !(a == b); }
 	friend bool operator<(const mint& a, const mint& b) { 
 		return a.v < b.v; }
-	friend str ts(mint a) { return ts(a.v); }
+	friend str ts(mint a) { return to_string(a.v); }
    
 	mint& operator+=(const mint& o) { 
 		if ((v += o.v) >= MOD) v -= MOD; 

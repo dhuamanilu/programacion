@@ -56,16 +56,18 @@ void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
     ll n;
     cin>>n;
-    vector<set<ll>> masks;
+    vector<vl> masks;
     for(ll i=0;i<n;i++){
         ll tam;
         cin>>tam;
-        set<ll> act;
+        vl act;
         for(ll j=0;j<tam;j++){
             ll ele;
             cin>>ele;
-            act.insert(ele);
+            act.emplace_back(ele);
         }
+        sort(act.begin(),act.end());
+        reverse(act.begin(),act.end());
         masks.emplace_back(act);
     }
 
@@ -81,24 +83,28 @@ void solve(){
             cout<<num[pos]<<"\n";
         }
         else if(type==1){
+            assert(pos < (ll)masks.size());
             for(auto & e : masks[pos]){
                 num.set(e);
             }    
         }
         else if(type==2){
+            assert(pos < (ll)masks.size());
             for(auto & e : masks[pos]){
                 num.reset(e);
             }
         }
         else if(type==3){
+            assert(pos < (ll)masks.size());
             for(auto & e : masks[pos]){
                 num.flip(e);
             }
         }
         else if(type==4){
+            assert(pos < (ll)masks.size());
             bool ok=true;
             for(auto & e : masks[pos]){
-                if(num[e]==0){
+                if(!num[e]){
                     ok=false;
                     break;
                 }
@@ -106,6 +112,7 @@ void solve(){
             cout<<ok<<"\n";
         }
         else if(type==5){
+            assert(pos < (ll)masks.size());
             bool ok=false;
             for(auto & e : masks[pos]){
                 if(num[e]){
@@ -116,6 +123,7 @@ void solve(){
             cout<<ok<<"\n";
         }
         else if(type==6){
+            assert(pos < (ll)masks.size());
             bool ok=true;
             for(auto & e : masks[pos]){
                 if(num[e]){
@@ -126,6 +134,7 @@ void solve(){
             cout<<ok<<"\n";
         }
         else if(type==7){
+            assert(pos < (ll)masks.size());
             ll cont=0;
             for(auto & e : masks[pos]){
                 if(num[e]){
@@ -135,11 +144,12 @@ void solve(){
             cout<<cont<<"\n";
         }
         else{
-            ll cont=0;
+            assert(pos < (ll)masks.size());
+            unsigned long long cont=0;
             for(auto & e : masks[pos]){
-                //if(num[e]){
-                    cont+=(1ll<<e);
-                //}
+                if(num[e]){
+                    cont+=(1ull<<e);
+                }
             }
             cout<<cont<<"\n";
         }
