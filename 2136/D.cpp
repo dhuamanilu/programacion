@@ -127,15 +127,19 @@ void solve(){
         cin>>e.first>>e.second;
     }
     const long long INF=(ll)1e15;
-    pl xd1={-INF,INF};
+    pl xd1={-INF,INF} ,xd2= {-INF , -INF};
+    ll d1 = INF , d2 = INF; 
+    const long long BIG = 1000000000;
     for(auto & e : a){
-        if(e.first > xd1.first){
-            xd1=e;
+        ll distancia = abs(BIG - e.first) + abs(BIG - e.second) ;
+        if(distancia < d1){
+            d1 = distancia;
+            xd1 = e;
         }
-        else if(e.first == xd1.first){
-            if(e.second < xd1.second){
-                xd1=e;
-            }
+        ll distancia2 = abs(BIG - e.first) + abs((-2 * BIG) - e.second) ;
+        if(distancia2 < d2){
+            d2 = distancia2;
+            xd2 = e;
         }
     }
     sort(a.begin(),a.end());
@@ -150,38 +154,17 @@ void solve(){
         cout<<"! "<<x<<" "<<y<<endl;
         cout.flush();
     };
-    const long long BIG = 1000000000;
-    if(a[n-1].first >=0 && a[n-1].second >=0){
-        query('R',BIG);
-        query('R',BIG);
-        query('R',BIG);
-        query('U',BIG);
-        ll dist = query('U',BIG)  - (5ll*BIG) + a[n-1].first + a[n-1].second;
-        query('D',BIG);
-        query('D',BIG);
-        query('D',BIG);
-        query('D',BIG);
-        ll dist2 = query('D',BIG);
-        ll x=(dist + dist2 - xd1.second - (6ll * BIG) + xd1.first )/2;
-        ll y=dist-x;
-        guess(x,y);
-    }
-    else if(a[n-1].first  < 0 && a[n-1].second  < 0){
-        query('L',BIG);
-        query('L',BIG);
-        query('L',BIG);
-        query('D',BIG);
-        ll dist = query('D',BIG)  - (5ll*BIG) + a[n-1].first + a[n-1].second;
-        query('D',BIG);
-        query('D',BIG);
-        query('D',BIG);
-        query('D',BIG);
-        ll dist2 = query('D',BIG);
-        ll x=(dist + dist2 - xd1.second - (6ll * BIG) + xd1.first )/2;
-        ll y=dist-x;
-        guess(x,y);
-    }
-    
+    query('R',BIG);
+    query('R',BIG);
+    query('U',BIG);
+    ll dist = query('U',BIG);
+    query('D',BIG);
+    query('D',BIG);
+    query('D',BIG);
+    ll dist2 = query('D',BIG);
+    ll x=(dist + dist2  - (8 * BIG) + (xd1.first + xd1.second) - (xd2.second) + xd2.first)/2;
+    ll y=dist-x -(4 * BIG) + (xd1.first + xd1.second) ;
+    guess(x,y);
 }
 int main() {
     //cin.tie(0)->sync_with_stdio(0);

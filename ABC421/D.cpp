@@ -120,11 +120,188 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
 
 void solve(){
-    
+    ll rt,ct,ra,ca;
+    cin>>rt>>ct>>ra>>ca;
+    ll n,m,l;
+    cin>>n>>m>>l;
+    V<pair<char,ll>> a(m),b(l);
+    for(auto & e : a){
+        cin>>e.first>>e.second;
+    }
+    for(auto & e : b){
+        cin>>e.first>>e.second;
+    }
+    ll i=0,j=0,ans=0;
+    auto mover=[](ll x,ll y,ll cuanto ,char d){
+        if(d=='U'){
+            x-=cuanto;
+        }
+        else if(d=='R'){
+            y+=cuanto;
+        }
+        else if(d=='D'){
+            x+=cuanto;
+        }
+        else{
+            y-=cuanto;
+        }
+        return make_pair(x,y);
+    };
+    while(i< m && j < l){
+        //dbg("mira",i,j,m,l);
+        ll cant = min(a[i].s,b[j].s);
+        if(a[i].f == b[j].f){
+            if(make_pair(rt,ct)==make_pair(ra,ca)){
+                ans+=cant;
+            }
+        }
+        else{
+            if(a[i].f =='L' && b[j].f=='U'){
+                //ra >= rt BIEN DOBLE CHECK
+                if((ra - rt) == (ct-ca) && (ct-ca)>0 && (ct-ca)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='L' && b[j].f=='D'){
+                // rt >= ra BIEN DOBLE CHECK
+                if((rt - ra) == (ct-ca) && (ct-ca)>0 && (ct-ca)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='U' && b[j].f=='R'){
+                // rt >= ra BIEN DOBLE CHECK
+                if((rt - ra) == (ct-ca) && (ct-ca)>0 && (ct-ca)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='U' && b[j].f=='L'){
+                // rt >= ra bien doble check
+                if((rt- ra) == (ca-ct) && (ca-ct)>0 && (ca-ct)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='R' && b[j].f=='D'){
+                // rt >= ra bien doble check
+                if((rt - ra) == (ca-ct) && (ca-ct)>0 && (ca-ct)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='R' && b[j].f=='U'){
+                // ra>= rt BIEN DOBLE CHECK
+                if((ra - rt) == (ca-ct) && (ca-ct)>0 && (ca-ct)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='D' && b[j].f=='L'){
+                // ra>= rt  BIEN DOBLE CHECK
+                if((ra - rt) == (ca-ct) && (ca-ct)>0 && (ca-ct)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='D' && b[j].f=='R'){
+                // ra>= rt  BIEN DOBLE CHECK
+                if((ra - rt) == (ct-ca) && (ct-ca)>0 && (ct-ca)<=cant){
+                    ans++;
+                }
+            }
+            else if(a[i].f =='L' && b[j].f=='R'){
+                if(rt==ra && (ct-ca)<=2*cant && (ct-ca)>0 && (ct-ca)%2==0){
+                    ans++;
+                }
+            }
+            else if(a[i].f=='R' && b[j].f=='L'){
+                if(rt==ra && (ca-ct)<=2*cant && (ca-ct)>0 && (ca-ct)%2==0){
+                    ans++;
+                }
+            }
+            else if(a[i].f=='U' && b[j].f=='D'){
+                if(ct==ca && (rt-ra)<=2*cant && (rt-ra)>0 && (rt-ra)%2==0){
+                    ans++;
+                }
+            }
+            else if(a[i].f=='D' && b[j].f=='U'){
+                if(ct==ca && (ra-rt)<=2*cant && (ra-rt)>0 && (ra-rt)%2==0){
+                    ans++;
+                }
+            }
+            
+        }
+        a[i].s-=cant;
+        b[j].s-=cant;
+        
+        auto mov = mover(rt,ct,cant,a[i].f);
+        rt = mov.f;
+        ct = mov.s;
+        auto mov2 = mover(ra,ca,cant,b[j].f);
+        ra = mov2.f;
+        ca = mov2.s;
+        if(a[i].s==0) i++;
+        if(b[j].s==0) j++;
+    }
+    while(i<m){
+        ll cant =a[i].s;
+        
+        if(a[i].f =='L'){
+            if(rt==ra && (ct-ca)<=cant && (ct-ca)>0){
+                ans++;
+            }
+        }
+        else if(a[i].f=='R'){
+            if(rt==ra && (ca-ct)<=cant && (ca-ct)>0){
+                ans++;
+            }
+        }
+        else if(a[i].f=='U'){
+            if(ct==ca && (rt-ra)<=cant && (rt-ra)>0){
+                ans++;
+            }
+        }
+        else if(a[i].f=='D'){
+            if(ct==ca && (ra-rt)<=cant && (ra-rt)>0){
+                ans++;
+            }
+        }  
+        a[i].s-=cant;
+        auto mov = mover(rt,ct,cant,a[i].f);
+        rt = mov.f;
+        ct = mov.s;
+        if(a[i].s==0) i++;
+    }
+    while(j<l){
+        ll cant =b[j].s;
+        if(b[j].f=='R'){
+            if(rt==ra && (ct-ca)<=cant && (ct-ca)>0){
+                ans++;
+            }
+        }
+        else if(b[j].f=='L'){
+            if(rt==ra && (ca-ct)<=cant && (ca-ct)>0){
+                ans++;
+            }
+        }
+        else if(b[j].f=='D'){
+            if(ct==ca && (rt-ra)<=cant && (rt-ra)>0){
+                ans++;
+            }
+        }
+        else if(b[j].f=='U'){
+            if(ct==ca && (ra-rt)<=cant && (ra-rt)>0 ){
+                ans++;
+            }
+        }   
+        b[j].s-=cant;
+        auto mov2 = mover(ra,ca,cant,b[j].f);
+        ra = mov2.f;
+        ca = mov2.s;
+        if(b[j].s==0) j++;
+    }
+    dbg(ans,i,j,m,l);
+    assert(i==m && j==l);
+    cout<<ans<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    cin>>t;
+    //cin>>t;
     while(t--) solve();
 }

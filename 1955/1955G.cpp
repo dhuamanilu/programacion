@@ -1,5 +1,5 @@
-//? #pragma GCC optimize ("Ofast")
-//? #pragma GCC target ("avx,avx2")
+#pragma GCC optimize ("Ofast")
+//#pragma GCC target ("avx,avx2")
 //! #pragma GCC optimize ("trapv")
 //#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
@@ -149,14 +149,69 @@ long long binpow(long long a, long long b) {
     return res;
 }
 //? /Custom Helpers
-
-
+const int N=105;
+ll a[N][N];
+ll vis[N][N];
 void solve() {
-	ll n;
-	cin>>n;
-	vl a(n);
-	each(e,a) cin>>e;
-	dbg(a);
+	ll n,m;
+	cin>>n>>m;
+	
+	for(ll i=0;i<n;i++){
+        for(ll j=0;j<m;j++){
+            cin>>a[i][j];
+        }
+    }
+    set<ll> divisors;
+    for(ll i=1;i*i<=a[0][0];i++){
+        if(a[0][0]%i==0){
+            divisors.insert(a[0][0]/i);
+            divisors.insert(i);
+        }
+    }
+    auto isValid=[&](ll x,ll y){
+        return x>=0 && x<n && y>=0 && y<m;
+    };
+    auto clean_vis=[&](){
+        for(ll i=0;i<n;i++){
+            for(ll j=0;j<m;j++){
+                vis[i][j]=0;
+            }
+        }
+    };
+    auto can=[&](ll val){
+        clean_vis();
+        queue<pl> cola;
+        cola.push({0,0});
+        vis[0][0]=1;
+        while(!cola.empty()){
+            auto [x,y] = cola.front();
+            cola.pop();
+            for(ll i=0;i<=1;i++){
+                for(ll j=0;j<=1;j++){
+                    if((i+j)==1){
+                        ll newX=x+i,newY=y+j;
+                        if(isValid(newX,newY)){
+                            if(!vis[newX][newY] && (a[newX][newY]%val)==0){
+                                cola.push({newX,newY});
+                                vis[newX][newY]=1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return vis[n-1][m-1];
+    };
+    //dbg(divisors);
+    for(auto it=divisors.rbegin();it!=divisors.rend();it++){
+        ll val=*it;
+        //dbg(val,"testeando");
+        if(can(val)){
+            //dbg("bien",val);
+            cout<<val<<"\n";
+            return;
+        }
+    }
 }
 
 int main() {

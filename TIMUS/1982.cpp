@@ -159,7 +159,46 @@ ll rng_ll(ll L, ll R) { assert(L <= R);
 void solve() {
 	ll n,k;
 	cin>>n>>k;
-	
+	vl a(k);
+    for(auto & e : a){
+        cin>>e;
+        e--;
+    }
+    V<vl> G(n,vl(n,0));
+    for(auto & e : G){
+        for(auto & e2 : e){
+            cin>>e2;
+        }
+    }
+    vl vis(n,0);
+    vl dis(n,BIG);
+    priority_queue<pl> pq;
+    for(auto & e : a){
+        dis[e] = 0;
+        vis[e] = 1;
+        pq.push(make_pair(0 , e));
+    }
+    while(!pq.empty()){
+        auto [dist , ele] = pq.top();
+        pq.pop();
+        for(ll i = 0; i < n ;   i++){
+            if(i == ele) continue;
+            if((dist + G[ele][i]) < dis[i]){
+                dis[i] = dist + G[ele][i];
+                vis[i] = 1;
+                pq.push(make_pair(dis[i] , i));
+            }
+        }
+    }
+    map<ll,ll> xd;
+    for(auto & e : a)xd[e]++;
+    ll ans = 0;
+    for(ll i = 0; i < n; i++){
+        if(xd.count(i)) continue;
+        ans += dis[i];
+    }
+    cout<<ans<<"\n";
+
 
 }
 

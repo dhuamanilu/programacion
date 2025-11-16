@@ -136,7 +136,21 @@
     "stacktrace": "cpp",
     "bit": "cpp",
     "format": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "any": "cpp",
+    "barrier": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "coroutine": "cpp",
+    "expected": "cpp",
+    "optional": "cpp",
+    "source_location": "cpp",
+    "latch": "cpp",
+    "semaphore": "cpp",
+    "spanstream": "cpp",
+    "stdfloat": "cpp",
+    "stop_token": "cpp",
+    "syncstream": "cpp"
   },
   "cmake.sourceDirectory": "C:/Users/Usuario/OneDrive/Documentos/programacion/2/cmake_stdheaders_generator",
   "C_Cpp.default.compilerPath": "c:\\msys64\\ucrt64\\bin\\gcc.exe"

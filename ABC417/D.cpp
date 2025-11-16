@@ -59,24 +59,50 @@ void setIn(string s) { freopen(s.c_str(), "r", stdin); }
 void solve(){
     ll n;
     cin>>n;
-    vl a(n);
-    for(auto & e : a)cin>>e;
-    sort(a.begin(),a.end());
-    if((a[1]%a[0])!=0){
-        cout<<"No\n";
+    V<array<ll,3>> info(n);
+    ll maxi = 0;
+    for(auto & e : info){
+        cin>>e[0]>>e[1]>>e[2];
+        maxi=max(maxi,e[0]+e[1]);
     }
-    else{
-        ll r=a[1]/a[0];
-        for(ll i=1;i<n;i++){
-            if((a[i]%a[i-1])!=0 ||  ((a[i-1]*r) != a[i])){
-                cout<<"No\n";
-                return;
-            }
+    V<vl> dp(n,vl(maxi+1));
+    for(ll j=0;j<=maxi;j++){
+        dp[n-1][j] = (j<= info[n-1][0]  ? j + info[n-1][1] : max(0ll,j-info[n-1][2]));
+    }
+    for(ll i=n-2;i>=0;i--){
+        for(ll j=0;j<=maxi;j++){
+            dp[i][j] = (j <= info[i][0]  ?  dp[i+1][j + info[i][1]] : dp[i+1][max(0ll,j - info[i][2])]);
         }
-        cout<<"Yes\n";
     }
-
-    
+    vl pref(n,0);
+    pref[0]=info[0][2];
+    for(ll i=1;i<n;i++){
+        pref[i]=pref[i-1] + info[i][2];
+    }
+    ll q;
+    cin>>q;
+    while(q--){
+        ll x;
+        cin>>x;
+        if(x<=maxi){
+            cout<<dp[0][x]<<"\n";
+        }
+        else{
+            ll idx= lower_bound(pref.begin(),pref.end(),x-maxi) - pref.begin();
+            if(idx==n){
+                cout<<x - pref[n-1]<<"\n";
+                continue;
+            }
+            if((idx+1)==n){
+                cout<<x - pref[n-1]<<"\n";
+                continue;
+            }
+            else{
+                cout<<dp[idx+1][max(0ll,x - pref[idx])]<<"\n";
+            }
+            
+        }
+    }
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

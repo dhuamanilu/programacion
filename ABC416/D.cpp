@@ -63,11 +63,15 @@ void solve(){
     for(auto & e: a){
         cin>>e;
     }
-    set<int>b;
+    vl be(n);
     for(ll i=0;i<n;i++){
         int e;
         cin>>e;
-        b.insert(e);
+        be[i]=e;
+    }
+    set<ll> b;
+    for(ll i=0;i<n;i++){
+        b.insert(be[i]);
     }
     sort(a.begin(),a.end());
     reverse(a.begin(),a.end());

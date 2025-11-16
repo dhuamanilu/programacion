@@ -128,83 +128,47 @@ void solve(){
         cout<<a[0]<<"\n";
         return;
     }
-    vl posMaxi(2,-1);
-    ll maxi=0;
-    for(ll i=1;i<n;i+=2){
-        if(a[i] > maxi){
-            maxi = a[i];
-            posMaxi[0]=i;
-            posMaxi[1]=i;
+    V<pl> b(n);
+    b[1]={a[1]-1,1};
+    for(ll i=3;i<n;i+=2){
+        if((a[i] - i) > b[i-2].first){
+            b[i]={a[i]-i,i};
         }
-        else if(a[i]==maxi){
-            posMaxi[1]=i;
+        else{
+            b[i]=b[i-2];
         }
     }
-    ll prof = (n%2==0) ? (n-2) : (n-1);
-    pl real={0,prof};
-    ll ganancia=prof;
+    V<pl> c(n);
+    ll last=(n%2==0) ? (n-1) : (n-2);
+    c[last]={a[last] + last,last};
+    for(ll i=last-2;i>=0;i-=2){
+        if((a[i] + i) > c[i+2].first){
+            c[i]={a[i]+i,i};
+        }
+        else{
+            c[i]=c[i+2];
+        }
+    }
+    ll maxi=(n%2==0) ? (n-2) : (n-1);
+    dbg(b);
     for(ll i=0;i<n;i+=2){
-        ll res=0;
-        pl swape={-1,-1};
-        ll local=0;
-        if((abs(i-1)+a[1]-a[i]) > res){
-            res = (abs(i-1)+a[1]-a[i]);
-            swape={1,i};
-            local=abs(i-1);
+        if(i>=1){
+            //dbg(i,b[i-1],a[i],2*(b[i-1].first - a[i]) + i - b[i-1].second);
+            maxi = max(maxi,2*(b[i-1].first - a[i]) + i + b[i-1].second);  
         }
-        ll another= (n%2==0) ? (n-1) : (n-2);
-        if(abs(i-another) + a[another] - a[i] > res){
-            res = abs(i-another) + a[another] - a[i];
-            swape={another,i};
-            local=abs(i-another);
-        }
-        //maximizar diferencia
-        if(abs(posMaxi[0] - i) + maxi - a[i] > res){
-            res=abs(posMaxi[0] - i) + maxi - a[i];
-            swape={posMaxi[0],i};
-            local=abs(posMaxi[0] - i);
-        }
-        if(abs(posMaxi[1] - i) + maxi - a[i] > res){
-            res=abs(posMaxi[1] - i) + maxi - a[i];
-            swape={posMaxi[1],i};
-            local=abs(posMaxi[1] - i);
-        }
-        if(res > prof){
-            prof = res;
-            real=swape;
-            ganancia = local;
+        if((i+1) < n){
+            //dbg(i,c[i+1],a[i],2*(c[i+1].first - a[i]) - i -c[i+1].second);
+            maxi=max(maxi,2*(c[i+1].first - a[i]) - i  - c[i+1].second);
         }
     }
-    pl xd={0,prof};
-    if(real==xd){
-        //swap(a[real.first],a[real.second]);
-        ll sum=prof;
-        for(ll i=0;i<n;i++){
-            if((i%2)==0){
-                sum+=a[i];
-            }
-            else{
-                sum-=a[i];
-            }         
+    ll sum=0;
+    for(ll i=0;i<n;i++){
+        if((i%2)==0){
+            sum+=a[i];
         }
-        cout<<sum<<"\n";
+        else sum-=a[i];
     }
-    else{
-        swap(a[real.first],a[real.second]);
-        ll sum=ganancia;
-        for(ll i=0;i<n;i++){
-            if((i%2)==0){
-                sum+=a[i];
-            }
-            else{
-                sum-=a[i];
-            }         
-        }
-        cout<<sum<<"\n";
-    }
-    
-    
-    
+    cout<<sum + maxi<<"\n";
 }
 int main() {
     cin.tie(0)->sync_with_stdio(0);

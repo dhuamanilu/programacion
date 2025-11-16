@@ -58,24 +58,17 @@ void solve(){
     ll n,m;
     cin>>n>>m;
     vl a(n);
+    ll sum=0;
     for(auto & e: a){
         cin>>e;
-        //e%=m;
+        sum+=e;
     }
     vl b(n);
     for(auto & e: b){
         cin>>e;
-        //e%=m;
+        sum+=e;
     }
-    sort(a.begin(),a.end());
-    reverse(a.begin(),a.end());
-    sort(b.begin(),b.end());
-    reverse(b.begin(),b.end());
-    ll sum=0;
-    for(ll i=0;i<n;i++){
-        sum+=(a[i]+b[i])%m;    
-    }
-    cout<<sum<<"\n";
+    cout<<sum%m<<"\n";
     
 }
 int main() {
