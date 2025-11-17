@@ -1,232 +1,235 @@
-//* sometimes pragmas don't work, if so, just comment it!
-#pragma GCC optimize ("Ofast")
-//#pragma GCC target ("avx,avx2")
-//! #pragma GCC optimize ("trapv")
-
-//! #undef _GLIBCXX_DEBUG //? for Stress Testing
-
+//#pragma GCC optimize ("Ofast")
+//? #pragma GCC target ("avx,avx2")
+//#pragma GCC optimize ("trapv")
+//#undef _GLIBCXX_DEBUG //? for Stress Testing
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
-#ifdef LOCAL
-    #include "debug.h"
-#else
-    #define dbg(...)     0
-    #define chk(...)     0
-
-    #define RAYA         0
-#endif
-
-
-
-const auto beg_time = std::chrono::high_resolution_clock::now();
-double time_elapsed() { return chrono::duration<double>(std::chrono::high_resolution_clock::now() - beg_time) .count(); }
-
-
-
-// building blocks
-using ll  = long long;
-using db  = long double;
-using str = string;
-
-//? priority_queue for minimum
-template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
-
-using ull  = unsigned long long;
-//? using i64  = long long;
-//? using u64  = uint64_t;
-//? using i128 = __int128;
-//? using u128 = __uint128_t;
-//? using f128 = __float128;
-
-
-
-// pairs
-using pi = pair<int, int>;
-using pl = pair<ll, ll>;
-using pd = pair<db, db>;
-
-#define mp make_pair
-#define f  first
-#define s  second
-
-
-
-#define tcT template <class T
-#define tcTU tcT, class U
-
-tcT > using V = vector<T>;
-tcT, size_t SZ > using AR = array<T, SZ>;
-using vi = V<int>;
-using vb = V<bool>;
-using vl = V<ll>;
-using vd = V<db>;
-using vs = V<str>;
-using vpi = V<pi>;
-using vpl = V<pl>;
-using vpd = V<pd>;
-
-using vvi = V<vi>;
-using vvl = V<vl>;
-using vvb = V<vb>;
-
-
-
-// vectors
-// oops size(x), rbegin(x), rend(x) need C++17
-#define sz(x) int((x).size())
-#define bg(x) begin(x)
-#define all(x) bg(x), end(x)
-#define rall(x) x.rbegin(), x.rend()
-#define sor(x) sort(all(x))
-#define rsz resize
-#define ins insert
-#define pb push_back
-#define eb emplace_back
-#define ft front()
-#define bk back()
-#define ts to_string
-
-#define lb lower_bound
-#define ub upper_bound
-
-
-
-// loops
-#define FOR(i, a, b) for (int i = (a); i < (b); ++i)
-#define F0R(i, a) FOR(i, 0, a)
-#define ROF(i, a, b) for (int i = (b)-1; i >= (a); --i)
-#define R0F(i, a) ROF(i, 0, a)
-#define rep(a) F0R(_, a)
-#define each(a, x) for (auto &a : x)
-
-
-
-ll cdiv(ll a, ll b) {
-	return a / b + ((a ^ b) > 0 && a % b);
-}  // divide a by b rounded up
-ll fdiv(ll a, ll b) {
-	return a / b - ((a ^ b) < 0 && a % b);
-}  // divide a by b rounded down
-
-tcT > bool ckmin(T &a, const T &b) {
-	return b < a ? a = b, 1 : 0;
-}  // set a = min(a,b)
-tcT > bool ckmax(T &a, const T &b) {
-	return a < b ? a = b, 1 : 0;
-}  // set a = max(a,b)
-
-tcT > void remDup(vector<T> &v) {  // sort and remove duplicates
-	sort(all(v));
-	v.erase(unique(all(v)), end(v));
-}
-tcTU > void safeErase(T &t, const U &u) {
-	auto it = t.find(u);
-	assert(it != end(t));
-	t.erase(it);
+//* Debugger
+string to_string(string s) {
+    return '"' + s + '"';
 }
 
+string to_string(const char* s) {
+    return to_string((string) s);
+}
 
+string to_string(char c) {
+    return string(1, c);
+}
 
-//? Custom Helpers
-template <typename T>
-inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
+string to_string(bool b) {
+    return (b ? "true" : "false");
+}
 
-long long binpow(long long a, long long b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
+template <typename A>
+string to_string(A v);
+
+template <typename A, typename B>
+string to_string(pair<A, B> p) {
+    return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";
+}
+
+template <typename A>
+string to_string(A v) {
+    bool first = true;
+    string res = "[";
+    for (const auto &x : v) {
+        if (!first) {
+            res += ", ";
+        }
+        first = false;
+        res += to_string(x);
     }
+    res += "]";
     return res;
 }
 
-//? __builtin_popcountll
-ll GetBit(ll mask, ll bit) { return (mask >> bit) & 1LL; }
-void TurnOn(ll& mask, ll bit) { mask = mask | (1LL << bit); }
-void TurnOff(ll& mask, ll bit) { mask = mask & (~(1LL << bit)); }
+void debug_out() { cerr << endl; }
 
-const int dddx[8]{1, 0, -1,  0, 1,  1, -1, -1};
-const int dddy[8]{0, 1,  0, -1, 1, -1,  1, -1};
+template <typename Head, typename... Tail>
+void debug_out(Head H, Tail... T) {
+  cerr << " " << to_string(H);
+  debug_out(T...);
+}
 
-using vvi = V<vi>;
-using vvl = V<vl>;
-using vvb = V<vb>;
+#ifdef LOCAL
+#define MACRO(code) do {code} while (false)
+#define dbg(x)      {auto xd = x; cout << "Line(" << __LINE__ << "): " << "\033[1;34m" << #x << "\033[0;32m = \033[35m" << to_string(xd) << "\033[0m" << endl;}
+#define dbg(...)    MACRO(cout << "Line(" << __LINE__ << "): " << "\033[1;34m" << "[" << #__VA_ARGS__ << "]\033[35m:"; debug_out(__VA_ARGS__); cout << "\033[0m";)
 
-const int MOD = 1e9 + 7;
-const int MX = (int)2e5 + 5;
-const ll BIG = 1e18;  //? not too close to LLONG_MAX
+#define GA          dbg(0)
+#define RAYA        cout << "\033[101m" << "================================" << "\033[0m" << endl;
+#else
+#define dbg(x)
+#define dbg(...)
+#define GA
+#define RAYA
+#endif
+//* /Debugger
+
+using ll = long long;
+using db = long double; // or double if tight TL
+using str = string;
+
+using pi = pair<int,int>;
+using pl = pair<ll, ll>;
+#define mp make_pair
+#define f first
+#define s second
+
+#define tcT template<class T
+tcT> using V = vector<T>;
+tcT, size_t SZ> using AR = array<T,SZ>;
+using vi = V<int>;
+using vl = V<ll>;
+using vb = V<bool>;
+using vpi = V<pi>;
+
+#define sz(x) int((x).size())
+#define all(x) begin(x), end(x)
+#define sor(x) sort(all(x))
+#define rsz resize
+#define pb push_back
+#define ft front()
+#define bk back()
+
+#define FOR(i,a,b) for (int i = (a); i < (b); ++i)
+#define F0R(i,a) FOR(i,0,a)
+#define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
+#define R0F(i,a) ROF(i,0,a)
+#define rep(a) F0R(_,a)
+#define each(a,x) for (auto& a: x)
+
+const int MOD = 1e9+7;
 const db PI = acos((db)-1);
-const int dx[4]{1, 0, -1, 0}, dy[4]{0, 1, 0, -1};  //? for every grid problem!!
-mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(0); // or mt19937_64
+//* mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
 
+tcT> bool ckmin(T& a, const T& b) {
+	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
+tcT> bool ckmax(T& a, const T& b) {
+	return a < b ? a = b, 1 : 0; } // set a = max(a,b)
+
+void setIn(string s) { freopen(s.c_str(), "r", stdin); }
+//? /Custom Helpers
+//? Generator
 int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-//? /Custom Helpers
 
-//? Template
-//? /Template
-
-
-
-vpl solve(vl &a) {
-    ll n=a.size();
-    set<tuple<ll,ll,ll>> disp;
-    FOR(i,0,16*(ll)sqrtl(n)){
-        ll x=1,y=1+3*i;
-        while(true){
-            disp.insert({x+y,x,y});
-            disp.insert({x+y+1,x,y+1});
-            disp.insert({x+y+1,x+1,y});
-            disp.insert({x+y+4,x+1,y+1});
-            if(y>=3){
-                x+=3;
-                y-=3;
-            }
-            else{
-                break;
-            }
+V<pl> brute(vl &a){
+    ll n = a.size();
+    set<array<ll,3>> closests;
+    for(ll row = 0; row < n; row++){
+        for(ll col = 0; col <= row; col++){
+            array<ll,3> aaa = {1 + (4 * row) , 1 + (3 * col) , 1 + (3 * row) - (3 * col)};
+            auto [dist, x , y] = aaa;
+            closests.insert({dist , x , y });
+            closests.insert({dist + 1 , x + 1 , y });
+            closests.insert({dist + 1 , x , y + 1 });
+            closests.insert({dist + 4 , x + 1 , y + 1});
         }
     }
-    disp.erase({2,1,1});
-	ll maxiX=1,maxiY=1;
-    vpl res;
-    res.pb({1,1});
-    FOR(i,1,n){
-        if(a[i]){
-            auto act=*disp.begin();
-            disp.erase(act);
-            res.pb({get<1>(act),get<2>(act)});
+    dbg(closests);
+    ll row = 0 ,col = -1;
+    V<pl> ans;
+    for(auto & e : a){
+        if(e == 1){
+            auto ptr = closests.begin();
+            array<ll,3> point = *ptr;
+            closests.erase(ptr);
+            auto [dist, x , y] = point;
+            ans.push_back({x , y});
         }
         else{
-            if(maxiY>=3){
-                maxiX+=3;
-                maxiY-=3;
-                res.pb({maxiX,maxiY});
-                ll falta=((maxiX%3==2 && maxiY%3==2) ? 2 : 0ll);
-                disp.erase({maxiX+maxiY+falta,maxiX,maxiY});
+            if(col + 1 > row){
+                row++;
+                col = 0;
             }
             else{
-                ll cuanto=((maxiX+maxiY+1)/3);
-                maxiX=1;
-                maxiY=1+3*cuanto;
-                res.pb({maxiX,maxiY});
-                ll falta=((maxiX%3==2 && maxiY%3==2) ? 2 : 0ll);
-                disp.erase({maxiX+maxiY+falta,maxiX,maxiY});
+                col++;
             }
+            array<ll,3> aaa = {1 + (4 * row), 1 + (3 * col) , 1 + (3 * row) - (3 * col)};
+            auto encontrar = closests.lower_bound(aaa);
+            assert(encontrar != closests.end() && *encontrar == aaa);
+            auto [dist, x , y] = *encontrar;
+            closests.erase(encontrar);
+            ans.push_back({x , y});
         }
     }
-    return res;
+
+    return ans;
 }
 
-void setIn(str s) { freopen(s.c_str(), "r", stdin); }
-void setOut(str s) { freopen(s.c_str(), "w", stdout); }
+V<pl> solve(vl &a) {
+    
+    ll n = a.size();
+    // 1 al mas cercano , 0 que no este ocupada 
+    ll row = 0 , col = -1;
+    set<array<ll,3>> closests;
+    auto obtenerPunto = [&](){
+        auto ptr = closests.begin();
+        array<ll,3> point = *ptr;
+        closests.erase(ptr);
+        return point;
+    };
+    set<array<ll,3>> pendings;
+    auto insert = [&](){
+        if(col + 1 > row){
+            row++;
+            col = 0;
+        }
+        else{
+            col++;
+        }
+        array<ll,3> aaa = {1 + (4 * row), 1 + (3 * col) , 1 + (3 * row) - (3 * col)};
+        auto [dist, x , y] = aaa;
+        
+        closests.insert({dist + 1 , x + 1 , y });
+        closests.insert({dist + 1 , x , y + 1 });
+        pendings.insert({dist + 4 , x + 1 , y + 1});
+        return aaa;
+    };
+    V<pl> ans;
+    for(auto & e : a){
+        if(e == 1){
+            auto poner = insert();
+            closests.insert(poner);
+            auto [dist , x , y] = obtenerPunto();
+            dbg(dist , x ,y);
+            
+
+
+
+            ///////////////////
+            auto ptrPorsiacaso = pendings.begin();
+            auto [d2 ,x2 , y2] = *ptrPorsiacaso;
+            dbg(d2 , x2 ,y2);
+            if(d2 < dist || (d2 == dist && (x2 < x || (x2 == x && y2 < y)))){
+                dbg("esta mal" , d2 < dist , d2 == dist);
+                ans.push_back({x2 , y2});
+                pendings.erase(ptrPorsiacaso);
+                closests.insert({dist , x , y});
+            }
+            else{
+                dbg("esto imprimire" ,dist , x, y);
+                ans.push_back({x , y});
+            }
+            
+            
+        }
+        else{
+            auto [dist , x , y] = insert();
+            dbg("e es 0 , tiene que ser nueva si o si ", dist, x ,y);
+            ans.push_back({x , y});
+        }
+    }
+    return ans;
+
+}
+
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -234,30 +237,30 @@ int main() {
 
     //? Stress Testing
     while(0) {
-        RAYA;
+        ll n =rng_ll(1 , 10);
+        vl a(n);
+        for(auto & e : a) e = rng_ll(0 , 1);
+        auto ans1 = brute(a);
+        auto ans2 = solve(a);
+        if(ans1!=ans2){
+            dbg(a,ans1,ans2);
+            assert(false);
+        }
+        else dbg("ok");
     }
 
     int t = 1;
 	cin >> t;
     for(int i = 0; i < t; i++) {
-        RAYA;
-        RAYA;
-		ll n;
-		cin>>n;
-		vl a(n);
-		each(e,a) cin>>e;
-        auto res = solve(a);
-        each(e,res){
-            cout<<e.f<<" "<<e.s<<"\n";
+        ll n;
+        cin>>n;
+        vl a(n);
+        for(auto & e : a)cin>>e;
+        //dbg(brute(a));
+        auto ans = solve(a);
+        for(auto & [x,y] : ans){
+            cout<<x<<" "<<y<<"\n";
         }
     }
-    RAYA;
-    RAYA;
-
-    #ifdef LOCAL
-        cerr << fixed << setprecision(5);
-        cerr << "\033[42m++++++++++++++++++++\033[0m\n";
-        cerr << "\033[42mtime = " << time_elapsed() << "ms\033[0m\n";
-        cerr << "\033[42m++++++++++++++++++++\033[0m\n";
-    #endif
+    return 0;
 }

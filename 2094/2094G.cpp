@@ -118,15 +118,9 @@ int rng_int(int L, int R) { assert(L <= R);
 	return uniform_int_distribution<int>(L,R)(rng);  }
 ll rng_ll(ll L, ll R) { assert(L <= R);
 	return uniform_int_distribution<ll>(L,R)(rng);  }
-struct Node{
-    ll val;
-    Node* next;
-    Node* prev;
-};
+
 vl brute(V<pl> &ops){
     ll q = ops.size();
-    
-    
     auto calc = [](vl &a){
         ll n = a.size() , ans = 0;
         for(ll i = 0; i < n; i++){
@@ -158,11 +152,11 @@ vl brute(V<pl> &ops){
 }
 vl solve(V<pl> &ops){
     ll q = ops.size();
-    ll sumPref = 0 , sumSuff = 0 , dir = 0 , tam = 0 , sumi = 0;
-    Node* actual = nullptr;
+    ll sumPref = 0 , dir = 0 , sumSuff = 0 , tam = 0 , sumi = 0;
+    deque<ll> actual;
     //direccion 0 es -- , direccion 1 es ++ 
     vl ans;
-    auto printList = [&](){
+    /*auto printList = [&](){
         Node* guarda = actual;
         Node* guarda2 = actual;
         RAYA;
@@ -171,28 +165,38 @@ vl solve(V<pl> &ops){
             guarda = guarda -> next;
         }while(guarda != guarda2);
         RAYA;
-    };
+    };*/
     for(ll i = 0; i < q; i++){
         ll type = ops[i].first;
-        if(actual != nullptr) printList();
+        //if(actual != nullptr) printList();
         //if(actual != nullptr) dbg("este es mi actual ", i , actual->val ,actual->prev->val , actual->next->val);
+        //dbg(actual);
         if(type == 1){
             //Perform a cyclic shift on the array
-            ll value = actual->val;
-            dbg(sumi , tam ,sumSuff);
+            ll value;
+            
+            if(dir == 0){
+                value = actual.back();
+            }
+            else{
+                value = actual.front();
+            }
+            //dbg("Xd" , sumi , tam ,sumSuff, (sumi - value) , ((tam - 1) * value));
             sumSuff += (sumi - value) - ((tam - 1) * value);
             sumPref += (-1ll * (sumi - value)) + ((tam - 1) * value);
-            /*if(dir == 0) actual = actual->prev;
-            else actual = actual->next;*/
-            actual = actual->prev;
+            if(dir == 0){
+                actual.push_front(value);
+                actual.pop_back();
+            }
+            else{
+                actual.push_back(value);
+                actual.pop_front();
+            }
         }
         else if(type == 2){
             //Reverse the entire array. 
             swap(sumPref,sumSuff);
-            /*if(dir == 0) actual = actual->next;
-            else actual = actual->prev;*/
-            actual = actual->next;
-            //dir ^= 1;
+            dir ^= 1;
         }
         else{
             assert(type == 3);
@@ -203,32 +207,8 @@ vl solve(V<pl> &ops){
             sumSuff += tam * ele;
             sumi += ele;
             sumPref += sumi;
-            if(actual == nullptr){
-                Node* nuevo = new Node;
-                nuevo->val = ele;
-                nuevo->next = nuevo;
-                nuevo->prev = nuevo;
-                //dbg("ctmr11111",nuevo->val , nuevo->next->val , nuevo->prev->val);
-                actual = nuevo;
-                //dbg(actual->val , actual->next->val , actual->prev->val);
-            }
-            else{
-                Node* nuevo= new Node;
-                nuevo->val = ele;
-
-                nuevo->next = actual->next;
-                nuevo->prev = actual;
-
-                //recien preparando
-                dbg("ctmr",nuevo->val , nuevo->next->val , nuevo->prev->val);
-                Node* guardaNext = actual->next;
-                dbg(guardaNext->val);
-                actual->next = nuevo;
-                guardaNext->prev = nuevo;
-
-                actual = nuevo;
-                //dbg(actual->val , actual->next->val , actual->prev->val);
-            }
+            if(dir == 0) actual.push_back(ele);
+            else actual.push_front(ele);
         }
         ans.push_back(sumSuff);
     }
@@ -239,15 +219,15 @@ vl solve(V<pl> &ops){
 int main() {
     cin.tie(0)->sync_with_stdio(0);
     ll t=1;
-    while(1){
-        ll q = rng_ll(1,7);
+    while(0){
+        ll q = rng_ll(1,1000);
         V<pl> ops(q);
         ops[0].first = 3;
-        ops[0].second = rng_ll(1,10);
+        ops[0].second = rng_ll(1,1000);
         for(ll i = 1 ;i < q; i++){
             ops[i].first = rng_ll(1 , 3);
             if(ops[i].first == 3){
-                ops[i].second = rng_ll(1,10);
+                ops[i].second = rng_ll(1,1000);
             }
         }
         auto ans1 = brute(ops);
